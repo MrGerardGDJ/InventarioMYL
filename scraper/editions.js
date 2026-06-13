@@ -59,6 +59,8 @@ export const EDITION_SLUGS = {
     "chile_oscuro", "napoleon", "raciales_imp_2024", "giger", "espiritu_samurai", "zodiaco",
     "amenazakaiju", "escuadronmecha", "bestiarium", "secretos_arcanos", "lootbox_2024",
     "toolkit_hielo_inmortal", "toolkit_cenizas_de_fuego",
+    // Ediciones recientes (descubiertas vía la API)
+    "onyria", "libertadores", "kvsm_titanes", "dia_de_muertos", "ritual_vudu", "chile_oculto",
   ],
 };
 

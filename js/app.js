@@ -26,8 +26,9 @@ async function loadData() {
   state.editionName = Object.fromEntries(state.editions.map((e) => [e.slug, e.name]));
 
   // Asegura nombre legible de edición en cada carta
+  // (prioriza el nombre que trae la propia carta desde el scraper)
   for (const c of state.cards) {
-    c.editionName = state.editionName[c.edition] || c.edition || "—";
+    c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
   }
   if (cardsRes.meta?.source === "seed") {
     showToast("Mostrando datos de demostración. Ejecuta el scraper para cargar el catálogo real.", 5000);

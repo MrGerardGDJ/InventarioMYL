@@ -916,5 +916,41 @@
     "format": "NE",
     "formatName": "Nueva Era / Imperio",
     "name": "Toolkit Cenizas De Fuego"
+  },
+  {
+    "slug": "onyria",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Onyria"
+  },
+  {
+    "slug": "libertadores",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Libertadores"
+  },
+  {
+    "slug": "kvsm_titanes",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Kvsm Titanes"
+  },
+  {
+    "slug": "dia_de_muertos",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Dia De Muertos"
+  },
+  {
+    "slug": "ritual_vudu",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Ritual Vudu"
+  },
+  {
+    "slug": "chile_oculto",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Chile Oculto"
   }
 ]

@@ -2,24 +2,25 @@
 /**
  * Scraper de cartas de Mitos y Leyendas para la app Inventario MyL.
  *
- * Usa la API pública que alimenta a tor.myl.cl:
- *   GET https://api.myl.cl/cards/edition/{slug}
- * que devuelve { edition, races, types, rarities, keywords, cards }.
- * Las imágenes siguen el patrón:
- *   https://api.myl.cl/static/cards/{ed_edid}/{edid}.png
+ * Fuente: API pública que alimenta tor.myl.cl.
+ *   - https://api.myl.cl/cards/edition/todas        → todas las cartas (descubre ediciones)
+ *   - https://api.myl.cl/cards/edition/{slug}        → cartas + tablas (raza/tipo/rareza) por edición
+ *   - imágenes: https://api.myl.cl/static/cards/{ed_edid}/{edid}.png
+ *
+ * Estrategia: descubre la lista de ediciones desde "todas" (incluye las nuevas
+ * y futuras) y la combina con la lista conocida (recupera ediciones antiguas
+ * que "todas" no incluye). Consulta cada edición y deduplica por carta.
  *
  * Escribe ../data/cards.json
  *
  * Uso:
- *   node scrape.js                       # todas las ediciones
- *   node scrape.js --edition helenica espada_sagrada
- *   node scrape.js --format PB
- *   node scrape.js --limit 5             # primeras N (prueba)
+ *   node scrape.js                 # todo
+ *   node scrape.js --limit 5       # prueba rápida (primeras N ediciones)
  */
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { allEditions, slugToName } from "./editions.js";
+import { allEditions, slugToName, FORMATS } from "./editions.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(__dirname, "..", "data", "cards.json");
@@ -33,40 +34,20 @@ const HEADERS = {
   Referer: "https://tor.myl.cl/",
 };
 
-/* ---------- argumentos ---------- */
 const argv = process.argv.slice(2);
-function argList(flag) {
-  const i = argv.indexOf(flag);
-  if (i === -1) return null;
-  const vals = [];
-  for (let j = i + 1; j < argv.length && !argv[j].startsWith("--"); j++) vals.push(argv[j]);
-  return vals;
-}
-const onlyEditions = argList("--edition");
-const onlyFormat = argList("--format")?.[0];
-const limit = argList("--limit")?.[0] ? Number(argList("--limit")[0]) : null;
+const limitArg = argv.indexOf("--limit");
+const limit = limitArg !== -1 ? Number(argv[limitArg + 1]) : null;
 
-let editions = allEditions();
-if (onlyFormat) editions = editions.filter((e) => e.format === onlyFormat);
-if (onlyEditions) editions = editions.filter((e) => onlyEditions.includes(e.slug));
-if (limit) editions = editions.slice(0, limit);
-
-console.log(`Scrapeando ${editions.length} ediciones desde ${API}`);
-
-/* ---------- helpers ---------- */
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const num = (v) => {
-  const n = Number(v);
-  return Number.isFinite(n) ? n : null;
-};
+const num = (v) => { const n = Number(v); return Number.isFinite(n) ? n : null; };
+const norm = (s) => String(s || "").toLowerCase().replace(/[-_\s]/g, "");
 function titleCase(s) {
-  return String(s || "")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim()
+  return String(s || "").toLowerCase().replace(/\s+/g, " ").trim()
     .replace(/(^|[\s("'¡¿\-/])([a-záéíóúñü])/g, (_, p, c) => p + c.toUpperCase());
 }
-// Construye un mapa id->name desde la primera clave top-level que sea un arreglo {id,name}
+function cleanTitle(t) {
+  return String(t || "").replace(/^\s*(IMP|IMPERIO|PE|PB|SB|FX|NE)\s*[-–:]\s*/i, "").trim();
+}
 function lookup(data, ...keys) {
   for (const k of keys) {
     if (Array.isArray(data[k]) && data[k][0] && "id" in data[k][0]) {
@@ -76,78 +57,118 @@ function lookup(data, ...keys) {
   return new Map();
 }
 
-/* ---------- recorrido ---------- */
-const all = [];
-const seen = new Set();
-let okEditions = 0;
-
-for (const ed of editions) {
-  process.stdout.write(`• ${ed.name} (${ed.slug}) … `);
-  try {
-    const res = await fetch(`${API}/${ed.slug}`, { headers: HEADERS });
-    if (!res.ok) {
-      console.log(`HTTP ${res.status}`);
-      continue;
-    }
-    const data = JSON.parse(await res.text());
-    const cards = data.cards || (Array.isArray(data) ? data : []);
-    const races = lookup(data, "races", "race");
-    const types = lookup(data, "types", "type");
-    const rarities = lookup(data, "rarities", "rarity");
-    const keywords = lookup(data, "keywords", "keyword");
-    const edTitle = data.edition?.title || ed.name || slugToName(ed.slug);
-
-    let added = 0;
-    for (const c of cards) {
-      const edid = String(c.edid ?? "").padStart(3, "0");
-      const id = `${ed.slug}__${edid}__${c.slug || added}`;
-      if (seen.has(id)) continue;
-      seen.add(id);
-      const edImgId = String(c.ed_edid ?? data.edition?.id ?? "");
-      all.push({
-        id,
-        name: titleCase(c.name) || "(sin nombre)",
-        edition: ed.slug,
-        editionName: edTitle,
-        format: ed.format,
-        edid,
-        type: types.get(String(c.type)) || "—",
-        race: races.get(String(c.race)) || "—",
-        rarity: rarities.get(String(c.rarity)) || "—",
-        keyword: keywords.get(String(c.keywords)) || "",
-        cost: num(c.cost),
-        strength: num(c.damage),
-        ability: (c.ability || "").replace(/\s+/g, " ").trim(),
-        flavour: (c.flavour || "").replace(/\s+/g, " ").trim(),
-        image: edImgId && c.edid != null ? `${IMG}/${edImgId}/${c.edid}.png` : "",
-      });
-      added++;
-    }
-    okEditions++;
-    console.log(`${added} cartas`);
-  } catch (err) {
-    console.log(`error: ${err.message}`);
+async function getJson(url) {
+  const r = await fetch(url, { headers: HEADERS });
+  const t = await r.text();
+  if (!r.ok) return null;
+  // El backend a veces antepone un warning antes del JSON; toma el último objeto.
+  try { return JSON.parse(t); }
+  catch {
+    const i = t.lastIndexOf('{"status"');
+    try { return JSON.parse(t.slice(i)); } catch { return null; }
   }
-  await sleep(120);
 }
 
-/* ---------- escribir salida ---------- */
-all.sort((a, b) => a.editionName.localeCompare(b.editionName, "es") || a.name.localeCompare(b.name, "es"));
+/* ---------- mapa slug→formato (desde la lista conocida) ---------- */
+const fmtByNorm = new Map();
+const nameByNorm = new Map();
+for (const e of allEditions()) {
+  fmtByNorm.set(norm(e.slug), e.format);
+  nameByNorm.set(norm(e.slug), e.name);
+}
+function formatFor(slug) {
+  return fmtByNorm.get(norm(slug)) || "NE"; // por defecto Imperio/Nueva Era
+}
+
+/* ---------- 1) descubrir ediciones desde "todas" ---------- */
+console.log("Descubriendo ediciones desde /todas …");
+const todas = await getJson(`${API}/todas`);
+const discovered = new Set();
+if (todas?.cards) {
+  for (const c of todas.cards) if (c.ed_slug) discovered.add(c.ed_slug);
+  console.log(`  todas: ${todas.cards.length} cartas, ${discovered.size} ediciones`);
+} else {
+  console.log("  (no se pudo leer /todas; se usará solo la lista conocida)");
+}
+
+/* ---------- 2) lista de ediciones a consultar (unión, sin duplicar normalizados) ---------- */
+const slugs = [];
+const seenNorm = new Set();
+function addSlug(s) {
+  const n = norm(s);
+  if (!n || seenNorm.has(n)) return;
+  seenNorm.add(n);
+  slugs.push(s);
+}
+for (const s of discovered) addSlug(s);          // canónicos + nuevos (prioridad)
+for (const e of allEditions()) addSlug(e.slug);  // recupera ediciones antiguas omitidas por "todas"
+
+let editionsToFetch = slugs;
+if (limit) editionsToFetch = editionsToFetch.slice(0, limit);
+console.log(`Consultando ${editionsToFetch.length} ediciones…\n`);
+
+/* ---------- 3) consultar cada edición y deduplicar por carta ---------- */
+const all = [];
+const seenCards = new Set(); // clave: ed_edid/edid (única por carta física)
+let okEditions = 0;
+
+for (const slug of editionsToFetch) {
+  process.stdout.write(`• ${slug} … `);
+  const data = await getJson(`${API}/${encodeURIComponent(slug)}`);
+  if (!data || !Array.isArray(data.cards)) { console.log("sin datos"); await sleep(80); continue; }
+
+  const races = lookup(data, "races", "race");
+  const types = lookup(data, "types", "type");
+  const rarities = lookup(data, "rarities", "rarity");
+  const keywords = lookup(data, "keywords", "keyword");
+  const edTitleRaw = data.edition?.title || nameByNorm.get(norm(slug)) || slugToName(slug);
+  const edTitle = cleanTitle(edTitleRaw) || edTitleRaw;
+  const format = formatFor(slug);
+
+  let added = 0;
+  for (const c of data.cards) {
+    const edImgId = String(c.ed_edid ?? data.edition?.id ?? "");
+    const edidRaw = String(c.edid ?? "");
+    const key = `${edImgId}/${edidRaw}`;
+    if (seenCards.has(key)) continue;
+    seenCards.add(key);
+    const edid = edidRaw.padStart(3, "0");
+    all.push({
+      id: `${norm(slug)}__${edid}__${c.slug || added}`,
+      name: titleCase(c.name) || "(sin nombre)",
+      edition: slug,
+      editionName: edTitle,
+      format,
+      edid,
+      type: types.get(String(c.type)) || "—",
+      race: races.get(String(c.race)) || "—",
+      rarity: rarities.get(String(c.rarity)) || "—",
+      keyword: keywords.get(String(c.keywords)) || "",
+      cost: num(c.cost),
+      strength: num(c.damage),
+      ability: (c.ability || "").replace(/\s+/g, " ").trim(),
+      flavour: (c.flavour || "").replace(/\s+/g, " ").trim(),
+      image: edImgId && edidRaw ? `${IMG}/${edImgId}/${edidRaw}.png` : "",
+    });
+    added++;
+  }
+  okEditions++;
+  console.log(`${added} cartas (${edTitle})`);
+  await sleep(80);
+}
+
+/* ---------- 4) escribir salida ---------- */
+all.sort((a, b) => (a.editionName || "").localeCompare(b.editionName || "", "es") || a.name.localeCompare(b.name, "es"));
 const payload = {
-  meta: {
-    source: "api.myl.cl",
-    generatedAt: new Date().toISOString(),
-    editions: okEditions,
-    count: all.length,
-  },
+  meta: { source: "api.myl.cl", generatedAt: new Date().toISOString(), editions: okEditions, count: all.length },
   cards: all,
 };
 fs.writeFileSync(OUT, JSON.stringify(payload));
-console.log(`\n✓ ${all.length} cartas de ${okEditions}/${editions.length} ediciones → ${OUT}`);
+console.log(`\n✓ ${all.length} cartas de ${okEditions} ediciones → ${OUT}`);
 
-// Muestra de validación
-console.log("\n=== MUESTRA (primeras 3) ===");
-console.log(JSON.stringify(all.slice(0, 3), null, 2));
 const withImg = all.filter((c) => c.image).length;
 const withRace = all.filter((c) => c.race !== "—").length;
-console.log(`\nResumen: ${all.length} cartas · ${withImg} con imagen · ${withRace} con raza resuelta`);
+const fmtCount = {};
+for (const c of all) fmtCount[c.format] = (fmtCount[c.format] || 0) + 1;
+console.log(`Resumen: ${all.length} cartas · ${withImg} con imagen · ${withRace} con raza · formatos ${JSON.stringify(fmtCount)}`);
+console.log("Ediciones nuevas presentes:", ["onyria", "libertadores", "ritual_vudu", "kvsm_titanes", "dia_de_muertos", "chile_oculto"].filter((s) => all.some((c) => c.edition === s)).join(", "));
