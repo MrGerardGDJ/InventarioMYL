@@ -32,14 +32,6 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Instalar dependencias
-        working-directory: scraper
-        run: npm install
-
-      - name: Instalar Chromium
-        working-directory: scraper
-        run: npx playwright install --with-deps chromium
-
       - name: Ejecutar scraper
         working-directory: scraper
         run: |

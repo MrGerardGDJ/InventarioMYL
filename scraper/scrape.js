@@ -1,27 +1,37 @@
 #!/usr/bin/env node
 /**
- * Scraper de cartas de Mitos y Leyendas (tor.myl.cl) para la app Inventario MyL.
+ * Scraper de cartas de Mitos y Leyendas para la app Inventario MyL.
  *
- * Recorre cada edición en /cartas/{slug}, espera a que la app Angular renderice
- * y extrae los datos de cada carta desde el DOM. Escribe ../data/cards.json.
+ * Usa la API pública que alimenta a tor.myl.cl:
+ *   GET https://api.myl.cl/cards/edition/{slug}
+ * que devuelve { edition, races, types, rarities, keywords, cards }.
+ * Las imágenes siguen el patrón:
+ *   https://api.myl.cl/static/cards/{ed_edid}/{edid}.png
+ *
+ * Escribe ../data/cards.json
  *
  * Uso:
- *   node scrape.js                      # todas las ediciones
- *   node scrape.js --edition espada_sagrada helenica   # solo algunas
- *   node scrape.js --format PB          # solo un formato (PE|PB|SB|FX|NE)
- *   node scrape.js --limit 5            # primeras N ediciones (útil para probar)
- *
- * Requiere: npm install  (instala Playwright + Chromium)
+ *   node scrape.js                       # todas las ediciones
+ *   node scrape.js --edition helenica espada_sagrada
+ *   node scrape.js --format PB
+ *   node scrape.js --limit 5             # primeras N (prueba)
  */
-import { chromium } from "playwright";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { allEditions, slugToName } from "./editions.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const BASE = "https://tor.myl.cl";
 const OUT = path.join(__dirname, "..", "data", "cards.json");
+const API = "https://api.myl.cl/cards/edition";
+const IMG = "https://api.myl.cl/static/cards";
+
+const HEADERS = {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+  Accept: "application/json, text/plain, */*",
+  Origin: "https://tor.myl.cl",
+  Referer: "https://tor.myl.cl/",
+};
 
 /* ---------- argumentos ---------- */
 const argv = process.argv.slice(2);
@@ -41,152 +51,103 @@ if (onlyFormat) editions = editions.filter((e) => e.format === onlyFormat);
 if (onlyEditions) editions = editions.filter((e) => onlyEditions.includes(e.slug));
 if (limit) editions = editions.slice(0, limit);
 
-console.log(`Scrapeando ${editions.length} ediciones de ${BASE}`);
+console.log(`Scrapeando ${editions.length} ediciones desde ${API}`);
 
-/* ---------- extracción dentro del navegador ---------- */
-// Se ejecuta en el contexto de la página. Es defensiva: intenta varias
-// estructuras de DOM ya que el marcado del sitio puede cambiar.
-function extractCards() {
-  const clean = (s) => (s || "").replace(/\s+/g, " ").trim();
-  const num = (s) => {
-    const m = clean(s).match(/-?\d+/);
-    return m ? Number(m[0]) : null;
-  };
-
-  // Candidatos a contenedor de carta
-  let nodes = Array.from(document.querySelectorAll(".cardinfo"));
-  if (nodes.length === 0) nodes = Array.from(document.querySelectorAll("[class*='card']")).filter((n) => n.querySelector("img"));
-
-  const out = [];
-  for (const node of nodes) {
-    const titleEl = node.querySelector(".content-title, .card-title, h3, h2, .title");
-    const name = clean(titleEl?.textContent);
-    if (!name) continue;
-
-    const imgEl = node.querySelector("img");
-    const image =
-      imgEl?.getAttribute("back-img") ||
-      imgEl?.getAttribute("data-src") ||
-      imgEl?.getAttribute("src") ||
-      "";
-
-    const abilityEl = node.querySelector(".cardability, .ability, .card-text, .descripcion");
-    const ability = clean(abilityEl?.textContent);
-
-    // Lee pares etiqueta:valor del texto del contenedor
-    const text = clean(node.textContent);
-    const field = (labels) => {
-      for (const label of labels) {
-        const re = new RegExp(label + "\\s*:?\\s*([\\wáéíóúñ\\-]+)", "i");
-        const m = text.match(re);
-        if (m) return clean(m[1]);
-      }
-      return "";
-    };
-
-    out.push({
-      name,
-      image: image.startsWith("//") ? "https:" + image : image,
-      rarity: field(["Rareza", "Rarity"]),
-      type: field(["Tipo", "Type"]),
-      race: field(["Raza", "Race"]),
-      strength: num(field(["Fuerza", "Ataque"])),
-      cost: num(field(["Coste", "Costo", "Cost"])),
-      ability,
-    });
+/* ---------- helpers ---------- */
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const num = (v) => {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+};
+function titleCase(s) {
+  return String(s || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/(^|[\s("'¡¿\-/])([a-záéíóúñü])/g, (_, p, c) => p + c.toUpperCase());
+}
+// Construye un mapa id->name desde la primera clave top-level que sea un arreglo {id,name}
+function lookup(data, ...keys) {
+  for (const k of keys) {
+    if (Array.isArray(data[k]) && data[k][0] && "id" in data[k][0]) {
+      return new Map(data[k].map((o) => [String(o.id), o.name]));
+    }
   }
-  return out;
+  return new Map();
 }
 
 /* ---------- recorrido ---------- */
 const all = [];
 const seen = new Set();
-
-const browser = await chromium.launch({ headless: true });
-const ctx = await browser.newContext({
-  userAgent:
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
-  viewport: { width: 1366, height: 900 },
-});
-const page = await ctx.newPage();
+let okEditions = 0;
 
 for (const ed of editions) {
-  const url = `${BASE}/cartas/${ed.slug}`;
   process.stdout.write(`• ${ed.name} (${ed.slug}) … `);
   try {
-    await page.goto(url, { waitUntil: "networkidle", timeout: 60000 });
-    // Espera a que Angular pinte tarjetas
-    await page
-      .waitForSelector(".cardinfo, [class*='card'] img", { timeout: 20000 })
-      .catch(() => {});
-    // Hace scroll para forzar lazy-loading
-    await autoScroll(page);
-    const cards = await page.evaluate(extractCards);
+    const res = await fetch(`${API}/${ed.slug}`, { headers: HEADERS });
+    if (!res.ok) {
+      console.log(`HTTP ${res.status}`);
+      continue;
+    }
+    const data = JSON.parse(await res.text());
+    const cards = data.cards || (Array.isArray(data) ? data : []);
+    const races = lookup(data, "races", "race");
+    const types = lookup(data, "types", "type");
+    const rarities = lookup(data, "rarities", "rarity");
+    const keywords = lookup(data, "keywords", "keyword");
+    const edTitle = data.edition?.title || ed.name || slugToName(ed.slug);
 
     let added = 0;
     for (const c of cards) {
-      const id = `${ed.slug}__${c.name.toLowerCase().replace(/[^\wáéíóúñ]+/g, "_").replace(/^_+|_+$/g, "")}`;
+      const edid = String(c.edid ?? "").padStart(3, "0");
+      const id = `${ed.slug}__${edid}__${c.slug || added}`;
       if (seen.has(id)) continue;
       seen.add(id);
+      const edImgId = String(c.ed_edid ?? data.edition?.id ?? "");
       all.push({
         id,
-        name: c.name,
+        name: titleCase(c.name) || "(sin nombre)",
         edition: ed.slug,
-        editionName: ed.name || slugToName(ed.slug),
+        editionName: edTitle,
         format: ed.format,
-        type: c.type || "—",
-        race: c.race || "—",
-        rarity: c.rarity || "—",
-        cost: c.cost,
-        strength: c.strength,
-        ability: c.ability || "",
-        image: c.image || "",
+        edid,
+        type: types.get(String(c.type)) || "—",
+        race: races.get(String(c.race)) || "—",
+        rarity: rarities.get(String(c.rarity)) || "—",
+        keyword: keywords.get(String(c.keywords)) || "",
+        cost: num(c.cost),
+        strength: num(c.damage),
+        ability: (c.ability || "").replace(/\s+/g, " ").trim(),
+        flavour: (c.flavour || "").replace(/\s+/g, " ").trim(),
+        image: edImgId && c.edid != null ? `${IMG}/${edImgId}/${c.edid}.png` : "",
       });
       added++;
     }
+    okEditions++;
     console.log(`${added} cartas`);
   } catch (err) {
     console.log(`error: ${err.message}`);
   }
+  await sleep(120);
 }
-
-await browser.close();
 
 /* ---------- escribir salida ---------- */
 all.sort((a, b) => a.editionName.localeCompare(b.editionName, "es") || a.name.localeCompare(b.name, "es"));
 const payload = {
   meta: {
-    source: "tor.myl.cl",
+    source: "api.myl.cl",
     generatedAt: new Date().toISOString(),
-    editions: editions.length,
+    editions: okEditions,
     count: all.length,
   },
   cards: all,
 };
-fs.writeFileSync(OUT, JSON.stringify(payload, null, 2));
-console.log(`\n✓ ${all.length} cartas escritas en ${OUT}`);
+fs.writeFileSync(OUT, JSON.stringify(payload));
+console.log(`\n✓ ${all.length} cartas de ${okEditions}/${editions.length} ediciones → ${OUT}`);
 
-// Muestra de validación (útil para revisar la extracción en los logs)
-console.log("\n=== MUESTRA (primeras 5 cartas) ===");
-console.log(JSON.stringify(all.slice(0, 5), null, 2));
+// Muestra de validación
+console.log("\n=== MUESTRA (primeras 3) ===");
+console.log(JSON.stringify(all.slice(0, 3), null, 2));
 const withImg = all.filter((c) => c.image).length;
-const withCost = all.filter((c) => c.cost != null).length;
-console.log(`\nResumen: ${all.length} cartas · ${withImg} con imagen · ${withCost} con coste`);
-
-async function autoScroll(page) {
-  await page.evaluate(async () => {
-    await new Promise((resolve) => {
-      let total = 0;
-      const step = 800;
-      const timer = setInterval(() => {
-        window.scrollBy(0, step);
-        total += step;
-        if (total >= document.body.scrollHeight + 2000) {
-          clearInterval(timer);
-          resolve();
-        }
-      }, 120);
-    });
-  });
-  await page.waitForTimeout(500);
-}
+const withRace = all.filter((c) => c.race !== "—").length;
+console.log(`\nResumen: ${all.length} cartas · ${withImg} con imagen · ${withRace} con raza resuelta`);

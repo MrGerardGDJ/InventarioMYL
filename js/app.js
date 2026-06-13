@@ -47,6 +47,7 @@ function normalizeCard(c, i) {
     cost: numOrNull(c.cost),
     strength: numOrNull(c.strength ?? c.attack),
     ability: c.ability || "",
+    flavour: c.flavour || "",
     image: c.image || c.image_path || "",
   };
 }
@@ -238,6 +239,7 @@ function openModal(card) {
           ${card.strength != null ? `<span class="tag">Fuerza ${card.strength}</span>` : ""}
         </div>
         <p>${escapeHtml(card.ability) || "<span class='muted'>Sin texto de habilidad.</span>"}</p>
+        ${card.flavour ? `<p class="muted" style="font-style:italic">«${escapeHtml(card.flavour)}»</p>` : ""}
         <div class="qty-row" style="border:none;padding:0;margin-top:16px;max-width:200px">
           <button class="qty-btn" data-m="minus">−</button>
           <span class="qty-num ${qty === 0 ? "zero" : ""}" data-role="mqty">${qty}</span>

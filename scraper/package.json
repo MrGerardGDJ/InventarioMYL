@@ -1,15 +1,10 @@
 {
   "name": "myl-scraper",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "Scraper de cartas de Mitos y Leyendas desde tor.myl.cl para la app Inventario MyL.",
+  "description": "Scraper de cartas de Mitos y Leyendas (api.myl.cl) para Inventario MyL.",
   "scripts": {
-    "scrape": "node scrape.js",
-    "scrape:one": "node scrape.js --edition",
-    "postinstall": "playwright install chromium"
-  },
-  "dependencies": {
-    "playwright": "^1.48.0"
+    "scrape": "node scrape.js"
   }
 }
