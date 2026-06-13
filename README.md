@@ -37,7 +37,8 @@ HTML/CSS/JS puro):
    - *Source*: **Deploy from a branch**
    - *Branch*: la rama de trabajo, carpeta **`/ (root)`** → **Save**
 2. En 1–2 minutos el sitio queda publicado en:
-   **https://knomoio.github.io/inventariomyl/**
+   **https://knomoio.github.io/InventarioMYL/**
+   (¡ojo con las mayúsculas! La URL distingue may/min: `InventarioMYL`).
 
 Todas las rutas de la app son relativas (`./css`, `./js`, `./data`), así que
 funciona correctamente bajo el subdirectorio del proyecto.
