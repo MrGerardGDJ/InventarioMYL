@@ -166,6 +166,13 @@ const payload = {
 fs.writeFileSync(OUT, JSON.stringify(payload, null, 2));
 console.log(`\n✓ ${all.length} cartas escritas en ${OUT}`);
 
+// Muestra de validación (útil para revisar la extracción en los logs)
+console.log("\n=== MUESTRA (primeras 5 cartas) ===");
+console.log(JSON.stringify(all.slice(0, 5), null, 2));
+const withImg = all.filter((c) => c.image).length;
+const withCost = all.filter((c) => c.cost != null).length;
+console.log(`\nResumen: ${all.length} cartas · ${withImg} con imagen · ${withCost} con coste`);
+
 async function autoScroll(page) {
   await page.evaluate(async () => {
     await new Promise((resolve) => {
