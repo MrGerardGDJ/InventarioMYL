@@ -1,0 +1,62 @@
+name: Actualizar datos de cartas
+
+on:
+  workflow_dispatch:
+    inputs:
+      format:
+        description: "Formato a scrapear (PE, PB, SB, FX, NE) — vacío = todos"
+        required: false
+        default: ""
+      limit:
+        description: "Límite de ediciones (vacío = sin límite, útil para probar)"
+        required: false
+        default: ""
+  schedule:
+    # Cada lunes a las 06:00 UTC actualiza el catálogo
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar dependencias
+        working-directory: scraper
+        run: npm install
+
+      - name: Instalar Chromium
+        working-directory: scraper
+        run: npx playwright install --with-deps chromium
+
+      - name: Ejecutar scraper
+        working-directory: scraper
+        run: |
+          ARGS=""
+          if [ -n "${{ github.event.inputs.format }}" ]; then ARGS="$ARGS --format ${{ github.event.inputs.format }}"; fi
+          if [ -n "${{ github.event.inputs.limit }}" ]; then ARGS="$ARGS --limit ${{ github.event.inputs.limit }}"; fi
+          echo "node scrape.js $ARGS"
+          node scrape.js $ARGS
+
+      - name: Commit de los datos actualizados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- data/cards.json; then
+            echo "Sin cambios en data/cards.json"
+          else
+            git add data/cards.json
+            git commit -m "datos: actualiza catálogo de cartas desde tor.myl.cl"
+            git push origin ${{ github.ref_name }}
+          fi

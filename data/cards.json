@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "source": "seed",
+    "note": "Dataset semilla de demostración. Ejecuta el scraper (carpeta /scraper) o el workflow de GitHub Actions 'Actualizar datos' para poblar con los datos reales de tor.myl.cl.",
+    "generatedAt": "2026-06-13",
+    "count": 30
+  },
+  "cards": [
+    { "id": "espada_sagrada__merlin", "name": "Merlín", "edition": "espada_sagrada", "format": "PB", "type": "Aliado", "race": "Sabio", "rarity": "Real", "cost": 5, "strength": 4, "ability": "Habilidad: roba una carta al entrar en juego.", "image": "" },
+    { "id": "espada_sagrada__rey_arturo", "name": "Rey Arturo", "edition": "espada_sagrada", "format": "PB", "type": "Aliado", "race": "Caballero", "rarity": "Real", "cost": 6, "strength": 6, "ability": "Lidera a los Caballeros de la Mesa Redonda.", "image": "" },
+    { "id": "espada_sagrada__excalibur", "name": "Excalibur", "edition": "espada_sagrada", "format": "PB", "type": "Arma", "race": "—", "rarity": "Real", "cost": 3, "strength": 0, "ability": "Otorga +3 de fuerza al aliado equipado.", "image": "" },
+    { "id": "helenica__zeus", "name": "Zeus", "edition": "helenica", "format": "PB", "type": "Aliado", "race": "Olímpico", "rarity": "Real", "cost": 7, "strength": 7, "ability": "Rey de los dioses del Olimpo.", "image": "" },
+    { "id": "helenica__atenea", "name": "Atenea", "edition": "helenica", "format": "PB", "type": "Aliado", "race": "Olímpico", "rarity": "Real", "cost": 5, "strength": 5, "ability": "Diosa de la sabiduría y la estrategia.", "image": "" },
+    { "id": "helenica__medusa", "name": "Medusa", "edition": "helenica", "format": "PB", "type": "Aliado", "race": "Bestia", "rarity": "Cortesano", "cost": 4, "strength": 4, "ability": "Petrifica al aliado defensor.", "image": "" },
+    { "id": "hijos_de_daana__lugh", "name": "Lugh", "edition": "hijos_de_daana", "format": "PB", "type": "Aliado", "race": "Faerie", "rarity": "Real", "cost": 5, "strength": 5, "ability": "Maestro de todas las artes.", "image": "" },
+    { "id": "dominios_de_ra__anubis", "name": "Anubis", "edition": "dominios_de_ra", "format": "PB", "type": "Aliado", "race": "Faraón", "rarity": "Real", "cost": 6, "strength": 5, "ability": "Guía a las almas al inframundo.", "image": "" },
+    { "id": "dominios_de_ra__ra", "name": "Ra", "edition": "dominios_de_ra", "format": "PB", "type": "Aliado", "race": "Faraón", "rarity": "Real", "cost": 8, "strength": 8, "ability": "Dios del sol egipcio.", "image": "" },
+    { "id": "ragnarok__odin", "name": "Odín", "edition": "ragnarok", "format": "PE", "type": "Aliado", "race": "Eterno", "rarity": "Real", "cost": 8, "strength": 7, "ability": "Padre de todos los dioses nórdicos.", "image": "" },
+    { "id": "ragnarok__thor", "name": "Thor", "edition": "ragnarok", "format": "PE", "type": "Aliado", "race": "Eterno", "rarity": "Real", "cost": 6, "strength": 6, "ability": "Dios del trueno.", "image": "" },
+    { "id": "ragnarok__loki", "name": "Loki", "edition": "ragnarok", "format": "PE", "type": "Aliado", "race": "Eterno", "rarity": "Cortesano", "cost": 4, "strength": 3, "ability": "Dios del engaño.", "image": "" },
+    { "id": "ragnarok__mjolnir", "name": "Mjolnir", "edition": "ragnarok", "format": "PE", "type": "Arma", "race": "—", "rarity": "Real", "cost": 4, "strength": 0, "ability": "Solo puede equiparla un Eterno digno.", "image": "" },
+    { "id": "el_reto__excalibur_oro", "name": "Mina de Oro", "edition": "el_reto", "format": "PE", "type": "Oro", "race": "—", "rarity": "Aldeano", "cost": 0, "strength": 0, "ability": "Genera 1 de oro por turno.", "image": "" },
+    { "id": "mundo_gotico__dracula", "name": "Drácula", "edition": "mundo_gotico", "format": "PE", "type": "Aliado", "race": "Sombra", "rarity": "Real", "cost": 7, "strength": 7, "ability": "Señor de los vampiros.", "image": "" },
+    { "id": "mundo_gotico__van_helsing", "name": "Van Helsing", "edition": "mundo_gotico", "format": "PE", "type": "Aliado", "race": "Desafiante", "rarity": "Cortesano", "cost": 4, "strength": 4, "ability": "Cazador de criaturas de la noche.", "image": "" },
+    { "id": "furia__berserker", "name": "Berserker", "edition": "furia", "format": "FX", "type": "Aliado", "race": "Bárbaro", "rarity": "Aldeano", "cost": 3, "strength": 4, "ability": "Furia: gana +1 al atacar.", "image": "" },
+    { "id": "troya__aquiles", "name": "Aquiles", "edition": "troya", "format": "FX", "type": "Aliado", "race": "Héroe", "rarity": "Real", "cost": 6, "strength": 7, "ability": "Invulnerable salvo en su talón.", "image": "" },
+    { "id": "troya__hector", "name": "Héctor", "edition": "troya", "format": "FX", "type": "Aliado", "race": "Héroe", "rarity": "Real", "cost": 6, "strength": 6, "ability": "Príncipe defensor de Troya.", "image": "" },
+    { "id": "excalibur__lancelot", "name": "Lancelot", "edition": "excalibur", "format": "FX", "type": "Aliado", "race": "Caballero", "rarity": "Real", "cost": 5, "strength": 5, "ability": "El mejor caballero de Camelot.", "image": "" },
+    { "id": "roma__cesar", "name": "Julio César", "edition": "roma", "format": "FX", "type": "Aliado", "race": "Defensor", "rarity": "Real", "cost": 6, "strength": 5, "ability": "Comandante de las legiones romanas.", "image": "" },
+    { "id": "olimpia__hades", "name": "Hades", "edition": "olimpia", "format": "NE", "type": "Aliado", "race": "Olímpico", "rarity": "Real", "cost": 7, "strength": 6, "ability": "Señor del inframundo.", "image": "" },
+    { "id": "asgard__fenrir", "name": "Fenrir", "edition": "asgard", "format": "NE", "type": "Aliado", "race": "Bestia", "rarity": "Real", "cost": 6, "strength": 7, "ability": "El lobo que devorará a Odín.", "image": "" },
+    { "id": "camelot__morgana", "name": "Morgana", "edition": "camelot", "format": "NE", "type": "Aliado", "race": "Sabio", "rarity": "Cortesano", "cost": 5, "strength": 4, "ability": "Hechicera enemiga de Camelot.", "image": "" },
+    { "id": "kemet__cleopatra", "name": "Cleopatra", "edition": "kemet", "format": "NE", "type": "Aliado", "race": "Faraón", "rarity": "Real", "cost": 5, "strength": 4, "ability": "Última reina del antiguo Egipto.", "image": "" },
+    { "id": "bushido__musashi", "name": "Miyamoto Musashi", "edition": "bushido", "format": "NE", "type": "Aliado", "race": "Desafiante", "rarity": "Real", "cost": 6, "strength": 6, "ability": "Maestro del estilo de dos espadas.", "image": "" },
+    { "id": "steampunk__nikola", "name": "Inventor de Vapor", "edition": "steampunk", "format": "NE", "type": "Aliado", "race": "Sabio", "rarity": "Aldeano", "cost": 3, "strength": 2, "ability": "Tótem: mejora las máquinas aliadas.", "image": "" },
+    { "id": "sumeria__gilgamesh", "name": "Gilgamesh", "edition": "sumeria", "format": "NE", "type": "Aliado", "race": "Héroe", "rarity": "Real", "cost": 7, "strength": 7, "ability": "Rey de Uruk en busca de la inmortalidad.", "image": "" },
+    { "id": "hermanos-grimm__lobo", "name": "El Lobo Feroz", "edition": "hermanos-grimm", "format": "NE", "type": "Aliado", "race": "Bestia", "rarity": "Cortesano", "cost": 4, "strength": 4, "ability": "Acecha en el bosque encantado.", "image": "" },
+    { "id": "templarios__amuleto", "name": "Amuleto Sagrado", "edition": "templarios", "format": "NE", "type": "Talismán", "race": "—", "rarity": "Aldeano", "cost": 2, "strength": 0, "ability": "Protege al aliado de un ataque por turno.", "image": "" }
+  ]
+}

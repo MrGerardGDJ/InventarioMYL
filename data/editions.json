@@ -1,0 +1,920 @@
+[
+  {
+    "slug": "el_reto",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "El Reto"
+  },
+  {
+    "slug": "mundo_gotico",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundo Gotico"
+  },
+  {
+    "slug": "ira_del_nahual",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Ira Del Nahual"
+  },
+  {
+    "slug": "ragnarok",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Ragnarok"
+  },
+  {
+    "slug": "cofradia",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Cofradia"
+  },
+  {
+    "slug": "espiritu_del_dragon",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Espiritu Del Dragon"
+  },
+  {
+    "slug": "leyendas_primera_era",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Leyendas Primera Era"
+  },
+  {
+    "slug": "promocionales_primera_era",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Promocionales Primera Era"
+  },
+  {
+    "slug": "raciales_pe",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Raciales PE"
+  },
+  {
+    "slug": "eXtension_pe",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "EXtension PE"
+  },
+  {
+    "slug": "leyendas_primera_era_2022",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Leyendas Primera Era 2022"
+  },
+  {
+    "slug": "toolkit_walkirias",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Toolkit Walkirias"
+  },
+  {
+    "slug": "toolkit_odin",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Toolkit Odin"
+  },
+  {
+    "slug": "leyendas_primera_era_2023",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Leyendas Primera Era 2023"
+  },
+  {
+    "slug": "mundo_medieval_el_reto",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundo Medieval El Reto"
+  },
+  {
+    "slug": "xinnian",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Xinnian"
+  },
+  {
+    "slug": "toolkit_puertas_del_valhalla",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Toolkit Puertas Del Valhalla"
+  },
+  {
+    "slug": "toolkit_justa",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Toolkit Justa"
+  },
+  {
+    "slug": "mundos_perdidos_horrores_de_salem",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundos Perdidos Horrores De Salem"
+  },
+  {
+    "slug": "mundos_perdidos_ciudad_de_los_cesares",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundos Perdidos Ciudad De Los Cesares"
+  },
+  {
+    "slug": "mundos_perdidos_la_saga_de_volsung",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundos Perdidos La Saga De Volsung"
+  },
+  {
+    "slug": "mundos_perdidos_leyendas_de_avalon",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundos Perdidos Leyendas De Avalon"
+  },
+  {
+    "slug": "mundos_perdidos_viaje_al_oeste",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundos Perdidos Viaje Al Oeste"
+  },
+  {
+    "slug": "mundos_perdidos_senores_del_trueno",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundos Perdidos Senores Del Trueno"
+  },
+  {
+    "slug": "vigilantes_de_la_noche",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Vigilantes De La Noche"
+  },
+  {
+    "slug": "lootbox_pe_2024",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Lootbox PE 2024"
+  },
+  {
+    "slug": "toolkit_honor_y_ferocidad",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Toolkit Honor Y Ferocidad"
+  },
+  {
+    "slug": "toolkit_valentia_y_desolacion",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Toolkit Valentia Y Desolacion"
+  },
+  {
+    "slug": "xinnian_año_serpiente_2025",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Xinnian AñO Serpiente 2025"
+  },
+  {
+    "slug": "espada_sagrada",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Espada Sagrada"
+  },
+  {
+    "slug": "cruzadas",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Cruzadas"
+  },
+  {
+    "slug": "helenica",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Helenica"
+  },
+  {
+    "slug": "imperio",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Imperio"
+  },
+  {
+    "slug": "hijos_de_daana",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Hijos De Daana"
+  },
+  {
+    "slug": "tierras_altas",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Tierras Altas"
+  },
+  {
+    "slug": "dominios_de_ra",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Dominios De Ra"
+  },
+  {
+    "slug": "encrucijada",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Encrucijada"
+  },
+  {
+    "slug": "leyendas_primer_bloque",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Leyendas Primer Bloque"
+  },
+  {
+    "slug": "promocionales_primer_bloque",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Promocionales Primer Bloque"
+  },
+  {
+    "slug": "raciales_pb",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Raciales PB"
+  },
+  {
+    "slug": "shogun_1",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Shogun 1"
+  },
+  {
+    "slug": "primer_bloque_2",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Primer Bloque 2"
+  },
+  {
+    "slug": "toolkit_dragon_dorado",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Toolkit Dragon Dorado"
+  },
+  {
+    "slug": "toolkit_fe_sin_limite",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Toolkit Fe Sin Limite"
+  },
+  {
+    "slug": "extensiones_pb_2023",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Extensiones PB 2023"
+  },
+  {
+    "slug": "espada_sagrada_aniversario",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Espada Sagrada Aniversario"
+  },
+  {
+    "slug": "relatos_espada_sagrada_aniversario",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Relatos Espada Sagrada Aniversario"
+  },
+  {
+    "slug": "colecciones_raciales_pb_2023",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Colecciones Raciales PB 2023"
+  },
+  {
+    "slug": "helenica_aniversario",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Helenica Aniversario"
+  },
+  {
+    "slug": "shogun_ii",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Shogun Ii"
+  },
+  {
+    "slug": "dracula_pb",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Dracula PB"
+  },
+  {
+    "slug": "pb_lootbox_2023",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "PB Lootbox 2023"
+  },
+  {
+    "slug": "leyendas_pb_3.0",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Leyendas PB 3.0"
+  },
+  {
+    "slug": "toolkit_pb_fuerza_y_destino",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Toolkit PB Fuerza Y Destino"
+  },
+  {
+    "slug": "toolkit_pb_magia_y_divinidad",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Toolkit PB Magia Y Divinidad"
+  },
+  {
+    "slug": "relatos_hel_mar_de_poseidon",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Relatos Hel Mar De Poseidon"
+  },
+  {
+    "slug": "relatos_hel_camino_de_teseo",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Relatos Hel Camino De Teseo"
+  },
+  {
+    "slug": "relatos_hel_laberinto_del_minotauro",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Relatos Hel Laberinto Del Minotauro"
+  },
+  {
+    "slug": "daana_aniversario",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Daana Aniversario"
+  },
+  {
+    "slug": "shogun_iii",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Shogun Iii"
+  },
+  {
+    "slug": "dante_pb",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Dante PB"
+  },
+  {
+    "slug": "guerrero_jaguar",
+    "format": "SB",
+    "formatName": "Segundo Bloque",
+    "name": "Guerrero Jaguar"
+  },
+  {
+    "slug": "vendaval",
+    "format": "SB",
+    "formatName": "Segundo Bloque",
+    "name": "Vendaval"
+  },
+  {
+    "slug": "barbarie",
+    "format": "SB",
+    "formatName": "Segundo Bloque",
+    "name": "Barbarie"
+  },
+  {
+    "slug": "reino_de_acero",
+    "format": "SB",
+    "formatName": "Segundo Bloque",
+    "name": "Reino De Acero"
+  },
+  {
+    "slug": "hordas",
+    "format": "SB",
+    "formatName": "Segundo Bloque",
+    "name": "Hordas"
+  },
+  {
+    "slug": "bestiario",
+    "format": "SB",
+    "formatName": "Segundo Bloque",
+    "name": "Bestiario"
+  },
+  {
+    "slug": "heroes",
+    "format": "SB",
+    "formatName": "Segundo Bloque",
+    "name": "Heroes"
+  },
+  {
+    "slug": "leyendas_segundo_bloque",
+    "format": "SB",
+    "formatName": "Segundo Bloque",
+    "name": "Leyendas Segundo Bloque"
+  },
+  {
+    "slug": "promocionales_segundo_bloque",
+    "format": "SB",
+    "formatName": "Segundo Bloque",
+    "name": "Promocionales Segundo Bloque"
+  },
+  {
+    "slug": "furia",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Furia"
+  },
+  {
+    "slug": "leyendas_bloque_furia",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Leyendas Bloque Furia"
+  },
+  {
+    "slug": "roma",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Roma"
+  },
+  {
+    "slug": "excalibur",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Excalibur"
+  },
+  {
+    "slug": "troya",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Troya"
+  },
+  {
+    "slug": "guerreros_del_sol",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Guerreros Del Sol"
+  },
+  {
+    "slug": "guardianes_de_daana",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Guardianes De Daana"
+  },
+  {
+    "slug": "furiaext",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Furiaext"
+  },
+  {
+    "slug": "extension_excalibur",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Extension Excalibur"
+  },
+  {
+    "slug": "extension_troya",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Extension Troya"
+  },
+  {
+    "slug": "leyendas_de_metal",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Leyendas De Metal"
+  },
+  {
+    "slug": "mazos_fx",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Mazos FX"
+  },
+  {
+    "slug": "la_cofradia",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "La Cofradia"
+  },
+  {
+    "slug": "kingdom_quest",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Kingdom Quest"
+  },
+  {
+    "slug": "vigilantes",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Vigilantes"
+  },
+  {
+    "slug": "producto_especial_furia_aniversario",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Producto Especial Furia Aniversario"
+  },
+  {
+    "slug": "sumeria",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Sumeria"
+  },
+  {
+    "slug": "rebelion",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Rebelion"
+  },
+  {
+    "slug": "asgard",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Asgard"
+  },
+  {
+    "slug": "midgard",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Midgard"
+  },
+  {
+    "slug": "camelot",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Camelot"
+  },
+  {
+    "slug": "templarios",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Templarios"
+  },
+  {
+    "slug": "bushido",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Bushido"
+  },
+  {
+    "slug": "sol-naciente",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Sol Naciente"
+  },
+  {
+    "slug": "dominio",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Dominio"
+  },
+  {
+    "slug": "contraataque",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Contraataque"
+  },
+  {
+    "slug": "aguila-imperial",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Aguila Imperial"
+  },
+  {
+    "slug": "steampunk",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Steampunk"
+  },
+  {
+    "slug": "axis-mundi",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Axis Mundi"
+  },
+  {
+    "slug": "hijos-del-sol",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Hijos Del Sol"
+  },
+  {
+    "slug": "legado-gotico",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Legado Gotico"
+  },
+  {
+    "slug": "kemet",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Kemet"
+  },
+  {
+    "slug": "dharma",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Dharma"
+  },
+  {
+    "slug": "olimpia",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Olimpia"
+  },
+  {
+    "slug": "calavera",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Calavera"
+  },
+  {
+    "slug": "kilimanjaro",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Kilimanjaro"
+  },
+  {
+    "slug": "arsenal",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Arsenal"
+  },
+  {
+    "slug": "tinta-inmortal",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Tinta Inmortal"
+  },
+  {
+    "slug": "terrores-nocturnos",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Terrores Nocturnos"
+  },
+  {
+    "slug": "invasion-oscura",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Invasion Oscura"
+  },
+  {
+    "slug": "dinastia-del-dragon",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Dinastia Del Dragon"
+  },
+  {
+    "slug": "hermanos-grimm",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Hermanos Grimm"
+  },
+  {
+    "slug": "keltoi",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Keltoi"
+  },
+  {
+    "slug": "cuentos-de-ultratumba",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Cuentos De Ultratumba"
+  },
+  {
+    "slug": "tierra-austral",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Tierra Austral"
+  },
+  {
+    "slug": "conjuros",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Conjuros"
+  },
+  {
+    "slug": "angeles-demonios",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Angeles Demonios"
+  },
+  {
+    "slug": "ajedrez",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Ajedrez"
+  },
+  {
+    "slug": "escuelas-elementales",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Escuelas Elementales"
+  },
+  {
+    "slug": "acero",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Acero"
+  },
+  {
+    "slug": "tinta_inmortal_robin_hood",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Tinta Inmortal Robin Hood"
+  },
+  {
+    "slug": "tinta_inmortal_romeo_y_julieta",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Tinta Inmortal Romeo Y Julieta"
+  },
+  {
+    "slug": "hermanos_grimm_elsastrecillovaliente_y_musicosdebremen",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Hermanos Grimm Elsastrecillovaliente Y Musicosdebremen"
+  },
+  {
+    "slug": "hermanos_grimm_elaguadelavida_y_johndeacero",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Hermanos Grimm Elaguadelavida Y Johndeacero"
+  },
+  {
+    "slug": "cuentos_de_terror_poe",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Cuentos De Terror Poe"
+  },
+  {
+    "slug": "cuentos_de_terror_lovecraft",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Cuentos De Terror Lovecraft"
+  },
+  {
+    "slug": "cid",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Cid"
+  },
+  {
+    "slug": "coleccion_racial_2022",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Coleccion Racial 2022"
+  },
+  {
+    "slug": "master_toolkit_2022",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Master Toolkit 2022"
+  },
+  {
+    "slug": "despertar_gotico",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Despertar Gotico"
+  },
+  {
+    "slug": "explorandum",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Explorandum"
+  },
+  {
+    "slug": "mastertoolkit_2023",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Mastertoolkit 2023"
+  },
+  {
+    "slug": "guardianes_reino_uno",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Guardianes Reino Uno"
+  },
+  {
+    "slug": "guardianes_reino_dos",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Guardianes Reino Dos"
+  },
+  {
+    "slug": "valhalla",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Valhalla"
+  },
+  {
+    "slug": "neo_midgard",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Neo Midgard"
+  },
+  {
+    "slug": "relatos_del_despertar_gotico",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Relatos Del Despertar Gotico"
+  },
+  {
+    "slug": "extension_valhalla",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Extension Valhalla"
+  },
+  {
+    "slug": "la_venganza_de_horus",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "La Venganza De Horus"
+  },
+  {
+    "slug": "visiones_de_kemet",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Visiones De Kemet"
+  },
+  {
+    "slug": "chile_oscuro",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Chile Oscuro"
+  },
+  {
+    "slug": "napoleon",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Napoleon"
+  },
+  {
+    "slug": "raciales_imp_2024",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Raciales IMP 2024"
+  },
+  {
+    "slug": "giger",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Giger"
+  },
+  {
+    "slug": "espiritu_samurai",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Espiritu Samurai"
+  },
+  {
+    "slug": "zodiaco",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Zodiaco"
+  },
+  {
+    "slug": "amenazakaiju",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Amenazakaiju"
+  },
+  {
+    "slug": "escuadronmecha",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Escuadronmecha"
+  },
+  {
+    "slug": "bestiarium",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Bestiarium"
+  },
+  {
+    "slug": "secretos_arcanos",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Secretos Arcanos"
+  },
+  {
+    "slug": "lootbox_2024",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Lootbox 2024"
+  },
+  {
+    "slug": "toolkit_hielo_inmortal",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Toolkit Hielo Inmortal"
+  },
+  {
+    "slug": "toolkit_cenizas_de_fuego",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Toolkit Cenizas De Fuego"
+  }
+]

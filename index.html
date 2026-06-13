@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventario MyL — Mitos y Leyendas</title>
+  <meta name="description" content="Inventario, búsqueda, filtros y mazos para las cartas del juego Mitos y Leyendas (MyL)." />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🃏</text></svg>" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🃏</span>
+      <div>
+        <h1>Inventario MyL</h1>
+        <p class="tagline">Mitos y Leyendas — colección y mazos</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input id="search" type="search" placeholder="Buscar carta por nombre o habilidad…" autocomplete="off" />
+    </div>
+    <nav class="tabs">
+      <button class="tab active" data-view="coleccion">Colección</button>
+      <button class="tab" data-view="mazos">Mazos</button>
+      <button class="tab" data-view="stats">Estadísticas</button>
+    </nav>
+    <button id="theme-toggle" class="icon-btn" title="Cambiar tema">🌙</button>
+  </header>
+
+  <main>
+    <!-- ===== VISTA COLECCIÓN ===== -->
+    <section id="view-coleccion" class="view active">
+      <aside class="filters">
+        <div class="filters-head">
+          <h2>Filtros</h2>
+          <button id="clear-filters" class="link-btn">Limpiar</button>
+        </div>
+
+        <label class="field">
+          <span>Inventario</span>
+          <select id="f-ownership">
+            <option value="all">Todas las cartas</option>
+            <option value="owned">Solo las que tengo</option>
+            <option value="missing">Solo las que me faltan</option>
+            <option value="dup">Duplicadas (2+)</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Formato</span>
+          <select id="f-format"><option value="">Todos</option></select>
+        </label>
+
+        <label class="field">
+          <span>Edición</span>
+          <select id="f-edition"><option value="">Todas</option></select>
+        </label>
+
+        <label class="field">
+          <span>Raza</span>
+          <select id="f-race"><option value="">Todas</option></select>
+        </label>
+
+        <label class="field">
+          <span>Tipo</span>
+          <select id="f-type"><option value="">Todos</option></select>
+        </label>
+
+        <label class="field">
+          <span>Rareza</span>
+          <select id="f-rarity"><option value="">Todas</option></select>
+        </label>
+
+        <label class="field">
+          <span>Coste máximo: <b id="cost-val">∞</b></span>
+          <input id="f-cost" type="range" min="0" max="12" value="12" />
+        </label>
+
+        <hr />
+
+        <label class="field">
+          <span>Ordenar por</span>
+          <select id="f-sort">
+            <option value="name">Nombre (A→Z)</option>
+            <option value="name_desc">Nombre (Z→A)</option>
+            <option value="cost">Coste (menor)</option>
+            <option value="cost_desc">Coste (mayor)</option>
+            <option value="strength_desc">Fuerza (mayor)</option>
+            <option value="edition">Edición</option>
+            <option value="qty_desc">Cantidad que tengo</option>
+          </select>
+        </label>
+      </aside>
+
+      <div class="content">
+        <div class="toolbar">
+          <div id="result-count" class="muted">Cargando…</div>
+          <div class="spacer"></div>
+          <div class="actions">
+            <button id="btn-import" class="btn">Importar</button>
+            <div class="dropdown">
+              <button id="btn-export" class="btn">Exportar ▾</button>
+              <div class="dropdown-menu">
+                <button data-export="json">Colección (JSON)</button>
+                <button data-export="csv">Colección (CSV)</button>
+                <button data-export="missing-csv">Faltantes (CSV)</button>
+              </div>
+            </div>
+            <input id="import-file" type="file" accept=".json" hidden />
+          </div>
+        </div>
+        <div id="cards-grid" class="cards-grid"></div>
+        <div id="grid-empty" class="empty hidden">No hay cartas que coincidan con los filtros.</div>
+        <button id="load-more" class="btn load-more hidden">Cargar más</button>
+      </div>
+    </section>
+
+    <!-- ===== VISTA MAZOS ===== -->
+    <section id="view-mazos" class="view">
+      <aside class="filters">
+        <div class="filters-head"><h2>Mis mazos</h2></div>
+        <div id="deck-list" class="deck-list"></div>
+        <button id="new-deck" class="btn full">+ Nuevo mazo</button>
+      </aside>
+      <div class="content">
+        <div id="deck-detail" class="deck-detail">
+          <p class="muted">Selecciona o crea un mazo para empezar a construirlo. Desde la vista <b>Colección</b> puedes añadir cartas al mazo activo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== VISTA ESTADÍSTICAS ===== -->
+    <section id="view-stats" class="view">
+      <div class="content stats-content">
+        <div id="stats-cards" class="stats-grid"></div>
+        <h3>Progreso por edición</h3>
+        <div id="stats-editions" class="edition-progress"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal detalle de carta -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box" id="modal-box"></div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
