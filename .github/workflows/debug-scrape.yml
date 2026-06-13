@@ -1,0 +1,29 @@
+name: Diagnóstico del scraper
+
+on:
+  workflow_dispatch:
+    inputs:
+      edition:
+        description: "Edición a inspeccionar"
+        required: false
+        default: "helenica"
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Instalar
+        working-directory: scraper
+        run: npm install
+      - name: Instalar Chromium
+        working-directory: scraper
+        run: npx playwright install --with-deps chromium
+      - name: Diagnóstico
+        working-directory: scraper
+        run: node debug.js "${{ github.event.inputs.edition }}"
