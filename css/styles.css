@@ -186,6 +186,37 @@ main { padding: 0; }
 .qty-num.zero { color: var(--muted); }
 .deck-add { font-size: 11px; padding: 4px 6px; }
 
+/* ===== Barra de mazo activo (Colección) ===== */
+.deck-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 8px 12px; margin-bottom: 14px; font-size: 13px;
+}
+.deck-bar .db-label { font-weight: 700; }
+.deck-bar select { padding: 7px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-3); color: var(--text); font-size: 13px; min-width: 160px; }
+
+/* ===== Selector de mazo (modal) ===== */
+.picker-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; max-height: 50vh; overflow-y: auto; }
+.picker-deck {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--bg-3); color: var(--text); font-size: 14px; text-align: left; width: 100%;
+}
+.picker-deck:hover { border-color: var(--accent); }
+.picker-deck .pd-name { font-weight: 600; }
+
+/* ===== Buscador para añadir cartas dentro del mazo ===== */
+.deck-add-search { margin: 14px 0; }
+.deck-add-search input {
+  width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg-3); color: var(--text); font-size: 14px;
+}
+.deck-search-results { margin-top: 6px; max-height: 320px; overflow-y: auto; }
+.dsr { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.dsr .dsr-name { font-weight: 600; }
+.dsr .dsr-meta { color: var(--muted); font-size: 11px; flex: 1; }
+.dsr .owned-tag { color: var(--ok); }
+
 .load-more { margin: 20px auto; display: block; }
 .empty { text-align: center; color: var(--muted); padding: 40px; }
 .hidden { display: none !important; }

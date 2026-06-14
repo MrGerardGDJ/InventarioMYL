@@ -115,6 +115,12 @@
             <input id="import-file" type="file" accept=".json" hidden />
           </div>
         </div>
+        <div class="deck-bar">
+          <span class="db-label">🃏 Mazo activo:</span>
+          <select id="active-deck-select"><option value="">(ninguno)</option></select>
+          <button id="active-deck-new" class="btn small">＋ Nuevo</button>
+          <span id="active-deck-count" class="muted"></span>
+        </div>
         <div id="cards-grid" class="cards-grid"></div>
         <div id="grid-empty" class="empty hidden">No hay cartas que coincidan con los filtros.</div>
         <button id="load-more" class="btn load-more hidden">Cargar más</button>
@@ -249,6 +255,12 @@ create policy "acceso_log" on inventario_myl_log
       </div>
       <div id="cloud-log" class="cloud-log"></div>
     </div>
+  </div>
+
+  <!-- Modal: elegir mazo para una carta -->
+  <div id="deck-modal" class="modal hidden">
+    <div class="modal-backdrop" data-close-deck></div>
+    <div class="modal-box" id="deck-modal-box"></div>
   </div>
 
   <div id="toast" class="toast hidden"></div>

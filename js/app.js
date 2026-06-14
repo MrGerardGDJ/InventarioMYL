@@ -179,9 +179,7 @@ function cardEl(card) {
     : `<div class="placeholder"><div class="ph-name">${escapeHtml(card.name)}</div>${card.editionName || ""}</div>`;
 
   const activeDeck = store.getDeck(store.getSetting("activeDeckId"));
-  const deckBtn = activeDeck
-    ? `<button class="qty-btn deck-add" title="Añadir a «${escapeAttr(activeDeck.name)}»">＋🃏</button>`
-    : "";
+  const deckBtn = `<button class="qty-btn deck-add" title="${activeDeck ? "Añadir a «" + escapeAttr(activeDeck.name) + "»" : "Añadir a un mazo"}">🃏＋</button>`;
 
   el.innerHTML = `
     <div class="card-img" data-act="detail">
@@ -206,10 +204,7 @@ function cardEl(card) {
     if (act === "plus") changeQty(el, card, +1);
     else if (act === "minus") changeQty(el, card, -1);
     else if (act === "detail") openModal(card);
-    else if (e.target.classList.contains("deck-add")) {
-      store.deckAdd(store.getSetting("activeDeckId"), card.id, 1);
-      showToast(`«${card.name}» añadida al mazo`);
-    }
+    else if (e.target.classList.contains("deck-add")) addToDeckQuick(card);
   });
   return el;
 }
@@ -275,6 +270,92 @@ function openModal(card) {
 }
 function closeModal() { $("#modal").classList.add("hidden"); }
 
+/* ===================== Añadir a mazo (desde Colección) ===================== */
+function addToDeckQuick(card) {
+  const activeId = store.getSetting("activeDeckId");
+  if (activeId && store.getDeck(activeId)) {
+    store.deckAdd(activeId, card.id, 1);
+    const d = store.getDeck(activeId);
+    refreshActiveDeckCount();
+    showToast(`«${card.name}» → ${d.name} (${d.cards[card.id]})`);
+  } else {
+    openDeckPicker(card);
+  }
+}
+
+function openDeckPicker(card) {
+  const decks = store.getDecks();
+  const box = $("#deck-modal-box");
+  const list = decks.length
+    ? decks.map((d) => `<button class="picker-deck" data-id="${escapeAttr(d.id)}">
+        <span class="pd-name">${escapeHtml(d.name)}</span>
+        <span class="muted">${d.cards[card.id] ? "ya tienes ×" + d.cards[card.id] + " · " : ""}${store.deckCount(d.id)} cartas</span>
+      </button>`).join("")
+    : `<p class="muted">Aún no tienes mazos. Crea uno abajo.</p>`;
+  box.innerHTML = `
+    <button class="modal-close" data-close-deck>×</button>
+    <h2>Añadir a un mazo</h2>
+    <p class="muted">«${escapeHtml(card.name)}»</p>
+    <div class="picker-list">${list}</div>
+    <button class="btn full" data-new-deck>＋ Crear mazo nuevo y añadir</button>`;
+  box.querySelector("[data-close-deck]").onclick = closeDeckModal;
+  box.querySelectorAll(".picker-deck").forEach((b) => {
+    b.onclick = () => {
+      const id = b.dataset.id;
+      store.deckAdd(id, card.id, 1);
+      store.setSetting("activeDeckId", id);
+      refreshActiveDeckUI();
+      showToast(`«${card.name}» → ${store.getDeck(id).name}`);
+      closeDeckModal();
+    };
+  });
+  box.querySelector("[data-new-deck]").onclick = () => {
+    const name = prompt("Nombre del nuevo mazo:", "Mazo nuevo");
+    if (name === null) return;
+    const d = store.createDeck(name);
+    store.deckAdd(d.id, card.id, 1);
+    store.setSetting("activeDeckId", d.id);
+    refreshActiveDeckUI();
+    showToast(`Mazo «${d.name}» creado con «${card.name}»`);
+    closeDeckModal();
+  };
+  $("#deck-modal").classList.remove("hidden");
+}
+function closeDeckModal() { $("#deck-modal").classList.add("hidden"); }
+
+function populateActiveDeckSelect() {
+  const sel = $("#active-deck-select");
+  if (!sel) return;
+  const decks = store.getDecks();
+  const active = store.getSetting("activeDeckId") || "";
+  sel.innerHTML = `<option value="">(ninguno)</option>` +
+    decks.map((d) => `<option value="${escapeAttr(d.id)}">${escapeHtml(d.name)}</option>`).join("");
+  sel.value = decks.some((d) => d.id === active) ? active : "";
+}
+function refreshActiveDeckCount() {
+  const el = $("#active-deck-count");
+  if (!el) return;
+  const d = store.getDeck(store.getSetting("activeDeckId"));
+  el.textContent = d ? `${store.deckCount(d.id)} cartas` : "Elige o crea un mazo para agregar con 🃏＋";
+}
+function refreshActiveDeckUI() { populateActiveDeckSelect(); refreshActiveDeckCount(); }
+
+function bindDeckBarEvents() {
+  $("#active-deck-select").addEventListener("change", (e) => {
+    store.setSetting("activeDeckId", e.target.value || null);
+    refreshActiveDeckCount();
+  });
+  $("#active-deck-new").addEventListener("click", () => {
+    const name = prompt("Nombre del nuevo mazo:", "Mazo nuevo");
+    if (name === null) return;
+    const d = store.createDeck(name);
+    store.setSetting("activeDeckId", d.id);
+    refreshActiveDeckUI();
+    showToast(`Mazo «${d.name}» creado y activo`);
+  });
+  $$("[data-close-deck]").forEach((el) => el.addEventListener("click", closeDeckModal));
+}
+
 /* ===================== Mazos ===================== */
 function renderDecksView() {
   const list = $("#deck-list");
@@ -287,6 +368,7 @@ function renderDecksView() {
   for (const d of decks) {
     const row = document.createElement("div");
     row.className = "deck-item" + (d.id === activeId ? " active" : "");
+    row.dataset.deckId = d.id;
     row.innerHTML = `
       <span class="d-name">${escapeHtml(d.name)}</span>
       <span class="d-count">${store.deckCount(d.id)}</span>
@@ -301,6 +383,7 @@ function renderDecksView() {
     };
     list.appendChild(row);
   }
+  refreshActiveDeckUI();
   renderDeckDetail();
 }
 
@@ -308,11 +391,58 @@ function renderDeckDetail() {
   const wrap = $("#deck-detail");
   const deck = store.getDeck(store.getSetting("activeDeckId"));
   if (!deck) {
-    wrap.innerHTML = `<p class="muted">Selecciona o crea un mazo para empezar a construirlo. Desde la vista <b>Colección</b> puedes añadir cartas al mazo activo con el botón ＋🃏.</p>`;
+    wrap.innerHTML = `<p class="muted">Selecciona o crea un mazo para empezar a construirlo. Desde la vista <b>Colección</b> puedes añadir cartas al mazo activo con el botón 🃏＋, o buscarlas aquí abajo.</p>`;
     return;
   }
+  wrap.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <h2><input id="deck-name" value="${escapeAttr(deck.name)}" style="background:var(--bg-3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font-size:18px;font-weight:700" /></h2>
+      <span class="muted" id="deck-total"></span>
+      <div class="spacer" style="flex:1"></div>
+      <button class="btn" id="deck-export">Exportar mazo</button>
+    </div>
+    <div id="deck-banner"></div>
+    <div class="deck-add-search">
+      <input id="deck-search" type="search" placeholder="🔎 Buscar carta por nombre para añadir a este mazo…" autocomplete="off" />
+      <div id="deck-search-results" class="deck-search-results"></div>
+    </div>
+    <div id="deck-contents"></div>`;
+
+  $("#deck-name").onchange = (e) => { store.renameDeck(deck.id, e.target.value || "Mazo"); populateActiveDeckSelect(); updateDeckCounts(); };
+  $("#deck-export").onclick = () => exportDeck(deck);
+
+  const di = $("#deck-search");
+  di.oninput = debounce(() => {
+    const q = di.value.trim().toLowerCase();
+    const res = $("#deck-search-results");
+    if (q.length < 2) { res.innerHTML = ""; return; }
+    const matches = state.cards.filter((c) => c.name.toLowerCase().includes(q)).slice(0, 30);
+    res.innerHTML = matches.map((c) => {
+      const own = store.getQty(c.id);
+      return `<div class="dsr" data-id="${escapeAttr(c.id)}">
+        <span class="dsr-name">${escapeHtml(c.name)}</span>
+        <span class="dsr-meta">${escapeHtml(c.editionName || "")} · <span class="${own > 0 ? "owned-tag" : ""}">tengo ${own}</span></span>
+        <button class="qty-btn" data-add title="Añadir al mazo">＋</button>
+      </div>`;
+    }).join("") || `<p class="muted">Sin resultados</p>`;
+    res.querySelectorAll(".dsr").forEach((row) => {
+      row.querySelector("[data-add]").onclick = () => {
+        store.deckAdd(deck.id, row.dataset.id, 1);
+        renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount();
+      };
+    });
+  }, 180);
+
+  renderDeckContents(deck);
+}
+
+function renderDeckContents(deck) {
+  const cont = $("#deck-contents");
+  if (!cont) return;
   const entries = Object.entries(deck.cards);
   const total = entries.reduce((a, [, q]) => a + q, 0);
+  const totalEl = $("#deck-total"); if (totalEl) totalEl.textContent = `${total} cartas`;
+
   const byType = {};
   let missing = 0;
   for (const [cid, q] of entries) {
@@ -322,16 +452,10 @@ function renderDeckDetail() {
     const own = store.getQty(cid);
     if (own < q) missing += q - own;
   }
+  const banner = $("#deck-banner");
+  if (banner) banner.innerHTML = missing > 0 ? `<div class="active-deck-banner">Te faltan <b>${missing}</b> copias de este mazo en tu colección.</div>` : "";
 
-  let html = `
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <h2><input id="deck-name" value="${escapeAttr(deck.name)}" style="background:var(--bg-3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font-size:18px;font-weight:700" /></h2>
-      <span class="muted">${total} cartas</span>
-      <div class="spacer" style="flex:1"></div>
-      <button class="btn" id="deck-export">Exportar mazo</button>
-    </div>`;
-  if (missing > 0) html += `<div class="active-deck-banner">Te faltan <b>${missing}</b> copias de este mazo en tu colección.</div>`;
-
+  let html = "";
   for (const [type, rows] of Object.entries(byType)) {
     html += `<h3 class="deck-section-title">${escapeHtml(type)} (${rows.reduce((a, r) => a + r.q, 0)})</h3>`;
     for (const { card, cid, q } of rows) {
@@ -349,16 +473,21 @@ function renderDeckDetail() {
         </div>`;
     }
   }
-  if (entries.length === 0) html += `<p class="muted">Mazo vacío. Ve a la pestaña Colección y usa ＋🃏 para añadir cartas.</p>`;
-  wrap.innerHTML = html;
-
-  $("#deck-name").onchange = (e) => { store.renameDeck(deck.id, e.target.value || "Mazo"); renderDecksView(); };
-  $("#deck-export").onclick = () => exportDeck(deck);
-  wrap.querySelectorAll(".deck-row").forEach((row) => {
+  if (entries.length === 0) html = `<p class="muted">Mazo vacío. Busca una carta arriba para añadirla, o usa 🃏＋ en la Colección.</p>`;
+  cont.innerHTML = html;
+  cont.querySelectorAll(".deck-row").forEach((row) => {
     const cid = row.dataset.cid;
     row.querySelectorAll("[data-d]").forEach((b) => {
-      b.onclick = () => { store.deckAdd(deck.id, cid, b.dataset.d === "plus" ? 1 : -1); renderDeckDetail(); renderDecksView(); };
+      b.onclick = () => { store.deckAdd(deck.id, cid, b.dataset.d === "plus" ? 1 : -1); renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount(); };
     });
+  });
+}
+
+function updateDeckCounts() {
+  $$("#deck-list .deck-item").forEach((row) => {
+    const id = row.dataset.deckId;
+    const c = row.querySelector(".d-count");
+    if (id && c) c.textContent = store.deckCount(id);
   });
 }
 
@@ -552,6 +681,7 @@ function refreshAll() {
   applyFilters();
   if (state.view === "mazos") renderDecksView();
   if (state.view === "stats") renderStats();
+  refreshActiveDeckUI();
 }
 
 function autoUpload() { return store.getSetting("cloudAuto") !== false; } // por defecto sí
@@ -775,7 +905,8 @@ function bindEvents() {
 
   // Modal
   $("#modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeModal(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); } });
+  $("#deck-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeDeckModal(); });
 
   // Exportar / importar
   const dd = $(".dropdown");
@@ -792,6 +923,7 @@ function bindEvents() {
     const name = prompt("Nombre del mazo:", "Mazo nuevo");
     if (name !== null) { const d = store.createDeck(name); store.setSetting("activeDeckId", d.id); renderDecksView(); }
   });
+  bindDeckBarEvents();
 
   // Estadísticas
   ["#stats-scope", "#stats-format"].forEach((s) => $(s).addEventListener("change", renderStats));
@@ -826,6 +958,7 @@ async function init() {
   store.onChange(onStoreChange);
   await loadData();
   populateFilters();
+  refreshActiveDeckUI();
   applyFilters();
   // Sincronización en la nube (si está configurada)
   if (cloud.isConfigured()) { setChip("☁ Sincronizado", "ok"); cloudReconcile(); startRealtime(); }
