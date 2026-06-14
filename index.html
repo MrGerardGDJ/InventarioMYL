@@ -226,6 +226,9 @@ alter table inventario_myl_log enable row level security;
 create policy "acceso_log" on inventario_myl_log
   for all using (true) with check (true);</pre>
         <button class="btn small" data-copy-sql="sync-sql-log">Copiar SQL del historial</button>
+        <p class="muted" style="margin-top:10px"><b>Opcional</b> — para <b>tiempo real</b> (que se actualice solo entre pantallas abiertas), ejecuta esto una vez. Es gratis en el plan Free de Supabase:</p>
+        <pre id="sync-sql-rt">alter publication supabase_realtime add table inventario_myl;</pre>
+        <button class="btn small" data-copy-sql="sync-sql-rt">Copiar SQL de tiempo real</button>
       </div>
       <div class="sync-form">
         <label class="field"><span>Project URL</span><input id="cloud-url" type="text" placeholder="https://xxxx.supabase.co" /></label>

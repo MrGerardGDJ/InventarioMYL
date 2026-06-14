@@ -70,6 +70,25 @@ export async function push(snapshot, { accion = "auto", copias = 0 } = {}) {
   return data?.actualizado || "";
 }
 
+// Tiempo real: avisa cuando la fila de esta 'clave' cambia en la nube.
+let channel = null;
+export async function subscribeRealtime(cb) {
+  const c = await client();
+  if (channel) { try { c.removeChannel(channel); } catch {} channel = null; }
+  channel = c.channel("inv-" + cfg.clave)
+    .on("postgres_changes",
+      { event: "*", schema: "public", table: TABLE, filter: `clave=eq.${cfg.clave}` },
+      (payload) => {
+        const row = payload.new || {};
+        if (row.datos) cb({ snapshot: row.datos, actualizado: row.actualizado });
+      })
+    .subscribe();
+  return channel;
+}
+export function unsubscribeRealtime() {
+  if (sb && channel) { try { sb.removeChannel(channel); } catch {} channel = null; }
+}
+
 // Lee el historial lineal (más reciente primero). Devuelve null si no está disponible.
 export async function getLog(limit = 30) {
   try {

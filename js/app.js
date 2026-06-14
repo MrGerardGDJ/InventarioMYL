@@ -610,6 +610,27 @@ async function cloudReconcile() {
   } catch (e) { setChip("☁ Error", "err"); showToast("Sincronización: " + e.message, 4000); }
 }
 
+/* ----- Tiempo real (Supabase Realtime) ----- */
+async function startRealtime() {
+  if (!cloud.isConfigured()) return;
+  try { await cloud.subscribeRealtime(onRealtime); }
+  catch (e) { console.warn("realtime:", e); }
+}
+function onRealtime({ snapshot, actualizado }) {
+  if (!snapshot || actualizado === cloud.getLastTs()) return; // cambio propio
+  if (cloud.isDirty()) {
+    setChip("☁ Cambios nuevos en la nube — toca Bajar", "sync");
+    showToast("Hay cambios desde otro dispositivo. Toca ⬇️ Bajar para traerlos.", 4500);
+    return;
+  }
+  store.applySnapshot(snapshot);
+  cloud.setLastTs(actualizado);
+  cloud.clearDirty();
+  refreshAll();
+  setChip("☁ Actualizado", "ok");
+  showToast("Actualizado en tiempo real desde la nube");
+}
+
 function onStoreChange(origin) {
   if (origin === "remote") { refreshAll(); return; }
   if (!cloud.isConfigured()) { flashChip("Guardado ✓", "ok"); return; }
@@ -670,7 +691,8 @@ function bindSyncEvents() {
     cloud.setConfig({ url, key, clave, device });
     $("#cloud-status").textContent = "Conectando…";
     await cloudReconcile();
-    $("#cloud-status").textContent = "Conexión lista. " + (autoUpload() ? "Tus cambios se subirán solos." : "Recuerda tocar Guardar para subir.");
+    startRealtime();
+    $("#cloud-status").textContent = "Conexión lista. " + (autoUpload() ? "Tus cambios se subirán solos." : "Recuerda tocar Guardar para subir.") + " Tiempo real activo.";
     showToast("Nube conectada ✓");
   });
   $("#cloud-push").addEventListener("click", async () => { if (!cloud.isConfigured()) return showToast("Conecta primero"); await doCloudPush(true); showToast("Guardado en la nube ✓"); openSyncModal(); });
@@ -683,6 +705,7 @@ function bindSyncEvents() {
     } catch (e) { showToast("Error: " + e.message, 4000); }
   });
   $("#cloud-disconnect").addEventListener("click", () => {
+    cloud.unsubscribeRealtime();
     cloud.disconnect(); setChip(""); $("#cloud-status").textContent = "Sincronización desactivada.";
     showToast("Nube desconectada");
   });
@@ -780,6 +803,6 @@ async function init() {
   populateFilters();
   applyFilters();
   // Sincronización en la nube (si está configurada)
-  if (cloud.isConfigured()) { setChip("☁ Sincronizado", "ok"); cloudReconcile(); }
+  if (cloud.isConfigured()) { setChip("☁ Sincronizado", "ok"); cloudReconcile(); startRealtime(); }
 }
 init();
