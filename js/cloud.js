@@ -1,25 +1,42 @@
 // Sincronización opcional en la nube usando Supabase (carga perezosa).
-// Guarda un único registro por "clave" (un código que elige el usuario) con
-// todo su inventario y mazos. Es opt-in: la app funciona sin esto.
+// Modelo: un registro por "clave" con todo el inventario + mazos, y un
+// historial lineal de guardados. La reconciliación se basa en si la fila
+// cambió en la nube desde la última vez que este dispositivo la vio
+// (independiente del reloj de cada equipo).
 import { loadScript, CDN } from "./cdn.js";
 
-const KEY = "myl.cloud.v1";
+const KEY = "myl.cloud.v1";       // configuración (url, key, clave, device)
+const SYNC = "myl.syncstate.v1";  // estado de sync (lastServerTs, dirty)
 const TABLE = "inventario_myl";
+const LOG = "inventario_myl_log";
 
-let cfg = read();
+let cfg = read(KEY, {});
+let sync = read(SYNC, { lastServerTs: "", dirty: false });
 let sb = null;
 
-function read() {
-  try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; }
-}
+function read(k, fb) { try { return JSON.parse(localStorage.getItem(k)) || fb; } catch { return fb; } }
+function writeSync() { localStorage.setItem(SYNC, JSON.stringify(sync)); }
+
 export function getConfig() { return { ...cfg }; }
 export function isConfigured() { return !!(cfg.url && cfg.key && cfg.clave); }
 export function setConfig(c) {
-  cfg = { url: (c.url || "").trim().replace(/\/$/, ""), key: (c.key || "").trim(), clave: (c.clave || "").trim() };
+  cfg = {
+    url: (c.url || "").trim().replace(/\/$/, ""),
+    key: (c.key || "").trim(),
+    clave: (c.clave || "").trim(),
+    device: (c.device || "").trim() || "dispositivo",
+  };
   localStorage.setItem(KEY, JSON.stringify(cfg));
-  sb = null; // forzar recreación del cliente
+  sb = null;
 }
-export function disconnect() { cfg = {}; localStorage.removeItem(KEY); sb = null; }
+export function disconnect() { cfg = {}; localStorage.removeItem(KEY); sync = { lastServerTs: "", dirty: false }; writeSync(); sb = null; }
+
+// Estado de sincronización
+export function getLastTs() { return sync.lastServerTs || ""; }
+export function setLastTs(ts) { sync.lastServerTs = ts || ""; writeSync(); }
+export function isDirty() { return !!sync.dirty; }
+export function markDirty() { sync.dirty = true; writeSync(); }
+export function clearDirty() { sync.dirty = false; writeSync(); }
 
 async function client() {
   if (!isConfigured()) throw new Error("Sincronización no configurada");
@@ -29,7 +46,7 @@ async function client() {
   return sb;
 }
 
-// Descarga el snapshot remoto (o null si no existe). Lanza si hay error real.
+// Descarga el snapshot remoto (o null si no existe).
 export async function pull() {
   const c = await client();
   const { data, error } = await c.from(TABLE).select("datos,actualizado").eq("clave", cfg.clave).maybeSingle();
@@ -38,12 +55,27 @@ export async function pull() {
   return { snapshot: data.datos, actualizado: data.actualizado };
 }
 
-// Sube el snapshot completo.
-export async function push(snapshot) {
+// Sube el snapshot completo y devuelve la marca 'actualizado' guardada.
+// Además registra una línea en el historial (si la tabla existe).
+export async function push(snapshot, { accion = "auto", copias = 0 } = {}) {
   const c = await client();
-  const { error } = await c.from(TABLE).upsert(
-    { clave: cfg.clave, datos: snapshot, actualizado: new Date().toISOString() },
-    { onConflict: "clave" }
-  );
+  const { data, error } = await c.from(TABLE)
+    .upsert({ clave: cfg.clave, datos: snapshot, actualizado: new Date().toISOString() }, { onConflict: "clave" })
+    .select("actualizado").single();
   if (error) throw new Error(error.message || "Error al guardar en la nube");
+  // Historial (best-effort: si la tabla no existe, se ignora)
+  try {
+    await c.from(LOG).insert({ clave: cfg.clave, dispositivo: cfg.device || "dispositivo", accion, copias });
+  } catch {}
+  return data?.actualizado || "";
+}
+
+// Lee el historial lineal (más reciente primero). Devuelve null si no está disponible.
+export async function getLog(limit = 30) {
+  try {
+    const c = await client();
+    const { data, error } = await c.from(LOG).select("*").eq("clave", cfg.clave).order("id", { ascending: false }).limit(limit);
+    if (error) return null;
+    return data;
+  } catch { return null; }
 }

@@ -208,24 +208,43 @@
 alter table inventario_myl enable row level security;
 create policy "acceso" on inventario_myl
   for all using (true) with check (true);</pre>
-            <button class="btn small" id="sync-copy-sql">Copiar SQL</button>
+            <button class="btn small" data-copy-sql="sync-sql">Copiar SQL</button>
           </li>
           <li>En <b>Settings → API</b> copia <b>Project URL</b> y la clave <b>anon public</b>.</li>
           <li>Pégalas abajo y elige una <b>clave de colección</b> (un código tuyo, p. ej. tu correo o una palabra secreta). Úsala igual en todos tus dispositivos.</li>
         </ol>
+        <p class="muted" style="margin-top:10px"><b>Opcional</b> — para el <b>historial</b> de guardados (quién y cuándo), ejecuta también este SQL una vez:</p>
+        <pre id="sync-sql-log">create table if not exists inventario_myl_log (
+  id bigserial primary key,
+  clave text,
+  dispositivo text,
+  accion text,
+  copias int,
+  creado timestamptz default now()
+);
+alter table inventario_myl_log enable row level security;
+create policy "acceso_log" on inventario_myl_log
+  for all using (true) with check (true);</pre>
+        <button class="btn small" data-copy-sql="sync-sql-log">Copiar SQL del historial</button>
       </div>
       <div class="sync-form">
         <label class="field"><span>Project URL</span><input id="cloud-url" type="text" placeholder="https://xxxx.supabase.co" /></label>
         <label class="field"><span>Clave anon public</span><input id="cloud-key" type="password" placeholder="eyJhbGci…" /></label>
         <label class="field"><span>Clave de colección (tu código)</span><input id="cloud-clave" type="text" placeholder="ej: wilson-myl" /></label>
+        <label class="field"><span>Nombre de este dispositivo</span><input id="cloud-device" type="text" placeholder="ej: PC, Celular" /></label>
       </div>
+      <label class="sync-check"><input type="checkbox" id="cloud-auto" /> Subir automáticamente al cambiar cantidades</label>
       <div class="sync-row">
         <button class="btn primary" id="cloud-connect">Conectar y sincronizar</button>
-        <button class="btn" id="cloud-push">Subir ahora</button>
-        <button class="btn" id="cloud-pull">Bajar ahora</button>
+        <button class="btn" id="cloud-push">💾 Guardar y subir</button>
+        <button class="btn" id="cloud-pull">⬇️ Bajar de la nube</button>
         <button class="btn" id="cloud-disconnect">Desconectar</button>
       </div>
       <p class="muted" id="cloud-status" style="margin-top:10px"></p>
+      <div class="sync-row">
+        <button class="btn" id="cloud-log-btn">📜 Ver historial</button>
+      </div>
+      <div id="cloud-log" class="cloud-log"></div>
     </div>
   </div>
 

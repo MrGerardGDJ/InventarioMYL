@@ -545,7 +545,7 @@ let chipTimer;
 function flashChip(text, cls) {
   setChip(text, cls);
   clearTimeout(chipTimer);
-  chipTimer = setTimeout(() => { if (!cloud.isConfigured()) setChip(""); else setChip("☁ Sincronizado", "ok"); }, 2500);
+  chipTimer = setTimeout(() => { if (!cloud.isConfigured()) setChip(""); }, 2500);
 }
 
 function refreshAll() {
@@ -554,38 +554,68 @@ function refreshAll() {
   if (state.view === "stats") renderStats();
 }
 
+function autoUpload() { return store.getSetting("cloudAuto") !== false; } // por defecto sí
+
 let pushTimer;
 function scheduleCloudPush() {
-  if (!cloud.isConfigured()) return;
   setChip("☁ Cambios sin subir…", "sync");
   clearTimeout(pushTimer);
-  pushTimer = setTimeout(doCloudPush, 1800);
-}
-async function doCloudPush() {
-  if (!cloud.isConfigured()) return;
-  try { setChip("☁ Subiendo…", "sync"); await cloud.push(store.getSnapshot()); setChip("☁ Sincronizado", "ok"); }
-  catch (e) { setChip("☁ Error", "err"); showToast("Error al sincronizar: " + e.message, 4000); }
+  pushTimer = setTimeout(() => doCloudPush(false), 1800);
 }
 
+async function doCloudPush(manual) {
+  if (!cloud.isConfigured()) return;
+  try {
+    setChip("☁ Subiendo…", "sync");
+    const ts = await cloud.push(store.getSnapshot(), { accion: manual ? "guardado manual" : "automático", copias: store.totalCards() });
+    cloud.setLastTs(ts);
+    cloud.clearDirty();
+    setChip("☁ Guardado ✓", "ok");
+  } catch (e) { setChip("☁ Error", "err"); showToast("Error al subir: " + e.message, 4000); }
+}
+
+function adoptRemote(remote) {
+  store.applySnapshot(remote.snapshot);
+  cloud.setLastTs(remote.actualizado);
+  cloud.clearDirty();
+  refreshAll();
+  setChip("☁ Sincronizado", "ok");
+}
+
+// Reconciliación basada en "¿cambió la fila en la nube desde la última vez?"
 async function cloudReconcile() {
   if (!cloud.isConfigured()) return;
   setChip("☁ Sincronizando…", "sync");
   try {
     const remote = await cloud.pull();
-    const localTs = store.getUpdatedAt();
-    if (remote && remote.snapshot) {
-      const rTs = new Date(remote.actualizado).getTime() || remote.snapshot.updatedAt || 0;
-      if (rTs > localTs) { store.applySnapshot(remote.snapshot); refreshAll(); setChip("☁ Sincronizado", "ok"); return; }
+    if (!remote || !remote.snapshot) { await doCloudPush(false); return; } // primera vez: subir
+    const changedElsewhere = remote.actualizado !== cloud.getLastTs();
+    if (!changedElsewhere) {
+      if (cloud.isDirty()) await doCloudPush(false);
+      else setChip("☁ Sincronizado", "ok");
+      return;
     }
-    await cloud.push(store.getSnapshot());
-    setChip("☁ Sincronizado", "ok");
+    // La nube cambió desde otro dispositivo
+    if (cloud.isDirty()) {
+      const takeCloud = confirm(
+        "Hay cambios en la NUBE (desde otro dispositivo) y también cambios locales sin subir.\n\n" +
+        "Aceptar = usar lo de la NUBE (descarta lo local de este equipo)\n" +
+        "Cancelar = subir lo de ESTE equipo (sobrescribe la nube)"
+      );
+      if (takeCloud) adoptRemote(remote);
+      else await doCloudPush(false);
+    } else {
+      adoptRemote(remote);
+    }
   } catch (e) { setChip("☁ Error", "err"); showToast("Sincronización: " + e.message, 4000); }
 }
 
 function onStoreChange(origin) {
   if (origin === "remote") { refreshAll(); return; }
-  if (cloud.isConfigured()) scheduleCloudPush();
-  else flashChip("Guardado ✓", "ok");
+  if (!cloud.isConfigured()) { flashChip("Guardado ✓", "ok"); return; }
+  cloud.markDirty();
+  if (autoUpload()) scheduleCloudPush();
+  else setChip("☁ Cambios sin subir — toca Guardar", "sync");
 }
 
 /* ----- Modal de datos / nube ----- */
@@ -594,36 +624,61 @@ function openSyncModal() {
   $("#cloud-url").value = cfg.url || "";
   $("#cloud-key").value = cfg.key || "";
   $("#cloud-clave").value = cfg.clave || "";
-  $("#cloud-status").textContent = cloud.isConfigured() ? "Sincronización activada." : "Sincronización no configurada.";
+  $("#cloud-device").value = cfg.device || "";
+  $("#cloud-auto").checked = autoUpload();
+  $("#cloud-status").textContent = cloud.isConfigured()
+    ? (cloud.isDirty() ? "Conectado. Tienes cambios sin subir." : "Conectado y sincronizado.")
+    : "Sincronización no configurada.";
+  $("#cloud-log").innerHTML = "";
   $("#sync-modal").classList.remove("hidden");
 }
 function closeSyncModal() { $("#sync-modal").classList.add("hidden"); }
+
+async function showLog() {
+  if (!cloud.isConfigured()) { showToast("Conecta primero"); return; }
+  const box = $("#cloud-log");
+  box.innerHTML = `<p class="muted">Cargando historial…</p>`;
+  const rows = await cloud.getLog(30);
+  if (rows == null) {
+    box.innerHTML = `<p class="muted">El historial requiere una tabla extra. Ejecuta el SQL de "historial" (en la ayuda) una vez.</p>`;
+    return;
+  }
+  if (!rows.length) { box.innerHTML = `<p class="muted">Aún no hay registros.</p>`; return; }
+  box.innerHTML = `<table class="log-table"><thead><tr><th>Fecha</th><th>Dispositivo</th><th>Acción</th><th>Copias</th></tr></thead><tbody>` +
+    rows.map((r) => `<tr><td>${new Date(r.creado).toLocaleString("es-CL")}</td><td>${escapeHtml(r.dispositivo || "—")}</td><td>${escapeHtml(r.accion || "—")}</td><td>${r.copias ?? ""}</td></tr>`).join("") +
+    `</tbody></table>`;
+}
 
 function bindSyncEvents() {
   $("#open-sync").addEventListener("click", openSyncModal);
   $$("[data-close-sync]").forEach((el) => el.addEventListener("click", closeSyncModal));
   $("#sync-help-toggle").addEventListener("click", (e) => { e.preventDefault(); $("#sync-help").classList.toggle("hidden"); });
-  $("#sync-copy-sql").addEventListener("click", () => {
-    navigator.clipboard.writeText($("#sync-sql").textContent).then(() => showToast("SQL copiado"));
-  });
+  $$("[data-copy-sql]").forEach((b) => b.addEventListener("click", () => {
+    navigator.clipboard.writeText($("#" + b.dataset.copySql).textContent).then(() => showToast("SQL copiado"));
+  }));
   $("#sync-backup").addEventListener("click", () => exportCollection("json"));
   $("#sync-restore").addEventListener("click", () => $("#import-file").click());
 
+  $("#cloud-auto").addEventListener("change", (e) => {
+    store.setSetting("cloudAuto", e.target.checked);
+    if (e.target.checked && cloud.isConfigured() && cloud.isDirty()) doCloudPush(false);
+  });
+
   $("#cloud-connect").addEventListener("click", async () => {
-    const url = $("#cloud-url").value, key = $("#cloud-key").value, clave = $("#cloud-clave").value;
+    const url = $("#cloud-url").value, key = $("#cloud-key").value, clave = $("#cloud-clave").value, device = $("#cloud-device").value;
     if (!url || !key || !clave) { showToast("Completa URL, clave y código de colección", 3500); return; }
-    cloud.setConfig({ url, key, clave });
+    cloud.setConfig({ url, key, clave, device });
     $("#cloud-status").textContent = "Conectando…";
     await cloudReconcile();
-    $("#cloud-status").textContent = "Sincronización activada. Tus cambios se subirán solos.";
+    $("#cloud-status").textContent = "Conexión lista. " + (autoUpload() ? "Tus cambios se subirán solos." : "Recuerda tocar Guardar para subir.");
     showToast("Nube conectada ✓");
   });
-  $("#cloud-push").addEventListener("click", async () => { if (!cloud.isConfigured()) return showToast("Conecta primero"); await doCloudPush(); showToast("Subido ✓"); });
+  $("#cloud-push").addEventListener("click", async () => { if (!cloud.isConfigured()) return showToast("Conecta primero"); await doCloudPush(true); showToast("Guardado en la nube ✓"); openSyncModal(); });
   $("#cloud-pull").addEventListener("click", async () => {
     if (!cloud.isConfigured()) return showToast("Conecta primero");
     try {
       const r = await cloud.pull();
-      if (r && r.snapshot) { store.applySnapshot(r.snapshot); refreshAll(); showToast("Bajado ✓"); setChip("☁ Sincronizado", "ok"); }
+      if (r && r.snapshot) { adoptRemote(r); showToast("Bajado ✓"); }
       else showToast("No hay datos en la nube todavía");
     } catch (e) { showToast("Error: " + e.message, 4000); }
   });
@@ -631,6 +686,7 @@ function bindSyncEvents() {
     cloud.disconnect(); setChip(""); $("#cloud-status").textContent = "Sincronización desactivada.";
     showToast("Nube desconectada");
   });
+  $("#cloud-log-btn").addEventListener("click", showLog);
 }
 
 /* ===================== Navegación / eventos ===================== */
