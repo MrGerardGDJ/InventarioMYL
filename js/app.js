@@ -200,11 +200,11 @@ function cardEl(card) {
     </div>`;
 
   el.addEventListener("click", (e) => {
-    const act = e.target.dataset.act;
+    if (e.target.closest(".deck-add")) { addToDeckQuick(card); return; }
+    const act = e.target.closest("[data-act]")?.dataset.act;
     if (act === "plus") changeQty(el, card, +1);
     else if (act === "minus") changeQty(el, card, -1);
     else if (act === "detail") openModal(card);
-    else if (e.target.classList.contains("deck-add")) addToDeckQuick(card);
   });
   return el;
 }
