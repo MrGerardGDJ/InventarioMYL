@@ -639,6 +639,31 @@ function onStoreChange(origin) {
   else setChip("☁ Cambios sin subir — toca Guardar", "sync");
 }
 
+/* ----- Red de seguridad: re-sincroniza al volver a la pestaña y cada 30s ----- */
+async function quietPull() {
+  if (!cloud.isConfigured() || cloud.isDirty()) return;
+  try {
+    const r = await cloud.pull();
+    if (r && r.snapshot && r.actualizado !== cloud.getLastTs()) {
+      store.applySnapshot(r.snapshot);
+      cloud.setLastTs(r.actualizado);
+      cloud.clearDirty();
+      refreshAll();
+      setChip("☁ Actualizado", "ok");
+    }
+  } catch {}
+}
+function startCloudBackgroundSync() {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && cloud.isConfigured()) {
+      startRealtime();   // reasegura la suscripción (el navegador la duerme en 2º plano)
+      quietPull();       // y trae cambios perdidos al instante
+    }
+  });
+  window.addEventListener("focus", () => { if (cloud.isConfigured()) quietPull(); });
+  setInterval(() => { if (cloud.isConfigured() && document.visibilityState === "visible") quietPull(); }, 30000);
+}
+
 /* ----- Modal de datos / nube ----- */
 function openSyncModal() {
   const cfg = cloud.getConfig();
@@ -804,5 +829,6 @@ async function init() {
   applyFilters();
   // Sincronización en la nube (si está configurada)
   if (cloud.isConfigured()) { setChip("☁ Sincronizado", "ok"); cloudReconcile(); startRealtime(); }
+  startCloudBackgroundSync();
 }
 init();
