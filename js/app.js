@@ -219,54 +219,131 @@ function changeQty(el, card, delta) {
 }
 
 /* ===================== Modal detalle ===================== */
+const FORMAT_LABELS = { empire: "Imperio", unified: "Unificado", first_era: "Primera Era", infantry: "Infantería", vcr: "VCR", joust: "Justa", reborn: "Renacido" };
+const profileCache = new Map();
+function fetchProfile(card) {
+  const edition = card.edition;
+  const slug = card.id.split("__").slice(2).join("__");
+  if (!edition || !slug) return Promise.resolve(null);
+  const key = edition + "/" + slug;
+  if (profileCache.has(key)) return profileCache.get(key);
+  const p = fetch(`https://api.myl.cl/cards/profile/${encodeURIComponent(edition)}/${encodeURIComponent(slug)}`)
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  profileCache.set(key, p);
+  return p;
+}
+function nl2br(s) { return escapeHtml(s).replace(/\n/g, "<br>"); }
+
 function openModal(card) {
   const qty = store.getQty(card.id);
   const box = $("#modal-box");
   const img = card.image
     ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(card.name)}" />`
     : `<div class="placeholder" style="color:var(--muted);padding:20px;text-align:center">Sin imagen</div>`;
+  const tag = (t) => `<span class="tag">${escapeHtml(t)}</span>`;
   box.innerHTML = `
     <button class="modal-close" data-close>×</button>
-    <div class="modal-detail">
-      <div class="m-img">${img}</div>
-      <div class="m-info">
+    <div class="card-detail">
+      <div class="cd-image" ${card.image ? 'data-zoom="1"' : ""}>
+        ${img}
+        ${card.image ? '<span class="cd-zoom-hint">🔍 Ampliar</span>' : ""}
+      </div>
+      <div class="cd-body">
         <h2>${escapeHtml(card.name)}</h2>
         <div class="m-tags">
-          <span class="tag">${escapeHtml(card.editionName || "")}</span>
-          <span class="tag">${escapeHtml(card.race)}</span>
-          <span class="tag">${escapeHtml(card.type)}</span>
-          <span class="tag">${escapeHtml(card.rarity)}</span>
-          ${card.cost != null ? `<span class="tag">Coste ${card.cost}</span>` : ""}
-          ${card.strength != null ? `<span class="tag">Fuerza ${card.strength}</span>` : ""}
+          ${tag(card.editionName || "")}${tag(card.race)}${tag(card.type)}${tag(card.rarity)}
+          ${card.cost != null ? tag("Coste " + card.cost) : ""}${card.strength != null ? tag("Fuerza " + card.strength) : ""}
         </div>
-        <p>${escapeHtml(card.ability) || "<span class='muted'>Sin texto de habilidad.</span>"}</p>
-        ${card.flavour ? `<p class="muted" style="font-style:italic">«${escapeHtml(card.flavour)}»</p>` : ""}
-        <div class="qty-row" style="border:none;padding:0;margin-top:16px;max-width:200px">
+        <div class="qty-row" style="border:none;padding:0;margin:14px 0">
           <button class="qty-btn" data-m="minus">−</button>
           <span class="qty-num ${qty === 0 ? "zero" : ""}" data-role="mqty">${qty}</span>
           <button class="qty-btn" data-m="plus">+</button>
+          <button class="btn small" data-add-deck>🃏 Añadir a mazo</button>
         </div>
-        <p class="muted" style="margin-top:6px">Cantidad en tu colección</p>
+        <div class="cd-section"><h4>Habilidad</h4><div id="cd-ability">${card.ability ? nl2br(card.ability) : "<span class='muted'>Sin texto.</span>"}</div></div>
+        ${card.flavour ? `<div class="cd-section"><h4>Historia</h4><p class="cd-flavour">«${escapeHtml(card.flavour)}»</p></div>` : ""}
+        <div id="cd-extra" class="cd-extra"><p class="muted">Cargando detalle ampliado…</p></div>
       </div>
     </div>`;
+
   box.querySelector("[data-close]").onclick = closeModal;
+  const zoomEl = box.querySelector("[data-zoom]");
+  if (zoomEl) zoomEl.onclick = () => openZoom(card.image, card.name);
+  box.querySelector("[data-add-deck]").onclick = () => addToDeckQuick(card);
   box.querySelectorAll("[data-m]").forEach((b) => {
     b.onclick = () => {
       const newQty = store.addQty(card.id, b.dataset.m === "plus" ? 1 : -1);
       const mq = box.querySelector('[data-role="mqty"]');
       mq.textContent = newQty;
       mq.classList.toggle("zero", newQty === 0);
-      // refleja en la grilla
       const gridCard = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
       if (gridCard) {
-        gridCard.querySelector('[data-role="qty"]').textContent = newQty;
-        gridCard.querySelector('[data-role="qty"]').classList.toggle("zero", newQty === 0);
+        const g = gridCard.querySelector('[data-role="qty"]');
+        g.textContent = newQty; g.classList.toggle("zero", newQty === 0);
         gridCard.classList.toggle("owned", newQty > 0);
       }
       updateResultCount();
     };
   });
+
   $("#modal").classList.remove("hidden");
+
+  // Detalle ampliado en vivo (api.myl.cl)
+  fetchProfile(card).then((p) => renderProfileExtra(p));
+}
+
+function renderProfileExtra(p) {
+  const box = $("#cd-extra");
+  if (!box) return;
+  if (!p || !p.details) {
+    box.innerHTML = `<p class="muted">No se pudo cargar el detalle ampliado (revisa tu conexión).</p>`;
+    return;
+  }
+  let html = "";
+  // Habilidad formateada del perfil (si difiere/está más completa)
+  const ab = p.details.ability_html || p.details.ability;
+  if (ab) { const a = $("#cd-ability"); if (a) a.innerHTML = nl2br(ab); }
+
+  // Formatos / torneos
+  const vf = p.valid_formats || {};
+  const valid = Object.entries(vf).filter(([, v]) => v).map(([k]) => FORMAT_LABELS[k] || k);
+  if (valid.length) {
+    html += `<div class="cd-section"><h4>Formatos de torneo</h4><div class="m-tags">${valid.map((f) => `<span class="tag ok-tag">✓ ${escapeHtml(f)}</span>`).join("")}</div></div>`;
+  }
+  // Palabras clave
+  const kws = (p.keywords || []).map((k) => k.name || k.slug).filter(Boolean);
+  if (kws.length) html += `<div class="cd-section"><h4>Palabras clave</h4><div class="m-tags">${kws.map((k) => `<span class="tag">${escapeHtml(k)}</span>`).join("")}</div></div>`;
+
+  // Datos de edición / ilustrador
+  const meta = [];
+  const ill = p.illustrator?.name || p.details.illustrator;
+  if (ill && typeof ill === "string") meta.push(["Ilustrador", ill]);
+  if (p.edition?.title) meta.push(["Edición", p.edition.title]);
+  if (p.edition?.date_release && !/^1990|^2000/.test(p.edition.date_release)) meta.push(["Lanzamiento", p.edition.date_release]);
+  if (meta.length) html += `<div class="cd-section"><h4>Ficha</h4>${meta.map(([k, v]) => `<div class="cd-meta"><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join("")}</div>`;
+
+  // Errata
+  const errata = (p.errata || []).map((e) => e.text || e.description || e.errata).filter(Boolean);
+  if (errata.length) html += `<div class="cd-section"><h4>Errata / aclaraciones</h4>${errata.map((t) => `<p class="muted">${nl2br(t)}</p>`).join("")}</div>`;
+
+  // Productos donde aparece
+  const prods = (p.products || []).map((x) => x.name || x.title).filter(Boolean);
+  if (prods.length) html += `<div class="cd-section"><h4>Aparece en</h4><div class="m-tags">${prods.map((x) => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div></div>`;
+
+  box.innerHTML = html || `<p class="muted">Sin información adicional.</p>`;
+}
+
+function openZoom(src, alt) {
+  let z = $("#img-zoom");
+  if (!z) {
+    z = document.createElement("div");
+    z.id = "img-zoom";
+    z.className = "img-zoom hidden";
+    z.addEventListener("click", () => z.classList.add("hidden"));
+    document.body.appendChild(z);
+  }
+  z.innerHTML = `<img src="${escapeAttr(src)}" alt="${escapeAttr(alt || "")}" />`;
+  z.classList.remove("hidden");
 }
 function closeModal() { $("#modal").classList.add("hidden"); }
 

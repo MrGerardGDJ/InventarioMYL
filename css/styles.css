@@ -238,6 +238,32 @@ main { padding: 0; }
 .tag { background: var(--bg-3); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; font-size: 12px; }
 .modal-close { position: absolute; top: 12px; right: 14px; background: none; border: none; color: var(--muted); font-size: 24px; }
 
+/* ===== Detalle de carta interactivo ===== */
+.card-detail { display: flex; gap: 20px; flex-wrap: wrap; }
+.card-detail .cd-image { flex: 0 0 300px; max-width: 300px; position: relative; align-self: flex-start; }
+.card-detail .cd-image[data-zoom] { cursor: zoom-in; }
+.card-detail .cd-image img { width: 100%; border-radius: 12px; display: block; box-shadow: var(--shadow); }
+.cd-zoom-hint { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.65); color: #fff; font-size: 11px; padding: 3px 8px; border-radius: 20px; pointer-events: none; }
+.cd-body { flex: 1; min-width: 250px; }
+.cd-body h2 { font-size: 22px; margin-bottom: 8px; }
+.cd-section { margin-top: 16px; }
+.cd-section h4 { margin: 0 0 6px; font-size: 13px; color: var(--accent-2); text-transform: uppercase; letter-spacing: 0.4px; }
+#cd-ability, .cd-section p { font-size: 14px; line-height: 1.5; }
+.cd-flavour { font-style: italic; color: var(--muted); }
+.cd-meta { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.cd-meta span { color: var(--muted); }
+.tag.ok-tag { color: var(--ok); border-color: var(--ok); }
+.cd-extra:empty { display: none; }
+
+/* Zoom de imagen a pantalla completa */
+.img-zoom { position: fixed; inset: 0; z-index: 70; background: rgba(0,0,0,0.92); display: flex; align-items: center; justify-content: center; padding: 16px; cursor: zoom-out; }
+.img-zoom img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
+
+@media (max-width: 640px) {
+  .card-detail .cd-image { flex-basis: 100%; max-width: 100%; text-align: center; }
+  .card-detail .cd-image img { max-width: 320px; margin: 0 auto; }
+}
+
 /* ===== Decks ===== */
 .deck-list { display: flex; flex-direction: column; gap: 6px; }
 .deck-item {
