@@ -18,10 +18,22 @@ Los datos de las cartas provienen de [tor.myl.cl](https://tor.myl.cl/cartas/toda
   *las que tengo*, *las que me faltan* o *duplicadas*.
 - 🗂️ **Mazos**: crea mazos, añade cartas desde la colección y comprueba qué
   copias te faltan para armarlos.
-- 📊 **Estadísticas**: progreso de tu colección por edición y totales.
-- ⬇️ **Exportar** colección a **JSON** o **CSV**, lista de **faltantes** (CSV) y
-  mazos a texto. **Importar** desde JSON (combinar o reemplazar).
-- 🌙 Tema claro/oscuro. Todo se guarda en tu navegador (`localStorage`).
+- 📊 **Estadísticas con gráficos** (Chart.js): progreso, por formato, razas,
+  curva de coste, tipo y rareza; con filtros de alcance (todas / poseídas /
+  faltantes) y por formato.
+- ⬇️ **Exportar** a **Excel (.xlsx)** y **PDF** con diseño cuidado (resumen +
+  tabla), además de **CSV**, lista de **faltantes** y **respaldo JSON**.
+  Las exportaciones respetan los filtros activos. **Importar** desde JSON.
+- 💾 **Guardado automático** en el navegador al tocar +/− y **sincronización
+  opcional en la nube** (Supabase) para tener el mismo inventario en el celular
+  y el PC. Botón ☁️ en la barra superior.
+- 🌙 Tema claro/oscuro.
+
+### Sincronizar entre dispositivos (opcional)
+El inventario se guarda solo en tu navegador. Para compartirlo entre el celular
+y el PC, abre **☁️ → Sincronizar**, sigue los 4 pasos (crear proyecto gratis en
+Supabase, ejecutar un SQL que la app te da, y pegar *Project URL* + *anon key* +
+una *clave de colección* tuya). A partir de ahí, cada +/− se sube solo.
 
 > El inventario y los mazos viven en tu navegador. Usa **Exportar** para
 > respaldarlos o pasarlos a otro dispositivo.

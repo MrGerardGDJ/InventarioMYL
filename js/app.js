@@ -1,4 +1,7 @@
 import * as store from "./store.js";
+import { exportExcel, exportPDF } from "./exporters.js";
+import { renderCharts } from "./charts.js";
+import * as cloud from "./cloud.js";
 
 /* ===================== Estado global ===================== */
 const state = {
@@ -71,6 +74,8 @@ function populateFilters() {
   fillSelect("#f-race", uniqueSorted(state.cards.map((c) => c.race)).map((v) => ({ value: v, label: v })));
   fillSelect("#f-type", uniqueSorted(state.cards.map((c) => c.type)).map((v) => ({ value: v, label: v })));
   fillSelect("#f-rarity", uniqueSorted(state.cards.map((c) => c.rarity)).map((v) => ({ value: v, label: v })));
+  // Formato también en la vista de estadísticas
+  fillSelect("#stats-format", uniqueSorted(state.cards.map((c) => c.format)).map((f) => ({ value: f, label: fmtNames[f] || f })));
   refreshEditionOptions();
 }
 
@@ -358,21 +363,36 @@ function renderDeckDetail() {
 }
 
 /* ===================== Estadísticas ===================== */
+function statsScopeLabel() {
+  const sc = $("#stats-scope").value;
+  const fm = $("#stats-format");
+  const fTxt = fm.value ? " · " + fm.options[fm.selectedIndex].text : "";
+  return (sc === "owned" ? "Solo las que tengo" : sc === "missing" ? "Solo faltantes" : "Todo el catálogo") + fTxt;
+}
+
 function renderStats() {
-  const owned = state.cards.filter((c) => store.getQty(c.id) > 0);
-  const totalCopies = store.totalCards();
-  const pct = state.cards.length ? Math.round((owned.length / state.cards.length) * 100) : 0;
+  const scope = $("#stats-scope")?.value || "all";
+  const fmt = $("#stats-format")?.value || "";
+  const base = fmt ? state.cards.filter((c) => c.format === fmt) : state.cards;
+
+  const owned = base.filter((c) => store.getQty(c.id) > 0);
+  const ownedCopies = base.reduce((s, c) => s + store.getQty(c.id), 0);
+  const pct = base.length ? Math.round((owned.length / base.length) * 100) : 0;
 
   $("#stats-cards").innerHTML = `
     ${statCard(owned.length, "Cartas únicas")}
-    ${statCard(totalCopies, "Copias totales")}
-    ${statCard(state.cards.length, "Cartas en catálogo")}
+    ${statCard(ownedCopies, "Copias totales")}
+    ${statCard(base.length, "Cartas en catálogo")}
     ${statCard(pct + "%", "Colección completa")}
     ${statCard(store.getDecks().length, "Mazos guardados")}`;
 
-  // Progreso por edición
+  // Gráficos (carga perezosa de Chart.js)
+  renderCharts({ cards: state.cards, getQty: store.getQty, scope, format: fmt })
+    .catch((e) => console.warn("charts:", e));
+
+  // Progreso por edición (respeta el formato elegido)
   const byEd = {};
-  for (const c of state.cards) {
+  for (const c of base) {
     const e = (byEd[c.edition] ||= { name: c.editionName, total: 0, owned: 0 });
     e.total++;
     if (store.getQty(c.id) > 0) e.owned++;
@@ -395,6 +415,18 @@ function statCard(num, lbl) {
   return `<div class="stat-card"><div class="num">${num}</div><div class="lbl">${lbl}</div></div>`;
 }
 
+function statsExportPDF() {
+  const scope = $("#stats-scope").value, fmt = $("#stats-format").value;
+  let cards = fmt ? state.cards.filter((c) => c.format === fmt) : state.cards.slice();
+  if (scope === "owned") cards = cards.filter((c) => store.getQty(c.id) > 0);
+  else if (scope === "missing") cards = cards.filter((c) => store.getQty(c.id) === 0);
+  if (cards.length > 1500 && !confirm(`Son ${cards.length} cartas. El PDF puede ser grande. ¿Continuar?`)) return;
+  showToast("Generando PDF…", 5000);
+  exportPDF(cards, store.getQty, statsScopeLabel())
+    .then(() => showToast("PDF descargado ✓"))
+    .catch((e) => showToast("Error: " + e.message, 4000));
+}
+
 /* ===================== Exportar / Importar ===================== */
 function download(filename, text, mime = "application/json") {
   const blob = new Blob([text], { type: mime });
@@ -404,7 +436,28 @@ function download(filename, text, mime = "application/json") {
   URL.revokeObjectURL(url);
 }
 
+function scopeLabel() {
+  const own = $("#f-ownership");
+  const ownTxt = own.selectedIndex > 0 ? own.options[own.selectedIndex].text : "Todas las cartas";
+  const ed = $("#f-edition");
+  const edTxt = ed.value ? " · " + ed.options[ed.selectedIndex].text : "";
+  return ownTxt + edTxt;
+}
+
 function exportCollection(format) {
+  // Excel / PDF: exportan el conjunto filtrado actual
+  if (format === "xlsx" || format === "pdf") {
+    const cards = state.filtered.length ? state.filtered : state.cards;
+    if (format === "pdf" && cards.length > 1500 &&
+        !confirm(`Vas a exportar ${cards.length} cartas a PDF (puede tardar). \n\nSugerencia: filtra primero (p. ej. "Solo las que tengo" o una edición). ¿Continuar igual?`)) return;
+    showToast("Generando archivo…", 5000);
+    const fn = format === "xlsx" ? exportExcel : exportPDF;
+    fn(cards, store.getQty, scopeLabel())
+      .then(() => showToast(format === "xlsx" ? "Excel descargado ✓" : "PDF descargado ✓"))
+      .catch((e) => showToast("Error al exportar: " + e.message, 4000));
+    return;
+  }
+
   const inv = store.getInventory();
   if (format === "json") {
     const data = {
@@ -481,6 +534,105 @@ function showToast(msg, ms = 2200) {
   toastTimer = setTimeout(() => t.classList.add("hidden"), ms);
 }
 
+/* ===================== Guardado / Sincronización ===================== */
+function setChip(text, cls = "") {
+  const c = $("#sync-chip");
+  if (!c) return;
+  c.textContent = text;
+  c.className = "sync-chip " + cls;
+}
+let chipTimer;
+function flashChip(text, cls) {
+  setChip(text, cls);
+  clearTimeout(chipTimer);
+  chipTimer = setTimeout(() => { if (!cloud.isConfigured()) setChip(""); else setChip("☁ Sincronizado", "ok"); }, 2500);
+}
+
+function refreshAll() {
+  applyFilters();
+  if (state.view === "mazos") renderDecksView();
+  if (state.view === "stats") renderStats();
+}
+
+let pushTimer;
+function scheduleCloudPush() {
+  if (!cloud.isConfigured()) return;
+  setChip("☁ Cambios sin subir…", "sync");
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(doCloudPush, 1800);
+}
+async function doCloudPush() {
+  if (!cloud.isConfigured()) return;
+  try { setChip("☁ Subiendo…", "sync"); await cloud.push(store.getSnapshot()); setChip("☁ Sincronizado", "ok"); }
+  catch (e) { setChip("☁ Error", "err"); showToast("Error al sincronizar: " + e.message, 4000); }
+}
+
+async function cloudReconcile() {
+  if (!cloud.isConfigured()) return;
+  setChip("☁ Sincronizando…", "sync");
+  try {
+    const remote = await cloud.pull();
+    const localTs = store.getUpdatedAt();
+    if (remote && remote.snapshot) {
+      const rTs = new Date(remote.actualizado).getTime() || remote.snapshot.updatedAt || 0;
+      if (rTs > localTs) { store.applySnapshot(remote.snapshot); refreshAll(); setChip("☁ Sincronizado", "ok"); return; }
+    }
+    await cloud.push(store.getSnapshot());
+    setChip("☁ Sincronizado", "ok");
+  } catch (e) { setChip("☁ Error", "err"); showToast("Sincronización: " + e.message, 4000); }
+}
+
+function onStoreChange(origin) {
+  if (origin === "remote") { refreshAll(); return; }
+  if (cloud.isConfigured()) scheduleCloudPush();
+  else flashChip("Guardado ✓", "ok");
+}
+
+/* ----- Modal de datos / nube ----- */
+function openSyncModal() {
+  const cfg = cloud.getConfig();
+  $("#cloud-url").value = cfg.url || "";
+  $("#cloud-key").value = cfg.key || "";
+  $("#cloud-clave").value = cfg.clave || "";
+  $("#cloud-status").textContent = cloud.isConfigured() ? "Sincronización activada." : "Sincronización no configurada.";
+  $("#sync-modal").classList.remove("hidden");
+}
+function closeSyncModal() { $("#sync-modal").classList.add("hidden"); }
+
+function bindSyncEvents() {
+  $("#open-sync").addEventListener("click", openSyncModal);
+  $$("[data-close-sync]").forEach((el) => el.addEventListener("click", closeSyncModal));
+  $("#sync-help-toggle").addEventListener("click", (e) => { e.preventDefault(); $("#sync-help").classList.toggle("hidden"); });
+  $("#sync-copy-sql").addEventListener("click", () => {
+    navigator.clipboard.writeText($("#sync-sql").textContent).then(() => showToast("SQL copiado"));
+  });
+  $("#sync-backup").addEventListener("click", () => exportCollection("json"));
+  $("#sync-restore").addEventListener("click", () => $("#import-file").click());
+
+  $("#cloud-connect").addEventListener("click", async () => {
+    const url = $("#cloud-url").value, key = $("#cloud-key").value, clave = $("#cloud-clave").value;
+    if (!url || !key || !clave) { showToast("Completa URL, clave y código de colección", 3500); return; }
+    cloud.setConfig({ url, key, clave });
+    $("#cloud-status").textContent = "Conectando…";
+    await cloudReconcile();
+    $("#cloud-status").textContent = "Sincronización activada. Tus cambios se subirán solos.";
+    showToast("Nube conectada ✓");
+  });
+  $("#cloud-push").addEventListener("click", async () => { if (!cloud.isConfigured()) return showToast("Conecta primero"); await doCloudPush(); showToast("Subido ✓"); });
+  $("#cloud-pull").addEventListener("click", async () => {
+    if (!cloud.isConfigured()) return showToast("Conecta primero");
+    try {
+      const r = await cloud.pull();
+      if (r && r.snapshot) { store.applySnapshot(r.snapshot); refreshAll(); showToast("Bajado ✓"); setChip("☁ Sincronizado", "ok"); }
+      else showToast("No hay datos en la nube todavía");
+    } catch (e) { showToast("Error: " + e.message, 4000); }
+  });
+  $("#cloud-disconnect").addEventListener("click", () => {
+    cloud.disconnect(); setChip(""); $("#cloud-status").textContent = "Sincronización desactivada.";
+    showToast("Nube desconectada");
+  });
+}
+
 /* ===================== Navegación / eventos ===================== */
 function switchView(view) {
   state.view = view;
@@ -537,6 +689,13 @@ function bindEvents() {
     if (name !== null) { const d = store.createDeck(name); store.setSetting("activeDeckId", d.id); renderDecksView(); }
   });
 
+  // Estadísticas
+  ["#stats-scope", "#stats-format"].forEach((s) => $(s).addEventListener("change", renderStats));
+  $("#stats-export-pdf").addEventListener("click", statsExportPDF);
+
+  // Datos / sincronización
+  bindSyncEvents();
+
   // Tema
   $("#theme-toggle").addEventListener("click", toggleTheme);
 }
@@ -560,8 +719,11 @@ function debounce(fn, ms) {
 async function init() {
   applyTheme(store.getSetting("theme") || "dark");
   bindEvents();
+  store.onChange(onStoreChange);
   await loadData();
   populateFilters();
   applyFilters();
+  // Sincronización en la nube (si está configurada)
+  if (cloud.isConfigured()) { setChip("☁ Sincronizado", "ok"); cloudReconcile(); }
 }
 init();

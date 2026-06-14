@@ -1,10 +1,12 @@
 // Almacenamiento local: inventario, mazos y preferencias.
-// Todo se guarda en localStorage del navegador del usuario.
+// Se guarda en localStorage del navegador y notifica cambios (para sincronización
+// en la nube e indicadores de "guardado").
 
 const KEYS = {
   inv: "myl.inventory.v1",
   decks: "myl.decks.v1",
   settings: "myl.settings.v1",
+  meta: "myl.meta.v1",
 };
 
 function read(key, fallback) {
@@ -19,38 +21,41 @@ function write(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
+/* ===== Notificación de cambios ===== */
+const listeners = new Set();
+export function onChange(cb) { listeners.add(cb); return () => listeners.delete(cb); }
+let meta = read(KEYS.meta, { updatedAt: 0 });
+// origin: 'local' (cambio del usuario) o 'remote' (aplicado desde la nube)
+function notify(origin = "local") {
+  if (origin === "local") { meta.updatedAt = Date.now(); write(KEYS.meta, meta); }
+  for (const cb of listeners) { try { cb(origin); } catch {} }
+}
+export function getUpdatedAt() { return meta.updatedAt || 0; }
+export function setUpdatedAt(ts) { meta.updatedAt = ts || Date.now(); write(KEYS.meta, meta); }
+
 /* ===== Inventario ===== */
 let inventory = read(KEYS.inv, {}); // { cardId: cantidad }
 
-export function getQty(id) {
-  return inventory[id] || 0;
-}
+export function getQty(id) { return inventory[id] || 0; }
 export function setQty(id, qty) {
   qty = Math.max(0, Math.floor(qty || 0));
   if (qty === 0) delete inventory[id];
   else inventory[id] = qty;
   write(KEYS.inv, inventory);
+  notify();
 }
-export function addQty(id, delta) {
-  setQty(id, getQty(id) + delta);
-  return getQty(id);
-}
-export function ownedCount() {
-  return Object.keys(inventory).length;
-}
-export function totalCards() {
-  return Object.values(inventory).reduce((a, b) => a + b, 0);
-}
-export function getInventory() {
-  return { ...inventory };
-}
-export function replaceInventory(obj) {
+export function addQty(id, delta) { setQty(id, getQty(id) + delta); return getQty(id); }
+export function ownedCount() { return Object.keys(inventory).length; }
+export function totalCards() { return Object.values(inventory).reduce((a, b) => a + b, 0); }
+export function getInventory() { return { ...inventory }; }
+export function replaceInventory(obj, origin = "local") {
   inventory = {};
   for (const [id, qty] of Object.entries(obj || {})) {
     const n = Math.max(0, Math.floor(Number(qty) || 0));
     if (n > 0) inventory[id] = n;
   }
   write(KEYS.inv, inventory);
+  notify(origin);
 }
 export function mergeInventory(obj) {
   for (const [id, qty] of Object.entries(obj || {})) {
@@ -58,30 +63,29 @@ export function mergeInventory(obj) {
     if (n > 0) inventory[id] = (inventory[id] || 0) + n;
   }
   write(KEYS.inv, inventory);
+  notify();
 }
 
 /* ===== Mazos ===== */
-let decks = read(KEYS.decks, []); // [{id, name, cards:{cardId:qty}}]
+let decks = read(KEYS.decks, []);
 
-export function getDecks() {
-  return decks;
-}
-export function getDeck(id) {
-  return decks.find((d) => d.id === id) || null;
-}
+export function getDecks() { return decks; }
+export function getDeck(id) { return decks.find((d) => d.id === id) || null; }
 export function createDeck(name) {
   const deck = { id: "d" + Date.now().toString(36), name: name || "Mazo nuevo", cards: {} };
   decks.push(deck);
   write(KEYS.decks, decks);
+  notify();
   return deck;
 }
 export function renameDeck(id, name) {
   const d = getDeck(id);
-  if (d) { d.name = name; write(KEYS.decks, decks); }
+  if (d) { d.name = name; write(KEYS.decks, decks); notify(); }
 }
 export function deleteDeck(id) {
   decks = decks.filter((d) => d.id !== id);
   write(KEYS.decks, decks);
+  notify();
 }
 export function deckAdd(deckId, cardId, delta = 1) {
   const d = getDeck(deckId);
@@ -90,18 +94,31 @@ export function deckAdd(deckId, cardId, delta = 1) {
   if (n === 0) delete d.cards[cardId];
   else d.cards[cardId] = n;
   write(KEYS.decks, decks);
+  notify();
 }
 export function deckCount(deckId) {
   const d = getDeck(deckId);
   if (!d) return 0;
   return Object.values(d.cards).reduce((a, b) => a + b, 0);
 }
-export function replaceDecks(arr) {
-  if (Array.isArray(arr)) { decks = arr; write(KEYS.decks, decks); }
+export function replaceDecks(arr, origin = "local") {
+  if (Array.isArray(arr)) { decks = arr; write(KEYS.decks, decks); notify(origin); }
+}
+
+/* ===== Snapshot completo (para respaldo / nube) ===== */
+export function getSnapshot() {
+  return { inventory: getInventory(), decks: JSON.parse(JSON.stringify(decks)), updatedAt: getUpdatedAt() };
+}
+// Aplica un snapshot completo SIN marcarlo como cambio local (origin 'remote').
+export function applySnapshot(snap) {
+  if (!snap) return;
+  replaceInventory(snap.inventory || {}, "remote");
+  if (Array.isArray(snap.decks)) { decks = snap.decks; write(KEYS.decks, decks); }
+  if (snap.updatedAt) setUpdatedAt(snap.updatedAt);
+  notify("remote");
 }
 
 /* ===== Preferencias ===== */
 let settings = read(KEYS.settings, { theme: "dark", activeDeckId: null });
-
 export function getSetting(k) { return settings[k]; }
 export function setSetting(k, v) { settings[k] = v; write(KEYS.settings, settings); }

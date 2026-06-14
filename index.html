@@ -25,6 +25,8 @@
       <button class="tab" data-view="mazos">Mazos</button>
       <button class="tab" data-view="stats">Estadísticas</button>
     </nav>
+    <span id="sync-chip" class="sync-chip" title="Estado de guardado"></span>
+    <button id="open-sync" class="icon-btn" title="Datos y sincronización">☁️</button>
     <button id="theme-toggle" class="icon-btn" title="Cambiar tema">🌙</button>
   </header>
 
@@ -102,9 +104,12 @@
             <div class="dropdown">
               <button id="btn-export" class="btn">Exportar ▾</button>
               <div class="dropdown-menu">
-                <button data-export="json">Colección (JSON)</button>
+                <div class="dropdown-note">Exporta lo que muestran los filtros actuales</div>
+                <button data-export="xlsx">📊 Excel (.xlsx)</button>
+                <button data-export="pdf">📄 PDF</button>
                 <button data-export="csv">Colección (CSV)</button>
                 <button data-export="missing-csv">Faltantes (CSV)</button>
+                <button data-export="json">Respaldo (JSON)</button>
               </div>
             </div>
             <input id="import-file" type="file" accept=".json" hidden />
@@ -133,8 +138,35 @@
     <!-- ===== VISTA ESTADÍSTICAS ===== -->
     <section id="view-stats" class="view">
       <div class="content stats-content">
+        <div class="stats-toolbar">
+          <label class="field inline">
+            <span>Mostrar</span>
+            <select id="stats-scope">
+              <option value="all">Todo el catálogo</option>
+              <option value="owned">Solo las que tengo</option>
+              <option value="missing">Solo las que me faltan</option>
+            </select>
+          </label>
+          <label class="field inline">
+            <span>Formato</span>
+            <select id="stats-format"><option value="">Todos</option></select>
+          </label>
+          <div class="spacer"></div>
+          <button id="stats-export-pdf" class="btn">📄 Exportar PDF</button>
+        </div>
+
         <div id="stats-cards" class="stats-grid"></div>
-        <h3>Progreso por edición</h3>
+
+        <div class="charts-grid">
+          <div class="chart-card"><h4>Progreso de la colección</h4><div class="chart-wrap"><canvas id="chart-progress"></canvas></div></div>
+          <div class="chart-card"><h4>Por formato</h4><div class="chart-wrap"><canvas id="chart-format"></canvas></div></div>
+          <div class="chart-card"><h4>Por tipo</h4><div class="chart-wrap"><canvas id="chart-type"></canvas></div></div>
+          <div class="chart-card"><h4>Top razas</h4><div class="chart-wrap"><canvas id="chart-race"></canvas></div></div>
+          <div class="chart-card"><h4>Curva de coste</h4><div class="chart-wrap"><canvas id="chart-cost"></canvas></div></div>
+          <div class="chart-card"><h4>Por rareza</h4><div class="chart-wrap"><canvas id="chart-rarity"></canvas></div></div>
+        </div>
+
+        <h3 style="margin-top:24px">Progreso por edición</h3>
         <div id="stats-editions" class="edition-progress"></div>
       </div>
     </section>
@@ -144,6 +176,57 @@
   <div id="modal" class="modal hidden">
     <div class="modal-backdrop"></div>
     <div class="modal-box" id="modal-box"></div>
+  </div>
+
+  <!-- Modal de datos y sincronización -->
+  <div id="sync-modal" class="modal hidden">
+    <div class="modal-backdrop" data-close-sync></div>
+    <div class="modal-box">
+      <button class="modal-close" data-close-sync>×</button>
+      <h2 style="margin-bottom:4px">Datos y sincronización</h2>
+      <p class="muted" id="sync-state-text">Tu inventario se guarda solo en este navegador al tocar +/−.</p>
+
+      <h3 class="sync-h3">📦 Respaldo local</h3>
+      <p class="muted">Descarga una copia de tu colección y mazos, o restáurala en otro dispositivo.</p>
+      <div class="sync-row">
+        <button class="btn" id="sync-backup">Descargar respaldo (JSON)</button>
+        <button class="btn" id="sync-restore">Restaurar respaldo</button>
+      </div>
+
+      <h3 class="sync-h3">☁️ Sincronizar entre dispositivos (opcional)</h3>
+      <p class="muted">Mantén tu inventario igual en el celular y el PC. Usa <b>Supabase</b> (gratis).
+        <a href="#" id="sync-help-toggle">Ver cómo configurarlo ▾</a></p>
+      <div id="sync-help" class="sync-help hidden">
+        <ol>
+          <li>Crea una cuenta gratis en <b>supabase.com</b> y un proyecto nuevo.</li>
+          <li>En el proyecto: <b>SQL Editor</b> → pega y ejecuta esto:
+            <pre id="sync-sql">create table if not exists inventario_myl (
+  clave text primary key,
+  datos jsonb,
+  actualizado timestamptz default now()
+);
+alter table inventario_myl enable row level security;
+create policy "acceso" on inventario_myl
+  for all using (true) with check (true);</pre>
+            <button class="btn small" id="sync-copy-sql">Copiar SQL</button>
+          </li>
+          <li>En <b>Settings → API</b> copia <b>Project URL</b> y la clave <b>anon public</b>.</li>
+          <li>Pégalas abajo y elige una <b>clave de colección</b> (un código tuyo, p. ej. tu correo o una palabra secreta). Úsala igual en todos tus dispositivos.</li>
+        </ol>
+      </div>
+      <div class="sync-form">
+        <label class="field"><span>Project URL</span><input id="cloud-url" type="text" placeholder="https://xxxx.supabase.co" /></label>
+        <label class="field"><span>Clave anon public</span><input id="cloud-key" type="password" placeholder="eyJhbGci…" /></label>
+        <label class="field"><span>Clave de colección (tu código)</span><input id="cloud-clave" type="text" placeholder="ej: wilson-myl" /></label>
+      </div>
+      <div class="sync-row">
+        <button class="btn primary" id="cloud-connect">Conectar y sincronizar</button>
+        <button class="btn" id="cloud-push">Subir ahora</button>
+        <button class="btn" id="cloud-pull">Bajar ahora</button>
+        <button class="btn" id="cloud-disconnect">Desconectar</button>
+      </div>
+      <p class="muted" id="cloud-status" style="margin-top:10px"></p>
+    </div>
   </div>
 
   <div id="toast" class="toast hidden"></div>
