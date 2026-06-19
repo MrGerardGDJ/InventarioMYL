@@ -26,18 +26,17 @@ async function loadData() {
   ]);
 
   const scraped = (cardsRes.cards || cardsRes || []).map(normalizeCard);
-  const custom = (customRes.cards || []).map(normalizeCard);
-  state.cards = [...scraped, ...custom];
+  const bundledCustom = (customRes.cards || []).map(normalizeCard);
+  state.baseCards = [...scraped, ...bundledCustom];
   state.editions = Array.isArray(edRes) ? edRes : [];
   state.editionName = Object.fromEntries(state.editions.map((e) => [e.slug, e.name]));
 
-  // Asegura nombre legible de edición en cada carta
-  // (prioriza el nombre que trae la propia carta desde el scraper)
-  for (const c of state.cards) {
+  // Asegura nombre legible de edición y precalcula texto de búsqueda (una vez)
+  for (const c of state.baseCards) {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
-    // Texto normalizado (sin tildes/ñ) para búsqueda insensible a diacríticos
     c.searchText = normText(c.name + " " + c.ability);
   }
+  rebuildCards();
   if (cardsRes.meta?.source === "seed") {
     showToast("Mostrando datos de demostración. Ejecuta el scraper para cargar el catálogo real.", 5000);
   }
@@ -67,6 +66,15 @@ function normalizeCard(c, i) {
 function numOrNull(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : null;
+}
+// Combina las cartas base (catálogo + bundle) con las cartas manuales del usuario
+function rebuildCards() {
+  const userCustom = store.getCustomCards().map(normalizeCard);
+  for (const c of userCustom) {
+    c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
+    c.searchText = normText(c.name + " " + c.ability);
+  }
+  state.cards = (state.baseCards || []).concat(userCustom);
 }
 // Minúsculas sin diacríticos (á→a, ñ→n) para comparar/buscar sin importar tildes
 function normText(s) {
@@ -273,6 +281,7 @@ function openModal(card) {
           <button class="qty-btn" data-m="plus">+</button>
           <button class="btn small" data-add-deck>🃏 Añadir a mazo</button>
         </div>
+        ${card.userCustom ? `<div class="sync-row" style="margin-top:4px"><button class="btn small" data-edit-card>✏️ Editar</button><button class="btn small" data-del-card>🗑 Eliminar</button></div>` : ""}
         <div class="cd-section"><h4>Habilidad</h4><div id="cd-ability">${card.ability ? nl2br(card.ability) : "<span class='muted'>Sin texto.</span>"}</div></div>
         ${card.flavour ? `<div class="cd-section"><h4>Historia</h4><p class="cd-flavour">«${escapeHtml(card.flavour)}»</p></div>` : ""}
         <div id="cd-extra" class="cd-extra"><p class="muted">Cargando detalle ampliado…</p></div>
@@ -283,6 +292,15 @@ function openModal(card) {
   const zoomEl = box.querySelector("[data-zoom]");
   if (zoomEl) zoomEl.onclick = () => openZoom(card.image, card.name);
   box.querySelector("[data-add-deck]").onclick = () => addToDeckQuick(card);
+  const editBtn = box.querySelector("[data-edit-card]");
+  if (editBtn) editBtn.onclick = () => { closeModal(); openCardForm(card); };
+  const delBtn = box.querySelector("[data-del-card]");
+  if (delBtn) delBtn.onclick = () => {
+    if (!confirm(`¿Eliminar la carta manual «${card.name}»?`)) return;
+    store.deleteCustomCard(card.id);
+    rebuildCards(); populateFilters(); applyFilters(); closeModal();
+    showToast("Carta eliminada");
+  };
   box.querySelectorAll("[data-m]").forEach((b) => {
     b.onclick = () => {
       const newQty = store.addQty(card.id, b.dataset.m === "plus" ? 1 : -1);
@@ -359,6 +377,92 @@ function openZoom(src, alt) {
   z.classList.remove("hidden");
 }
 function closeModal() { $("#modal").classList.add("hidden"); }
+
+/* ===================== Carta manual (formulario) ===================== */
+let cfImageData = "";
+function editionSlug(text) {
+  return normText(text).trim().replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "") || "personalizada";
+}
+function populateEditionDatalist() {
+  const dl = $("#cf-editions");
+  if (!dl) return;
+  const names = [...new Set(state.cards.map((c) => c.editionName).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+  dl.innerHTML = names.map((n) => `<option value="${escapeAttr(n)}"></option>`).join("");
+}
+function openCardForm(card) {
+  populateEditionDatalist();
+  const editing = card && card.userCustom;
+  $("#cf-title").textContent = editing ? "Editar carta" : "Agregar carta manual";
+  $("#cf-id").value = editing ? card.id : "";
+  $("#cf-name").value = editing ? card.name : "";
+  $("#cf-edition").value = editing ? (card.editionName || "") : "";
+  $("#cf-format").value = editing ? (card.format || "NE") : "NE";
+  $("#cf-race").value = editing && card.race !== "—" ? card.race : "";
+  $("#cf-type").value = editing ? card.type : "Aliado";
+  $("#cf-rarity").value = editing && card.rarity !== "—" ? card.rarity : "";
+  $("#cf-cost").value = editing && card.cost != null ? card.cost : "";
+  $("#cf-strength").value = editing && card.strength != null ? card.strength : "";
+  $("#cf-ability").value = editing ? card.ability : "";
+  $("#cf-flavour").value = editing ? card.flavour : "";
+  $("#cf-image-url").value = editing && /^https?:|^\.\//.test(card.image || "") ? card.image : "";
+  $("#cf-image-file").value = "";
+  cfImageData = editing ? (card.image || "") : "";
+  renderCfPreview();
+  $("#cf-delete").style.display = editing ? "" : "none";
+  $("#card-form-modal").classList.remove("hidden");
+}
+function closeCardForm() { $("#card-form-modal").classList.add("hidden"); }
+function renderCfPreview() {
+  const src = $("#cf-image-url").value.trim() || cfImageData;
+  $("#cf-preview").innerHTML = src ? `<img src="${escapeAttr(src)}" alt="" />` : "";
+}
+function saveCardForm() {
+  const name = $("#cf-name").value.trim();
+  if (!name) { showToast("Escribe al menos el nombre"); return; }
+  const edName = $("#cf-edition").value.trim() || "Personalizada";
+  const card = {
+    name,
+    edition: editionSlug(edName),
+    editionName: edName,
+    format: $("#cf-format").value,
+    type: $("#cf-type").value,
+    race: $("#cf-race").value.trim() || "—",
+    rarity: $("#cf-rarity").value.trim() || "—",
+    cost: $("#cf-cost").value === "" ? null : Number($("#cf-cost").value),
+    strength: $("#cf-strength").value === "" ? null : Number($("#cf-strength").value),
+    ability: $("#cf-ability").value.trim(),
+    flavour: $("#cf-flavour").value.trim(),
+    image: $("#cf-image-url").value.trim() || cfImageData || "",
+  };
+  const id = $("#cf-id").value;
+  if (id) store.updateCustomCard(id, card);
+  else store.addCustomCard(card);
+  rebuildCards(); populateFilters(); applyFilters(); refreshActiveDeckUI();
+  closeCardForm();
+  showToast(id ? "Carta actualizada" : "Carta agregada ✓");
+}
+function bindCardFormEvents() {
+  $("#btn-add-card").addEventListener("click", () => openCardForm(null));
+  $("#cf-save").addEventListener("click", saveCardForm);
+  $("#cf-delete").addEventListener("click", () => {
+    const id = $("#cf-id").value;
+    if (id && confirm("¿Eliminar esta carta manual?")) {
+      store.deleteCustomCard(id);
+      rebuildCards(); populateFilters(); applyFilters(); closeCardForm();
+      showToast("Carta eliminada");
+    }
+  });
+  $$("[data-close-cf]").forEach((el) => el.addEventListener("click", closeCardForm));
+  $("#cf-image-url").addEventListener("input", renderCfPreview);
+  $("#cf-image-file").addEventListener("change", (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    if (f.size > 1.5 * 1024 * 1024) { showToast("Imagen muy grande (máx ~1.5 MB)", 3500); e.target.value = ""; return; }
+    const reader = new FileReader();
+    reader.onload = () => { cfImageData = reader.result; $("#cf-image-url").value = ""; renderCfPreview(); };
+    reader.readAsDataURL(f);
+  });
+}
 
 /* ===================== Añadir a mazo (desde Colección) ===================== */
 function addToDeckQuick(card) {
@@ -768,6 +872,7 @@ function flashChip(text, cls) {
 }
 
 function refreshAll() {
+  rebuildCards();
   applyFilters();
   if (state.view === "mazos") renderDecksView();
   if (state.view === "stats") renderStats();
@@ -995,7 +1100,7 @@ function bindEvents() {
 
   // Modal
   $("#modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeModal(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); } });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); } });
   $("#deck-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeDeckModal(); });
 
   // Exportar / importar
@@ -1021,6 +1126,9 @@ function bindEvents() {
 
   // Datos / sincronización
   bindSyncEvents();
+
+  // Carta manual
+  bindCardFormEvents();
 
   // Tema
   $("#theme-toggle").addEventListener("click", toggleTheme);

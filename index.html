@@ -100,6 +100,7 @@
           <div id="result-count" class="muted">Cargando…</div>
           <div class="spacer"></div>
           <div class="actions">
+            <button id="btn-add-card" class="btn">➕ Carta manual</button>
             <button id="btn-import" class="btn">Importar</button>
             <div class="dropdown">
               <button id="btn-export" class="btn">Exportar ▾</button>
@@ -262,6 +263,54 @@ create policy "acceso_log" on inventario_myl_log
     <div class="modal-backdrop" data-close-deck></div>
     <div class="modal-box" id="deck-modal-box"></div>
   </div>
+
+  <!-- Modal: agregar / editar carta manual -->
+  <div id="card-form-modal" class="modal hidden">
+    <div class="modal-backdrop" data-close-cf></div>
+    <div class="modal-box">
+      <button class="modal-close" data-close-cf>×</button>
+      <h2 id="cf-title">Agregar carta manual</h2>
+      <p class="muted">Para cartas que TOR no tiene. Se guardan en tu colección y se sincronizan en la nube.</p>
+      <input type="hidden" id="cf-id" />
+      <div class="cf-grid">
+        <label class="field cf-full"><span>Nombre *</span><input id="cf-name" type="text" placeholder="Ej: Ismael" /></label>
+        <label class="field"><span>Edición</span><input id="cf-edition" type="text" list="cf-editions" placeholder="Ej: Onyria" /></label>
+        <label class="field"><span>Formato</span>
+          <select id="cf-format">
+            <option value="NE">Nueva Era / Imperio</option>
+            <option value="PB">Primer Bloque</option>
+            <option value="PE">Primera Era</option>
+            <option value="SB">Segundo Bloque</option>
+            <option value="FX">Furia Extendido</option>
+            <option value="OT">Otro</option>
+          </select>
+        </label>
+        <label class="field"><span>Raza</span><input id="cf-race" type="text" placeholder="Ej: Guerrero" /></label>
+        <label class="field"><span>Tipo</span>
+          <select id="cf-type">
+            <option>Aliado</option><option>Talismán</option><option>Tótem</option>
+            <option>Arma</option><option>Oro</option><option>Monumento</option><option value="—">Otro</option>
+          </select>
+        </label>
+        <label class="field"><span>Rareza</span><input id="cf-rarity" type="text" placeholder="Ej: Cortesano" /></label>
+        <label class="field"><span>Coste</span><input id="cf-cost" type="number" min="0" /></label>
+        <label class="field"><span>Fuerza</span><input id="cf-strength" type="number" min="0" /></label>
+        <label class="field cf-full"><span>Habilidad</span><textarea id="cf-ability" rows="3"></textarea></label>
+        <label class="field cf-full"><span>Historia / ambientación</span><textarea id="cf-flavour" rows="2"></textarea></label>
+        <label class="field cf-full"><span>Imagen (sube un archivo o pega una URL)</span>
+          <input id="cf-image-file" type="file" accept="image/*" />
+          <input id="cf-image-url" type="text" placeholder="https://… (opcional)" style="margin-top:6px" />
+        </label>
+        <div class="cf-preview" id="cf-preview"></div>
+      </div>
+      <div class="sync-row">
+        <button class="btn primary" id="cf-save">Guardar carta</button>
+        <button class="btn" id="cf-delete" style="display:none">🗑 Eliminar</button>
+        <button class="btn" data-close-cf>Cancelar</button>
+      </div>
+    </div>
+  </div>
+  <datalist id="cf-editions"></datalist>
 
   <div id="toast" class="toast hidden"></div>
 

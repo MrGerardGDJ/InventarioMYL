@@ -7,6 +7,7 @@ const KEYS = {
   decks: "myl.decks.v1",
   settings: "myl.settings.v1",
   meta: "myl.meta.v1",
+  custom: "myl.customcards.v1",
 };
 
 function read(key, fallback) {
@@ -105,15 +106,40 @@ export function replaceDecks(arr, origin = "local") {
   if (Array.isArray(arr)) { decks = arr; write(KEYS.decks, decks); notify(origin); }
 }
 
+/* ===== Cartas manuales del usuario (se sincronizan en la nube) ===== */
+let customCards = read(KEYS.custom, []);
+export function getCustomCards() { return customCards.slice(); }
+export function addCustomCard(card) {
+  const id = card.id || "user__" + Date.now().toString(36);
+  const c = { ...card, id, custom: true, userCustom: true };
+  customCards.push(c);
+  write(KEYS.custom, customCards);
+  notify();
+  return c;
+}
+export function updateCustomCard(id, patch) {
+  const i = customCards.findIndex((c) => c.id === id);
+  if (i === -1) return;
+  customCards[i] = { ...customCards[i], ...patch, id, custom: true, userCustom: true };
+  write(KEYS.custom, customCards);
+  notify();
+}
+export function deleteCustomCard(id) {
+  customCards = customCards.filter((c) => c.id !== id);
+  write(KEYS.custom, customCards);
+  notify();
+}
+
 /* ===== Snapshot completo (para respaldo / nube) ===== */
 export function getSnapshot() {
-  return { inventory: getInventory(), decks: JSON.parse(JSON.stringify(decks)), updatedAt: getUpdatedAt() };
+  return { inventory: getInventory(), decks: JSON.parse(JSON.stringify(decks)), customCards: getCustomCards(), updatedAt: getUpdatedAt() };
 }
 // Aplica un snapshot completo SIN marcarlo como cambio local (origin 'remote').
 export function applySnapshot(snap) {
   if (!snap) return;
   replaceInventory(snap.inventory || {}, "remote");
   if (Array.isArray(snap.decks)) { decks = snap.decks; write(KEYS.decks, decks); }
+  if (Array.isArray(snap.customCards)) { customCards = snap.customCards; write(KEYS.custom, customCards); }
   if (snap.updatedAt) setUpdatedAt(snap.updatedAt);
   notify("remote");
 }

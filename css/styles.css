@@ -334,6 +334,19 @@ main { padding: 0; }
 .sync-form .field { margin: 0; }
 .sync-form input { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-3); color: var(--text); font-size: 13px; }
 .btn.small { padding: 5px 10px; font-size: 12px; }
+
+/* ===== Formulario de carta manual ===== */
+.cf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+.cf-grid .field { margin: 0; }
+.cf-grid .cf-full { grid-column: 1 / -1; }
+.cf-grid input, .cf-grid select, .cf-grid textarea {
+  width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg-3); color: var(--text); font-size: 13px; font-family: inherit;
+}
+.cf-preview { grid-column: 1 / -1; }
+.cf-preview img { max-height: 220px; border-radius: 10px; border: 1px solid var(--border); }
+@media (max-width: 560px) { .cf-grid { grid-template-columns: 1fr; } }
+
 .sync-check { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 13px; color: var(--text); cursor: pointer; }
 .sync-check input { width: 16px; height: 16px; }
 .cloud-log { margin-top: 12px; max-height: 240px; overflow-y: auto; }
