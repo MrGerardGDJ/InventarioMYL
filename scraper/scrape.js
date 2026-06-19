@@ -160,9 +160,11 @@ for (const slug of editionsToFetch) {
 /* ---------- 3.5) enriquecer nombres con acentos/ñ desde el perfil ---------- */
 // El listado de la API entrega los nombres SIN diacríticos; el perfil sí los trae.
 // Se consulta el perfil de cada carta (con concurrencia) para corregir el nombre.
-const noNames = argv.includes("--no-names");
+// El enriquecimiento de nombres por perfil es OPT-IN (--names): la API limita
+// fuertemente miles de consultas seguidas. En uso normal, la app corrige los
+// títulos de forma perezosa en el navegador (solo las cartas que se ven).
 const reenrich = argv.includes("--reenrich");
-if (!noNames && all.length) {
+if (argv.includes("--names") && all.length) {
   const PROFILE = "https://api.myl.cl/cards/profile";
   // Incremental: reutiliza nombres ya corregidos de una corrida previa y solo
   // consulta el perfil de cartas nuevas. (--reenrich fuerza revisar todo.)

@@ -81,6 +81,43 @@ function normText(s) {
   return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
+/* --- Correcci\u00f3n perezosa de nombres (la API del listado los entrega sin
+   tildes/\u00f1; el perfil s\u00ed los trae). Se corrigen solo las cartas visibles y
+   se cachean para no volver a consultarlas. --- */
+const nameCache = (() => { try { return JSON.parse(localStorage.getItem("myl.namecache.v1")) || {}; } catch { return {}; } })();
+let nameCacheTimer;
+function saveNameCache() {
+  clearTimeout(nameCacheTimer);
+  nameCacheTimer = setTimeout(() => { try { localStorage.setItem("myl.namecache.v1", JSON.stringify(nameCache)); } catch {} }, 800);
+}
+function displayName(card) { return nameCache[card.id] || card.name; }
+
+let nameQueue = [], nameActive = 0;
+function scheduleNameCorrection(cards) {
+  for (const c of cards) { if (c.custom || c.id in nameCache) continue; nameQueue.push(c); }
+  pumpNames();
+}
+function pumpNames() {
+  while (nameActive < 6 && nameQueue.length) {
+    const c = nameQueue.shift();
+    if (c.id in nameCache) continue;
+    nameActive++;
+    fetchProfile(c).then((p) => {
+      const nm = p?.details?.name?.trim();
+      nameCache[c.id] = nm || c.name; // marca como revisada (evita reconsultar)
+      if (nm && nm !== c.name) updateCardNameInDom(c.id, nm);
+      saveNameCache();
+    }).catch(() => {}).finally(() => { nameActive--; pumpNames(); });
+  }
+}
+function updateCardNameInDom(id, name) {
+  const sel = `.card[data-id="${CSS.escape(id)}"]`;
+  const el = document.querySelector(sel + " .card-name");
+  if (el) el.textContent = name;
+  const ph = document.querySelector(sel + " .ph-name");
+  if (ph) ph.textContent = name;
+}
+
 /* ===================== Filtros (poblar selects) ===================== */
 function uniqueSorted(values) {
   return [...new Set(values.filter((v) => v && v !== "—"))].sort((a, b) =>
@@ -183,6 +220,7 @@ function renderGrid(reset) {
   const frag = document.createDocumentFragment();
   for (const card of slice) frag.appendChild(cardEl(card));
   grid.appendChild(frag);
+  scheduleNameCorrection(slice);
 
   $("#grid-empty").classList.toggle("hidden", state.filtered.length !== 0);
   const hasMore = (state.page + 1) * state.pageSize < state.filtered.length;
@@ -195,9 +233,10 @@ function cardEl(card) {
   el.className = "card" + (qty > 0 ? " owned" : "");
   el.dataset.id = card.id;
 
+  const dName = displayName(card);
   const img = card.image
-    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(card.name)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(card.name)}</div>'}))" />`
-    : `<div class="placeholder"><div class="ph-name">${escapeHtml(card.name)}</div>${card.editionName || ""}</div>`;
+    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
+    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div>${card.editionName || ""}</div>`;
 
   const activeDeck = store.getDeck(store.getSetting("activeDeckId"));
   const deckBtn = `<button class="qty-btn deck-add" title="${activeDeck ? "Añadir a «" + escapeAttr(activeDeck.name) + "»" : "Añadir a un mazo"}">🃏＋</button>`;
@@ -209,7 +248,7 @@ function cardEl(card) {
       ${img}
     </div>
     <div class="card-body">
-      <div class="card-name">${escapeHtml(card.name)}</div>
+      <div class="card-name">${escapeHtml(dName)}</div>
       <div class="card-meta">${escapeHtml(card.race)} · ${escapeHtml(card.type)}</div>
       <div class="card-meta">${escapeHtml(card.editionName || "")}</div>
       <div class="qty-row">
@@ -270,7 +309,7 @@ function openModal(card) {
         ${card.image ? '<span class="cd-zoom-hint">🔍 Ampliar</span>' : ""}
       </div>
       <div class="cd-body">
-        <h2>${escapeHtml(card.name)}</h2>
+        <h2 id="cd-name">${escapeHtml(displayName(card))}</h2>
         <div class="m-tags">
           ${tag(card.editionName || "")}${tag(card.race)}${tag(card.type)}${tag(card.rarity)}
           ${card.cost != null ? tag("Coste " + card.cost) : ""}${card.strength != null ? tag("Fuerza " + card.strength) : ""}
@@ -320,12 +359,18 @@ function openModal(card) {
   $("#modal").classList.remove("hidden");
 
   // Detalle ampliado en vivo (api.myl.cl)
-  fetchProfile(card).then((p) => renderProfileExtra(p));
+  fetchProfile(card).then((p) => renderProfileExtra(p, card));
 }
 
-function renderProfileExtra(p) {
+function renderProfileExtra(p, card) {
   const box = $("#cd-extra");
   if (!box) return;
+  // Corrige el nombre (tildes/ñ) con el del perfil
+  const realName = p?.details?.name?.trim();
+  if (card && realName) {
+    const h = $("#cd-name"); if (h) h.textContent = realName;
+    if (realName !== card.name) { nameCache[card.id] = realName; saveNameCache(); updateCardNameInDom(card.id, realName); }
+  }
   if (!p || !p.details) {
     box.innerHTML = `<p class="muted">No se pudo cargar el detalle ampliado (revisa tu conexión).</p>`;
     return;
@@ -614,7 +659,7 @@ function renderDeckDetail() {
     res.innerHTML = matches.map((c) => {
       const own = store.getQty(c.id);
       return `<div class="dsr" data-id="${escapeAttr(c.id)}">
-        <span class="dsr-name">${escapeHtml(c.name)}</span>
+        <span class="dsr-name">${escapeHtml(displayName(c))}</span>
         <span class="dsr-meta">${escapeHtml(c.editionName || "")} · <span class="${own > 0 ? "owned-tag" : ""}">tengo ${own}</span></span>
         <button class="qty-btn" data-add title="Añadir al mazo">＋</button>
       </div>`;
@@ -653,7 +698,7 @@ function renderDeckContents(deck) {
   for (const [type, rows] of Object.entries(byType)) {
     html += `<h3 class="deck-section-title">${escapeHtml(type)} (${rows.reduce((a, r) => a + r.q, 0)})</h3>`;
     for (const { card, cid, q } of rows) {
-      const name = card ? card.name : cid;
+      const name = card ? displayName(card) : cid;
       const own = store.getQty(cid);
       const lack = own < q ? ` <span style="color:var(--danger)">(faltan ${q - own})</span>` : "";
       html += `
