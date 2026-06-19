@@ -157,6 +157,33 @@ for (const slug of editionsToFetch) {
   await sleep(80);
 }
 
+/* ---------- 3.5) enriquecer nombres con acentos/ñ desde el perfil ---------- */
+// El listado de la API entrega los nombres SIN diacríticos; el perfil sí los trae.
+// Se consulta el perfil de cada carta (con concurrencia) para corregir el nombre.
+const noNames = argv.includes("--no-names");
+if (!noNames && all.length) {
+  console.log(`\nCorrigiendo nombres (acentos/ñ) desde el perfil…`);
+  const PROFILE = "https://api.myl.cl/cards/profile";
+  let idx = 0, done = 0, fixed = 0;
+  async function worker() {
+    while (idx < all.length) {
+      const card = all[idx++];
+      const slug = card.id.split("__").slice(2).join("__");
+      try {
+        const r = await fetch(`${PROFILE}/${encodeURIComponent(card.edition)}/${encodeURIComponent(slug)}`, { headers: HEADERS });
+        if (r.ok) {
+          const pj = await r.json();
+          const nm = pj?.details?.name;
+          if (nm && nm.trim() && nm.trim() !== card.name) { card.name = nm.trim(); fixed++; }
+        }
+      } catch {}
+      if (++done % 1500 === 0) console.log(`  ${done}/${all.length} (corregidos: ${fixed})`);
+    }
+  }
+  await Promise.all(Array.from({ length: 12 }, worker));
+  console.log(`✓ nombres revisados: ${all.length}, corregidos: ${fixed}`);
+}
+
 /* ---------- 4) escribir salida ---------- */
 all.sort((a, b) => (a.editionName || "").localeCompare(b.editionName || "", "es") || a.name.localeCompare(b.name, "es"));
 const payload = {

@@ -35,6 +35,8 @@ async function loadData() {
   // (prioriza el nombre que trae la propia carta desde el scraper)
   for (const c of state.cards) {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
+    // Texto normalizado (sin tildes/ñ) para búsqueda insensible a diacríticos
+    c.searchText = normText(c.name + " " + c.ability);
   }
   if (cardsRes.meta?.source === "seed") {
     showToast("Mostrando datos de demostración. Ejecuta el scraper para cargar el catálogo real.", 5000);
@@ -65,6 +67,10 @@ function normalizeCard(c, i) {
 function numOrNull(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : null;
+}
+// Minúsculas sin diacríticos (á→a, ñ→n) para comparar/buscar sin importar tildes
+function normText(s) {
+  return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 /* ===================== Filtros (poblar selects) ===================== */
@@ -111,7 +117,7 @@ function fillSelect(sel, opts) {
 
 /* ===================== Aplicar filtros ===================== */
 function applyFilters() {
-  const q = $("#search").value.trim().toLowerCase();
+  const q = normText($("#search").value.trim());
   const ownership = $("#f-ownership").value;
   const fmt = $("#f-format").value;
   const ed = $("#f-edition").value;
@@ -122,7 +128,7 @@ function applyFilters() {
   const sort = $("#f-sort").value;
 
   let out = state.cards.filter((c) => {
-    if (q && !(c.name.toLowerCase().includes(q) || c.ability.toLowerCase().includes(q))) return false;
+    if (q && !c.searchText.includes(q)) return false;
     if (fmt && c.format !== fmt) return false;
     if (ed && c.edition !== ed) return false;
     if (race && c.race !== race) return false;
@@ -497,10 +503,10 @@ function renderDeckDetail() {
 
   const di = $("#deck-search");
   di.oninput = debounce(() => {
-    const q = di.value.trim().toLowerCase();
+    const q = normText(di.value.trim());
     const res = $("#deck-search-results");
     if (q.length < 2) { res.innerHTML = ""; return; }
-    const matches = state.cards.filter((c) => c.name.toLowerCase().includes(q)).slice(0, 30);
+    const matches = state.cards.filter((c) => c.searchText.includes(q)).slice(0, 30);
     res.innerHTML = matches.map((c) => {
       const own = store.getQty(c.id);
       return `<div class="dsr" data-id="${escapeAttr(c.id)}">
