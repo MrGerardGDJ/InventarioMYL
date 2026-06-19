@@ -161,13 +161,33 @@ for (const slug of editionsToFetch) {
 // El listado de la API entrega los nombres SIN diacríticos; el perfil sí los trae.
 // Se consulta el perfil de cada carta (con concurrencia) para corregir el nombre.
 const noNames = argv.includes("--no-names");
+const reenrich = argv.includes("--reenrich");
 if (!noNames && all.length) {
-  console.log(`\nCorrigiendo nombres (acentos/ñ) desde el perfil…`);
   const PROFILE = "https://api.myl.cl/cards/profile";
+  // Incremental: reutiliza nombres ya corregidos de una corrida previa y solo
+  // consulta el perfil de cartas nuevas. (--reenrich fuerza revisar todo.)
+  const prevName = new Map();
+  let prevHadDiacritics = false;
+  try {
+    const prev = JSON.parse(fs.readFileSync(OUT, "utf8"));
+    for (const c of prev.cards || []) {
+      prevName.set(c.id, c.name);
+      if (/[áéíóúñü]/i.test(c.name)) prevHadDiacritics = true;
+    }
+  } catch {}
+  const baseline = prevHadDiacritics && !reenrich; // ya existe una base corregida
+  let pending = all;
+  if (baseline) {
+    for (const c of all) if (prevName.has(c.id)) c.name = prevName.get(c.id);
+    pending = all.filter((c) => !prevName.has(c.id)); // solo cartas nuevas
+  }
+  console.log(`\nCorrigiendo nombres (acentos/ñ): ${pending.length} por consultar` +
+    (baseline ? ` (reutilizadas ${all.length - pending.length} de la base previa)` : ` (base completa)`));
+
   let idx = 0, done = 0, fixed = 0;
   async function worker() {
-    while (idx < all.length) {
-      const card = all[idx++];
+    while (idx < pending.length) {
+      const card = pending[idx++];
       const slug = card.id.split("__").slice(2).join("__");
       try {
         const r = await fetch(`${PROFILE}/${encodeURIComponent(card.edition)}/${encodeURIComponent(slug)}`, { headers: HEADERS });
@@ -177,11 +197,11 @@ if (!noNames && all.length) {
           if (nm && nm.trim() && nm.trim() !== card.name) { card.name = nm.trim(); fixed++; }
         }
       } catch {}
-      if (++done % 1500 === 0) console.log(`  ${done}/${all.length} (corregidos: ${fixed})`);
+      if (++done % 1500 === 0) console.log(`  ${done}/${pending.length} (corregidos: ${fixed})`);
     }
   }
   await Promise.all(Array.from({ length: 12 }, worker));
-  console.log(`✓ nombres revisados: ${all.length}, corregidos: ${fixed}`);
+  console.log(`✓ nombres: consultados ${pending.length}, corregidos ${fixed}`);
 }
 
 /* ---------- 4) escribir salida ---------- */
