@@ -15,11 +15,11 @@
       "race": "Guerrero",
       "rarity": "Cortesano",
       "keyword": "Furia",
-      "cost": 7,
+      "cost": 2,
       "strength": 4,
-      "ability": "Furia.\nCuando ataca, puedes elegir un Aliado oponente para que no lo bloquee. Ese Aliado pierde 1 de Fuerza y su habilidad por el turno.",
+      "ability": "Furia.\nCuando ataca, puedes elegir un Aliado oponente para que lo bloquee. Ese Aliado pierde 1 de Fuerza y su habilidad por el turno.",
       "flavour": "Llámenme Ismael. Hace años, con muy poco dinero en el bolsillo y sin nada que me atara a la tierra, pensé en irme a navegar por ahí para conocer los océanos del mundo. — H. Melville.",
-      "image": "",
+      "image": "./data/custom-images/ismael.webp",
       "custom": true
     }
   ]
