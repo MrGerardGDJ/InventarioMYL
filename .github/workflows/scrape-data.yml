@@ -58,5 +58,10 @@ jobs:
           else
             git add data/cards.json
             git commit -m "datos: actualiza catálogo de cartas desde tor.myl.cl"
-            git push origin ${{ github.ref_name }}
+            # Reintenta integrando cambios remotos (evita rechazo si la rama avanzó)
+            for i in 1 2 3; do
+              git push origin ${{ github.ref_name }} && break
+              echo "push rechazado, integrando cambios remotos (intento $i)…"
+              git pull --rebase -X ours origin ${{ github.ref_name }} || git rebase --abort
+            done
           fi
