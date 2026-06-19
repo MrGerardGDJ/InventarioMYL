@@ -19,12 +19,15 @@ const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
 /* ===================== Carga de datos ===================== */
 async function loadData() {
-  const [cardsRes, edRes] = await Promise.all([
+  const [cardsRes, edRes, customRes] = await Promise.all([
     fetch("./data/cards.json").then((r) => r.json()).catch(() => ({ cards: [] })),
     fetch("./data/editions.json").then((r) => r.json()).catch(() => []),
+    fetch("./data/custom-cards.json").then((r) => (r.ok ? r.json() : { cards: [] })).catch(() => ({ cards: [] })),
   ]);
 
-  state.cards = (cardsRes.cards || cardsRes || []).map(normalizeCard);
+  const scraped = (cardsRes.cards || cardsRes || []).map(normalizeCard);
+  const custom = (customRes.cards || []).map(normalizeCard);
+  state.cards = [...scraped, ...custom];
   state.editions = Array.isArray(edRes) ? edRes : [];
   state.editionName = Object.fromEntries(state.editions.map((e) => [e.slug, e.name]));
 
@@ -44,15 +47,19 @@ function normalizeCard(c, i) {
     id,
     name: c.name || "Sin nombre",
     edition: c.edition || "",
+    editionName: c.editionName || "",
     format: c.format || "",
+    edid: c.edid || "",
     type: c.type || "—",
     race: c.race || "—",
     rarity: c.rarity || "—",
+    keyword: c.keyword || "",
     cost: numOrNull(c.cost),
     strength: numOrNull(c.strength ?? c.attack),
     ability: c.ability || "",
     flavour: c.flavour || "",
     image: c.image || c.image_path || "",
+    custom: !!c.custom,
   };
 }
 function numOrNull(v) {
