@@ -1,5 +1,6 @@
 // Exportación a Excel (.xlsx) y PDF con diseño cuidado. Carga perezosa.
 import { loadScript, CDN } from "./cdn.js";
+import { typeIcon, raceIcon } from "./icons.js";
 
 const FMT_NAMES = { PE: "Primera Era", PB: "Primer Bloque", SB: "Segundo Bloque", FX: "Furia Extendido", NE: "Nueva Era / Imperio" };
 const today = () => new Date().toISOString().slice(0, 10);
@@ -173,27 +174,6 @@ export async function exportDeckExcel(deck, cards, getQty, displayName) {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Mazo");
   XLSX.writeFile(wb, `mazo_${deck.name.replace(/\s+/g, "_")}_${today()}.xlsx`);
-}
-
-/* Íconos (emoji) por tipo y raza para la imagen del mazo */
-const TYPE_ICON = {
-  "Aliado": "🛡️", "Arma": "⚔️", "Talismán": "✨", "Tótem": "🗿",
-  "Oro": "🪙", "Monumento": "🏛️", "Otro": "🃏", "—": "🃏",
-};
-const RACE_ICON = {
-  "Guerrero": "🗡️", "Héroe": "🦸", "Dragón": "🐉", "Bestia": "🐾", "Eterno": "⚡",
-  "Faerie": "🧚", "Olímpico": "🏛️", "Sombra": "🌑", "Sacerdote": "🙏", "Caballero": "🐎",
-  "Faraón": "🏺", "Titán": "🗻", "Bárbaro": "🪓", "Defensor": "🛡️", "Desafiante": "🎯",
-  "Vampiro": "🧛", "Licántropo": "🐺", "Samurái": "🥷", "Kami": "⛩️", "Oni": "👹",
-  "Dios": "🔱", "Sirena": "🧜", "Cazador": "🏹", "Sacerdotisa": "🙏", "Chamán": "🪶",
-  "Paladín": "✝️", "Asesino": "🗡️", "Abominación": "🧟", "Ancestral": "🗿", "Campeón": "🏆",
-  "Sin Raza": "▫️", "Criaturas": "🐾", "Xian": "🐲", "Tenebris": "🌑",
-};
-function typeIcon(t) { return TYPE_ICON[t] || "🃏"; }
-function raceIcon(r) {
-  if (RACE_ICON[r]) return RACE_ICON[r];
-  const first = String(r || "").split("/")[0].trim();
-  return RACE_ICON[first] || "";
 }
 
 /* ===================== MAZO: Imagen (PNG) ===================== */

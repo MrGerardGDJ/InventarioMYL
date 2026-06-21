@@ -2,6 +2,7 @@ import * as store from "./store.js";
 import { exportExcel, exportPDF, exportDeckExcel, exportDeckImage } from "./exporters.js";
 import { renderCharts } from "./charts.js";
 import * as cloud from "./cloud.js";
+import { typeIcon, raceIcon, NO_STRENGTH_TYPES } from "./icons.js";
 
 /* ===================== Estado global ===================== */
 const state = {
@@ -56,7 +57,7 @@ function normalizeCard(c, i) {
     rarity: c.rarity || "—",
     keyword: c.keyword || "",
     cost: numOrNull(c.cost),
-    strength: numOrNull(c.strength ?? c.attack),
+    strength: NO_STRENGTH_TYPES.has(c.type || "—") ? null : numOrNull(c.strength ?? c.attack),
     ability: c.ability || "",
     flavour: c.flavour || "",
     image: c.image || c.image_path || "",
@@ -709,13 +710,13 @@ function renderDeckContents(deck) {
 
   let html = "";
   for (const [type, rows] of Object.entries(byType)) {
-    html += `<h3 class="deck-section-title">${escapeHtml(type)} (${rows.reduce((a, r) => a + r.q, 0)})</h3>`;
+    html += `<h3 class="deck-section-title">${typeIcon(type)} ${escapeHtml(type)} (${rows.reduce((a, r) => a + r.q, 0)})</h3>`;
     for (const { card, cid, q } of rows) {
       const name = card ? displayName(card) : cid;
       const own = store.getQty(cid);
       const lack = own < q ? ` <span style="color:var(--danger)">(faltan ${q - own})</span>` : "";
       const meta = card
-        ? `${escapeHtml(card.race)}${card.cost != null ? " · ⛁" + card.cost : ""}${card.strength != null ? " · ⚔" + card.strength : ""}`
+        ? `${raceIcon(card.race)} ${escapeHtml(card.race)}${card.cost != null ? " · ⛁" + card.cost : ""}${card.strength != null ? " · ⚔" + card.strength : ""}`
         : "";
       html += `
         <div class="deck-row" data-cid="${escapeAttr(cid)}">
