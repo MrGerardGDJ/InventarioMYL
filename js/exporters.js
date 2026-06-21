@@ -175,6 +175,27 @@ export async function exportDeckExcel(deck, cards, getQty, displayName) {
   XLSX.writeFile(wb, `mazo_${deck.name.replace(/\s+/g, "_")}_${today()}.xlsx`);
 }
 
+/* Íconos (emoji) por tipo y raza para la imagen del mazo */
+const TYPE_ICON = {
+  "Aliado": "🛡️", "Arma": "⚔️", "Talismán": "✨", "Tótem": "🗿",
+  "Oro": "🪙", "Monumento": "🏛️", "Otro": "🃏", "—": "🃏",
+};
+const RACE_ICON = {
+  "Guerrero": "🗡️", "Héroe": "🦸", "Dragón": "🐉", "Bestia": "🐾", "Eterno": "⚡",
+  "Faerie": "🧚", "Olímpico": "🏛️", "Sombra": "🌑", "Sacerdote": "🙏", "Caballero": "🐎",
+  "Faraón": "🏺", "Titán": "🗻", "Bárbaro": "🪓", "Defensor": "🛡️", "Desafiante": "🎯",
+  "Vampiro": "🧛", "Licántropo": "🐺", "Samurái": "🥷", "Kami": "⛩️", "Oni": "👹",
+  "Dios": "🔱", "Sirena": "🧜", "Cazador": "🏹", "Sacerdotisa": "🙏", "Chamán": "🪶",
+  "Paladín": "✝️", "Asesino": "🗡️", "Abominación": "🧟", "Ancestral": "🗿", "Campeón": "🏆",
+  "Sin Raza": "▫️", "Criaturas": "🐾", "Xian": "🐲", "Tenebris": "🌑",
+};
+function typeIcon(t) { return TYPE_ICON[t] || "🃏"; }
+function raceIcon(r) {
+  if (RACE_ICON[r]) return RACE_ICON[r];
+  const first = String(r || "").split("/")[0].trim();
+  return RACE_ICON[first] || "";
+}
+
 /* ===================== MAZO: Imagen (PNG) ===================== */
 export async function exportDeckImage(deck, cards, getQty, displayName) {
   await loadScript(CDN.html2canvas);
@@ -190,13 +211,13 @@ export async function exportDeckImage(deck, cards, getQty, displayName) {
   const colsHtml = Object.entries(groups).map(([type, rs]) => `
     <div style="break-inside:avoid;margin-bottom:14px">
       <div style="color:#d9b85a;font-weight:700;font-size:15px;border-bottom:1px solid #3a3f50;padding-bottom:4px;margin-bottom:6px">
-        ${esc(type)} <span style="color:#8b93a7;font-weight:400">(${rs.reduce((a, r) => a + r.qty, 0)})</span>
+        ${typeIcon(type)} ${esc(type)} <span style="color:#8b93a7;font-weight:400">(${rs.reduce((a, r) => a + r.qty, 0)})</span>
       </div>
       ${rs.map((r) => `
         <div style="display:flex;align-items:center;gap:8px;padding:3px 0;font-size:14px">
           <span style="color:#d9b85a;font-weight:700;min-width:26px">${r.qty}×</span>
           <span style="flex:1;color:#fff">${esc(r.name)}${r.missing ? ` <span style="color:#e5707a;font-size:12px">(faltan ${r.missing})</span>` : ""}</span>
-          <span style="color:#9aa1b2;font-size:12px">${esc(r.race)}</span>
+          <span style="color:#9aa1b2;font-size:12px">${raceIcon(r.race)} ${esc(r.race)}</span>
           ${r.cost != null ? `<span style="background:#1f2330;color:#e7e9ee;border-radius:10px;padding:1px 7px;font-size:12px">⛁ ${r.cost}</span>` : ""}
           ${r.strength != null ? `<span style="background:#7a2a2f;color:#fff;border-radius:6px;padding:1px 7px;font-size:12px">⚔ ${r.strength}</span>` : ""}
         </div>`).join("")}
