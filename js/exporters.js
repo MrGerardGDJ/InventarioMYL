@@ -128,3 +128,103 @@ export async function exportPDF(cards, getQty, scopeLabel = "Colección") {
 
   doc.save(`inventario_myl_${today()}.pdf`);
 }
+
+/* ===================== MAZO: helpers ===================== */
+function fmtDate(ts) {
+  const d = ts ? new Date(ts) : new Date();
+  return d.toLocaleDateString("es-CL", { day: "2-digit", month: "2-digit", year: "numeric" });
+}
+// Devuelve las cartas del mazo enriquecidas y agrupadas por tipo
+function deckRows(deck, cards, getQty, displayName) {
+  const byId = new Map(cards.map((c) => [c.id, c]));
+  const rows = [];
+  for (const [cid, q] of Object.entries(deck.cards)) {
+    const c = byId.get(cid) || { name: cid, race: "—", type: "Otro", cost: null, strength: null, rarity: "—", editionName: "" };
+    rows.push({
+      qty: q, name: displayName ? displayName(c) : c.name, race: c.race, type: c.type,
+      cost: c.cost, strength: c.strength, rarity: c.rarity, edition: c.editionName || c.edition || "",
+      own: getQty(cid), missing: Math.max(0, q - getQty(cid)),
+    });
+  }
+  rows.sort((a, b) => (a.type || "").localeCompare(b.type || "", "es") || a.name.localeCompare(b.name, "es"));
+  return rows;
+}
+
+/* ===================== MAZO: Excel ===================== */
+export async function exportDeckExcel(deck, cards, getQty, displayName) {
+  await loadScript(CDN.xlsx);
+  const XLSX = window.XLSX;
+  const rows = deckRows(deck, cards, getQty, displayName);
+  const total = rows.reduce((s, r) => s + r.qty, 0);
+  const missing = rows.reduce((s, r) => s + r.missing, 0);
+
+  const head = [
+    [`Mazo: ${deck.name}`],
+    ["Actualizado", fmtDate(deck.updatedAt)],
+    ["Total de cartas", total],
+    ["Te faltan", missing],
+    [],
+    ["Cant.", "Nombre", "Raza", "Tipo", "Coste", "Fuerza", "Rareza", "Edición", "Tengo", "Faltan"],
+  ];
+  const body = rows.map((r) => [r.qty, r.name, r.race, r.type, r.cost ?? "", r.strength ?? "", r.rarity, r.edition, r.own, r.missing || ""]);
+  const ws = XLSX.utils.aoa_to_sheet(head.concat(body));
+  ws["!cols"] = [{ wch: 6 }, { wch: 30 }, { wch: 16 }, { wch: 12 }, { wch: 7 }, { wch: 7 }, { wch: 14 }, { wch: 22 }, { wch: 7 }, { wch: 7 }];
+  ws["!autofilter"] = { ref: `A6:J${6 + body.length}` };
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Mazo");
+  XLSX.writeFile(wb, `mazo_${deck.name.replace(/\s+/g, "_")}_${today()}.xlsx`);
+}
+
+/* ===================== MAZO: Imagen (PNG) ===================== */
+export async function exportDeckImage(deck, cards, getQty, displayName) {
+  await loadScript(CDN.html2canvas);
+  const rows = deckRows(deck, cards, getQty, displayName);
+  const total = rows.reduce((s, r) => s + r.qty, 0);
+  const missing = rows.reduce((s, r) => s + r.missing, 0);
+
+  // Agrupa por tipo
+  const groups = {};
+  for (const r of rows) (groups[r.type] ||= []).push(r);
+
+  const esc = (s) => String(s ?? "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const colsHtml = Object.entries(groups).map(([type, rs]) => `
+    <div style="break-inside:avoid;margin-bottom:14px">
+      <div style="color:#d9b85a;font-weight:700;font-size:15px;border-bottom:1px solid #3a3f50;padding-bottom:4px;margin-bottom:6px">
+        ${esc(type)} <span style="color:#8b93a7;font-weight:400">(${rs.reduce((a, r) => a + r.qty, 0)})</span>
+      </div>
+      ${rs.map((r) => `
+        <div style="display:flex;align-items:center;gap:8px;padding:3px 0;font-size:14px">
+          <span style="color:#d9b85a;font-weight:700;min-width:26px">${r.qty}×</span>
+          <span style="flex:1;color:#fff">${esc(r.name)}${r.missing ? ` <span style="color:#e5707a;font-size:12px">(faltan ${r.missing})</span>` : ""}</span>
+          <span style="color:#9aa1b2;font-size:12px">${esc(r.race)}</span>
+          ${r.cost != null ? `<span style="background:#1f2330;color:#e7e9ee;border-radius:10px;padding:1px 7px;font-size:12px">⛁ ${r.cost}</span>` : ""}
+          ${r.strength != null ? `<span style="background:#7a2a2f;color:#fff;border-radius:6px;padding:1px 7px;font-size:12px">⚔ ${r.strength}</span>` : ""}
+        </div>`).join("")}
+    </div>`).join("");
+
+  const node = document.createElement("div");
+  node.style.cssText = "position:fixed;left:-9999px;top:0;width:680px;padding:24px;background:#0f1117;color:#e7e9ee;font-family:Segoe UI,system-ui,sans-serif;box-sizing:border-box";
+  node.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #c9a13b;padding-bottom:10px;margin-bottom:16px">
+      <div>
+        <div style="font-size:13px;color:#c9a13b;letter-spacing:1px">🃏 INVENTARIO MyL · MAZO</div>
+        <div style="font-size:24px;font-weight:800">${esc(deck.name)}</div>
+      </div>
+      <div style="text-align:right;font-size:12px;color:#9aa1b2">
+        <div><b style="color:#e7e9ee">${total}</b> cartas${missing ? ` · faltan ${missing}` : ""}</div>
+        <div>Actualizado: ${fmtDate(deck.updatedAt)}</div>
+      </div>
+    </div>
+    <div style="column-count:2;column-gap:24px">${colsHtml || '<span style="color:#9aa1b2">Mazo vacío</span>'}</div>
+    <div style="margin-top:18px;text-align:center;color:#5b6273;font-size:11px">knomoio.github.io/InventarioMYL</div>`;
+  document.body.appendChild(node);
+  try {
+    const canvas = await window.html2canvas(node, { backgroundColor: "#0f1117", scale: 2 });
+    const a = document.createElement("a");
+    a.href = canvas.toDataURL("image/png");
+    a.download = `mazo_${deck.name.replace(/\s+/g, "_")}_${today()}.png`;
+    a.click();
+  } finally {
+    node.remove();
+  }
+}

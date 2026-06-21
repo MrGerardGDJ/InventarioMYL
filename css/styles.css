@@ -282,6 +282,7 @@ main { padding: 0; }
 }
 .deck-row .dr-qty { font-weight: 700; width: 28px; }
 .deck-row .dr-name { flex: 1; }
+.deck-row .dr-sub { display: block; font-size: 11px; color: var(--muted); margin-top: 1px; }
 .deck-row .dr-actions button { margin-left: 4px; }
 .active-deck-banner {
   background: var(--bg-3); border: 1px dashed var(--accent); border-radius: 8px;

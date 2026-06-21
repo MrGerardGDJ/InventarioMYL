@@ -1,5 +1,5 @@
 import * as store from "./store.js";
-import { exportExcel, exportPDF } from "./exporters.js";
+import { exportExcel, exportPDF, exportDeckExcel, exportDeckImage } from "./exporters.js";
 import { renderCharts } from "./charts.js";
 import * as cloud from "./cloud.js";
 
@@ -638,8 +638,11 @@ function renderDeckDetail() {
       <h2><input id="deck-name" value="${escapeAttr(deck.name)}" style="background:var(--bg-3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font-size:18px;font-weight:700" /></h2>
       <span class="muted" id="deck-total"></span>
       <div class="spacer" style="flex:1"></div>
-      <button class="btn" id="deck-export">Exportar mazo</button>
+      <button class="btn small" id="deck-xlsx">📊 Excel</button>
+      <button class="btn small" id="deck-img">🖼️ Imagen</button>
+      <button class="btn small" id="deck-txt">📋 Texto</button>
     </div>
+    <div class="muted" style="font-size:12px;margin-top:4px">Actualizado: ${deck.updatedAt ? new Date(deck.updatedAt).toLocaleString("es-CL") : "—"}</div>
     <div id="deck-banner"></div>
     <div class="deck-add-search">
       <input id="deck-search" type="search" placeholder="🔎 Buscar carta por nombre para añadir a este mazo…" autocomplete="off" />
@@ -648,7 +651,17 @@ function renderDeckDetail() {
     <div id="deck-contents"></div>`;
 
   $("#deck-name").onchange = (e) => { store.renameDeck(deck.id, e.target.value || "Mazo"); populateActiveDeckSelect(); updateDeckCounts(); };
-  $("#deck-export").onclick = () => exportDeck(deck);
+  $("#deck-txt").onclick = () => exportDeck(deck);
+  $("#deck-xlsx").onclick = () => {
+    showToast("Generando Excel…", 4000);
+    exportDeckExcel(deck, state.cards, store.getQty, displayName)
+      .then(() => showToast("Excel descargado ✓")).catch((e) => showToast("Error: " + e.message, 4000));
+  };
+  $("#deck-img").onclick = () => {
+    showToast("Generando imagen…", 4000);
+    exportDeckImage(deck, state.cards, store.getQty, displayName)
+      .then(() => showToast("Imagen descargada ✓")).catch((e) => showToast("Error: " + e.message, 4000));
+  };
 
   const di = $("#deck-search");
   di.oninput = debounce(() => {
@@ -701,10 +714,13 @@ function renderDeckContents(deck) {
       const name = card ? displayName(card) : cid;
       const own = store.getQty(cid);
       const lack = own < q ? ` <span style="color:var(--danger)">(faltan ${q - own})</span>` : "";
+      const meta = card
+        ? `${escapeHtml(card.race)}${card.cost != null ? " · ⛁" + card.cost : ""}${card.strength != null ? " · ⚔" + card.strength : ""}`
+        : "";
       html += `
         <div class="deck-row" data-cid="${escapeAttr(cid)}">
           <span class="dr-qty">${q}×</span>
-          <span class="dr-name">${escapeHtml(name)}${lack}</span>
+          <span class="dr-name">${escapeHtml(name)}${lack}<span class="dr-sub">${meta}</span></span>
           <span class="dr-actions">
             <button class="qty-btn" data-d="minus">−</button>
             <button class="qty-btn" data-d="plus">+</button>

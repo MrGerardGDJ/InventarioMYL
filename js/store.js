@@ -73,7 +73,7 @@ let decks = read(KEYS.decks, []);
 export function getDecks() { return decks; }
 export function getDeck(id) { return decks.find((d) => d.id === id) || null; }
 export function createDeck(name) {
-  const deck = { id: "d" + Date.now().toString(36), name: name || "Mazo nuevo", cards: {} };
+  const deck = { id: "d" + Date.now().toString(36), name: name || "Mazo nuevo", cards: {}, updatedAt: Date.now() };
   decks.push(deck);
   write(KEYS.decks, decks);
   notify();
@@ -81,7 +81,7 @@ export function createDeck(name) {
 }
 export function renameDeck(id, name) {
   const d = getDeck(id);
-  if (d) { d.name = name; write(KEYS.decks, decks); notify(); }
+  if (d) { d.name = name; d.updatedAt = Date.now(); write(KEYS.decks, decks); notify(); }
 }
 export function deleteDeck(id) {
   decks = decks.filter((d) => d.id !== id);
@@ -94,6 +94,7 @@ export function deckAdd(deckId, cardId, delta = 1) {
   const n = Math.max(0, (d.cards[cardId] || 0) + delta);
   if (n === 0) delete d.cards[cardId];
   else d.cards[cardId] = n;
+  d.updatedAt = Date.now();
   write(KEYS.decks, decks);
   notify();
 }
