@@ -283,6 +283,21 @@ main { padding: 0; }
 .deck-row .dr-qty { font-weight: 700; width: 28px; }
 .deck-row .dr-name { flex: 1; }
 .deck-row .dr-sub { display: block; font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+/* Resumen del mazo en pantalla */
+.deck-summary { margin: 14px 0; }
+.deck-summary .ds-title { font-size: 12px; color: var(--accent-2); letter-spacing: .4px; text-transform: uppercase; margin: 10px 0 6px; }
+.ds-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.ds-chip { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; min-width: 96px; }
+.ds-chip .ds-t { font-size: 12px; color: var(--muted); }
+.ds-chip .ds-n { font-size: 20px; font-weight: 800; color: var(--accent-2); }
+.ds-matrix { overflow-x: auto; }
+.ds-matrix table { border-collapse: collapse; font-size: 13px; min-width: 320px; }
+.ds-matrix th, .ds-matrix td { padding: 5px 9px; text-align: center; border-bottom: 1px solid var(--border); }
+.ds-matrix th:first-child, .ds-matrix td:first-child { text-align: left; }
+.ds-matrix th { color: var(--muted); font-weight: 600; }
+.ds-matrix td.b { font-weight: 700; color: var(--accent-2); }
+.ds-matrix tr.tot td { font-weight: 700; color: var(--text); border-top: 1px solid var(--border); }
 .deck-row .dr-actions button { margin-left: 4px; }
 .active-deck-banner {
   background: var(--bg-3); border: 1px dashed var(--accent); border-radius: 8px;

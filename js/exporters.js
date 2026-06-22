@@ -151,6 +151,29 @@ function deckRows(deck, cards, getQty, displayName) {
   return rows;
 }
 
+// Resumen del mazo: totales, distribución por tipo y matriz tipo × coste
+export function deckSummary(deck, cards, getQty, displayName) {
+  const rows = deckRows(deck, cards, getQty, displayName);
+  const total = rows.reduce((s, r) => s + r.qty, 0);
+  const missing = rows.reduce((s, r) => s + r.missing, 0);
+  const TYPE_ORDER = ["Aliado", "Talismán", "Tótem", "Arma", "Oro", "Monumento", "Otro"];
+  const typeTotal = {}, matrix = {}, costKeys = new Set();
+  for (const r of rows) {
+    const t = r.type || "Otro";
+    typeTotal[t] = (typeTotal[t] || 0) + r.qty;
+    const ck = r.cost == null ? "–" : (r.cost >= 8 ? "8+" : String(r.cost));
+    (matrix[t] ||= {})[ck] = (matrix[t][ck] || 0) + r.qty;
+    costKeys.add(ck);
+  }
+  const ord = (k) => (k === "–" ? 999 : k === "8+" ? 100 : Number(k));
+  const cols = [...costKeys].sort((a, b) => ord(a) - ord(b));
+  const typesPresent = TYPE_ORDER.filter((t) => typeTotal[t]);
+  for (const t of Object.keys(typeTotal)) if (!typesPresent.includes(t)) typesPresent.push(t);
+  const colTotal = (c) => typesPresent.reduce((s, t) => s + (matrix[t][c] || 0), 0);
+  const pct = (n) => (total ? Math.round((n / total) * 100) : 0);
+  return { rows, total, missing, typeTotal, matrix, cols, typesPresent, colTotal, pct };
+}
+
 /* ===================== MAZO: Excel ===================== */
 export async function exportDeckExcel(deck, cards, getQty, displayName) {
   await loadScript(CDN.xlsx);
@@ -172,6 +195,26 @@ export async function exportDeckExcel(deck, cards, getQty, displayName) {
   ws["!cols"] = [{ wch: 6 }, { wch: 30 }, { wch: 16 }, { wch: 12 }, { wch: 7 }, { wch: 7 }, { wch: 14 }, { wch: 22 }, { wch: 7 }, { wch: 7 }];
   ws["!autofilter"] = { ref: `A6:J${6 + body.length}` };
   const wb = XLSX.utils.book_new();
+
+  // Hoja "Resumen": distribución por tipo + matriz tipo × coste
+  const S = deckSummary(deck, cards, getQty, displayName);
+  const resumen = [
+    [`Resumen: ${deck.name}`],
+    ["Actualizado", fmtDate(deck.updatedAt)],
+    ["Total de cartas", S.total],
+    [],
+    ["Distribución por tipo", "Cantidad", "%"],
+    ...S.typesPresent.map((t) => [t, S.typeTotal[t], S.pct(S.typeTotal[t]) + "%"]),
+    [],
+    ["Detalle por tipo y coste"],
+    ["Tipo", ...S.cols, "Total"],
+    ...S.typesPresent.map((t) => [t, ...S.cols.map((c) => S.matrix[t][c] || ""), S.typeTotal[t]]),
+    ["Total", ...S.cols.map((c) => S.colTotal(c)), S.total],
+  ];
+  const wsR = XLSX.utils.aoa_to_sheet(resumen);
+  wsR["!cols"] = [{ wch: 16 }, ...S.cols.map(() => ({ wch: 5 })), { wch: 7 }];
+  XLSX.utils.book_append_sheet(wb, wsR, "Resumen");
+
   XLSX.utils.book_append_sheet(wb, ws, "Mazo");
   XLSX.writeFile(wb, `mazo_${deck.name.replace(/\s+/g, "_")}_${today()}.xlsx`);
 }
@@ -179,9 +222,7 @@ export async function exportDeckExcel(deck, cards, getQty, displayName) {
 /* ===================== MAZO: Imagen (PNG) ===================== */
 export async function exportDeckImage(deck, cards, getQty, displayName) {
   await loadScript(CDN.html2canvas);
-  const rows = deckRows(deck, cards, getQty, displayName);
-  const total = rows.reduce((s, r) => s + r.qty, 0);
-  const missing = rows.reduce((s, r) => s + r.missing, 0);
+  const { rows, total, missing, typeTotal, matrix, cols, typesPresent, colTotal, pct } = deckSummary(deck, cards, getQty, displayName);
 
   // Agrupa por tipo
   const groups = {};
@@ -202,23 +243,6 @@ export async function exportDeckImage(deck, cards, getQty, displayName) {
           ${r.strength != null ? `<span style="background:#7a2a2f;color:#fff;border-radius:6px;padding:1px 7px;font-size:12px">⚔ ${r.strength}</span>` : ""}
         </div>`).join("")}
     </div>`).join("");
-
-  // --- Resumen: distribución por tipo y matriz tipo × coste ---
-  const TYPE_ORDER = ["Aliado", "Talismán", "Tótem", "Arma", "Oro", "Monumento", "Otro"];
-  const typeTotal = {}, matrix = {}, costKeys = new Set();
-  for (const r of rows) {
-    const t = r.type || "Otro";
-    typeTotal[t] = (typeTotal[t] || 0) + r.qty;
-    const ck = r.cost == null ? "–" : (r.cost >= 8 ? "8+" : String(r.cost));
-    (matrix[t] ||= {})[ck] = (matrix[t][ck] || 0) + r.qty;
-    costKeys.add(ck);
-  }
-  const ord = (k) => (k === "–" ? 999 : k === "8+" ? 100 : Number(k));
-  const cols = [...costKeys].sort((a, b) => ord(a) - ord(b));
-  const typesPresent = TYPE_ORDER.filter((t) => typeTotal[t]);
-  for (const t of Object.keys(typeTotal)) if (!typesPresent.includes(t)) typesPresent.push(t);
-  const colTotal = (c) => typesPresent.reduce((s, t) => s + (matrix[t][c] || 0), 0);
-  const pct = (n) => (total ? Math.round((n / total) * 100) : 0);
 
   const distHtml = typesPresent.map((t) => `
     <div style="flex:1;min-width:120px;background:#171a23;border:1px solid #2b3040;border-radius:10px;padding:10px 12px">

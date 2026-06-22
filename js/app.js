@@ -1,5 +1,5 @@
 import * as store from "./store.js";
-import { exportExcel, exportPDF, exportDeckExcel, exportDeckImage } from "./exporters.js";
+import { exportExcel, exportPDF, exportDeckExcel, exportDeckImage, deckSummary } from "./exporters.js";
 import { renderCharts } from "./charts.js";
 import * as cloud from "./cloud.js";
 import { typeIcon, raceIcon, NO_STRENGTH_TYPES } from "./icons.js";
@@ -645,6 +645,7 @@ function renderDeckDetail() {
     </div>
     <div class="muted" style="font-size:12px;margin-top:4px">Actualizado: ${deck.updatedAt ? new Date(deck.updatedAt).toLocaleString("es-CL") : "—"}</div>
     <div id="deck-banner"></div>
+    <div id="deck-summary" class="deck-summary"></div>
     <div class="deck-add-search">
       <input id="deck-search" type="search" placeholder="🔎 Buscar carta por nombre para añadir a este mazo…" autocomplete="off" />
       <div id="deck-search-results" class="deck-search-results"></div>
@@ -737,6 +738,24 @@ function renderDeckContents(deck) {
       b.onclick = () => { store.deckAdd(deck.id, cid, b.dataset.d === "plus" ? 1 : -1); renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount(); };
     });
   });
+  renderDeckSummary(deck);
+}
+
+function renderDeckSummary(deck) {
+  const box = $("#deck-summary");
+  if (!box) return;
+  const S = deckSummary(deck, state.cards, store.getQty, displayName);
+  if (!S.total) { box.innerHTML = ""; return; }
+  const chips = S.typesPresent.map((t) =>
+    `<div class="ds-chip"><div class="ds-t">${typeIcon(t)} ${escapeHtml(t)}</div><div class="ds-n">${S.typeTotal[t]} <span class="muted">· ${S.pct(S.typeTotal[t])}%</span></div></div>`).join("");
+  const head = `<tr><th>Tipo</th>${S.cols.map((c) => `<th>${c}</th>`).join("")}<th>Total</th></tr>`;
+  const body = S.typesPresent.map((t) =>
+    `<tr><td>${typeIcon(t)} ${escapeHtml(t)}</td>${S.cols.map((c) => `<td>${S.matrix[t][c] || ""}</td>`).join("")}<td class="b">${S.typeTotal[t]}</td></tr>`).join("");
+  const totalRow = `<tr class="tot"><td>Total</td>${S.cols.map((c) => `<td>${S.colTotal(c)}</td>`).join("")}<td>${S.total}</td></tr>`;
+  box.innerHTML =
+    `<div class="ds-title">Distribución por tipo</div><div class="ds-chips">${chips}</div>
+     <div class="ds-title">Detalle por tipo y coste</div>
+     <div class="ds-matrix"><table>${head}${body}${totalRow}</table></div>`;
 }
 
 function updateDeckCounts() {
