@@ -203,6 +203,47 @@ export async function exportDeckImage(deck, cards, getQty, displayName) {
         </div>`).join("")}
     </div>`).join("");
 
+  // --- Resumen: distribución por tipo y matriz tipo × coste ---
+  const TYPE_ORDER = ["Aliado", "Talismán", "Tótem", "Arma", "Oro", "Monumento", "Otro"];
+  const typeTotal = {}, matrix = {}, costKeys = new Set();
+  for (const r of rows) {
+    const t = r.type || "Otro";
+    typeTotal[t] = (typeTotal[t] || 0) + r.qty;
+    const ck = r.cost == null ? "–" : (r.cost >= 8 ? "8+" : String(r.cost));
+    (matrix[t] ||= {})[ck] = (matrix[t][ck] || 0) + r.qty;
+    costKeys.add(ck);
+  }
+  const ord = (k) => (k === "–" ? 999 : k === "8+" ? 100 : Number(k));
+  const cols = [...costKeys].sort((a, b) => ord(a) - ord(b));
+  const typesPresent = TYPE_ORDER.filter((t) => typeTotal[t]);
+  for (const t of Object.keys(typeTotal)) if (!typesPresent.includes(t)) typesPresent.push(t);
+  const colTotal = (c) => typesPresent.reduce((s, t) => s + (matrix[t][c] || 0), 0);
+  const pct = (n) => (total ? Math.round((n / total) * 100) : 0);
+
+  const distHtml = typesPresent.map((t) => `
+    <div style="flex:1;min-width:120px;background:#171a23;border:1px solid #2b3040;border-radius:10px;padding:10px 12px">
+      <div style="font-size:12px;color:#9aa1b2">${typeIcon(t)} ${esc(t)}</div>
+      <div style="font-size:22px;font-weight:800;color:#d9b85a">${typeTotal[t]}<span style="font-size:12px;color:#8b93a7;font-weight:400"> · ${pct(typeTotal[t])}%</span></div>
+    </div>`).join("");
+
+  const th = (x) => `<th style="padding:5px 8px;color:#9aa1b2;font-weight:600;border-bottom:1px solid #2b3040;text-align:center">${x}</th>`;
+  const td = (x, b) => `<td style="padding:5px 8px;text-align:center;${b ? "font-weight:700;color:#d9b85a" : "color:#e7e9ee"}">${x || ""}</td>`;
+  const matrixHtml = `
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:10px">
+      <thead><tr><th style="padding:5px 8px;text-align:left;color:#9aa1b2;border-bottom:1px solid #2b3040">Tipo</th>${cols.map((c) => th(c)).join("")}${th("Total")}</tr></thead>
+      <tbody>
+        ${typesPresent.map((t) => `<tr><td style="padding:5px 8px;color:#e7e9ee">${typeIcon(t)} ${esc(t)}</td>${cols.map((c) => td(matrix[t][c])).join("")}${td(typeTotal[t], true)}</tr>`).join("")}
+        <tr style="border-top:1px solid #2b3040"><td style="padding:5px 8px;color:#9aa1b2;font-weight:700">Total</td>${cols.map((c) => td(colTotal(c), true)).join("")}${td(total, true)}</tr>
+      </tbody>
+    </table>`;
+
+  const summaryHtml = `
+    <div style="font-size:12px;color:#c9a13b;letter-spacing:1px;margin-bottom:8px">DISTRIBUCIÓN POR TIPO</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">${distHtml}</div>
+    <div style="font-size:12px;color:#c9a13b;letter-spacing:1px">DETALLE POR TIPO Y COSTE</div>
+    ${matrixHtml}
+    <div style="height:18px"></div>`;
+
   const node = document.createElement("div");
   node.style.cssText = "position:fixed;left:-9999px;top:0;width:680px;padding:24px;background:#0f1117;color:#e7e9ee;font-family:Segoe UI,system-ui,sans-serif;box-sizing:border-box";
   node.innerHTML = `
@@ -216,6 +257,7 @@ export async function exportDeckImage(deck, cards, getQty, displayName) {
         <div>Actualizado: ${fmtDate(deck.updatedAt)}</div>
       </div>
     </div>
+    ${rows.length ? summaryHtml : ""}
     <div style="column-count:2;column-gap:24px">${colsHtml || '<span style="color:#9aa1b2">Mazo vacío</span>'}</div>
     <div style="margin-top:18px;text-align:center;color:#5b6273;font-size:11px">knomoio.github.io/InventarioMYL</div>`;
   document.body.appendChild(node);
