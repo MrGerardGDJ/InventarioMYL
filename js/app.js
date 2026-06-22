@@ -1,0 +1,1246 @@
+import * as store from "./store.js";
+import { exportExcel, exportPDF, exportDeckExcel, exportDeckImage, deckSummary } from "./exporters.js";
+import { renderCharts } from "./charts.js";
+import * as cloud from "./cloud.js";
+import { typeIcon, raceIcon, NO_STRENGTH_TYPES } from "./icons.js";
+
+/* ===================== Estado global ===================== */
+const state = {
+  cards: [],
+  editions: [],
+  editionName: {}, // slug -> nombre legible
+  filtered: [],
+  page: 0,
+  pageSize: 60,
+  view: "coleccion",
+};
+
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+/* ===================== Carga de datos ===================== */
+async function loadData() {
+  const [cardsRes, edRes, customRes] = await Promise.all([
+    fetch("./data/cards.json").then((r) => r.json()).catch(() => ({ cards: [] })),
+    fetch("./data/editions.json").then((r) => r.json()).catch(() => []),
+    fetch("./data/custom-cards.json").then((r) => (r.ok ? r.json() : { cards: [] })).catch(() => ({ cards: [] })),
+  ]);
+
+  const scraped = (cardsRes.cards || cardsRes || []).map(normalizeCard);
+  const bundledCustom = (customRes.cards || []).map(normalizeCard);
+  state.baseCards = [...scraped, ...bundledCustom];
+  state.editions = Array.isArray(edRes) ? edRes : [];
+  state.editionName = Object.fromEntries(state.editions.map((e) => [e.slug, e.name]));
+
+  // Asegura nombre legible de edición y precalcula texto de búsqueda (una vez)
+  for (const c of state.baseCards) {
+    c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
+    c.searchText = normText(c.name + " " + c.ability);
+  }
+  rebuildCards();
+  if (cardsRes.meta?.source === "seed") {
+    showToast("Mostrando datos de demostración. Ejecuta el scraper para cargar el catálogo real.", 5000);
+  }
+}
+
+function normalizeCard(c, i) {
+  const id = c.id || `${c.edition || "x"}__${(c.name || "carta_" + i).toLowerCase().replace(/\s+/g, "_")}`;
+  return {
+    id,
+    name: c.name || "Sin nombre",
+    edition: c.edition || "",
+    editionName: c.editionName || "",
+    format: c.format || "",
+    edid: c.edid || "",
+    type: c.type || "—",
+    race: c.race || "—",
+    rarity: c.rarity || "—",
+    keyword: c.keyword || "",
+    cost: numOrNull(c.cost),
+    strength: NO_STRENGTH_TYPES.has(c.type || "—") ? null : numOrNull(c.strength ?? c.attack),
+    ability: c.ability || "",
+    flavour: c.flavour || "",
+    image: c.image || c.image_path || "",
+    custom: !!c.custom,
+  };
+}
+function numOrNull(v) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+// Combina las cartas base (catálogo + bundle) con las cartas manuales del usuario
+function rebuildCards() {
+  const userCustom = store.getCustomCards().map(normalizeCard);
+  for (const c of userCustom) {
+    c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
+    c.searchText = normText(c.name + " " + c.ability);
+  }
+  state.cards = (state.baseCards || []).concat(userCustom);
+}
+// Minúsculas sin diacríticos (á→a, ñ→n) para comparar/buscar sin importar tildes
+function normText(s) {
+  return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+/* --- Correcci\u00f3n perezosa de nombres (la API del listado los entrega sin
+   tildes/\u00f1; el perfil s\u00ed los trae). Se corrigen solo las cartas visibles y
+   se cachean para no volver a consultarlas. --- */
+const nameCache = (() => { try { return JSON.parse(localStorage.getItem("myl.namecache.v1")) || {}; } catch { return {}; } })();
+let nameCacheTimer;
+function saveNameCache() {
+  clearTimeout(nameCacheTimer);
+  nameCacheTimer = setTimeout(() => { try { localStorage.setItem("myl.namecache.v1", JSON.stringify(nameCache)); } catch {} }, 800);
+}
+function displayName(card) { return nameCache[card.id] || card.name; }
+
+let nameQueue = [], nameActive = 0;
+function scheduleNameCorrection(cards) {
+  for (const c of cards) { if (c.custom || c.id in nameCache) continue; nameQueue.push(c); }
+  pumpNames();
+}
+function pumpNames() {
+  while (nameActive < 6 && nameQueue.length) {
+    const c = nameQueue.shift();
+    if (c.id in nameCache) continue;
+    nameActive++;
+    fetchProfile(c).then((p) => {
+      const nm = p?.details?.name?.trim();
+      nameCache[c.id] = nm || c.name; // marca como revisada (evita reconsultar)
+      if (nm && nm !== c.name) updateCardNameInDom(c.id, nm);
+      saveNameCache();
+    }).catch(() => {}).finally(() => { nameActive--; pumpNames(); });
+  }
+}
+function updateCardNameInDom(id, name) {
+  const sel = `.card[data-id="${CSS.escape(id)}"]`;
+  const el = document.querySelector(sel + " .card-name");
+  if (el) el.textContent = name;
+  const ph = document.querySelector(sel + " .ph-name");
+  if (ph) ph.textContent = name;
+}
+
+/* ===================== Filtros (poblar selects) ===================== */
+function uniqueSorted(values) {
+  return [...new Set(values.filter((v) => v && v !== "—"))].sort((a, b) =>
+    String(a).localeCompare(String(b), "es")
+  );
+}
+
+function populateFilters() {
+  // Formato
+  const fmtNames = { PE: "Primera Era", PB: "Primer Bloque", SB: "Segundo Bloque", FX: "Furia Extendido", NE: "Nueva Era / Imperio" };
+  fillSelect("#f-format", uniqueSorted(state.cards.map((c) => c.format)).map((f) => ({ value: f, label: fmtNames[f] || f })));
+  fillSelect("#f-race", uniqueSorted(state.cards.map((c) => c.race)).map((v) => ({ value: v, label: v })));
+  fillSelect("#f-type", uniqueSorted(state.cards.map((c) => c.type)).map((v) => ({ value: v, label: v })));
+  fillSelect("#f-rarity", uniqueSorted(state.cards.map((c) => c.rarity)).map((v) => ({ value: v, label: v })));
+  // Formato también en la vista de estadísticas
+  fillSelect("#stats-format", uniqueSorted(state.cards.map((c) => c.format)).map((f) => ({ value: f, label: fmtNames[f] || f })));
+  refreshEditionOptions();
+}
+
+function refreshEditionOptions() {
+  const fmt = $("#f-format").value;
+  // ediciones presentes en el dataset (respeta el formato seleccionado)
+  const present = uniqueSorted(
+    state.cards.filter((c) => !fmt || c.format === fmt).map((c) => c.edition)
+  );
+  const opts = present.map((slug) => ({ value: slug, label: state.editionName[slug] || slug }));
+  fillSelect("#f-edition", opts);
+}
+
+function fillSelect(sel, opts) {
+  const el = $(sel);
+  const first = el.querySelector("option");
+  el.innerHTML = "";
+  el.appendChild(first.cloneNode(true));
+  for (const o of opts) {
+    const opt = document.createElement("option");
+    opt.value = o.value;
+    opt.textContent = o.label;
+    el.appendChild(opt);
+  }
+}
+
+/* ===================== Aplicar filtros ===================== */
+function applyFilters() {
+  const q = normText($("#search").value.trim());
+  const ownership = $("#f-ownership").value;
+  const fmt = $("#f-format").value;
+  const ed = $("#f-edition").value;
+  const race = $("#f-race").value;
+  const type = $("#f-type").value;
+  const rarity = $("#f-rarity").value;
+  const maxCost = Number($("#f-cost").value);
+  const sort = $("#f-sort").value;
+
+  let out = state.cards.filter((c) => {
+    if (q && !c.searchText.includes(q)) return false;
+    if (fmt && c.format !== fmt) return false;
+    if (ed && c.edition !== ed) return false;
+    if (race && c.race !== race) return false;
+    if (type && c.type !== type) return false;
+    if (rarity && c.rarity !== rarity) return false;
+    if (maxCost < 12 && c.cost != null && c.cost > maxCost) return false;
+    const qty = store.getQty(c.id);
+    if (ownership === "owned" && qty < 1) return false;
+    if (ownership === "missing" && qty >= 1) return false;
+    if (ownership === "dup" && qty < 2) return false;
+    return true;
+  });
+
+  out.sort((a, b) => {
+    switch (sort) {
+      case "name_desc": return b.name.localeCompare(a.name, "es");
+      case "cost": return (a.cost ?? 99) - (b.cost ?? 99);
+      case "cost_desc": return (b.cost ?? -1) - (a.cost ?? -1);
+      case "strength_desc": return (b.strength ?? -1) - (a.strength ?? -1);
+      case "edition": return (a.editionName || "").localeCompare(b.editionName || "", "es");
+      case "qty_desc": return store.getQty(b.id) - store.getQty(a.id);
+      default: return a.name.localeCompare(b.name, "es");
+    }
+  });
+
+  state.filtered = out;
+  state.page = 0;
+  renderGrid(true);
+  updateResultCount();
+}
+
+function updateResultCount() {
+  const n = state.filtered.length;
+  const owned = state.filtered.filter((c) => store.getQty(c.id) > 0).length;
+  $("#result-count").textContent = `${n} carta${n === 1 ? "" : "s"} · ${owned} en tu colección`;
+}
+
+/* ===================== Render grid ===================== */
+function renderGrid(reset) {
+  const grid = $("#cards-grid");
+  if (reset) grid.innerHTML = "";
+  const start = state.page * state.pageSize;
+  const slice = state.filtered.slice(start, start + state.pageSize);
+  const frag = document.createDocumentFragment();
+  for (const card of slice) frag.appendChild(cardEl(card));
+  grid.appendChild(frag);
+  scheduleNameCorrection(slice);
+
+  $("#grid-empty").classList.toggle("hidden", state.filtered.length !== 0);
+  const hasMore = (state.page + 1) * state.pageSize < state.filtered.length;
+  $("#load-more").classList.toggle("hidden", !hasMore);
+}
+
+function cardEl(card) {
+  const qty = store.getQty(card.id);
+  const el = document.createElement("div");
+  el.className = "card" + (qty > 0 ? " owned" : "");
+  el.dataset.id = card.id;
+
+  const dName = displayName(card);
+  const img = card.image
+    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
+    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div>${card.editionName || ""}</div>`;
+
+  const activeDeck = store.getDeck(store.getSetting("activeDeckId"));
+  const deckBtn = `<button class="qty-btn deck-add" title="${activeDeck ? "Añadir a «" + escapeAttr(activeDeck.name) + "»" : "Añadir a un mazo"}">🃏＋</button>`;
+
+  el.innerHTML = `
+    <div class="card-img" data-act="detail">
+      ${card.cost != null ? `<span class="badge-cost">${card.cost}</span>` : ""}
+      ${card.strength != null ? `<span class="badge-str">${card.strength}</span>` : ""}
+      ${img}
+    </div>
+    <div class="card-body">
+      <div class="card-name">${escapeHtml(dName)}</div>
+      <div class="card-meta">${escapeHtml(card.race)} · ${escapeHtml(card.type)}</div>
+      <div class="card-meta">${escapeHtml(card.editionName || "")}</div>
+      <div class="qty-row">
+        <button class="qty-btn" data-act="minus">−</button>
+        <span class="qty-num ${qty === 0 ? "zero" : ""}" data-role="qty">${qty}</span>
+        <button class="qty-btn" data-act="plus">+</button>
+        ${deckBtn}
+      </div>
+    </div>`;
+
+  el.addEventListener("click", (e) => {
+    if (e.target.closest(".deck-add")) { addToDeckQuick(card); return; }
+    const act = e.target.closest("[data-act]")?.dataset.act;
+    if (act === "plus") changeQty(el, card, +1);
+    else if (act === "minus") changeQty(el, card, -1);
+    else if (act === "detail") openModal(card);
+  });
+  return el;
+}
+
+function changeQty(el, card, delta) {
+  const qty = store.addQty(card.id, delta);
+  const numEl = el.querySelector('[data-role="qty"]');
+  numEl.textContent = qty;
+  numEl.classList.toggle("zero", qty === 0);
+  el.classList.toggle("owned", qty > 0);
+  updateResultCount();
+}
+
+/* ===================== Modal detalle ===================== */
+const FORMAT_LABELS = { empire: "Imperio", unified: "Unificado", first_era: "Primera Era", infantry: "Infantería", vcr: "VCR", joust: "Justa", reborn: "Renacido" };
+const profileCache = new Map();
+function fetchProfile(card) {
+  const edition = card.edition;
+  const slug = card.id.split("__").slice(2).join("__");
+  if (!edition || !slug) return Promise.resolve(null);
+  const key = edition + "/" + slug;
+  if (profileCache.has(key)) return profileCache.get(key);
+  const p = fetch(`https://api.myl.cl/cards/profile/${encodeURIComponent(edition)}/${encodeURIComponent(slug)}`)
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  profileCache.set(key, p);
+  return p;
+}
+function nl2br(s) { return escapeHtml(s).replace(/\n/g, "<br>"); }
+
+function openModal(card) {
+  const qty = store.getQty(card.id);
+  const box = $("#modal-box");
+  const img = card.image
+    ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(card.name)}" />`
+    : `<div class="placeholder" style="color:var(--muted);padding:20px;text-align:center">Sin imagen</div>`;
+  const tag = (t) => `<span class="tag">${escapeHtml(t)}</span>`;
+  box.innerHTML = `
+    <button class="modal-close" data-close>×</button>
+    <div class="card-detail">
+      <div class="cd-image" ${card.image ? 'data-zoom="1"' : ""}>
+        ${img}
+        ${card.image ? '<span class="cd-zoom-hint">🔍 Ampliar</span>' : ""}
+      </div>
+      <div class="cd-body">
+        <h2 id="cd-name">${escapeHtml(displayName(card))}</h2>
+        <div class="m-tags">
+          ${tag(card.editionName || "")}${tag(card.race)}${tag(card.type)}${tag(card.rarity)}
+          ${card.cost != null ? tag("Coste " + card.cost) : ""}${card.strength != null ? tag("Fuerza " + card.strength) : ""}
+        </div>
+        <div class="qty-row" style="border:none;padding:0;margin:14px 0">
+          <button class="qty-btn" data-m="minus">−</button>
+          <span class="qty-num ${qty === 0 ? "zero" : ""}" data-role="mqty">${qty}</span>
+          <button class="qty-btn" data-m="plus">+</button>
+          <button class="btn small" data-add-deck>🃏 Añadir a mazo</button>
+        </div>
+        ${card.userCustom ? `<div class="sync-row" style="margin-top:4px"><button class="btn small" data-edit-card>✏️ Editar</button><button class="btn small" data-del-card>🗑 Eliminar</button></div>` : ""}
+        <div class="cd-section"><h4>Habilidad</h4><div id="cd-ability">${card.ability ? nl2br(card.ability) : "<span class='muted'>Sin texto.</span>"}</div></div>
+        ${card.flavour ? `<div class="cd-section"><h4>Historia</h4><p class="cd-flavour">«${escapeHtml(card.flavour)}»</p></div>` : ""}
+        <div id="cd-extra" class="cd-extra"><p class="muted">Cargando detalle ampliado…</p></div>
+      </div>
+    </div>`;
+
+  box.querySelector("[data-close]").onclick = closeModal;
+  const zoomEl = box.querySelector("[data-zoom]");
+  if (zoomEl) zoomEl.onclick = () => openZoom(card.image, card.name);
+  box.querySelector("[data-add-deck]").onclick = () => addToDeckQuick(card);
+  const editBtn = box.querySelector("[data-edit-card]");
+  if (editBtn) editBtn.onclick = () => { closeModal(); openCardForm(card); };
+  const delBtn = box.querySelector("[data-del-card]");
+  if (delBtn) delBtn.onclick = () => {
+    if (!confirm(`¿Eliminar la carta manual «${card.name}»?`)) return;
+    store.deleteCustomCard(card.id);
+    rebuildCards(); populateFilters(); applyFilters(); closeModal();
+    showToast("Carta eliminada");
+  };
+  box.querySelectorAll("[data-m]").forEach((b) => {
+    b.onclick = () => {
+      const newQty = store.addQty(card.id, b.dataset.m === "plus" ? 1 : -1);
+      const mq = box.querySelector('[data-role="mqty"]');
+      mq.textContent = newQty;
+      mq.classList.toggle("zero", newQty === 0);
+      const gridCard = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+      if (gridCard) {
+        const g = gridCard.querySelector('[data-role="qty"]');
+        g.textContent = newQty; g.classList.toggle("zero", newQty === 0);
+        gridCard.classList.toggle("owned", newQty > 0);
+      }
+      updateResultCount();
+    };
+  });
+
+  $("#modal").classList.remove("hidden");
+
+  // Detalle ampliado en vivo (api.myl.cl)
+  fetchProfile(card).then((p) => renderProfileExtra(p, card));
+}
+
+function renderProfileExtra(p, card) {
+  const box = $("#cd-extra");
+  if (!box) return;
+  // Corrige el nombre (tildes/ñ) con el del perfil
+  const realName = p?.details?.name?.trim();
+  if (card && realName) {
+    const h = $("#cd-name"); if (h) h.textContent = realName;
+    if (realName !== card.name) { nameCache[card.id] = realName; saveNameCache(); updateCardNameInDom(card.id, realName); }
+  }
+  if (!p || !p.details) {
+    box.innerHTML = `<p class="muted">No se pudo cargar el detalle ampliado (revisa tu conexión).</p>`;
+    return;
+  }
+  let html = "";
+  // Habilidad formateada del perfil (si difiere/está más completa)
+  const ab = p.details.ability_html || p.details.ability;
+  if (ab) { const a = $("#cd-ability"); if (a) a.innerHTML = nl2br(ab); }
+
+  // Formatos / torneos
+  const vf = p.valid_formats || {};
+  const valid = Object.entries(vf).filter(([, v]) => v).map(([k]) => FORMAT_LABELS[k] || k);
+  if (valid.length) {
+    html += `<div class="cd-section"><h4>Formatos de torneo</h4><div class="m-tags">${valid.map((f) => `<span class="tag ok-tag">✓ ${escapeHtml(f)}</span>`).join("")}</div></div>`;
+  }
+  // Palabras clave
+  const kws = (p.keywords || []).map((k) => k.name || k.slug).filter(Boolean);
+  if (kws.length) html += `<div class="cd-section"><h4>Palabras clave</h4><div class="m-tags">${kws.map((k) => `<span class="tag">${escapeHtml(k)}</span>`).join("")}</div></div>`;
+
+  // Datos de edición / ilustrador
+  const meta = [];
+  const ill = p.illustrator?.name || p.details.illustrator;
+  if (ill && typeof ill === "string") meta.push(["Ilustrador", ill]);
+  if (p.edition?.title) meta.push(["Edición", p.edition.title]);
+  if (p.edition?.date_release && !/^1990|^2000/.test(p.edition.date_release)) meta.push(["Lanzamiento", p.edition.date_release]);
+  if (meta.length) html += `<div class="cd-section"><h4>Ficha</h4>${meta.map(([k, v]) => `<div class="cd-meta"><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join("")}</div>`;
+
+  // Errata
+  const errata = (p.errata || []).map((e) => e.text || e.description || e.errata).filter(Boolean);
+  if (errata.length) html += `<div class="cd-section"><h4>Errata / aclaraciones</h4>${errata.map((t) => `<p class="muted">${nl2br(t)}</p>`).join("")}</div>`;
+
+  // Productos donde aparece
+  const prods = (p.products || []).map((x) => x.name || x.title).filter(Boolean);
+  if (prods.length) html += `<div class="cd-section"><h4>Aparece en</h4><div class="m-tags">${prods.map((x) => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div></div>`;
+
+  box.innerHTML = html || `<p class="muted">Sin información adicional.</p>`;
+}
+
+function openZoom(src, alt) {
+  let z = $("#img-zoom");
+  if (!z) {
+    z = document.createElement("div");
+    z.id = "img-zoom";
+    z.className = "img-zoom hidden";
+    z.addEventListener("click", () => z.classList.add("hidden"));
+    document.body.appendChild(z);
+  }
+  z.innerHTML = `<img src="${escapeAttr(src)}" alt="${escapeAttr(alt || "")}" />`;
+  z.classList.remove("hidden");
+}
+function closeModal() { $("#modal").classList.add("hidden"); }
+
+/* ===================== Carta manual (formulario) ===================== */
+let cfImageData = "";
+function editionSlug(text) {
+  return normText(text).trim().replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "") || "personalizada";
+}
+function populateEditionDatalist() {
+  const dl = $("#cf-editions");
+  if (!dl) return;
+  const names = [...new Set(state.cards.map((c) => c.editionName).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+  dl.innerHTML = names.map((n) => `<option value="${escapeAttr(n)}"></option>`).join("");
+}
+function openCardForm(card) {
+  populateEditionDatalist();
+  const editing = card && card.userCustom;
+  $("#cf-title").textContent = editing ? "Editar carta" : "Agregar carta manual";
+  $("#cf-id").value = editing ? card.id : "";
+  $("#cf-name").value = editing ? card.name : "";
+  $("#cf-edition").value = editing ? (card.editionName || "") : "";
+  $("#cf-format").value = editing ? (card.format || "NE") : "NE";
+  $("#cf-race").value = editing && card.race !== "—" ? card.race : "";
+  $("#cf-type").value = editing ? card.type : "Aliado";
+  $("#cf-rarity").value = editing && card.rarity !== "—" ? card.rarity : "";
+  $("#cf-cost").value = editing && card.cost != null ? card.cost : "";
+  $("#cf-strength").value = editing && card.strength != null ? card.strength : "";
+  $("#cf-ability").value = editing ? card.ability : "";
+  $("#cf-flavour").value = editing ? card.flavour : "";
+  $("#cf-image-url").value = editing && /^https?:|^\.\//.test(card.image || "") ? card.image : "";
+  $("#cf-image-file").value = "";
+  cfImageData = editing ? (card.image || "") : "";
+  renderCfPreview();
+  $("#cf-delete").style.display = editing ? "" : "none";
+  $("#card-form-modal").classList.remove("hidden");
+}
+function closeCardForm() { $("#card-form-modal").classList.add("hidden"); }
+function renderCfPreview() {
+  const src = $("#cf-image-url").value.trim() || cfImageData;
+  $("#cf-preview").innerHTML = src ? `<img src="${escapeAttr(src)}" alt="" />` : "";
+}
+function saveCardForm() {
+  const name = $("#cf-name").value.trim();
+  if (!name) { showToast("Escribe al menos el nombre"); return; }
+  const edName = $("#cf-edition").value.trim() || "Personalizada";
+  const card = {
+    name,
+    edition: editionSlug(edName),
+    editionName: edName,
+    format: $("#cf-format").value,
+    type: $("#cf-type").value,
+    race: $("#cf-race").value.trim() || "—",
+    rarity: $("#cf-rarity").value.trim() || "—",
+    cost: $("#cf-cost").value === "" ? null : Number($("#cf-cost").value),
+    strength: $("#cf-strength").value === "" ? null : Number($("#cf-strength").value),
+    ability: $("#cf-ability").value.trim(),
+    flavour: $("#cf-flavour").value.trim(),
+    image: $("#cf-image-url").value.trim() || cfImageData || "",
+  };
+  const id = $("#cf-id").value;
+  if (id) store.updateCustomCard(id, card);
+  else store.addCustomCard(card);
+  rebuildCards(); populateFilters(); applyFilters(); refreshActiveDeckUI();
+  closeCardForm();
+  showToast(id ? "Carta actualizada" : "Carta agregada ✓");
+}
+function bindCardFormEvents() {
+  $("#btn-add-card").addEventListener("click", () => openCardForm(null));
+  $("#cf-save").addEventListener("click", saveCardForm);
+  $("#cf-delete").addEventListener("click", () => {
+    const id = $("#cf-id").value;
+    if (id && confirm("¿Eliminar esta carta manual?")) {
+      store.deleteCustomCard(id);
+      rebuildCards(); populateFilters(); applyFilters(); closeCardForm();
+      showToast("Carta eliminada");
+    }
+  });
+  $$("[data-close-cf]").forEach((el) => el.addEventListener("click", closeCardForm));
+  $("#cf-image-url").addEventListener("input", renderCfPreview);
+  $("#cf-image-file").addEventListener("change", (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    if (f.size > 1.5 * 1024 * 1024) { showToast("Imagen muy grande (máx ~1.5 MB)", 3500); e.target.value = ""; return; }
+    const reader = new FileReader();
+    reader.onload = () => { cfImageData = reader.result; $("#cf-image-url").value = ""; renderCfPreview(); };
+    reader.readAsDataURL(f);
+  });
+}
+
+/* ===================== Añadir a mazo (desde Colección) ===================== */
+function addToDeckQuick(card) {
+  const activeId = store.getSetting("activeDeckId");
+  if (activeId && store.getDeck(activeId)) {
+    store.deckAdd(activeId, card.id, 1);
+    const d = store.getDeck(activeId);
+    refreshActiveDeckCount();
+    showToast(`«${card.name}» → ${d.name} (${d.cards[card.id]})`);
+  } else {
+    openDeckPicker(card);
+  }
+}
+
+function openDeckPicker(card) {
+  const decks = store.getDecks();
+  const box = $("#deck-modal-box");
+  const list = decks.length
+    ? decks.map((d) => `<button class="picker-deck" data-id="${escapeAttr(d.id)}">
+        <span class="pd-name">${escapeHtml(d.name)}</span>
+        <span class="muted">${d.cards[card.id] ? "ya tienes ×" + d.cards[card.id] + " · " : ""}${store.deckCount(d.id)} cartas</span>
+      </button>`).join("")
+    : `<p class="muted">Aún no tienes mazos. Crea uno abajo.</p>`;
+  box.innerHTML = `
+    <button class="modal-close" data-close-deck>×</button>
+    <h2>Añadir a un mazo</h2>
+    <p class="muted">«${escapeHtml(card.name)}»</p>
+    <div class="picker-list">${list}</div>
+    <button class="btn full" data-new-deck>＋ Crear mazo nuevo y añadir</button>`;
+  box.querySelector("[data-close-deck]").onclick = closeDeckModal;
+  box.querySelectorAll(".picker-deck").forEach((b) => {
+    b.onclick = () => {
+      const id = b.dataset.id;
+      store.deckAdd(id, card.id, 1);
+      store.setSetting("activeDeckId", id);
+      refreshActiveDeckUI();
+      showToast(`«${card.name}» → ${store.getDeck(id).name}`);
+      closeDeckModal();
+    };
+  });
+  box.querySelector("[data-new-deck]").onclick = () => {
+    const name = prompt("Nombre del nuevo mazo:", "Mazo nuevo");
+    if (name === null) return;
+    const d = store.createDeck(name);
+    store.deckAdd(d.id, card.id, 1);
+    store.setSetting("activeDeckId", d.id);
+    refreshActiveDeckUI();
+    showToast(`Mazo «${d.name}» creado con «${card.name}»`);
+    closeDeckModal();
+  };
+  $("#deck-modal").classList.remove("hidden");
+}
+function closeDeckModal() { $("#deck-modal").classList.add("hidden"); }
+
+function populateActiveDeckSelect() {
+  const sel = $("#active-deck-select");
+  if (!sel) return;
+  const decks = store.getDecks();
+  const active = store.getSetting("activeDeckId") || "";
+  sel.innerHTML = `<option value="">(ninguno)</option>` +
+    decks.map((d) => `<option value="${escapeAttr(d.id)}">${escapeHtml(d.name)}</option>`).join("");
+  sel.value = decks.some((d) => d.id === active) ? active : "";
+}
+function refreshActiveDeckCount() {
+  const el = $("#active-deck-count");
+  if (!el) return;
+  const d = store.getDeck(store.getSetting("activeDeckId"));
+  el.textContent = d ? `${store.deckCount(d.id)} cartas` : "Elige o crea un mazo para agregar con 🃏＋";
+}
+function refreshActiveDeckUI() { populateActiveDeckSelect(); refreshActiveDeckCount(); }
+
+function bindDeckBarEvents() {
+  $("#active-deck-select").addEventListener("change", (e) => {
+    store.setSetting("activeDeckId", e.target.value || null);
+    refreshActiveDeckCount();
+  });
+  $("#active-deck-new").addEventListener("click", () => {
+    const name = prompt("Nombre del nuevo mazo:", "Mazo nuevo");
+    if (name === null) return;
+    const d = store.createDeck(name);
+    store.setSetting("activeDeckId", d.id);
+    refreshActiveDeckUI();
+    showToast(`Mazo «${d.name}» creado y activo`);
+  });
+  $$("[data-close-deck]").forEach((el) => el.addEventListener("click", closeDeckModal));
+}
+
+/* ===================== Mazos ===================== */
+function renderDecksView() {
+  const list = $("#deck-list");
+  const decks = store.getDecks();
+  list.innerHTML = "";
+  const activeId = store.getSetting("activeDeckId");
+  if (decks.length === 0) {
+    list.innerHTML = `<p class="muted">Aún no tienes mazos.</p>`;
+  }
+  for (const d of decks) {
+    const row = document.createElement("div");
+    row.className = "deck-item" + (d.id === activeId ? " active" : "");
+    row.dataset.deckId = d.id;
+    row.innerHTML = `
+      <span class="d-name">${escapeHtml(d.name)}</span>
+      <span class="d-count">${store.deckCount(d.id)}</span>
+      <button class="qty-btn" data-del title="Eliminar">🗑</button>`;
+    row.querySelector(".d-name").onclick = () => { store.setSetting("activeDeckId", d.id); renderDecksView(); renderDeckDetail(); };
+    row.querySelector("[data-del]").onclick = () => {
+      if (confirm(`¿Eliminar el mazo «${d.name}»?`)) {
+        store.deleteDeck(d.id);
+        if (activeId === d.id) store.setSetting("activeDeckId", null);
+        renderDecksView(); renderDeckDetail();
+      }
+    };
+    list.appendChild(row);
+  }
+  refreshActiveDeckUI();
+  renderDeckDetail();
+}
+
+function renderDeckDetail() {
+  const wrap = $("#deck-detail");
+  const deck = store.getDeck(store.getSetting("activeDeckId"));
+  if (!deck) {
+    wrap.innerHTML = `<p class="muted">Selecciona o crea un mazo para empezar a construirlo. Desde la vista <b>Colección</b> puedes añadir cartas al mazo activo con el botón 🃏＋, o buscarlas aquí abajo.</p>`;
+    return;
+  }
+  wrap.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <h2><input id="deck-name" value="${escapeAttr(deck.name)}" style="background:var(--bg-3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font-size:18px;font-weight:700" /></h2>
+      <span class="muted" id="deck-total"></span>
+      <div class="spacer" style="flex:1"></div>
+      <button class="btn small" id="deck-xlsx">📊 Excel</button>
+      <button class="btn small" id="deck-img">🖼️ Imagen</button>
+      <button class="btn small" id="deck-txt">📋 Texto</button>
+    </div>
+    <div class="muted" style="font-size:12px;margin-top:4px">Actualizado: ${deck.updatedAt ? new Date(deck.updatedAt).toLocaleString("es-CL") : "—"}</div>
+    <div id="deck-banner"></div>
+    <div id="deck-summary" class="deck-summary"></div>
+    <div class="deck-add-search">
+      <input id="deck-search" type="search" placeholder="🔎 Buscar carta por nombre para añadir a este mazo…" autocomplete="off" />
+      <div id="deck-search-results" class="deck-search-results"></div>
+    </div>
+    <div id="deck-contents"></div>`;
+
+  $("#deck-name").onchange = (e) => { store.renameDeck(deck.id, e.target.value || "Mazo"); populateActiveDeckSelect(); updateDeckCounts(); };
+  $("#deck-txt").onclick = () => exportDeck(deck);
+  $("#deck-xlsx").onclick = () => {
+    showToast("Generando Excel…", 4000);
+    exportDeckExcel(deck, state.cards, store.getQty, displayName)
+      .then(() => showToast("Excel descargado ✓")).catch((e) => showToast("Error: " + e.message, 4000));
+  };
+  $("#deck-img").onclick = () => {
+    showToast("Generando imagen…", 4000);
+    exportDeckImage(deck, state.cards, store.getQty, displayName)
+      .then(() => showToast("Imagen descargada ✓")).catch((e) => showToast("Error: " + e.message, 4000));
+  };
+
+  const di = $("#deck-search");
+  di.oninput = debounce(() => {
+    const q = normText(di.value.trim());
+    const res = $("#deck-search-results");
+    if (q.length < 2) { res.innerHTML = ""; return; }
+    const matches = state.cards.filter((c) => c.searchText.includes(q)).slice(0, 30);
+    res.innerHTML = matches.map((c) => {
+      const own = store.getQty(c.id);
+      return `<div class="dsr" data-id="${escapeAttr(c.id)}">
+        <span class="dsr-name">${escapeHtml(displayName(c))}</span>
+        <span class="dsr-meta">${escapeHtml(c.editionName || "")} · <span class="${own > 0 ? "owned-tag" : ""}">tengo ${own}</span></span>
+        <button class="qty-btn" data-add title="Añadir al mazo">＋</button>
+      </div>`;
+    }).join("") || `<p class="muted">Sin resultados</p>`;
+    res.querySelectorAll(".dsr").forEach((row) => {
+      row.querySelector("[data-add]").onclick = () => {
+        store.deckAdd(deck.id, row.dataset.id, 1);
+        renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount();
+      };
+    });
+  }, 180);
+
+  renderDeckContents(deck);
+}
+
+function renderDeckContents(deck) {
+  const cont = $("#deck-contents");
+  if (!cont) return;
+  const entries = Object.entries(deck.cards);
+  const total = entries.reduce((a, [, q]) => a + q, 0);
+  const totalEl = $("#deck-total"); if (totalEl) totalEl.textContent = `${total} cartas`;
+
+  const byType = {};
+  let missing = 0;
+  for (const [cid, q] of entries) {
+    const card = state.cards.find((c) => c.id === cid);
+    const t = card ? card.type : "Otro";
+    (byType[t] ||= []).push({ card, cid, q });
+    const own = store.getQty(cid);
+    if (own < q) missing += q - own;
+  }
+  const banner = $("#deck-banner");
+  if (banner) banner.innerHTML = missing > 0 ? `<div class="active-deck-banner">Te faltan <b>${missing}</b> copias de este mazo en tu colección.</div>` : "";
+
+  let html = "";
+  for (const [type, rows] of Object.entries(byType)) {
+    html += `<h3 class="deck-section-title">${typeIcon(type)} ${escapeHtml(type)} (${rows.reduce((a, r) => a + r.q, 0)})</h3>`;
+    for (const { card, cid, q } of rows) {
+      const name = card ? displayName(card) : cid;
+      const own = store.getQty(cid);
+      const lack = own < q ? ` <span style="color:var(--danger)">(faltan ${q - own})</span>` : "";
+      const meta = card
+        ? `${raceIcon(card.race)} ${escapeHtml(card.race)}${card.cost != null ? " · ⛁" + card.cost : ""}${card.strength != null ? " · ⚔" + card.strength : ""}`
+        : "";
+      html += `
+        <div class="deck-row" data-cid="${escapeAttr(cid)}">
+          <span class="dr-qty">${q}×</span>
+          <span class="dr-name">${escapeHtml(name)}${lack}<span class="dr-sub">${meta}</span></span>
+          <span class="dr-actions">
+            <button class="qty-btn" data-d="minus">−</button>
+            <button class="qty-btn" data-d="plus">+</button>
+          </span>
+        </div>`;
+    }
+  }
+  if (entries.length === 0) html = `<p class="muted">Mazo vacío. Busca una carta arriba para añadirla, o usa 🃏＋ en la Colección.</p>`;
+  cont.innerHTML = html;
+  cont.querySelectorAll(".deck-row").forEach((row) => {
+    const cid = row.dataset.cid;
+    row.querySelectorAll("[data-d]").forEach((b) => {
+      b.onclick = () => { store.deckAdd(deck.id, cid, b.dataset.d === "plus" ? 1 : -1); renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount(); };
+    });
+  });
+  renderDeckSummary(deck);
+}
+
+function renderDeckSummary(deck) {
+  const box = $("#deck-summary");
+  if (!box) return;
+  const S = deckSummary(deck, state.cards, store.getQty, displayName);
+  if (!S.total) { box.innerHTML = ""; return; }
+  const chips = S.typesPresent.map((t) =>
+    `<div class="ds-chip"><div class="ds-t">${typeIcon(t)} ${escapeHtml(t)}</div><div class="ds-n">${S.typeTotal[t]} <span class="muted">· ${S.pct(S.typeTotal[t])}%</span></div></div>`).join("");
+  const head = `<tr><th>Tipo</th>${S.cols.map((c) => `<th>${c}</th>`).join("")}<th>Total</th></tr>`;
+  const body = S.typesPresent.map((t) =>
+    `<tr><td>${typeIcon(t)} ${escapeHtml(t)}</td>${S.cols.map((c) => `<td>${S.matrix[t][c] || ""}</td>`).join("")}<td class="b">${S.typeTotal[t]}</td></tr>`).join("");
+  const totalRow = `<tr class="tot"><td>Total</td>${S.cols.map((c) => `<td>${S.colTotal(c)}</td>`).join("")}<td>${S.total}</td></tr>`;
+  box.innerHTML =
+    `<div class="ds-title">Distribución por tipo</div><div class="ds-chips">${chips}</div>
+     <div class="ds-title">Detalle por tipo y coste</div>
+     <div class="ds-matrix"><table>${head}${body}${totalRow}</table></div>`;
+}
+
+function updateDeckCounts() {
+  $$("#deck-list .deck-item").forEach((row) => {
+    const id = row.dataset.deckId;
+    const c = row.querySelector(".d-count");
+    if (id && c) c.textContent = store.deckCount(id);
+  });
+}
+
+/* ===================== Estadísticas ===================== */
+function statsScopeLabel() {
+  const sc = $("#stats-scope").value;
+  const fm = $("#stats-format");
+  const fTxt = fm.value ? " · " + fm.options[fm.selectedIndex].text : "";
+  return (sc === "owned" ? "Solo las que tengo" : sc === "missing" ? "Solo faltantes" : "Todo el catálogo") + fTxt;
+}
+
+function renderStats() {
+  const scope = $("#stats-scope")?.value || "all";
+  const fmt = $("#stats-format")?.value || "";
+  const base = fmt ? state.cards.filter((c) => c.format === fmt) : state.cards;
+
+  const owned = base.filter((c) => store.getQty(c.id) > 0);
+  const ownedCopies = base.reduce((s, c) => s + store.getQty(c.id), 0);
+  const pct = base.length ? Math.round((owned.length / base.length) * 100) : 0;
+
+  $("#stats-cards").innerHTML = `
+    ${statCard(owned.length, "Cartas únicas")}
+    ${statCard(ownedCopies, "Copias totales")}
+    ${statCard(base.length, "Cartas en catálogo")}
+    ${statCard(pct + "%", "Colección completa")}
+    ${statCard(store.getDecks().length, "Mazos guardados")}`;
+
+  // Gráficos (carga perezosa de Chart.js)
+  renderCharts({ cards: state.cards, getQty: store.getQty, scope, format: fmt })
+    .catch((e) => console.warn("charts:", e));
+
+  // Progreso por edición (respeta el formato elegido)
+  const byEd = {};
+  for (const c of base) {
+    const e = (byEd[c.edition] ||= { name: c.editionName, total: 0, owned: 0 });
+    e.total++;
+    if (store.getQty(c.id) > 0) e.owned++;
+  }
+  const rows = Object.values(byEd)
+    .filter((e) => e.total > 0)
+    .sort((a, b) => b.owned / b.total - a.owned / a.total || b.total - a.total);
+  $("#stats-editions").innerHTML = rows
+    .map((e) => {
+      const p = Math.round((e.owned / e.total) * 100);
+      return `<div class="ep-row">
+        <span>${escapeHtml(e.name || "—")}</span>
+        <span class="ep-bar"><span class="ep-fill" style="width:${p}%"></span></span>
+        <span class="muted">${e.owned}/${e.total} (${p}%)</span>
+      </div>`;
+    })
+    .join("") || `<p class="muted">Sin datos.</p>`;
+}
+function statCard(num, lbl) {
+  return `<div class="stat-card"><div class="num">${num}</div><div class="lbl">${lbl}</div></div>`;
+}
+
+function statsExportPDF() {
+  const scope = $("#stats-scope").value, fmt = $("#stats-format").value;
+  let cards = fmt ? state.cards.filter((c) => c.format === fmt) : state.cards.slice();
+  if (scope === "owned") cards = cards.filter((c) => store.getQty(c.id) > 0);
+  else if (scope === "missing") cards = cards.filter((c) => store.getQty(c.id) === 0);
+  if (cards.length > 1500 && !confirm(`Son ${cards.length} cartas. El PDF puede ser grande. ¿Continuar?`)) return;
+  showToast("Generando PDF…", 5000);
+  exportPDF(cards, store.getQty, statsScopeLabel())
+    .then(() => showToast("PDF descargado ✓"))
+    .catch((e) => showToast("Error: " + e.message, 4000));
+}
+
+/* ===================== Exportar / Importar ===================== */
+function download(filename, text, mime = "application/json") {
+  const blob = new Blob([text], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function scopeLabel() {
+  const own = $("#f-ownership");
+  const ownTxt = own.selectedIndex > 0 ? own.options[own.selectedIndex].text : "Todas las cartas";
+  const ed = $("#f-edition");
+  const edTxt = ed.value ? " · " + ed.options[ed.selectedIndex].text : "";
+  return ownTxt + edTxt;
+}
+
+function exportCollection(format) {
+  // Excel / PDF: exportan el conjunto filtrado actual
+  if (format === "xlsx" || format === "pdf") {
+    const cards = state.filtered.length ? state.filtered : state.cards;
+    if (format === "pdf" && cards.length > 1500 &&
+        !confirm(`Vas a exportar ${cards.length} cartas a PDF (puede tardar). \n\nSugerencia: filtra primero (p. ej. "Solo las que tengo" o una edición). ¿Continuar igual?`)) return;
+    showToast("Generando archivo…", 5000);
+    const fn = format === "xlsx" ? exportExcel : exportPDF;
+    fn(cards, store.getQty, scopeLabel())
+      .then(() => showToast(format === "xlsx" ? "Excel descargado ✓" : "PDF descargado ✓"))
+      .catch((e) => showToast("Error al exportar: " + e.message, 4000));
+    return;
+  }
+
+  const inv = store.getInventory();
+  if (format === "json") {
+    const data = {
+      app: "Inventario MyL",
+      exportedAt: new Date().toISOString(),
+      inventory: inv,
+      decks: store.getDecks(),
+    };
+    download(`coleccion_myl_${today()}.json`, JSON.stringify(data, null, 2));
+    showToast("Colección exportada (JSON)");
+    return;
+  }
+  // CSV
+  const wantMissing = format === "missing-csv";
+  const rows = [["nombre", "edicion", "formato", "tipo", "raza", "rareza", "coste", "fuerza", "cantidad"]];
+  for (const c of state.cards) {
+    const qty = inv[c.id] || 0;
+    if (wantMissing ? qty > 0 : qty === 0) continue;
+    rows.push([c.name, c.editionName, c.format, c.type, c.race, c.rarity, c.cost ?? "", c.strength ?? "", wantMissing ? "" : qty]);
+  }
+  const csv = rows.map((r) => r.map(csvCell).join(",")).join("\n");
+  download(`${wantMissing ? "faltantes" : "coleccion"}_myl_${today()}.csv`, csv, "text/csv");
+  showToast(`Exportado (CSV): ${rows.length - 1} filas`);
+}
+
+function exportDeck(deck) {
+  const lines = [`# ${deck.name}`];
+  for (const [cid, q] of Object.entries(deck.cards)) {
+    const card = state.cards.find((c) => c.id === cid);
+    lines.push(`${q} ${card ? card.name : cid}`);
+  }
+  download(`mazo_${deck.name.replace(/\s+/g, "_")}.txt`, lines.join("\n"), "text/plain");
+  showToast("Mazo exportado");
+}
+
+function importCollection(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      const inv = data.inventory || data;
+      const merge = confirm("¿Combinar con tu colección actual?\n\nAceptar = combinar (suma cantidades)\nCancelar = reemplazar todo");
+      if (merge) store.mergeInventory(inv);
+      else store.replaceInventory(inv);
+      if (Array.isArray(data.decks)) store.replaceDecks(data.decks);
+      applyFilters();
+      renderDecksView();
+      showToast("Colección importada");
+    } catch {
+      showToast("Archivo no válido", 3000);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function csvCell(v) {
+  const s = String(v ?? "");
+  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+function today() { return new Date().toISOString().slice(0, 10); }
+
+/* ===================== Utilidades ===================== */
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+let toastTimer;
+function showToast(msg, ms = 2200) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.remove("hidden");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.add("hidden"), ms);
+}
+
+/* ===================== Guardado / Sincronización ===================== */
+function setChip(text, cls = "") {
+  const c = $("#sync-chip");
+  if (!c) return;
+  c.textContent = text;
+  c.className = "sync-chip " + cls;
+}
+let chipTimer;
+function flashChip(text, cls) {
+  setChip(text, cls);
+  clearTimeout(chipTimer);
+  chipTimer = setTimeout(() => { if (!cloud.isConfigured()) setChip(""); }, 2500);
+}
+
+function refreshAll() {
+  rebuildCards();
+  applyFilters();
+  if (state.view === "mazos") renderDecksView();
+  if (state.view === "stats") renderStats();
+  refreshActiveDeckUI();
+}
+
+function autoUpload() { return store.getSetting("cloudAuto") !== false; } // por defecto sí
+
+let pushTimer;
+function scheduleCloudPush() {
+  setChip("☁ Cambios sin subir…", "sync");
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(() => doCloudPush(false), 1800);
+}
+
+async function doCloudPush(manual) {
+  if (!cloud.isConfigured()) return;
+  try {
+    setChip("☁ Subiendo…", "sync");
+    const ts = await cloud.push(store.getSnapshot(), { accion: manual ? "guardado manual" : "automático", copias: store.totalCards() });
+    cloud.setLastTs(ts);
+    cloud.clearDirty();
+    setChip("☁ Guardado ✓", "ok");
+  } catch (e) { setChip("☁ Error", "err"); showToast("Error al subir: " + e.message, 4000); }
+}
+
+function adoptRemote(remote) {
+  store.applySnapshot(remote.snapshot);
+  cloud.setLastTs(remote.actualizado);
+  cloud.clearDirty();
+  refreshAll();
+  setChip("☁ Sincronizado", "ok");
+}
+
+// Reconciliación basada en "¿cambió la fila en la nube desde la última vez?"
+async function cloudReconcile() {
+  if (!cloud.isConfigured()) return;
+  setChip("☁ Sincronizando…", "sync");
+  try {
+    const remote = await cloud.pull();
+    if (!remote || !remote.snapshot) { await doCloudPush(false); return; } // primera vez: subir
+    const changedElsewhere = remote.actualizado !== cloud.getLastTs();
+    if (!changedElsewhere) {
+      if (cloud.isDirty()) await doCloudPush(false);
+      else setChip("☁ Sincronizado", "ok");
+      return;
+    }
+    // La nube cambió desde otro dispositivo
+    if (cloud.isDirty()) {
+      const takeCloud = confirm(
+        "Hay cambios en la NUBE (desde otro dispositivo) y también cambios locales sin subir.\n\n" +
+        "Aceptar = usar lo de la NUBE (descarta lo local de este equipo)\n" +
+        "Cancelar = subir lo de ESTE equipo (sobrescribe la nube)"
+      );
+      if (takeCloud) adoptRemote(remote);
+      else await doCloudPush(false);
+    } else {
+      adoptRemote(remote);
+    }
+  } catch (e) { setChip("☁ Error", "err"); showToast("Sincronización: " + e.message, 4000); }
+}
+
+/* ----- Tiempo real (Supabase Realtime) ----- */
+async function startRealtime() {
+  if (!cloud.isConfigured()) return;
+  try { await cloud.subscribeRealtime(onRealtime); }
+  catch (e) { console.warn("realtime:", e); }
+}
+function onRealtime({ snapshot, actualizado }) {
+  if (!snapshot || actualizado === cloud.getLastTs()) return; // cambio propio
+  if (cloud.isDirty()) {
+    setChip("☁ Cambios nuevos en la nube — toca Bajar", "sync");
+    showToast("Hay cambios desde otro dispositivo. Toca ⬇️ Bajar para traerlos.", 4500);
+    return;
+  }
+  store.applySnapshot(snapshot);
+  cloud.setLastTs(actualizado);
+  cloud.clearDirty();
+  refreshAll();
+  setChip("☁ Actualizado", "ok");
+  showToast("Actualizado en tiempo real desde la nube");
+}
+
+function onStoreChange(origin) {
+  if (origin === "remote") { refreshAll(); return; }
+  if (!cloud.isConfigured()) { flashChip("Guardado ✓", "ok"); return; }
+  cloud.markDirty();
+  if (autoUpload()) scheduleCloudPush();
+  else setChip("☁ Cambios sin subir — toca Guardar", "sync");
+}
+
+/* ----- Red de seguridad: re-sincroniza al volver a la pestaña y cada 30s ----- */
+async function quietPull() {
+  if (!cloud.isConfigured() || cloud.isDirty()) return;
+  try {
+    const r = await cloud.pull();
+    if (r && r.snapshot && r.actualizado !== cloud.getLastTs()) {
+      store.applySnapshot(r.snapshot);
+      cloud.setLastTs(r.actualizado);
+      cloud.clearDirty();
+      refreshAll();
+      setChip("☁ Actualizado", "ok");
+    }
+  } catch {}
+}
+function startCloudBackgroundSync() {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && cloud.isConfigured()) {
+      startRealtime();   // reasegura la suscripción (el navegador la duerme en 2º plano)
+      quietPull();       // y trae cambios perdidos al instante
+    }
+  });
+  window.addEventListener("focus", () => { if (cloud.isConfigured()) quietPull(); });
+  setInterval(() => { if (cloud.isConfigured() && document.visibilityState === "visible") quietPull(); }, 30000);
+}
+
+/* ----- Modal de datos / nube ----- */
+function openSyncModal() {
+  const cfg = cloud.getConfig();
+  $("#cloud-url").value = cfg.url || "";
+  $("#cloud-key").value = cfg.key || "";
+  $("#cloud-clave").value = cfg.clave || "";
+  $("#cloud-device").value = cfg.device || "";
+  $("#cloud-auto").checked = autoUpload();
+  $("#cloud-status").textContent = cloud.isConfigured()
+    ? (cloud.isDirty() ? "Conectado. Tienes cambios sin subir." : "Conectado y sincronizado.")
+    : "Sincronización no configurada.";
+  $("#cloud-log").innerHTML = "";
+  $("#sync-modal").classList.remove("hidden");
+}
+function closeSyncModal() { $("#sync-modal").classList.add("hidden"); }
+
+async function showLog() {
+  if (!cloud.isConfigured()) { showToast("Conecta primero"); return; }
+  const box = $("#cloud-log");
+  box.innerHTML = `<p class="muted">Cargando historial…</p>`;
+  const rows = await cloud.getLog(30);
+  if (rows == null) {
+    box.innerHTML = `<p class="muted">El historial requiere una tabla extra. Ejecuta el SQL de "historial" (en la ayuda) una vez.</p>`;
+    return;
+  }
+  if (!rows.length) { box.innerHTML = `<p class="muted">Aún no hay registros.</p>`; return; }
+  box.innerHTML = `<table class="log-table"><thead><tr><th>Fecha</th><th>Dispositivo</th><th>Acción</th><th>Copias</th></tr></thead><tbody>` +
+    rows.map((r) => `<tr><td>${new Date(r.creado).toLocaleString("es-CL")}</td><td>${escapeHtml(r.dispositivo || "—")}</td><td>${escapeHtml(r.accion || "—")}</td><td>${r.copias ?? ""}</td></tr>`).join("") +
+    `</tbody></table>`;
+}
+
+function bindSyncEvents() {
+  $("#open-sync").addEventListener("click", openSyncModal);
+  $$("[data-close-sync]").forEach((el) => el.addEventListener("click", closeSyncModal));
+  $("#sync-help-toggle").addEventListener("click", (e) => { e.preventDefault(); $("#sync-help").classList.toggle("hidden"); });
+  $$("[data-copy-sql]").forEach((b) => b.addEventListener("click", () => {
+    navigator.clipboard.writeText($("#" + b.dataset.copySql).textContent).then(() => showToast("SQL copiado"));
+  }));
+  $("#sync-backup").addEventListener("click", () => exportCollection("json"));
+  $("#sync-restore").addEventListener("click", () => $("#import-file").click());
+
+  $("#cloud-auto").addEventListener("change", (e) => {
+    store.setSetting("cloudAuto", e.target.checked);
+    if (e.target.checked && cloud.isConfigured() && cloud.isDirty()) doCloudPush(false);
+  });
+
+  $("#cloud-connect").addEventListener("click", async () => {
+    const url = $("#cloud-url").value, key = $("#cloud-key").value, clave = $("#cloud-clave").value, device = $("#cloud-device").value;
+    if (!url || !key || !clave) { showToast("Completa URL, clave y código de colección", 3500); return; }
+    cloud.setConfig({ url, key, clave, device });
+    $("#cloud-status").textContent = "Conectando…";
+    await cloudReconcile();
+    startRealtime();
+    $("#cloud-status").textContent = "Conexión lista. " + (autoUpload() ? "Tus cambios se subirán solos." : "Recuerda tocar Guardar para subir.") + " Tiempo real activo.";
+    showToast("Nube conectada ✓");
+  });
+  $("#cloud-push").addEventListener("click", async () => { if (!cloud.isConfigured()) return showToast("Conecta primero"); await doCloudPush(true); showToast("Guardado en la nube ✓"); openSyncModal(); });
+  $("#cloud-pull").addEventListener("click", async () => {
+    if (!cloud.isConfigured()) return showToast("Conecta primero");
+    try {
+      const r = await cloud.pull();
+      if (r && r.snapshot) { adoptRemote(r); showToast("Bajado ✓"); }
+      else showToast("No hay datos en la nube todavía");
+    } catch (e) { showToast("Error: " + e.message, 4000); }
+  });
+  $("#cloud-disconnect").addEventListener("click", () => {
+    cloud.unsubscribeRealtime();
+    cloud.disconnect(); setChip(""); $("#cloud-status").textContent = "Sincronización desactivada.";
+    showToast("Nube desconectada");
+  });
+  $("#cloud-log-btn").addEventListener("click", showLog);
+}
+
+/* ===================== Navegación / eventos ===================== */
+function switchView(view) {
+  state.view = view;
+  $$(".tab").forEach((t) => t.classList.toggle("active", t.dataset.view === view));
+  $$(".view").forEach((v) => v.classList.toggle("active", v.id === "view-" + view));
+  if (view === "mazos") renderDecksView();
+  if (view === "stats") renderStats();
+}
+
+function bindEvents() {
+  // Tabs
+  $$(".tab").forEach((t) => t.addEventListener("click", () => switchView(t.dataset.view)));
+
+  // Filtros
+  const debounced = debounce(applyFilters, 180);
+  $("#search").addEventListener("input", debounced);
+  ["#f-ownership", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-sort"].forEach((s) =>
+    $(s).addEventListener("change", applyFilters)
+  );
+  $("#f-format").addEventListener("change", () => { refreshEditionOptions(); applyFilters(); });
+  $("#f-cost").addEventListener("input", (e) => {
+    const v = Number(e.target.value);
+    $("#cost-val").textContent = v >= 12 ? "∞" : v;
+    applyFilters();
+  });
+  $("#clear-filters").addEventListener("click", () => {
+    $("#search").value = "";
+    ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-sort"].forEach((s) => ($(s).selectedIndex = 0));
+    $("#f-cost").value = 12; $("#cost-val").textContent = "∞";
+    refreshEditionOptions();
+    applyFilters();
+  });
+
+  // Paginación
+  $("#load-more").addEventListener("click", () => { state.page++; renderGrid(false); });
+
+  // Modal
+  $("#modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeModal(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); } });
+  $("#deck-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeDeckModal(); });
+
+  // Exportar / importar
+  const dd = $(".dropdown");
+  $("#btn-export").addEventListener("click", () => dd.classList.toggle("open"));
+  document.addEventListener("click", (e) => { if (!dd.contains(e.target)) dd.classList.remove("open"); });
+  $$(".dropdown-menu button").forEach((b) =>
+    b.addEventListener("click", () => { exportCollection(b.dataset.export); dd.classList.remove("open"); })
+  );
+  $("#btn-import").addEventListener("click", () => $("#import-file").click());
+  $("#import-file").addEventListener("change", (e) => { if (e.target.files[0]) importCollection(e.target.files[0]); e.target.value = ""; });
+
+  // Mazos
+  $("#new-deck").addEventListener("click", () => {
+    const name = prompt("Nombre del mazo:", "Mazo nuevo");
+    if (name !== null) { const d = store.createDeck(name); store.setSetting("activeDeckId", d.id); renderDecksView(); }
+  });
+  bindDeckBarEvents();
+
+  // Estadísticas
+  ["#stats-scope", "#stats-format"].forEach((s) => $(s).addEventListener("change", renderStats));
+  $("#stats-export-pdf").addEventListener("click", statsExportPDF);
+
+  // Datos / sincronización
+  bindSyncEvents();
+
+  // Carta manual
+  bindCardFormEvents();
+
+  // Tema
+  $("#theme-toggle").addEventListener("click", toggleTheme);
+}
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+  applyTheme(cur);
+  store.setSetting("theme", cur);
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  $("#theme-toggle").textContent = theme === "light" ? "☀️" : "🌙";
+}
+
+function debounce(fn, ms) {
+  let t;
+  return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}
+
+/* ===================== Init ===================== */
+async function init() {
+  applyTheme(store.getSetting("theme") || "dark");
+  bindEvents();
+  store.onChange(onStoreChange);
+  await loadData();
+  populateFilters();
+  refreshActiveDeckUI();
+  applyFilters();
+  // Sincronización en la nube (si está configurada)
+  if (cloud.isConfigured()) { setChip("☁ Sincronizado", "ok"); cloudReconcile(); startRealtime(); }
+  startCloudBackgroundSync();
+}
+init();

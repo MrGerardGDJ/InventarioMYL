@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "note": "Cartas agregadas manualmente (no provienen del scraper). La app las fusiona con data/cards.json y NO se sobrescriben al actualizar el catálogo.",
+    "source": "manual"
+  },
+  "cards": [
+    {
+      "id": "onyria__custom__ismael",
+      "name": "Ismael",
+      "edition": "onyria",
+      "editionName": "Onyria",
+      "format": "NE",
+      "edid": "136",
+      "type": "Aliado",
+      "race": "Guerrero",
+      "rarity": "Cortesano",
+      "keyword": "Furia",
+      "cost": 2,
+      "strength": 4,
+      "ability": "Furia.\nCuando ataca, puedes elegir un Aliado oponente para que lo bloquee. Ese Aliado pierde 1 de Fuerza y su habilidad por el turno.",
+      "flavour": "Llámenme Ismael. Hace años, con muy poco dinero en el bolsillo y sin nada que me atara a la tierra, pensé en irme a navegar por ahí para conocer los océanos del mundo. — H. Melville.",
+      "image": "./data/custom-images/ismael.webp",
+      "custom": true
+    }
+  ]
+}
