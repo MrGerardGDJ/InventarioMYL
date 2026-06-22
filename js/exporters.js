@@ -5,6 +5,24 @@ import { typeIcon, raceIcon } from "./icons.js";
 const FMT_NAMES = { PE: "Primera Era", PB: "Primer Bloque", SB: "Segundo Bloque", FX: "Furia Extendido", NE: "Nueva Era / Imperio" };
 const today = () => new Date().toISOString().slice(0, 10);
 
+// Logo de la app como dataURL (para incrustarlo en la imagen exportada)
+let _logoData;
+async function getLogoData() {
+  if (_logoData !== undefined) return _logoData;
+  try {
+    const img = await new Promise((res, rej) => {
+      const i = new Image();
+      i.onload = () => res(i); i.onerror = rej;
+      i.src = "./assets/logo.jpg";
+    });
+    const c = document.createElement("canvas");
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    c.getContext("2d").drawImage(img, 0, 0);
+    _logoData = c.toDataURL("image/jpeg", 0.85);
+  } catch { _logoData = ""; }
+  return _logoData;
+}
+
 // Resumen agregado del conjunto de cartas
 export function summarize(cards, getQty) {
   let uniqueOwned = 0, copies = 0;
@@ -222,6 +240,7 @@ export async function exportDeckExcel(deck, cards, getQty, displayName) {
 /* ===================== MAZO: Imagen (PNG) ===================== */
 export async function exportDeckImage(deck, cards, getQty, displayName) {
   await loadScript(CDN.html2canvas);
+  const logo = await getLogoData();
   const { rows, total, missing, typeTotal, matrix, cols, typesPresent, colTotal, pct } = deckSummary(deck, cards, getQty, displayName);
 
   // Agrupa por tipo
@@ -272,9 +291,12 @@ export async function exportDeckImage(deck, cards, getQty, displayName) {
   node.style.cssText = "position:fixed;left:-9999px;top:0;width:680px;padding:24px;background:#0f1117;color:#e7e9ee;font-family:Segoe UI,system-ui,sans-serif;box-sizing:border-box";
   node.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #c9a13b;padding-bottom:10px;margin-bottom:16px">
-      <div>
-        <div style="font-size:13px;color:#c9a13b;letter-spacing:1px">🃏 INVENTARIO MyL · MAZO</div>
-        <div style="font-size:24px;font-weight:800">${esc(deck.name)}</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        ${logo ? `<img src="${logo}" style="height:58px;width:auto;border-radius:6px" />` : ""}
+        <div>
+          <div style="font-size:13px;color:#c9a13b;letter-spacing:1px">INVENTARIO MyL · MAZO</div>
+          <div style="font-size:24px;font-weight:800">${esc(deck.name)}</div>
+        </div>
       </div>
       <div style="text-align:right;font-size:12px;color:#9aa1b2">
         <div><b style="color:#e7e9ee">${total}</b> cartas${missing ? ` · faltan ${missing}` : ""}</div>
