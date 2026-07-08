@@ -13,6 +13,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Instalar Playwright
+        working-directory: scraper
+        run: npm i playwright@1.48.0 && npx playwright install --with-deps chromium
       - name: Diagnóstico
         working-directory: scraper
         run: node debug.js
