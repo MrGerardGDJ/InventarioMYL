@@ -462,7 +462,7 @@ function renderCfPreview() {
   const src = $("#cf-image-url").value.trim() || cfImageData;
   $("#cf-preview").innerHTML = src ? `<img src="${escapeAttr(src)}" alt="" />` : "";
 }
-function saveCardForm() {
+function saveCardForm(another) {
   const name = $("#cf-name").value.trim();
   if (!name) { showToast("Escribe al menos el nombre"); return; }
   const edName = $("#cf-edition").value.trim() || "Personalizada";
@@ -484,12 +484,31 @@ function saveCardForm() {
   if (id) store.updateCustomCard(id, card);
   else store.addCustomCard(card);
   rebuildCards(); populateFilters(); applyFilters(); refreshActiveDeckUI();
-  closeCardForm();
-  showToast(id ? "Carta actualizada" : "Carta agregada ✓");
+  if (another) {
+    // Mantiene edición/formato/raza/rareza; limpia lo específico de la carta
+    $("#cf-id").value = "";
+    $("#cf-name").value = "";
+    $("#cf-cost").value = "";
+    $("#cf-strength").value = "";
+    $("#cf-ability").value = "";
+    $("#cf-flavour").value = "";
+    $("#cf-image-url").value = "";
+    $("#cf-image-file").value = "";
+    cfImageData = "";
+    renderCfPreview();
+    $("#cf-delete").style.display = "none";
+    $("#cf-title").textContent = "Agregar carta manual";
+    $("#cf-name").focus();
+    showToast("Guardada ✓ — agrega la siguiente");
+  } else {
+    closeCardForm();
+    showToast(id ? "Carta actualizada" : "Carta agregada ✓");
+  }
 }
 function bindCardFormEvents() {
   $("#btn-add-card").addEventListener("click", () => openCardForm(null));
-  $("#cf-save").addEventListener("click", saveCardForm);
+  $("#cf-save").addEventListener("click", () => saveCardForm(false));
+  $("#cf-save-another").addEventListener("click", () => saveCardForm(true));
   $("#cf-delete").addEventListener("click", () => {
     const id = $("#cf-id").value;
     if (id && confirm("¿Eliminar esta carta manual?")) {
