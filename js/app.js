@@ -215,7 +215,50 @@ function applyFilters() {
   state.page = 0;
   renderGrid(true);
   updateResultCount();
+  updateOrphanNote();
 }
+
+/* ===================== Cartas fuera de catálogo (huérfanas) ===================== */
+function computeOrphans() {
+  const ids = new Set(state.cards.map((c) => c.id));
+  return Object.entries(store.getInventory())
+    .filter(([id, q]) => q > 0 && !ids.has(id))
+    .map(([id, qty]) => ({ id, qty }));
+}
+function updateOrphanNote() {
+  const el = $("#orphan-note");
+  if (!el) return;
+  const n = computeOrphans().length;
+  el.classList.toggle("hidden", n === 0);
+  if (n) el.textContent = `⚠ ${n} fuera de catálogo`;
+}
+function openOrphanModal() {
+  const list = computeOrphans();
+  const box = $("#orphan-modal-box");
+  box.innerHTML = `
+    <button class="modal-close" data-close-orphan>×</button>
+    <h2>Cartas fuera de catálogo</h2>
+    <p class="muted">Cantidades guardadas en tu inventario que no calzan con ninguna carta del catálogo actual (p. ej. una edición que TOR aún no publica, o un dato antiguo). <b>No se borran solas</b>: si la edición vuelve al catálogo, se reconectan automáticamente. Puedes eliminarlas manualmente si sabes que ya no aplican.</p>
+    ${list.length
+      ? `<div class="orphan-list">` + list.map((o) => `
+          <div class="orphan-row" data-id="${escapeAttr(o.id)}">
+            <span class="mono">${escapeHtml(o.id)}</span>
+            <span class="muted">×${o.qty}</span>
+            <button class="btn small" data-del-orphan>Eliminar</button>
+          </div>`).join("") + `</div>`
+      : `<p class="muted">No hay cartas fuera de catálogo. 🎉</p>`}`;
+  box.querySelector("[data-close-orphan]").onclick = closeOrphanModal;
+  box.querySelectorAll(".orphan-row").forEach((r) => {
+    r.querySelector("[data-del-orphan]").onclick = () => {
+      if (!confirm(`¿Eliminar la cantidad de «${r.dataset.id}» de tu inventario?`)) return;
+      store.setQty(r.dataset.id, 0);
+      r.remove();
+      updateOrphanNote();
+    };
+  });
+  $("#orphan-modal").classList.remove("hidden");
+}
+function closeOrphanModal() { $("#orphan-modal").classList.add("hidden"); }
 
 function updateResultCount() {
   const n = state.filtered.length;
@@ -1211,7 +1254,10 @@ function bindEvents() {
 
   // Modal
   $("#modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeModal(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); } });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); } });
+  $("#orphan-note").addEventListener("click", openOrphanModal);
+  $("#orphan-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeOrphanModal(); });
+  $$("[data-close-orphan]").forEach((el) => el.addEventListener("click", closeOrphanModal));
   $("#deck-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeDeckModal(); });
 
   // Exportar / importar

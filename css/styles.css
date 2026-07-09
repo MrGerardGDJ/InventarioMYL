@@ -217,6 +217,16 @@ main { padding: 0; }
 .dsr .dsr-meta { color: var(--muted); font-size: 11px; flex: 1; }
 .dsr .owned-tag { color: var(--ok); }
 
+/* ===== Aviso de cartas fuera de catálogo ===== */
+.orphan-note {
+  border: 1px solid var(--danger); background: rgba(229,72,77,0.12); color: var(--danger);
+  padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.orphan-note:hover { background: rgba(229,72,77,0.2); }
+.orphan-list { margin-top: 12px; max-height: 50vh; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+.orphan-row { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-3); }
+.orphan-row .mono { font-family: ui-monospace, monospace; font-size: 13px; flex: 1; }
+
 .load-more { margin: 20px auto; display: block; }
 .empty { text-align: center; color: var(--muted); padding: 40px; }
 .hidden { display: none !important; }

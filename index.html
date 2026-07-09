@@ -98,6 +98,7 @@
       <div class="content">
         <div class="toolbar">
           <div id="result-count" class="muted">Cargando…</div>
+          <button id="orphan-note" class="orphan-note hidden"></button>
           <div class="spacer"></div>
           <div class="actions">
             <button id="btn-add-card" class="btn">➕ Carta manual</button>
@@ -312,6 +313,12 @@ create policy "acceso_log" on inventario_myl_log
     </div>
   </div>
   <datalist id="cf-editions"></datalist>
+
+  <!-- Modal: cartas fuera de catálogo -->
+  <div id="orphan-modal" class="modal hidden">
+    <div class="modal-backdrop" data-close-orphan></div>
+    <div class="modal-box" id="orphan-modal-box"></div>
+  </div>
 
   <div id="toast" class="toast hidden"></div>
 
