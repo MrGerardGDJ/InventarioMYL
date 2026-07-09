@@ -132,9 +132,22 @@ sobrecargar servidores ajenos).
 
 - **tor.myl.cl** — oficial (Salo MyL). API abierta `api.myl.cl`. ✅ (fuente actual)
 - **codicetcg.org** — muy actualizada, backend Supabase cerrado. ⛔ (ver sección 3)
-- **mazos.cl** — comunidad, armado/compartir mazos y resúmenes. Revisar si expone API.
-- Repos en GitHub (scrapers/datos de fans): buscar "mitos y leyendas cartas json",
-  p. ej. `andreuvv/myl_scraper`, `hernancasanova/Mitos-y-leyendas`.
+- **mazos.cl** — app React con backend propio en `api.mazos.cl` (JSON, endpoints no
+  documentados). Su bloque **Imperio/Nueva Era está "próximamente"** → le falta el
+  bloque moderno. ⛔ por ahora (no tiene los datos nuevos; API no abierta/documentada).
+- **andreuvv/myl_scraper** (GitHub) — scraper Python de **tor.myl.cl**. Es la MISMA
+  fuente que ya usamos (nosotros vía API directa, más limpio). Solo referencia. 🔁
+- **hernancasanova/Mitos-y-leyendas** (GitHub) — app de fans (mismo concepto). Solo
+  referencia de diseño, no fuente de datos.
+- **PoolMyL (Facebook)** — base comunitaria compartida en Facebook (archivos/posts),
+  sin API. Útil solo si consigues un **archivo descargable** (JSON/CSV/Excel) para
+  importar manualmente.
+
+**Resumen de investigación (2026-07-09):** de las candidatas revisadas, **ninguna
+aporta una API abierta nueva más allá de TOR**. Códice y mazos.cl tienen backend
+propio no abierto; andreuvv = TOR; el resto son apps/comunidad. TOR sigue siendo la
+fuente canónica; para lo que TOR aún no publica, usar **carga manual** o **importar
+un archivo** comunitario.
 
 Cuando encuentres una candidata, corre por ella la **lista de la sección 4** y, si
 pasa, me pasas la URL de su API y la integro.
