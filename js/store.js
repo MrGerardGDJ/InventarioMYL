@@ -107,6 +107,31 @@ export function replaceDecks(arr, origin = "local") {
   if (Array.isArray(arr)) { decks = arr; write(KEYS.decks, decks); notify(origin); }
 }
 
+/* ===== Migración de claves de carta (legacyId → id estable) =====
+   Remapea inventario y mazos. Idempotente: solo actúa sobre claves presentes
+   en el mapa y solo escribe/notifica si hubo cambios. */
+export function migrateKeys(map) {
+  let changed = false;
+  const remap = (obj) => {
+    const out = {};
+    for (const [k, v] of Object.entries(obj)) {
+      const nk = map[k] || k;
+      if (nk !== k) changed = true;
+      out[nk] = (out[nk] || 0) + v;
+    }
+    return out;
+  };
+  const newInv = remap(inventory);
+  for (const d of decks) d.cards = remap(d.cards);
+  if (changed) {
+    inventory = newInv;
+    write(KEYS.inv, inventory);
+    write(KEYS.decks, decks);
+    notify();
+  }
+  return changed;
+}
+
 /* ===== Cartas manuales del usuario (se sincronizan en la nube) ===== */
 let customCards = read(KEYS.custom, []);
 export function getCustomCards() { return customCards.slice(); }

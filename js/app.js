@@ -37,6 +37,15 @@ async function loadData() {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
     c.searchText = normText(c.name + " " + c.ability);
   }
+  // Migración auto-reconciliante (Capa B): remapea inventario/mazos de
+  // legacyId → id estable usando el catálogo. Idempotente; se cura sola cuando
+  // vuelve una edición que había fallado.
+  try {
+    const legacyMap = {};
+    for (const c of state.baseCards) if (c.legacyId && c.legacyId !== c.id) legacyMap[c.legacyId] = c.id;
+    if (store.migrateKeys(legacyMap)) console.info("Inventario/mazos migrados a ids estables");
+  } catch (e) { console.warn("migración de ids:", e); }
+
   rebuildCards();
   if (cardsRes.meta?.source === "seed") {
     showToast("Mostrando datos de demostración. Ejecuta el scraper para cargar el catálogo real.", 5000);
@@ -47,6 +56,8 @@ function normalizeCard(c, i) {
   const id = c.id || `${c.edition || "x"}__${(c.name || "carta_" + i).toLowerCase().replace(/\s+/g, "_")}`;
   return {
     id,
+    slug: c.slug || "",
+    legacyId: c.legacyId || "",
     name: c.name || "Sin nombre",
     edition: c.edition || "",
     editionName: c.editionName || "",
@@ -284,7 +295,7 @@ const FORMAT_LABELS = { empire: "Imperio", unified: "Unificado", first_era: "Pri
 const profileCache = new Map();
 function fetchProfile(card) {
   const edition = card.edition;
-  const slug = card.id.split("__").slice(2).join("__");
+  const slug = card.slug || card.id.split("__").slice(2).join("__");
   if (!edition || !slug) return Promise.resolve(null);
   const key = edition + "/" + slug;
   if (profileCache.has(key)) return profileCache.get(key);
