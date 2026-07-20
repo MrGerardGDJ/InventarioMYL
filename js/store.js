@@ -5,6 +5,7 @@
 const KEYS = {
   inv: "myl.inventory.v1",
   decks: "myl.decks.v1",
+  collections: "myl.collections.v1",
   settings: "myl.settings.v1",
   meta: "myl.meta.v1",
   custom: "myl.customcards.v1",
@@ -107,6 +108,58 @@ export function replaceDecks(arr, origin = "local") {
   if (Array.isArray(arr)) { decks = arr; write(KEYS.decks, decks); notify(origin); }
 }
 
+/* ===== Colecciones (una edición que se quiere completar) =====
+   Una colección NO guarda cantidades: es una vista de una edición sobre el
+   inventario. Borrarla nunca borra cantidades. */
+let collections = read(KEYS.collections, []);
+
+export function getCollections() { return collections; }
+export function getCollection(id) { return collections.find((c) => c.id === id) || null; }
+export function createCollection(name, edition) {
+  const col = { id: "c" + Date.now().toString(36), name: name || "Colección", edition, updatedAt: Date.now() };
+  collections.push(col);
+  write(KEYS.collections, collections);
+  notify();
+  return col;
+}
+export function renameCollection(id, name) {
+  const c = getCollection(id);
+  if (c) { c.name = name; c.updatedAt = Date.now(); write(KEYS.collections, collections); notify(); }
+}
+export function deleteCollection(id) {
+  collections = collections.filter((c) => c.id !== id);
+  write(KEYS.collections, collections);
+  notify();
+}
+export function replaceCollections(arr, origin = "local") {
+  if (Array.isArray(arr)) { collections = arr; write(KEYS.collections, collections); notify(origin); }
+}
+
+/* ===== Migración de claves de carta (legacyId → id estable) =====
+   Remapea inventario y mazos. Idempotente: solo actúa sobre claves presentes
+   en el mapa y solo escribe/notifica si hubo cambios. */
+export function migrateKeys(map) {
+  let changed = false;
+  const remap = (obj) => {
+    const out = {};
+    for (const [k, v] of Object.entries(obj)) {
+      const nk = map[k] || k;
+      if (nk !== k) changed = true;
+      out[nk] = (out[nk] || 0) + v;
+    }
+    return out;
+  };
+  const newInv = remap(inventory);
+  for (const d of decks) d.cards = remap(d.cards);
+  if (changed) {
+    inventory = newInv;
+    write(KEYS.inv, inventory);
+    write(KEYS.decks, decks);
+    notify();
+  }
+  return changed;
+}
+
 /* ===== Cartas manuales del usuario (se sincronizan en la nube) ===== */
 let customCards = read(KEYS.custom, []);
 export function getCustomCards() { return customCards.slice(); }
@@ -133,13 +186,14 @@ export function deleteCustomCard(id) {
 
 /* ===== Snapshot completo (para respaldo / nube) ===== */
 export function getSnapshot() {
-  return { inventory: getInventory(), decks: JSON.parse(JSON.stringify(decks)), customCards: getCustomCards(), updatedAt: getUpdatedAt() };
+  return { inventory: getInventory(), decks: JSON.parse(JSON.stringify(decks)), collections: JSON.parse(JSON.stringify(collections)), customCards: getCustomCards(), updatedAt: getUpdatedAt() };
 }
 // Aplica un snapshot completo SIN marcarlo como cambio local (origin 'remote').
 export function applySnapshot(snap) {
   if (!snap) return;
   replaceInventory(snap.inventory || {}, "remote");
   if (Array.isArray(snap.decks)) { decks = snap.decks; write(KEYS.decks, decks); }
+  if (Array.isArray(snap.collections)) { collections = snap.collections; write(KEYS.collections, collections); }
   if (Array.isArray(snap.customCards)) { customCards = snap.customCards; write(KEYS.custom, customCards); }
   if (snap.updatedAt) setUpdatedAt(snap.updatedAt);
   notify("remote");

@@ -21,7 +21,8 @@
       <input id="search" type="search" placeholder="Buscar carta por nombre o habilidad…" autocomplete="off" />
     </div>
     <nav class="tabs">
-      <button class="tab active" data-view="coleccion">Colección</button>
+      <button class="tab active" data-view="coleccion">Catálogo</button>
+      <button class="tab" data-view="colecciones">Colecciones</button>
       <button class="tab" data-view="mazos">Mazos</button>
       <button class="tab" data-view="stats">Estadísticas</button>
     </nav>
@@ -86,6 +87,8 @@
           <select id="f-sort">
             <option value="name">Nombre (A→Z)</option>
             <option value="name_desc">Nombre (Z→A)</option>
+            <option value="number">Número de carta (ascendente)</option>
+            <option value="number_desc">Número de carta (descendente)</option>
             <option value="cost">Coste (menor)</option>
             <option value="cost_desc">Coste (mayor)</option>
             <option value="strength_desc">Fuerza (mayor)</option>
@@ -98,6 +101,7 @@
       <div class="content">
         <div class="toolbar">
           <div id="result-count" class="muted">Cargando…</div>
+          <button id="orphan-note" class="orphan-note hidden"></button>
           <div class="spacer"></div>
           <div class="actions">
             <button id="btn-add-card" class="btn">➕ Carta manual</button>
@@ -125,6 +129,21 @@
         <div id="cards-grid" class="cards-grid"></div>
         <div id="grid-empty" class="empty hidden">No hay cartas que coincidan con los filtros.</div>
         <button id="load-more" class="btn load-more hidden">Cargar más</button>
+      </div>
+    </section>
+
+    <!-- ===== VISTA COLECCIONES ===== -->
+    <section id="view-colecciones" class="view">
+      <aside class="filters">
+        <div class="filters-head"><h2>Mis colecciones</h2></div>
+        <p class="muted" style="font-size:12px;margin-top:0">Una colección sigue tu avance en una edición completa, carta por carta. Las que no tienes se ven bloqueadas 🔒.</p>
+        <div id="collection-list" class="deck-list"></div>
+        <button id="new-collection" class="btn full">+ Nueva colección</button>
+      </aside>
+      <div class="content">
+        <div id="collection-detail" class="collection-detail">
+          <p class="muted">Crea una colección con <b>+ Nueva colección</b>: eliges una edición y verás todas sus cartas ordenadas por número, marcando tu progreso.</p>
+        </div>
       </div>
     </section>
 
@@ -258,6 +277,22 @@ create policy "acceso_log" on inventario_myl_log
     </div>
   </div>
 
+  <!-- Modal: crear colección -->
+  <div id="collection-modal" class="modal hidden">
+    <div class="modal-backdrop" data-close-col></div>
+    <div class="modal-box">
+      <button class="modal-close" data-close-col>×</button>
+      <h2>Nueva colección</h2>
+      <p class="muted">Elige la edición que quieres coleccionar. Verás todas sus cartas ordenadas por número; las que aún no tienes aparecen en blanco y negro, como bloqueadas.</p>
+      <label class="field"><span>Edición *</span><select id="col-edition"><option value="">— Elige una edición —</option></select></label>
+      <label class="field"><span>Nombre (opcional)</span><input id="col-name" type="text" placeholder="Ej: Completar Hijos de Daana" /></label>
+      <div class="sync-row">
+        <button class="btn primary" id="col-create">Crear colección</button>
+        <button class="btn" data-close-col>Cancelar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal: elegir mazo para una carta -->
   <div id="deck-modal" class="modal hidden">
     <div class="modal-backdrop" data-close-deck></div>
@@ -305,12 +340,19 @@ create policy "acceso_log" on inventario_myl_log
       </div>
       <div class="sync-row">
         <button class="btn primary" id="cf-save">Guardar carta</button>
+        <button class="btn" id="cf-save-another">Guardar y agregar otra</button>
         <button class="btn" id="cf-delete" style="display:none">🗑 Eliminar</button>
         <button class="btn" data-close-cf>Cancelar</button>
       </div>
     </div>
   </div>
   <datalist id="cf-editions"></datalist>
+
+  <!-- Modal: cartas fuera de catálogo -->
+  <div id="orphan-modal" class="modal hidden">
+    <div class="modal-backdrop" data-close-orphan></div>
+    <div class="modal-box" id="orphan-modal-box"></div>
+  </div>
 
   <div id="toast" class="toast hidden"></div>
 

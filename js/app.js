@@ -1,3 +1,21 @@
+/* =============================================================================
+   app.js — Lógica principal de Inventario MyL
+   -----------------------------------------------------------------------------
+   Mapa del archivo (buscar el título de cada sección para saltar a ella):
+     · Estado global ............ datos en memoria (catálogo, filtros, vista)
+     · Carga de datos ........... fetch de data/*.json + normalización de cartas
+     · Corrección de nombres .... arregla tildes/ñ consultando el perfil de la API
+     · Filtros .................. poblar selects y aplicar filtros/ordenamientos
+     · Render grid .............. grilla de cartas del Catálogo (paginada)
+     · Modal detalle ............ ficha ampliada de una carta (API en vivo)
+     · Carta manual ............. formulario para cartas fuera del catálogo
+     · Colecciones .............. cuaderno digital por edición (cartas bloqueadas)
+     · Mazos .................... CRUD de mazos + resumen + exportaciones
+     · Estadísticas ............. tarjetas, gráficos y progreso por edición
+     · Exportar / Importar ...... Excel, PDF, CSV y respaldo JSON
+     · Guardado / Sincronización  nube Supabase (push/pull/realtime)
+     · Navegación / eventos ..... tabs, listeners y arranque (init)
+   ========================================================================== */
 import * as store from "./store.js";
 import { exportExcel, exportPDF, exportDeckExcel, exportDeckImage, deckSummary } from "./exporters.js";
 import { renderCharts } from "./charts.js";
@@ -6,13 +24,15 @@ import { typeIcon, raceIcon, NO_STRENGTH_TYPES } from "./icons.js";
 
 /* ===================== Estado global ===================== */
 const state = {
-  cards: [],
-  editions: [],
-  editionName: {}, // slug -> nombre legible
-  filtered: [],
+  cards: [],        // catálogo completo (scrapeado + bundle + cartas manuales)
+  editions: [],     // data/editions.json en orden de publicación por bloque
+  editionName: {},  // slug -> nombre legible
+  editionOrder: {}, // slug -> índice en editions.json (para ordenar por edición)
+  filtered: [],     // resultado de applyFilters() que muestra la grilla
   page: 0,
-  pageSize: 60,
+  pageSize: 60,     // cartas por página en la grilla del Catálogo
   view: "coleccion",
+  colFilter: "all", // filtro de la vista Colecciones: all | missing | owned
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -31,12 +51,23 @@ async function loadData() {
   state.baseCards = [...scraped, ...bundledCustom];
   state.editions = Array.isArray(edRes) ? edRes : [];
   state.editionName = Object.fromEntries(state.editions.map((e) => [e.slug, e.name]));
+  // Orden real de publicación (editions.json viene ordenado por bloque/era)
+  state.editionOrder = Object.fromEntries(state.editions.map((e, i) => [e.slug, i]));
 
   // Asegura nombre legible de edición y precalcula texto de búsqueda (una vez)
   for (const c of state.baseCards) {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
     c.searchText = normText(c.name + " " + c.ability);
   }
+  // Migración auto-reconciliante (Capa B): remapea inventario/mazos de
+  // legacyId → id estable usando el catálogo. Idempotente; se cura sola cuando
+  // vuelve una edición que había fallado.
+  try {
+    const legacyMap = {};
+    for (const c of state.baseCards) if (c.legacyId && c.legacyId !== c.id) legacyMap[c.legacyId] = c.id;
+    if (store.migrateKeys(legacyMap)) console.info("Inventario/mazos migrados a ids estables");
+  } catch (e) { console.warn("migración de ids:", e); }
+
   rebuildCards();
   if (cardsRes.meta?.source === "seed") {
     showToast("Mostrando datos de demostración. Ejecuta el scraper para cargar el catálogo real.", 5000);
@@ -47,6 +78,8 @@ function normalizeCard(c, i) {
   const id = c.id || `${c.edition || "x"}__${(c.name || "carta_" + i).toLowerCase().replace(/\s+/g, "_")}`;
   return {
     id,
+    slug: c.slug || "",
+    legacyId: c.legacyId || "",
     name: c.name || "Sin nombre",
     edition: c.edition || "",
     editionName: c.editionName || "",
@@ -76,6 +109,7 @@ function rebuildCards() {
     c.searchText = normText(c.name + " " + c.ability);
   }
   state.cards = (state.baseCards || []).concat(userCustom);
+  editionCardsCache.clear(); // el catálogo cambió: invalida la caché de Colecciones
 }
 // Minúsculas sin diacríticos (á→a, ñ→n) para comparar/buscar sin importar tildes
 function normText(s) {
@@ -139,13 +173,52 @@ function populateFilters() {
 }
 
 function refreshEditionOptions() {
-  const fmt = $("#f-format").value;
-  // ediciones presentes en el dataset (respeta el formato seleccionado)
-  const present = uniqueSorted(
-    state.cards.filter((c) => !fmt || c.format === fmt).map((c) => c.edition)
-  );
-  const opts = present.map((slug) => ({ value: slug, label: state.editionName[slug] || slug }));
-  fillSelect("#f-edition", opts);
+  const sel = $("#f-edition");
+  const prev = sel.value;
+  fillEditionSelect(sel, $("#f-format").value, "Todas");
+  if ([...sel.options].some((o) => o.value === prev)) sel.value = prev;
+}
+
+// Agrupa las ediciones presentes en el dataset por bloque/era, respetando el
+// orden de publicación de editions.json (no alfabético)
+function editionOptionGroups(fmt) {
+  const present = new Set(state.cards.filter((c) => !fmt || c.format === fmt).map((c) => c.edition));
+  const groups = new Map();
+  for (const e of state.editions) {
+    if (!present.has(e.slug)) continue;
+    present.delete(e.slug);
+    const g = e.formatName || e.format || "Otros";
+    if (!groups.has(g)) groups.set(g, []);
+    groups.get(g).push({ value: e.slug, label: e.name });
+  }
+  if (present.size) {
+    const extra = [...present]
+      .sort((a, b) => (state.editionName[a] || a).localeCompare(state.editionName[b] || b, "es"))
+      .map((s) => ({ value: s, label: state.editionName[s] || s }));
+    groups.set("Otras / personalizadas", extra);
+  }
+  return groups;
+}
+
+function fillEditionSelect(el, fmt, placeholder) {
+  el.innerHTML = "";
+  if (placeholder != null) {
+    const o = document.createElement("option");
+    o.value = "";
+    o.textContent = placeholder;
+    el.appendChild(o);
+  }
+  for (const [gname, items] of editionOptionGroups(fmt)) {
+    const og = document.createElement("optgroup");
+    og.label = gname;
+    for (const it of items) {
+      const o = document.createElement("option");
+      o.value = it.value;
+      o.textContent = it.label;
+      og.appendChild(o);
+    }
+    el.appendChild(og);
+  }
 }
 
 function fillSelect(sel, opts) {
@@ -161,7 +234,11 @@ function fillSelect(sel, opts) {
   }
 }
 
-/* ===================== Aplicar filtros ===================== */
+/* ===================== Aplicar filtros =====================
+   Lee todos los controles del panel de filtros, filtra state.cards y ordena
+   el resultado según #f-sort. El orden por "número de carta" usa edid (número
+   dentro de la edición) y desempata por edición según el orden de publicación
+   (editions.json), de modo que el listado quede estable y predecible. */
 function applyFilters() {
   const q = normText($("#search").value.trim());
   const ownership = $("#f-ownership").value;
@@ -191,10 +268,12 @@ function applyFilters() {
   out.sort((a, b) => {
     switch (sort) {
       case "name_desc": return b.name.localeCompare(a.name, "es");
+      case "number": return cardNum(a) - cardNum(b) || editionOrd(a) - editionOrd(b) || a.name.localeCompare(b.name, "es");
+      case "number_desc": return cardNum(b) - cardNum(a) || editionOrd(a) - editionOrd(b) || a.name.localeCompare(b.name, "es");
       case "cost": return (a.cost ?? 99) - (b.cost ?? 99);
       case "cost_desc": return (b.cost ?? -1) - (a.cost ?? -1);
       case "strength_desc": return (b.strength ?? -1) - (a.strength ?? -1);
-      case "edition": return (a.editionName || "").localeCompare(b.editionName || "", "es");
+      case "edition": return editionOrd(a) - editionOrd(b) || cardNum(a) - cardNum(b) || a.name.localeCompare(b.name, "es");
       case "qty_desc": return store.getQty(b.id) - store.getQty(a.id);
       default: return a.name.localeCompare(b.name, "es");
     }
@@ -204,7 +283,61 @@ function applyFilters() {
   state.page = 0;
   renderGrid(true);
   updateResultCount();
+  updateOrphanNote();
 }
+
+// Número de la carta dentro de su edición (edid "037" → 37); sin número → al final
+function cardNum(c) {
+  const n = parseInt(c.edid, 10);
+  return Number.isFinite(n) ? n : Infinity;
+}
+// Posición de la edición según el orden de publicación (editions.json)
+function editionOrd(c) {
+  const i = state.editionOrder?.[c.edition];
+  return i == null ? 9999 : i;
+}
+
+/* ===================== Cartas fuera de catálogo (huérfanas) ===================== */
+function computeOrphans() {
+  const ids = new Set(state.cards.map((c) => c.id));
+  return Object.entries(store.getInventory())
+    .filter(([id, q]) => q > 0 && !ids.has(id))
+    .map(([id, qty]) => ({ id, qty }));
+}
+function updateOrphanNote() {
+  const el = $("#orphan-note");
+  if (!el) return;
+  const n = computeOrphans().length;
+  el.classList.toggle("hidden", n === 0);
+  if (n) el.textContent = `⚠ ${n} fuera de catálogo`;
+}
+function openOrphanModal() {
+  const list = computeOrphans();
+  const box = $("#orphan-modal-box");
+  box.innerHTML = `
+    <button class="modal-close" data-close-orphan>×</button>
+    <h2>Cartas fuera de catálogo</h2>
+    <p class="muted">Cantidades guardadas en tu inventario que no calzan con ninguna carta del catálogo actual (p. ej. una edición que TOR aún no publica, o un dato antiguo). <b>No se borran solas</b>: si la edición vuelve al catálogo, se reconectan automáticamente. Puedes eliminarlas manualmente si sabes que ya no aplican.</p>
+    ${list.length
+      ? `<div class="orphan-list">` + list.map((o) => `
+          <div class="orphan-row" data-id="${escapeAttr(o.id)}">
+            <span class="mono">${escapeHtml(o.id)}</span>
+            <span class="muted">×${o.qty}</span>
+            <button class="btn small" data-del-orphan>Eliminar</button>
+          </div>`).join("") + `</div>`
+      : `<p class="muted">No hay cartas fuera de catálogo. 🎉</p>`}`;
+  box.querySelector("[data-close-orphan]").onclick = closeOrphanModal;
+  box.querySelectorAll(".orphan-row").forEach((r) => {
+    r.querySelector("[data-del-orphan]").onclick = () => {
+      if (!confirm(`¿Eliminar la cantidad de «${r.dataset.id}» de tu inventario?`)) return;
+      store.setQty(r.dataset.id, 0);
+      r.remove();
+      updateOrphanNote();
+    };
+  });
+  $("#orphan-modal").classList.remove("hidden");
+}
+function closeOrphanModal() { $("#orphan-modal").classList.add("hidden"); }
 
 function updateResultCount() {
   const n = state.filtered.length;
@@ -228,6 +361,9 @@ function renderGrid(reset) {
   $("#load-more").classList.toggle("hidden", !hasMore);
 }
 
+// Crea el nodo de una carta para cualquier grilla (Catálogo y Colecciones).
+// La clase .owned refleja si hay copias en el inventario; en la vista
+// Colecciones el CSS usa esa clase para el efecto bloqueada/desbloqueada.
 function cardEl(card) {
   const qty = store.getQty(card.id);
   const el = document.createElement("div");
@@ -235,6 +371,7 @@ function cardEl(card) {
   el.dataset.id = card.id;
 
   const dName = displayName(card);
+  const num = cardNum(card); // número dentro de la edición (Infinity si no tiene)
   const img = card.image
     ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
     : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div>${card.editionName || ""}</div>`;
@@ -246,6 +383,7 @@ function cardEl(card) {
     <div class="card-img" data-act="detail">
       ${card.cost != null ? `<span class="badge-cost">${card.cost}</span>` : ""}
       ${card.strength != null ? `<span class="badge-str">${card.strength}</span>` : ""}
+      ${Number.isFinite(num) ? `<span class="badge-num">#${num}</span>` : ""}
       ${img}
     </div>
     <div class="card-body">
@@ -270,6 +408,9 @@ function cardEl(card) {
   return el;
 }
 
+// Cambia la cantidad de una carta desde la grilla y actualiza SOLO los nodos
+// afectados (sin re-render completo). Al alternar .owned, en Colecciones el
+// CSS anima el paso blanco y negro ⇄ color de la imagen.
 function changeQty(el, card, delta) {
   const qty = store.addQty(card.id, delta);
   const numEl = el.querySelector('[data-role="qty"]');
@@ -277,6 +418,7 @@ function changeQty(el, card, delta) {
   numEl.classList.toggle("zero", qty === 0);
   el.classList.toggle("owned", qty > 0);
   updateResultCount();
+  if (state.view === "colecciones") updateCollectionProgress();
 }
 
 /* ===================== Modal detalle ===================== */
@@ -284,7 +426,7 @@ const FORMAT_LABELS = { empire: "Imperio", unified: "Unificado", first_era: "Pri
 const profileCache = new Map();
 function fetchProfile(card) {
   const edition = card.edition;
-  const slug = card.id.split("__").slice(2).join("__");
+  const slug = card.slug || card.id.split("__").slice(2).join("__");
   if (!edition || !slug) return Promise.resolve(null);
   const key = edition + "/" + slug;
   if (profileCache.has(key)) return profileCache.get(key);
@@ -354,6 +496,7 @@ function openModal(card) {
         gridCard.classList.toggle("owned", newQty > 0);
       }
       updateResultCount();
+      if (state.view === "colecciones") updateCollectionProgress();
     };
   });
 
@@ -462,7 +605,7 @@ function renderCfPreview() {
   const src = $("#cf-image-url").value.trim() || cfImageData;
   $("#cf-preview").innerHTML = src ? `<img src="${escapeAttr(src)}" alt="" />` : "";
 }
-function saveCardForm() {
+function saveCardForm(another) {
   const name = $("#cf-name").value.trim();
   if (!name) { showToast("Escribe al menos el nombre"); return; }
   const edName = $("#cf-edition").value.trim() || "Personalizada";
@@ -484,12 +627,31 @@ function saveCardForm() {
   if (id) store.updateCustomCard(id, card);
   else store.addCustomCard(card);
   rebuildCards(); populateFilters(); applyFilters(); refreshActiveDeckUI();
-  closeCardForm();
-  showToast(id ? "Carta actualizada" : "Carta agregada ✓");
+  if (another) {
+    // Mantiene edición/formato/raza/rareza; limpia lo específico de la carta
+    $("#cf-id").value = "";
+    $("#cf-name").value = "";
+    $("#cf-cost").value = "";
+    $("#cf-strength").value = "";
+    $("#cf-ability").value = "";
+    $("#cf-flavour").value = "";
+    $("#cf-image-url").value = "";
+    $("#cf-image-file").value = "";
+    cfImageData = "";
+    renderCfPreview();
+    $("#cf-delete").style.display = "none";
+    $("#cf-title").textContent = "Agregar carta manual";
+    $("#cf-name").focus();
+    showToast("Guardada ✓ — agrega la siguiente");
+  } else {
+    closeCardForm();
+    showToast(id ? "Carta actualizada" : "Carta agregada ✓");
+  }
 }
 function bindCardFormEvents() {
   $("#btn-add-card").addEventListener("click", () => openCardForm(null));
-  $("#cf-save").addEventListener("click", saveCardForm);
+  $("#cf-save").addEventListener("click", () => saveCardForm(false));
+  $("#cf-save-another").addEventListener("click", () => saveCardForm(true));
   $("#cf-delete").addEventListener("click", () => {
     const id = $("#cf-id").value;
     if (id && confirm("¿Eliminar esta carta manual?")) {
@@ -594,6 +756,172 @@ function bindDeckBarEvents() {
     showToast(`Mazo «${d.name}» creado y activo`);
   });
   $$("[data-close-deck]").forEach((el) => el.addEventListener("click", closeDeckModal));
+}
+
+/* ===================== Colecciones (cuaderno de colección digital) =====================
+   Una "colección" es el álbum digital de UNA edición: al crearla se elige la
+   edición y la vista muestra todas sus cartas ordenadas por número (edid).
+   Las cantidades NO viven en la colección: se leen del inventario, por lo que
+   marcar copias aquí o en el Catálogo es equivalente. El efecto visual de
+   "carta bloqueada" (blanco y negro → color) lo resuelve CSS con la clase
+   .owned que cardEl()/changeQty() mantienen al día (ver styles.css,
+   sección Colecciones). */
+
+// Cartas de la edición de la colección, ordenadas por número de carta.
+// Se cachean por edición para no recorrer el catálogo completo (~20k cartas)
+// en cada clic de +/−; rebuildCards() limpia la caché cuando cambia el catálogo.
+const editionCardsCache = new Map();
+function collectionCards(col) {
+  let arr = editionCardsCache.get(col.edition);
+  if (!arr) {
+    arr = state.cards
+      .filter((c) => c.edition === col.edition)
+      .sort((a, b) => cardNum(a) - cardNum(b) || a.name.localeCompare(b.name, "es"));
+    editionCardsCache.set(col.edition, arr);
+  }
+  return arr;
+}
+// Progreso de la colección: únicas poseídas / total de la edición
+function collectionStats(col) {
+  const cards = collectionCards(col);
+  const owned = cards.filter((c) => store.getQty(c.id) > 0).length;
+  return { total: cards.length, owned, pct: cards.length ? Math.round((owned / cards.length) * 100) : 0 };
+}
+
+// Panel lateral: lista de colecciones con su barra de progreso.
+// Al final delega en renderCollectionDetail() para pintar la activa.
+function renderCollectionsView() {
+  const list = $("#collection-list");
+  const cols = store.getCollections();
+  const activeId = store.getSetting("activeCollectionId");
+  list.innerHTML = cols.length ? "" : `<p class="muted">Aún no tienes colecciones.</p>`;
+  for (const col of cols) {
+    const s = collectionStats(col);
+    const row = document.createElement("div");
+    row.className = "col-item" + (col.id === activeId ? " active" : "");
+    row.dataset.colId = col.id;
+    row.innerHTML = `
+      <div class="col-top">
+        <span class="d-name">${escapeHtml(col.name)}</span>
+        <button class="qty-btn" data-del title="Eliminar colección">🗑</button>
+      </div>
+      <div class="col-ed muted">${escapeHtml(state.editionName[col.edition] || col.edition)}</div>
+      <span class="ep-bar"><span class="ep-fill" style="width:${s.pct}%"></span></span>
+      <div class="col-nums muted">${s.owned}/${s.total} (${s.pct}%)</div>`;
+    row.querySelector(".d-name").onclick = () => {
+      store.setSetting("activeCollectionId", col.id);
+      renderCollectionsView();
+    };
+    row.querySelector("[data-del]").onclick = () => {
+      if (!confirm(`¿Eliminar la colección «${col.name}»?\n\n(No borra las cantidades de tu inventario)`)) return;
+      store.deleteCollection(col.id);
+      if (store.getSetting("activeCollectionId") === col.id) store.setSetting("activeCollectionId", null);
+      renderCollectionsView();
+    };
+    list.appendChild(row);
+  }
+  renderCollectionDetail();
+}
+
+// Detalle de la colección activa: nombre editable, barra de progreso grande,
+// filtro (todas/faltantes/obtenidas) y la grilla de cartas de la edición.
+function renderCollectionDetail() {
+  const wrap = $("#collection-detail");
+  const col = store.getCollection(store.getSetting("activeCollectionId"));
+  if (!col) {
+    wrap.innerHTML = `<p class="muted">Crea una colección con <b>+ Nueva colección</b>: eliges una edición y verás todas sus cartas ordenadas por número, marcando tu progreso.</p>`;
+    return;
+  }
+  const s = collectionStats(col);
+  wrap.innerHTML = `
+    <div class="col-head">
+      <h2><input id="col-name-edit" value="${escapeAttr(col.name)}" /></h2>
+      <span class="tag">${escapeHtml(state.editionName[col.edition] || col.edition)}</span>
+      <div class="spacer"></div>
+      <label class="field inline"><span>Mostrar</span>
+        <select id="col-filter">
+          <option value="all">Todas las cartas</option>
+          <option value="missing">Solo las que faltan</option>
+          <option value="owned">Solo las que tengo</option>
+        </select>
+      </label>
+    </div>
+    <div class="col-progress-big">
+      <span class="ep-bar"><span class="ep-fill" id="col-fill" style="width:${s.pct}%"></span></span>
+      <span class="muted" id="col-progress-text">${s.owned}/${s.total} cartas (${s.pct}%)</span>
+    </div>
+    <div id="collection-grid" class="cards-grid collection-grid"></div>
+    <div id="col-empty" class="empty hidden">No hay cartas con este filtro.</div>`;
+
+  $("#col-name-edit").onchange = (e) => {
+    store.renameCollection(col.id, e.target.value.trim() || "Colección");
+    renderCollectionsView();
+  };
+  const filterSel = $("#col-filter");
+  filterSel.value = state.colFilter || "all";
+  filterSel.onchange = (e) => { state.colFilter = e.target.value; renderCollectionGrid(col); };
+  renderCollectionGrid(col);
+}
+
+// Grilla del álbum: reutiliza cardEl() del Catálogo (mismos botones +/− y
+// detalle). El contenedor lleva la clase .collection-grid, que activa en CSS
+// el modo bloqueado para las cartas sin copias.
+function renderCollectionGrid(col) {
+  const grid = $("#collection-grid");
+  if (!grid) return;
+  let cards = collectionCards(col);
+  const f = state.colFilter || "all";
+  if (f === "missing") cards = cards.filter((c) => store.getQty(c.id) === 0);
+  else if (f === "owned") cards = cards.filter((c) => store.getQty(c.id) > 0);
+  grid.innerHTML = "";
+  const frag = document.createDocumentFragment();
+  for (const c of cards) frag.appendChild(cardEl(c));
+  grid.appendChild(frag);
+  scheduleNameCorrection(cards);
+  $("#col-empty").classList.toggle("hidden", cards.length !== 0);
+}
+
+// Actualiza barras de progreso (detalle + panel lateral) al cambiar cantidades
+function updateCollectionProgress() {
+  const col = store.getCollection(store.getSetting("activeCollectionId"));
+  if (!col) return;
+  const s = collectionStats(col);
+  const fill = $("#col-fill");
+  if (fill) fill.style.width = s.pct + "%";
+  const txt = $("#col-progress-text");
+  if (txt) txt.textContent = `${s.owned}/${s.total} cartas (${s.pct}%)`;
+  const row = document.querySelector(`.col-item[data-col-id="${CSS.escape(col.id)}"]`);
+  if (row) {
+    row.querySelector(".ep-fill").style.width = s.pct + "%";
+    row.querySelector(".col-nums").textContent = `${s.owned}/${s.total} (${s.pct}%)`;
+  }
+}
+
+// Modal de creación: selector de edición agrupado por bloque + nombre opcional
+function openCollectionModal() {
+  fillEditionSelect($("#col-edition"), "", "— Elige una edición —");
+  $("#col-name").value = "";
+  $("#collection-modal").classList.remove("hidden");
+}
+function closeCollectionModal() { $("#collection-modal").classList.add("hidden"); }
+function createCollectionFromModal() {
+  const ed = $("#col-edition").value;
+  if (!ed) { showToast("Elige una edición para la colección"); return; }
+  // Sin nombre explícito, la colección toma el nombre de la edición
+  const name = $("#col-name").value.trim() || (state.editionName[ed] || ed);
+  const col = store.createCollection(name, ed);
+  store.setSetting("activeCollectionId", col.id);
+  closeCollectionModal();
+  renderCollectionsView();
+  showToast(`Colección «${name}» creada ✓`);
+}
+function bindCollectionEvents() {
+  $("#new-collection").addEventListener("click", openCollectionModal);
+  $("#col-create").addEventListener("click", createCollectionFromModal);
+  $$("[data-close-col]").forEach((el) => el.addEventListener("click", closeCollectionModal));
+  $("#collection-modal").addEventListener("click", (e) => {
+    if (e.target.classList.contains("modal-backdrop")) closeCollectionModal();
+  });
 }
 
 /* ===================== Mazos ===================== */
@@ -869,6 +1197,7 @@ function exportCollection(format) {
       exportedAt: new Date().toISOString(),
       inventory: inv,
       decks: store.getDecks(),
+      collections: store.getCollections(),
     };
     download(`coleccion_myl_${today()}.json`, JSON.stringify(data, null, 2));
     showToast("Colección exportada (JSON)");
@@ -907,6 +1236,7 @@ function importCollection(file) {
       if (merge) store.mergeInventory(inv);
       else store.replaceInventory(inv);
       if (Array.isArray(data.decks)) store.replaceDecks(data.decks);
+      if (Array.isArray(data.collections)) store.replaceCollections(data.collections);
       applyFilters();
       renderDecksView();
       showToast("Colección importada");
@@ -955,6 +1285,7 @@ function flashChip(text, cls) {
 function refreshAll() {
   rebuildCards();
   applyFilters();
+  if (state.view === "colecciones") renderCollectionsView();
   if (state.view === "mazos") renderDecksView();
   if (state.view === "stats") renderStats();
   refreshActiveDeckUI();
@@ -1148,6 +1479,7 @@ function switchView(view) {
   state.view = view;
   $$(".tab").forEach((t) => t.classList.toggle("active", t.dataset.view === view));
   $$(".view").forEach((v) => v.classList.toggle("active", v.id === "view-" + view));
+  if (view === "colecciones") renderCollectionsView();
   if (view === "mazos") renderDecksView();
   if (view === "stats") renderStats();
 }
@@ -1181,7 +1513,10 @@ function bindEvents() {
 
   // Modal
   $("#modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeModal(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); } });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); closeCollectionModal(); } });
+  $("#orphan-note").addEventListener("click", openOrphanModal);
+  $("#orphan-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeOrphanModal(); });
+  $$("[data-close-orphan]").forEach((el) => el.addEventListener("click", closeOrphanModal));
   $("#deck-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeDeckModal(); });
 
   // Exportar / importar
@@ -1200,6 +1535,9 @@ function bindEvents() {
     if (name !== null) { const d = store.createDeck(name); store.setSetting("activeDeckId", d.id); renderDecksView(); }
   });
   bindDeckBarEvents();
+
+  // Colecciones
+  bindCollectionEvents();
 
   // Estadísticas
   ["#stats-scope", "#stats-format"].forEach((s) => $(s).addEventListener("change", renderStats));

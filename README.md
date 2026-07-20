@@ -13,7 +13,11 @@ Los datos de las cartas provienen de [tor.myl.cl](https://tor.myl.cl/cartas/toda
 
 - 🔎 **Búsqueda** por nombre o texto de habilidad.
 - 🧰 **Filtros**: formato, edición, raza, tipo, rareza y coste máximo.
-- ↕️ **Ordenar** por nombre, coste, fuerza, edición o cantidad que posees.
+- ↕️ **Ordenar** por nombre, **número de carta**, coste, fuerza, edición
+  (en orden de publicación por bloque) o cantidad que posees.
+- 📚 **Colecciones**: elige una edición y síguela carta por carta, ordenada por
+  número; las cartas que aún no tienes se ven **bloqueadas** (blanco y negro
+  con candado) y una barra muestra tu progreso.
 - 📦 **Inventario**: marca cuántas copias tienes de cada carta (+/−). Filtra por
   *las que tengo*, *las que me faltan* o *duplicadas*.
 - 🗂️ **Mazos**: crea mazos, añade cartas desde la colección y comprueba qué

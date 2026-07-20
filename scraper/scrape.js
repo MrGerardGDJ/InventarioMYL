@@ -134,7 +134,12 @@ for (const slug of editionsToFetch) {
     seenCards.add(key);
     const edid = edidRaw.padStart(3, "0");
     all.push({
-      id: `${norm(slug)}__${edid}__${c.slug || added}`,
+      // id ESTABLE (Capa A): id numérico de edición + número de carta.
+      // No cambia aunque cambie el nombre/slug. Es la clave que referencia el inventario.
+      id: `${edImgId}-${edidRaw}`,
+      // legacyId: id anterior (basado en slug) — solo para migrar inventarios viejos.
+      legacyId: `${norm(slug)}__${edid}__${c.slug || added}`,
+      slug: c.slug || "",
       name: titleCase(c.name) || "(sin nombre)",
       edition: slug,
       editionName: edTitle,
@@ -190,7 +195,7 @@ if (argv.includes("--names") && all.length) {
   async function worker() {
     while (idx < pending.length) {
       const card = pending[idx++];
-      const slug = card.id.split("__").slice(2).join("__");
+      const slug = card.slug || card.id.split("__").slice(2).join("__");
       try {
         const r = await fetch(`${PROFILE}/${encodeURIComponent(card.edition)}/${encodeURIComponent(slug)}`, { headers: HEADERS });
         if (r.ok) {
@@ -205,6 +210,30 @@ if (argv.includes("--names") && all.length) {
   await Promise.all(Array.from({ length: 12 }, worker));
   console.log(`✓ nombres: consultados ${pending.length}, corregidos ${fixed}`);
 }
+
+/* ---------- 3.9) merge NO destructivo con el catálogo previo ----------
+   Si una edición falla en esta corrida, conservamos sus cartas anteriores para
+   que el catálogo (Capa A) nunca se encoja por errores transitorios de la API.
+   La clave estable es el id "edEdid-edid" (o se deriva de la URL de imagen). */
+function uidOf(card) {
+  if (card.id && /^\d+-\d+$/.test(card.id)) return card.id;
+  const m = String(card.image || "").match(/\/static\/cards\/(\d+)\/(\d+)\.png/);
+  return m ? `${m[1]}-${m[2]}` : null;
+}
+let carried = 0;
+try {
+  const prev = JSON.parse(fs.readFileSync(OUT, "utf8"));
+  const have = new Set(all.map((c) => c.id));
+  for (const pc of prev.cards || []) {
+    const u = uidOf(pc);
+    if (!u || have.has(u)) continue;
+    // Normaliza la carta previa al esquema con id estable (por si es formato viejo)
+    all.push({ ...pc, id: u, legacyId: pc.legacyId || pc.id, slug: pc.slug || "", carried: true });
+    have.add(u);
+    carried++;
+  }
+} catch {}
+if (carried) console.log(`Conservadas ${carried} cartas de ediciones no disponibles en esta corrida`);
 
 /* ---------- 4) escribir salida ---------- */
 all.sort((a, b) => (a.editionName || "").localeCompare(b.editionName || "", "es") || a.name.localeCompare(b.name, "es"));
