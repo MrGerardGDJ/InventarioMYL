@@ -262,7 +262,9 @@ export function renameEditionOnCards(slug, newName) {
 let customCards = read(KEYS.custom, []);
 export function getCustomCards() { return customCards.slice(); }
 export function addCustomCard(card) {
-  const id = card.id || "user__" + Date.now().toString(36);
+  // Sufijo aleatorio: Date.now() solo no basta cuando se agregan varias cartas
+  // en el mismo milisegundo (p. ej. importación CSV) y los ids chocarían
+  const id = card.id || "user__" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 7);
   const c = { ...card, id, custom: true, userCustom: true };
   customCards.push(c);
   write(KEYS.custom, customCards);
