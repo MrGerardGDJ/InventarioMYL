@@ -1,3 +1,21 @@
+/* =============================================================================
+   app.js — Lógica principal de Inventario MyL
+   -----------------------------------------------------------------------------
+   Mapa del archivo (buscar el título de cada sección para saltar a ella):
+     · Estado global ............ datos en memoria (catálogo, filtros, vista)
+     · Carga de datos ........... fetch de data/*.json + normalización de cartas
+     · Corrección de nombres .... arregla tildes/ñ consultando el perfil de la API
+     · Filtros .................. poblar selects y aplicar filtros/ordenamientos
+     · Render grid .............. grilla de cartas del Catálogo (paginada)
+     · Modal detalle ............ ficha ampliada de una carta (API en vivo)
+     · Carta manual ............. formulario para cartas fuera del catálogo
+     · Colecciones .............. cuaderno digital por edición (cartas bloqueadas)
+     · Mazos .................... CRUD de mazos + resumen + exportaciones
+     · Estadísticas ............. tarjetas, gráficos y progreso por edición
+     · Exportar / Importar ...... Excel, PDF, CSV y respaldo JSON
+     · Guardado / Sincronización  nube Supabase (push/pull/realtime)
+     · Navegación / eventos ..... tabs, listeners y arranque (init)
+   ========================================================================== */
 import * as store from "./store.js";
 import { exportExcel, exportPDF, exportDeckExcel, exportDeckImage, deckSummary } from "./exporters.js";
 import { renderCharts } from "./charts.js";
@@ -6,13 +24,15 @@ import { typeIcon, raceIcon, NO_STRENGTH_TYPES } from "./icons.js";
 
 /* ===================== Estado global ===================== */
 const state = {
-  cards: [],
-  editions: [],
-  editionName: {}, // slug -> nombre legible
-  filtered: [],
+  cards: [],        // catálogo completo (scrapeado + bundle + cartas manuales)
+  editions: [],     // data/editions.json en orden de publicación por bloque
+  editionName: {},  // slug -> nombre legible
+  editionOrder: {}, // slug -> índice en editions.json (para ordenar por edición)
+  filtered: [],     // resultado de applyFilters() que muestra la grilla
   page: 0,
-  pageSize: 60,
+  pageSize: 60,     // cartas por página en la grilla del Catálogo
   view: "coleccion",
+  colFilter: "all", // filtro de la vista Colecciones: all | missing | owned
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -89,6 +109,7 @@ function rebuildCards() {
     c.searchText = normText(c.name + " " + c.ability);
   }
   state.cards = (state.baseCards || []).concat(userCustom);
+  editionCardsCache.clear(); // el catálogo cambió: invalida la caché de Colecciones
 }
 // Minúsculas sin diacríticos (á→a, ñ→n) para comparar/buscar sin importar tildes
 function normText(s) {
@@ -213,7 +234,11 @@ function fillSelect(sel, opts) {
   }
 }
 
-/* ===================== Aplicar filtros ===================== */
+/* ===================== Aplicar filtros =====================
+   Lee todos los controles del panel de filtros, filtra state.cards y ordena
+   el resultado según #f-sort. El orden por "número de carta" usa edid (número
+   dentro de la edición) y desempata por edición según el orden de publicación
+   (editions.json), de modo que el listado quede estable y predecible. */
 function applyFilters() {
   const q = normText($("#search").value.trim());
   const ownership = $("#f-ownership").value;
@@ -336,6 +361,9 @@ function renderGrid(reset) {
   $("#load-more").classList.toggle("hidden", !hasMore);
 }
 
+// Crea el nodo de una carta para cualquier grilla (Catálogo y Colecciones).
+// La clase .owned refleja si hay copias en el inventario; en la vista
+// Colecciones el CSS usa esa clase para el efecto bloqueada/desbloqueada.
 function cardEl(card) {
   const qty = store.getQty(card.id);
   const el = document.createElement("div");
@@ -343,6 +371,7 @@ function cardEl(card) {
   el.dataset.id = card.id;
 
   const dName = displayName(card);
+  const num = cardNum(card); // número dentro de la edición (Infinity si no tiene)
   const img = card.image
     ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
     : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div>${card.editionName || ""}</div>`;
@@ -354,7 +383,7 @@ function cardEl(card) {
     <div class="card-img" data-act="detail">
       ${card.cost != null ? `<span class="badge-cost">${card.cost}</span>` : ""}
       ${card.strength != null ? `<span class="badge-str">${card.strength}</span>` : ""}
-      ${Number.isFinite(cardNum(card)) ? `<span class="badge-num">#${cardNum(card)}</span>` : ""}
+      ${Number.isFinite(num) ? `<span class="badge-num">#${num}</span>` : ""}
       ${img}
     </div>
     <div class="card-body">
@@ -379,6 +408,9 @@ function cardEl(card) {
   return el;
 }
 
+// Cambia la cantidad de una carta desde la grilla y actualiza SOLO los nodos
+// afectados (sin re-render completo). Al alternar .owned, en Colecciones el
+// CSS anima el paso blanco y negro ⇄ color de la imagen.
 function changeQty(el, card, delta) {
   const qty = store.addQty(card.id, delta);
   const numEl = el.querySelector('[data-role="qty"]');
@@ -726,18 +758,38 @@ function bindDeckBarEvents() {
   $$("[data-close-deck]").forEach((el) => el.addEventListener("click", closeDeckModal));
 }
 
-/* ===================== Colecciones (completar una edición) ===================== */
+/* ===================== Colecciones (cuaderno de colección digital) =====================
+   Una "colección" es el álbum digital de UNA edición: al crearla se elige la
+   edición y la vista muestra todas sus cartas ordenadas por número (edid).
+   Las cantidades NO viven en la colección: se leen del inventario, por lo que
+   marcar copias aquí o en el Catálogo es equivalente. El efecto visual de
+   "carta bloqueada" (blanco y negro → color) lo resuelve CSS con la clase
+   .owned que cardEl()/changeQty() mantienen al día (ver styles.css,
+   sección Colecciones). */
+
+// Cartas de la edición de la colección, ordenadas por número de carta.
+// Se cachean por edición para no recorrer el catálogo completo (~20k cartas)
+// en cada clic de +/−; rebuildCards() limpia la caché cuando cambia el catálogo.
+const editionCardsCache = new Map();
 function collectionCards(col) {
-  return state.cards
-    .filter((c) => c.edition === col.edition)
-    .sort((a, b) => cardNum(a) - cardNum(b) || a.name.localeCompare(b.name, "es"));
+  let arr = editionCardsCache.get(col.edition);
+  if (!arr) {
+    arr = state.cards
+      .filter((c) => c.edition === col.edition)
+      .sort((a, b) => cardNum(a) - cardNum(b) || a.name.localeCompare(b.name, "es"));
+    editionCardsCache.set(col.edition, arr);
+  }
+  return arr;
 }
+// Progreso de la colección: únicas poseídas / total de la edición
 function collectionStats(col) {
   const cards = collectionCards(col);
   const owned = cards.filter((c) => store.getQty(c.id) > 0).length;
   return { total: cards.length, owned, pct: cards.length ? Math.round((owned / cards.length) * 100) : 0 };
 }
 
+// Panel lateral: lista de colecciones con su barra de progreso.
+// Al final delega en renderCollectionDetail() para pintar la activa.
 function renderCollectionsView() {
   const list = $("#collection-list");
   const cols = store.getCollections();
@@ -771,6 +823,8 @@ function renderCollectionsView() {
   renderCollectionDetail();
 }
 
+// Detalle de la colección activa: nombre editable, barra de progreso grande,
+// filtro (todas/faltantes/obtenidas) y la grilla de cartas de la edición.
 function renderCollectionDetail() {
   const wrap = $("#collection-detail");
   const col = store.getCollection(store.getSetting("activeCollectionId"));
@@ -809,6 +863,9 @@ function renderCollectionDetail() {
   renderCollectionGrid(col);
 }
 
+// Grilla del álbum: reutiliza cardEl() del Catálogo (mismos botones +/− y
+// detalle). El contenedor lleva la clase .collection-grid, que activa en CSS
+// el modo bloqueado para las cartas sin copias.
 function renderCollectionGrid(col) {
   const grid = $("#collection-grid");
   if (!grid) return;
@@ -840,6 +897,7 @@ function updateCollectionProgress() {
   }
 }
 
+// Modal de creación: selector de edición agrupado por bloque + nombre opcional
 function openCollectionModal() {
   fillEditionSelect($("#col-edition"), "", "— Elige una edición —");
   $("#col-name").value = "";
@@ -849,6 +907,7 @@ function closeCollectionModal() { $("#collection-modal").classList.add("hidden")
 function createCollectionFromModal() {
   const ed = $("#col-edition").value;
   if (!ed) { showToast("Elige una edición para la colección"); return; }
+  // Sin nombre explícito, la colección toma el nombre de la edición
   const name = $("#col-name").value.trim() || (state.editionName[ed] || ed);
   const col = store.createCollection(name, ed);
   store.setSetting("activeCollectionId", col.id);

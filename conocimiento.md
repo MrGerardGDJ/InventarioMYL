@@ -81,6 +81,18 @@ incluye lo mismo.
 
 ## Registro de cambios
 
+### 2026-07-20 (2ª iteración) — Efecto B/N → color refinado, comentarios y optimización
+- El efecto "carta bloqueada" de Colecciones ahora se aplica también al
+  `.placeholder` (cuando la imagen no carga) y tiene **transición animada**:
+  al marcar la primera copia la carta pasa de blanco y negro a color suavemente
+  (`transition: filter`). Con hover se asoma un poco el color como vista previa.
+- **Pasada de comentarios**: mapa del archivo al inicio de `app.js`, y cada
+  sección funcional (colecciones, filtros, grilla, cambio de cantidades)
+  documenta qué hace y cómo se conecta con el CSS/store.
+- **Optimización**: caché de cartas por edición (`editionCardsCache`) para que
+  el progreso de una colección no recorra las ~20k cartas del catálogo en cada
+  clic de +/−; se invalida en `rebuildCards()` cuando cambia el catálogo.
+
 ### 2026-07-20 — Colecciones por edición, orden por número de carta y mejoras de UI
 - **Nuevo `conocimiento.md`** (este archivo).
 - **Nueva vista "Colecciones"**: crear colecciones eligiendo una edición (selector agrupado

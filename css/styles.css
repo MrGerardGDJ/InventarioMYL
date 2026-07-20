@@ -191,15 +191,28 @@ main { padding: 0; }
 .qty-num.zero { color: var(--muted); }
 .deck-add { font-size: 11px; padding: 4px 6px; }
 
-/* ===== Colecciones ===== */
-/* Cartas que no tienes: bloqueadas (blanco y negro + oscurecidas + candado) */
-.collection-grid .card:not(.owned) .card-img img {
-  filter: grayscale(1) brightness(0.45);
-  transition: filter 0.15s ease;
+/* ===== Colecciones (cuaderno de colección digital) =====
+   Efecto "carta bloqueada": mientras la cantidad es 0 la carta se ve en
+   blanco y negro y oscurecida (grayscale + brightness por CSS, sin tocar la
+   imagen original). Cuando el usuario marca que la tiene, app.js agrega la
+   clase .owned a la tarjeta y la imagen recupera el color con una transición
+   suave. Se aplica tanto a la <img> real como al .placeholder que la
+   reemplaza si la imagen no carga. */
+.collection-grid .card .card-img img,
+.collection-grid .card .card-img .placeholder {
+  transition: filter 0.45s ease; /* desbloqueo animado B/N → color */
 }
-.collection-grid .card:not(.owned):hover .card-img img {
-  filter: grayscale(0.55) brightness(0.7);
+.collection-grid .card:not(.owned) .card-img img,
+.collection-grid .card:not(.owned) .card-img .placeholder {
+  filter: grayscale(1) brightness(0.5);
 }
+/* Al pasar el mouse se "asoma" un poco el color, como vista previa */
+.collection-grid .card:not(.owned):hover .card-img img,
+.collection-grid .card:not(.owned):hover .card-img .placeholder {
+  filter: grayscale(0.5) brightness(0.75);
+}
+/* Candado superpuesto al centro de la imagen bloqueada (fuera del filtro,
+   para que conserve su color). pointer-events:none deja pasar los clics. */
 .collection-grid .card:not(.owned) .card-img::after {
   content: "🔒";
   position: absolute; inset: 0;
