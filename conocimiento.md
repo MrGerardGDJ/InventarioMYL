@@ -43,6 +43,8 @@ abriendo `index.html` (o sirviéndolo con cualquier servidor estático / GitHub 
 | `myl.inventory.v1` | `{ cardId: cantidad }` |
 | `myl.decks.v1` | `[{ id, name, cards:{cardId:n}, updatedAt }]` |
 | `myl.collections.v1` | `[{ id, name, edition (slug), updatedAt }]` — las cantidades NO viven aquí; una colección es una "vista" de una edición sobre el inventario. |
+| `myl.trade.v1` | `{ cardId: copias ofrecidas para cambio }` — nunca mayor que lo que hay en inventario (el store lo recorta solo). |
+| `myl.tradelog.v1` | Historial de intercambios: `[{ given, received, date }]` (ids de carta, más reciente primero). |
 | `myl.customcards.v1` | Cartas manuales del usuario |
 | `myl.settings.v1` | Preferencias (`theme`, `activeDeckId`, `activeCollectionId`, `cloudAuto`, …) |
 | `myl.meta.v1` | `updatedAt` del último cambio local |
@@ -59,8 +61,14 @@ incluye lo mismo.
   Botones +/− cambian cantidades; 🃏＋ agrega al mazo activo.
 - **Colecciones** (`view-colecciones`): cada colección se crea eligiendo una **edición**;
   muestra solo las cartas de esa edición **ordenadas por número** (`edid`). Las cartas con
-  cantidad 0 se ven "bloqueadas" (blanco y negro + oscurecidas + candado, vía CSS
-  `.collection-grid .card:not(.owned)`). Barra de progreso `poseídas/total`.
+  cantidad 0 se ven en blanco y negro y oscurecidas (vía CSS
+  `.collection-grid .card:not(.owned)`); recuperan el color con transición al marcar la
+  primera copia. Barra de progreso `poseídas/total`.
+- **Cambios** (`view-cambios`): inventario de intercambio. Se marcan copias repetidas
+  como "para cambio" (desde esta vista o desde el detalle de una carta); al registrar un
+  intercambio se descuenta la carta entregada, se suma la recibida y esta entra
+  automáticamente a la colección de su edición (se crea sola si no existe). Historial al
+  pie. Filtro "Ofrecidas para cambio" disponible también en el Catálogo.
 - **Mazos** (`view-mazos`): CRUD de mazos, buscador interno, resumen por tipo/coste,
   export a Excel/imagen/texto.
 - **Estadísticas** (`view-stats`): tarjetas, gráficos y progreso por edición.
@@ -80,6 +88,18 @@ incluye lo mismo.
   Extendido → Nueva Era/Imperio), no el alfabético.
 
 ## Registro de cambios
+
+### 2026-07-20 (3ª iteración) — Inventario de intercambio (Cambios) y ajuste visual
+- **Nueva vista "Cambios"**: marcar copias repetidas como disponibles para cambio
+  (con tope en lo que realmente se tiene), registrar intercambios (entregada −1,
+  recibida +1) e historial con fechas. La carta recibida entra automáticamente a la
+  colección de su edición; si no existe esa colección, **se crea sola**.
+- Control "Para cambio" en el modal de detalle de cualquier carta, indicador
+  "En cambio ×n" en las grillas y filtro "Ofrecidas para cambio" en el Catálogo.
+- Persistencia en `myl.trade.v1` y `myl.tradelog.v1`, incluidas en respaldo JSON,
+  importación y snapshot de nube.
+- **Se quitó el candado (emoji) de las cartas bloqueadas** en Colecciones: el estado
+  se comunica solo con el blanco y negro + oscurecido, más limpio visualmente.
 
 ### 2026-07-20 (2ª iteración) — Efecto B/N → color refinado, comentarios y optimización
 - El efecto "carta bloqueada" de Colecciones ahora se aplica también al

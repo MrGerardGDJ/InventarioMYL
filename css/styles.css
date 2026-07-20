@@ -211,15 +211,6 @@ main { padding: 0; }
 .collection-grid .card:not(.owned):hover .card-img .placeholder {
   filter: grayscale(0.5) brightness(0.75);
 }
-/* Candado superpuesto al centro de la imagen bloqueada (fuera del filtro,
-   para que conserve su color). pointer-events:none deja pasar los clics. */
-.collection-grid .card:not(.owned) .card-img::after {
-  content: "🔒";
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 30px; text-shadow: 0 2px 10px #000;
-  pointer-events: none;
-}
 .collection-grid .card:not(.owned) .card-name { color: var(--muted); }
 
 /* Lista lateral de colecciones */
@@ -243,6 +234,29 @@ main { padding: 0; }
 .col-head .spacer { flex: 1; }
 .col-progress-big { display: flex; align-items: center; gap: 12px; margin: 14px 0 18px; }
 .col-progress-big .ep-bar { flex: 1; height: 16px; }
+
+/* ===== Cambios (inventario de intercambio) =====
+   Lista de cartas ofrecidas, buscadores (reutilizan .deck-add-search/.dsr)
+   e historial de intercambios registrados. */
+.trade-h3 { margin: 22px 0 8px; font-size: 15px; }
+.trade-list { display: flex; flex-direction: column; gap: 8px; }
+.trade-row {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg-2); font-size: 13px;
+}
+.trade-row .tr-info { flex: 1; min-width: 180px; }
+.trade-row .tr-name { font-weight: 600; }
+.trade-row .tr-meta { display: block; font-size: 11px; color: var(--muted); margin-top: 1px; }
+.trade-row .tr-qty { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.trade-log .tlog-row {
+  display: grid; grid-template-columns: 150px 1fr 1fr; gap: 10px;
+  padding: 7px 10px; border-bottom: 1px solid var(--border); font-size: 13px;
+}
+@media (max-width: 640px) { .trade-log .tlog-row { grid-template-columns: 1fr; gap: 2px; } }
+/* Indicador "En cambio ×n" en las tarjetas y control del modal de detalle */
+.card-trade { color: var(--accent-2); font-weight: 600; }
+.trade-ctl { display: flex; align-items: center; gap: 8px; margin: 0 0 14px; font-size: 13px; flex-wrap: wrap; }
 
 /* ===== Barra de mazo activo (Colección) ===== */
 .deck-bar {
