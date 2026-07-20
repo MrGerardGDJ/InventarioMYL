@@ -89,6 +89,17 @@ incluye lo mismo.
 
 ## Registro de cambios
 
+### 2026-07-20 (4ª iteración) — Corrección de cartas manuales, botón arriba y búsqueda global
+- **Bug corregido**: las cartas manuales perdían la marca `userCustom` al normalizarse
+  (`normalizeCard`), por lo que el detalle no mostraba Editar/Eliminar y era imposible
+  corregir una edición mal escrita (p. ej. "brotherhood" → "Brotherhood"). Ahora se
+  preserva la marca y las cartas manuales vuelven a ser editables, incluida su edición.
+- El botón **“+ Nueva colección” quedó arriba** del listado (antes quedaba al fondo a
+  medida que crecía la lista).
+- El **buscador de la barra superior ahora también filtra dentro de la vista activa**:
+  en Colecciones filtra las cartas de la colección abierta y en Mazos las filas del mazo
+  abierto (los totales y el aviso de faltantes siguen calculándose sobre el mazo completo).
+
 ### 2026-07-20 (3ª iteración) — Inventario de intercambio (Cambios) y ajuste visual
 - **Nueva vista "Cambios"**: marcar copias repetidas como disponibles para cambio
   (con tope en lo que realmente se tiene), registrar intercambios (entregada −1,

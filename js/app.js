@@ -96,6 +96,10 @@ function normalizeCard(c, i) {
     flavour: c.flavour || "",
     image: c.image || c.image_path || "",
     custom: !!c.custom,
+    // Preservar la marca de carta creada por el usuario: sin ella el detalle
+    // no muestra los botones Editar/Eliminar (bug que impedía corregir la
+    // edición de una carta manual mal escrita)
+    userCustom: !!c.userCustom,
   };
 }
 function numOrNull(v) {
@@ -904,6 +908,9 @@ function renderCollectionGrid(col) {
   const f = state.colFilter || "all";
   if (f === "missing") cards = cards.filter((c) => store.getQty(c.id) === 0);
   else if (f === "owned") cards = cards.filter((c) => store.getQty(c.id) > 0);
+  // El buscador global de la barra superior también filtra dentro de la colección
+  const query = normText($("#search").value.trim());
+  if (query) cards = cards.filter((c) => c.searchText.includes(query));
   grid.innerHTML = "";
   const frag = document.createDocumentFragment();
   for (const c of cards) frag.appendChild(cardEl(c));
@@ -1219,14 +1226,19 @@ function renderDeckContents(deck) {
   const total = entries.reduce((a, [, q]) => a + q, 0);
   const totalEl = $("#deck-total"); if (totalEl) totalEl.textContent = `${total} cartas`;
 
+  // El buscador global filtra qué filas del mazo se muestran; los totales,
+  // el resumen y el aviso de faltantes siguen calculándose sobre el mazo completo
+  const query = normText($("#search").value.trim());
+
   const byType = {};
   let missing = 0;
   for (const [cid, q] of entries) {
     const card = state.cards.find((c) => c.id === cid);
-    const t = card ? card.type : "Otro";
-    (byType[t] ||= []).push({ card, cid, q });
     const own = store.getQty(cid);
     if (own < q) missing += q - own;
+    if (query && !(card ? card.searchText.includes(query) : normText(cid).includes(query))) continue;
+    const t = card ? card.type : "Otro";
+    (byType[t] ||= []).push({ card, cid, q });
   }
   const banner = $("#deck-banner");
   if (banner) banner.innerHTML = missing > 0 ? `<div class="active-deck-banner">Te faltan <b>${missing}</b> copias de este mazo en tu colección.</div>` : "";
@@ -1253,6 +1265,7 @@ function renderDeckContents(deck) {
     }
   }
   if (entries.length === 0) html = `<p class="muted">Mazo vacío. Busca una carta arriba para añadirla, o usa 🃏＋ en la Colección.</p>`;
+  else if (!html) html = `<p class="muted">Ninguna carta del mazo coincide con la búsqueda de la barra superior.</p>`;
   cont.innerHTML = html;
   cont.querySelectorAll(".deck-row").forEach((row) => {
     const cid = row.dataset.cid;
@@ -1688,8 +1701,18 @@ function bindEvents() {
   // Tabs
   $$(".tab").forEach((t) => t.addEventListener("click", () => switchView(t.dataset.view)));
 
-  // Filtros
-  const debounced = debounce(applyFilters, 180);
+  // Buscador global: filtra el Catálogo y también la vista activa
+  // (dentro de una colección o del mazo abierto)
+  const debounced = debounce(() => {
+    applyFilters();
+    if (state.view === "colecciones") {
+      const col = store.getCollection(store.getSetting("activeCollectionId"));
+      if (col) renderCollectionGrid(col);
+    } else if (state.view === "mazos") {
+      const deck = store.getDeck(store.getSetting("activeDeckId"));
+      if (deck) renderDeckContents(deck);
+    }
+  }, 180);
   $("#search").addEventListener("input", debounced);
   ["#f-ownership", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-sort"].forEach((s) =>
     $(s).addEventListener("change", applyFilters)
