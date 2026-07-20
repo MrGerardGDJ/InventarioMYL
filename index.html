@@ -107,6 +107,7 @@
           <div class="spacer"></div>
           <div class="actions">
             <button id="btn-add-card" class="btn">➕ Carta manual</button>
+            <button id="btn-editions" class="btn">Ediciones</button>
             <button id="btn-import" class="btn">Importar</button>
             <div class="dropdown">
               <button id="btn-export" class="btn">Exportar ▾</button>
@@ -335,6 +336,13 @@ create policy "acceso_log" on inventario_myl_log
     <div class="modal-box" id="deck-modal-box"></div>
   </div>
 
+  <!-- Modal: gestor de ediciones personalizadas (contenido dinámico en app.js).
+       Debe ir ANTES del modal de carta manual para que este se apile encima. -->
+  <div id="editions-modal" class="modal hidden">
+    <div class="modal-backdrop" data-close-ed></div>
+    <div class="modal-box" id="editions-box"></div>
+  </div>
+
   <!-- Modal: agregar / editar carta manual -->
   <div id="card-form-modal" class="modal hidden">
     <div class="modal-backdrop" data-close-cf></div>
@@ -346,6 +354,7 @@ create policy "acceso_log" on inventario_myl_log
       <div class="cf-grid">
         <label class="field cf-full"><span>Nombre *</span><input id="cf-name" type="text" placeholder="Ej: Ismael" /></label>
         <label class="field"><span>Edición</span><input id="cf-edition" type="text" list="cf-editions" placeholder="Ej: Onyria" /></label>
+        <label class="field"><span>Número en la edición</span><input id="cf-number" type="number" min="1" placeholder="Ej: 12" /></label>
         <label class="field"><span>Formato</span>
           <select id="cf-format">
             <option value="NE">Nueva Era / Imperio</option>

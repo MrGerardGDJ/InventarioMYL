@@ -258,6 +258,23 @@ main { padding: 0; }
 .card-trade { color: var(--accent-2); font-weight: 600; }
 .trade-ctl { display: flex; align-items: center; gap: 8px; margin: 0 0 14px; font-size: 13px; flex-wrap: wrap; }
 
+/* ===== Gestor de ediciones personalizadas ===== */
+.ed-list, .ed-cards {
+  display: flex; flex-direction: column; gap: 6px;
+  margin: 12px 0; max-height: 38vh; overflow-y: auto;
+}
+.ed-row, .ed-card-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 11px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg-3); font-size: 13px;
+}
+.ed-row .ed-name { font-weight: 600; flex: 1; min-width: 140px; }
+.ed-row .ed-meta { color: var(--muted); font-size: 11px; }
+.ed-card-row .ec-num { font-weight: 700; min-width: 38px; color: var(--accent-2); }
+.ed-card-row .ec-name { flex: 1; min-width: 140px; }
+.csv-report { margin-top: 10px; font-size: 13px; }
+.csv-report .err { color: var(--danger); font-size: 12px; margin-top: 2px; }
+
 /* ===== Barra de mazo activo (Colección) ===== */
 .deck-bar {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
