@@ -174,6 +174,8 @@ main { padding: 0; }
   background: rgba(0,0,0,0.7); color: #fff; border-radius: 6px;
   padding: 2px 7px; font-size: 11px; font-weight: 700; z-index: 2;
 }
+/* Identificador de carta especial/promocional (Promo, P-001…) */
+.badge-num.special { background: var(--accent); color: #1b1300; }
 .card-body { padding: 8px 10px; flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .card-name { font-size: 13.5px; font-weight: 700; line-height: 1.2; }
 .card-meta { font-size: 11px; color: var(--muted); }
@@ -212,6 +214,12 @@ main { padding: 0; }
   filter: grayscale(0.5) brightness(0.75);
 }
 .collection-grid .card:not(.owned) .card-name { color: var(--muted); }
+/* Títulos de las secciones dentro de una colección (promocionales / numeradas) */
+.col-section-title {
+  margin: 20px 0 10px; font-size: 15px; color: var(--accent-2);
+  border-bottom: 1px solid var(--border); padding-bottom: 6px;
+}
+.col-section-title:first-child { margin-top: 0; }
 
 /* Lista lateral de colecciones */
 .col-item {

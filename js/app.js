@@ -96,6 +96,10 @@ function normalizeCard(c, i) {
     ability: c.ability || "",
     flavour: c.flavour || "",
     image: c.image || c.image_path || "",
+    // Identificador de carta especial/promocional (ej. "Promo", "P-001").
+    // Si está presente, la carta no usa número y se lista en la sección de
+    // especiales, al inicio de la colección.
+    specialId: c.specialId || "",
     custom: !!c.custom,
     // Preservar la marca de carta creada por el usuario: sin ella el detalle
     // no muestra los botones Editar/Eliminar (bug que impedía corregir la
@@ -312,6 +316,15 @@ function editionOrd(c) {
   const i = state.editionOrder?.[c.edition];
   return i == null ? 9999 : i;
 }
+// Orden dentro de una edición: cartas especiales/promocionales primero
+// (por identificador, con orden numérico natural: P-1 < P-2 < P-10) y
+// luego las numeradas por su número de carta
+function compareEditionCards(a, b) {
+  const sa = a.specialId ? 1 : 0, sb = b.specialId ? 1 : 0;
+  if (sa !== sb) return sb - sa;
+  if (sa) return a.specialId.localeCompare(b.specialId, "es", { numeric: true, sensitivity: "base" });
+  return cardNum(a) - cardNum(b) || a.name.localeCompare(b.name, "es");
+}
 
 /* ===================== Cartas fuera de catálogo (huérfanas) ===================== */
 function computeOrphans() {
@@ -399,7 +412,7 @@ function cardEl(card) {
     <div class="card-img" data-act="detail">
       ${card.cost != null ? `<span class="badge-cost">${card.cost}</span>` : ""}
       ${card.strength != null ? `<span class="badge-str">${card.strength}</span>` : ""}
-      ${Number.isFinite(num) ? `<span class="badge-num">#${num}</span>` : ""}
+      ${card.specialId ? `<span class="badge-num special">${escapeHtml(card.specialId)}</span>` : Number.isFinite(num) ? `<span class="badge-num">#${num}</span>` : ""}
       ${img}
     </div>
     <div class="card-body">
@@ -627,6 +640,7 @@ function openCardForm(card, preset) {
   $("#cf-name").value = editing ? card.name : "";
   $("#cf-edition").value = editing ? (card.editionName || "") : (preset?.editionName || "");
   $("#cf-number").value = editing ? (card.edid ? parseInt(card.edid, 10) : "") : (preset?.nextNum || "");
+  $("#cf-special").value = editing ? (card.specialId || "") : "";
   $("#cf-format").value = editing ? (card.format || "NE") : (preset?.format || "NE");
   $("#cf-race").value = editing && card.race !== "—" ? card.race : "";
   $("#cf-type").value = editing ? card.type : "Aliado";
@@ -641,6 +655,8 @@ function openCardForm(card, preset) {
   renderCfPreview();
   $("#cf-delete").style.display = editing ? "" : "none";
   $("#card-form-modal").classList.remove("hidden");
+  // Al agregar una carta especial desde el gestor, el foco va al identificador
+  if (!editing && preset?.special) $("#cf-special").focus();
 }
 function closeCardForm() { $("#card-form-modal").classList.add("hidden"); }
 function renderCfPreview() {
@@ -664,11 +680,14 @@ function saveCardForm(another) {
     else slug = editionSlug(edName);
   }
   const numVal = $("#cf-number").value;
+  const specialVal = $("#cf-special").value.trim();
   const card = {
     name,
     edition: slug,
     editionName: finalEdName,
-    edid: numVal === "" ? "" : String(Math.max(1, Math.floor(Number(numVal)))).padStart(3, "0"),
+    // Una carta especial usa su identificador; el número queda solo para las normales
+    specialId: specialVal,
+    edid: (specialVal || numVal === "") ? "" : String(Math.max(1, Math.floor(Number(numVal)))).padStart(3, "0"),
     format: $("#cf-format").value,
     type: $("#cf-type").value,
     race: $("#cf-race").value.trim() || "—",
@@ -689,7 +708,8 @@ function saveCardForm(another) {
     // El número avanza solo al siguiente para cargar la edición en orden.
     $("#cf-id").value = "";
     $("#cf-name").value = "";
-    $("#cf-number").value = numVal === "" ? "" : Number(numVal) + 1;
+    $("#cf-number").value = numVal === "" || specialVal ? "" : Number(numVal) + 1;
+    $("#cf-special").value = "";
     $("#cf-cost").value = "";
     $("#cf-strength").value = "";
     $("#cf-ability").value = "";
@@ -746,7 +766,7 @@ const ED_FORMATS = [
   ["NE", "Nueva Era / Imperio"], ["PB", "Primer Bloque"], ["PE", "Primera Era"],
   ["SB", "Segundo Bloque"], ["FX", "Furia Extendido"], ["OT", "Otro"],
 ];
-const CSV_HEADERS = ["numero", "nombre", "tipo", "raza", "rareza", "coste", "fuerza", "habilidad", "historia", "imagen"];
+const CSV_HEADERS = ["numero", "especial", "nombre", "tipo", "raza", "rareza", "coste", "fuerza", "habilidad", "historia", "imagen"];
 
 // Estado del modal: lista de ediciones o editor de una edición concreta
 let edModal = { mode: "list", slug: null, csv: null };
@@ -825,23 +845,26 @@ function deleteEditionFlow(slug) {
 function editionCustomCards(slug) {
   return state.cards
     .filter((c) => c.edition === slug && c.userCustom)
-    .sort((a, b) => cardNum(a) - cardNum(b) || a.name.localeCompare(b.name, "es"));
+    .sort(compareEditionCards); // especiales primero, luego por número
 }
 
 function renderEditionEditor(box) {
   const ed = store.getCustomEdition(edModal.slug);
   if (!ed) { edModal = { mode: "list", slug: null, csv: null }; renderEditionsModal(); return; }
   const cards = editionCustomCards(ed.slug);
+  const specials = cards.filter((c) => c.specialId);
+  const normals = cards.filter((c) => !c.specialId);
   const fmtOpts = ED_FORMATS.map(([v, l]) => `<option value="${v}" ${ed.format === v ? "selected" : ""}>${l}</option>`).join("");
-  const cardRows = cards.map((c) => {
+  const cardRow = (c) => {
     const n = cardNum(c);
+    const label = c.specialId ? escapeHtml(c.specialId) : Number.isFinite(n) ? "#" + n : "—";
     return `<div class="ed-card-row" data-id="${escapeAttr(c.id)}">
-      <span class="ec-num">${Number.isFinite(n) ? "#" + n : "—"}</span>
+      <span class="ec-num">${label}</span>
       <span class="ec-name">${escapeHtml(c.name)}</span>
       <button class="btn small" data-ec-edit>Editar</button>
       <button class="btn small" data-ec-del>Quitar</button>
     </div>`;
-  }).join("");
+  };
 
   box.innerHTML = `
     <button class="modal-close" data-close-ed>×</button>
@@ -855,12 +878,17 @@ function renderEditionEditor(box) {
     </div>
     <div class="sync-row"><button class="btn primary" id="ed-save">Guardar cambios</button></div>
 
-    <h3 class="sync-h3">Listado de cartas (${cards.length}${ed.expectedTotal ? " de " + ed.expectedTotal : ""})</h3>
-    <div class="ed-cards">${cardRows || `<p class="muted">Aún no tiene cartas. Agrégalas una a una o importa el listado desde un CSV.</p>`}</div>
+    <h3 class="sync-h3">Cartas especiales / promocionales (${specials.length})</h3>
+    <p class="muted" style="margin:4px 0 0">Cartas sin número, con identificador propio (ej: Promo, P-001). Se muestran al inicio de la colección.</p>
+    <div class="ed-cards">${specials.map(cardRow).join("") || `<p class="muted">Sin cartas especiales.</p>`}</div>
+    <div class="sync-row"><button class="btn" id="ed-add-special">Agregar carta especial</button></div>
+
+    <h3 class="sync-h3">Listado de cartas de la edición (${normals.length}${ed.expectedTotal ? " de " + ed.expectedTotal : ""})</h3>
+    <div class="ed-cards">${normals.map(cardRow).join("") || `<p class="muted">Aún no tiene cartas numeradas. Agrégalas una a una o importa el listado desde un CSV.</p>`}</div>
     <div class="sync-row"><button class="btn" id="ed-add-card">Agregar carta</button></div>
 
     <h3 class="sync-h3">Importar listado desde CSV (UTF-8)</h3>
-    <p class="muted">Columnas: <b>numero, nombre, tipo, raza, rareza, coste, fuerza, habilidad, historia, imagen</b>. La imagen debe ser un enlace (https://…) donde se vea la carta. El número identifica cada carta: si reimportas el archivo, las filas con el mismo número <b>actualizan</b> la carta en vez de duplicarla.</p>
+    <p class="muted">Columnas: <b>numero, especial, nombre, tipo, raza, rareza, coste, fuerza, habilidad, historia, imagen</b>. Usa <b>numero</b> para las cartas normales o <b>especial</b> (ej: Promo, P-001) para las promocionales — una de las dos, no ambas. La imagen debe ser un enlace (https://…). El número o identificador especial identifica cada carta: si reimportas el archivo, esas filas <b>actualizan</b> la carta en vez de duplicarla.</p>
     <div class="sync-row">
       <button class="btn" id="ed-tpl">Descargar plantilla CSV</button>
       <label class="btn" style="cursor:pointer">Elegir archivo CSV<input id="ed-csv" type="file" accept=".csv,text/csv" hidden /></label>
@@ -886,8 +914,11 @@ function renderEditionEditor(box) {
     showToast("Edición guardada ✓");
   };
   $("#ed-add-card").onclick = () => {
-    const nums = cards.map(cardNum).filter(Number.isFinite);
+    const nums = normals.map(cardNum).filter(Number.isFinite);
     openCardForm(null, { editionName: ed.name, format: ed.format === "OT" ? "NE" : ed.format, nextNum: (nums.length ? Math.max(...nums) : 0) + 1 });
+  };
+  $("#ed-add-special").onclick = () => {
+    openCardForm(null, { editionName: ed.name, format: ed.format === "OT" ? "NE" : ed.format, special: true });
   };
   box.querySelectorAll(".ed-card-row").forEach((row) => {
     const card = cardById(row.dataset.id);
@@ -913,8 +944,10 @@ function renderEditionEditor(box) {
 function downloadCSVTemplate() {
   const tpl =
     CSV_HEADERS.join(",") + "\n" +
-    `1,Ejemplo Aliado,Aliado,Guerrero,Cortesano,3,2,"Cuando entra en juego, roba una carta.","Texto de ambientación.",https://ejemplo.com/carta1.png\n` +
-    `2,Ejemplo Talismán,Talismán,,Real,2,,"Destierra un Oro en juego.",,\n`;
+    `1,,Ejemplo Aliado,Aliado,Guerrero,Cortesano,3,2,"Cuando entra en juego, roba una carta.","Texto de ambientación.",https://ejemplo.com/carta1.png\n` +
+    `2,,Ejemplo Talismán,Talismán,,Real,2,,"Destierra un Oro en juego.",,\n` +
+    `,Promo,Inti,Aliado,Sacerdote,Promocional,3,4,"Ejemplo de carta promocional sin número.",,https://ejemplo.com/inti.png\n` +
+    `,P-001,Lautaro,Aliado,Guerrero,Promocional,4,5,"Otra promocional con identificador propio.",,\n`;
   // BOM para que Excel lo abra directo como UTF-8
   download("plantilla_edicion.csv", "\uFEFF" + tpl, "text/csv;charset=utf-8");
   showToast("Plantilla descargada: llénala en Excel/Sheets y guárdala como CSV UTF-8");
@@ -954,15 +987,21 @@ function parseEditionCSV(text, ed) {
   for (const col of CSV_HEADERS) idx[col] = header.indexOf(col);
   if (idx.nombre === -1) return { cards: [], errors: ['Falta la columna "nombre" en la primera fila. Descarga la plantilla para ver el formato.'] };
 
-  const cards = [], errors = [], seenNums = new Set();
+  const cards = [], errors = [], seenNums = new Set(), seenSpecials = new Set();
   const get = (r, col) => (idx[col] === -1 ? "" : (r[idx[col]] ?? "").trim());
   for (let i = 1; i < rows.length; i++) {
     const r = rows[i], fila = i + 1;
     const nombre = get(r, "nombre");
     if (!nombre) { errors.push(`fila ${fila}: sin nombre`); continue; }
     const numRaw = get(r, "numero");
+    const espRaw = get(r, "especial");
+    if (numRaw !== "" && espRaw !== "") { errors.push(`fila ${fila} («${nombre}»): usa "numero" O "especial", no ambos`); continue; }
     let num = null;
-    if (numRaw !== "") {
+    if (espRaw !== "") {
+      const key = normText(espRaw);
+      if (seenSpecials.has(key)) { errors.push(`fila ${fila} («${nombre}»): identificador especial "${espRaw}" repetido en el archivo`); continue; }
+      seenSpecials.add(key);
+    } else if (numRaw !== "") {
       num = Number(numRaw);
       if (!Number.isInteger(num) || num < 1) { errors.push(`fila ${fila} («${nombre}»): número inválido "${numRaw}"`); continue; }
       if (seenNums.has(num)) { errors.push(`fila ${fila} («${nombre}»): número ${num} repetido en el archivo`); continue; }
@@ -977,6 +1016,7 @@ function parseEditionCSV(text, ed) {
       name: nombre,
       edition: ed.slug,
       editionName: ed.name,
+      specialId: espRaw,
       edid: num ? String(num).padStart(3, "0") : "",
       format: ed.format === "OT" ? "NE" : ed.format,
       type: get(r, "tipo") || "—",
@@ -987,6 +1027,7 @@ function parseEditionCSV(text, ed) {
       flavour: get(r, "historia"),
       image: imagen,
       _num: num,
+      _esp: espRaw,
     });
   }
   return { cards, errors };
@@ -1006,14 +1047,17 @@ function renderCSVPreview(ed) {
 }
 
 // Importa las filas válidas: crea cartas nuevas o actualiza las existentes de
-// la edición que tengan el mismo número (o el mismo nombre si no hay número)
+// la edición que tengan el mismo número, el mismo identificador especial, o el
+// mismo nombre si la fila no trae ninguno de los dos
 function importCSVCards(ed) {
   const existing = store.getCustomCards().filter((c) => c.edition === ed.slug);
   let created = 0, updated = 0;
   for (const nc of edModal.csv.cards) {
-    const { _num, ...card } = nc;
+    const { _num, _esp, ...card } = nc;
     const match = existing.find((c) =>
-      _num ? parseInt(c.edid, 10) === _num : normText(c.name) === normText(card.name)
+      _esp ? normText(c.specialId || "") === normText(_esp)
+        : _num ? parseInt(c.edid, 10) === _num
+        : normText(c.name) === normText(card.name)
     );
     if (match) { store.updateCustomCard(match.id, card); updated++; }
     else { store.addCustomCard(card); created++; }
@@ -1135,7 +1179,7 @@ function collectionCards(col) {
   if (!arr) {
     arr = state.cards
       .filter((c) => c.edition === col.edition)
-      .sort((a, b) => cardNum(a) - cardNum(b) || a.name.localeCompare(b.name, "es"));
+      .sort(compareEditionCards); // especiales primero, luego por número
     editionCardsCache.set(col.edition, arr);
   }
   return arr;
@@ -1147,7 +1191,9 @@ function collectionStats(col) {
   const cards = collectionCards(col);
   const owned = cards.filter((c) => store.getQty(c.id) > 0).length;
   const ce = store.getCustomEdition(col.edition);
-  const total = Math.max(cards.length, Number(ce?.expectedTotal) || 0);
+  // El "total esperado" aplica al listado numerado; las especiales se suman aparte
+  const specials = cards.filter((c) => c.specialId).length;
+  const total = specials + Math.max(cards.length - specials, Number(ce?.expectedTotal) || 0);
   return { total, owned, pct: total ? Math.round((owned / total) * 100) : 0 };
 }
 
@@ -1219,7 +1265,7 @@ function renderCollectionDetail() {
       <span class="ep-bar"><span class="ep-fill" id="col-fill" style="width:${s.pct}%"></span></span>
       <span class="muted" id="col-progress-text">${s.owned}/${s.total} cartas (${s.pct}%)</span>
     </div>
-    <div id="collection-grid" class="cards-grid collection-grid"></div>
+    <div id="collection-grid"></div>
     <div id="col-empty" class="empty hidden">No hay cartas con este filtro.</div>`;
 
   $("#col-name-edit").onchange = (e) => {
@@ -1233,11 +1279,13 @@ function renderCollectionDetail() {
 }
 
 // Grilla del álbum: reutiliza cardEl() del Catálogo (mismos botones +/− y
-// detalle). El contenedor lleva la clase .collection-grid, que activa en CSS
-// el modo bloqueado para las cartas sin copias.
+// detalle). Si la edición tiene cartas especiales/promocionales, se muestran
+// como listado inicial con su propio título y luego el listado numerado.
+// Cada grilla interna lleva la clase .collection-grid, que activa en CSS el
+// modo bloqueado (blanco y negro) para las cartas sin copias.
 function renderCollectionGrid(col) {
-  const grid = $("#collection-grid");
-  if (!grid) return;
+  const wrap = $("#collection-grid");
+  if (!wrap) return;
   let cards = collectionCards(col);
   const f = state.colFilter || "all";
   if (f === "missing") cards = cards.filter((c) => store.getQty(c.id) === 0);
@@ -1245,10 +1293,29 @@ function renderCollectionGrid(col) {
   // El buscador global de la barra superior también filtra dentro de la colección
   const query = normText($("#search").value.trim());
   if (query) cards = cards.filter((c) => c.searchText.includes(query));
-  grid.innerHTML = "";
-  const frag = document.createDocumentFragment();
-  for (const c of cards) frag.appendChild(cardEl(c));
-  grid.appendChild(frag);
+
+  const specials = cards.filter((c) => c.specialId);
+  const normals = cards.filter((c) => !c.specialId);
+  wrap.innerHTML = "";
+  const addSection = (title, list) => {
+    if (!list.length) return;
+    if (title) {
+      const h = document.createElement("h3");
+      h.className = "col-section-title";
+      h.textContent = title;
+      wrap.appendChild(h);
+    }
+    const g = document.createElement("div");
+    g.className = "cards-grid collection-grid";
+    for (const c of list) g.appendChild(cardEl(c));
+    wrap.appendChild(g);
+  };
+  if (specials.length) {
+    addSection(`Cartas promocionales / especiales (${specials.length})`, specials);
+    addSection(`Listado de cartas de la edición (${normals.length})`, normals);
+  } else {
+    addSection(null, normals); // sin especiales: una sola grilla, como siempre
+  }
   scheduleNameCorrection(cards);
   $("#col-empty").classList.toggle("hidden", cards.length !== 0);
 }

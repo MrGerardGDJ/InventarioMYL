@@ -90,6 +90,23 @@ incluye lo mismo.
 
 ## Registro de cambios
 
+### 2026-07-20 (6ª iteración) — Cartas especiales / promocionales por edición
+- Las cartas manuales ganan el campo **`specialId`** (identificador libre: "Promo",
+  "P-001"…): identifica cartas promocionales que no llevan número de carta.
+- **Colecciones**: si la edición tiene especiales, la vista se divide en dos
+  secciones tituladas — "Cartas promocionales / especiales" al inicio y luego
+  "Listado de cartas de la edición" (numeradas). Sin especiales, se ve como antes.
+- **Gestor de ediciones**: sección propia de cartas especiales con botón
+  "Agregar carta especial" (el formulario abre con foco en el identificador).
+  El identificador aparece como insignia dorada en la esquina de la carta.
+- **CSV**: nueva columna `especial` (excluyente con `numero`); la plantilla incluye
+  ejemplos (Inti "Promo", Lautaro "P-001"). Al reimportar, las filas con el mismo
+  identificador especial actualizan la carta en vez de duplicarla.
+- El orden dentro de una edición es: especiales por identificador (orden natural,
+  P-1 < P-2 < P-10) y luego numeradas por número (`compareEditionCards`).
+- El "total esperado" de la edición aplica solo al listado numerado; las especiales
+  se suman aparte en la barra de progreso de la colección.
+
 ### 2026-07-20 (5ª iteración) — Gestor de ediciones personalizadas con importador CSV
 - **Nuevo apartado "Ediciones"** (botón en la barra del Catálogo): crear, editar y
   eliminar ediciones propias con nombre, descripción, bloque/formato y **total
