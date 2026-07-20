@@ -8,6 +8,7 @@ const KEYS = {
   collections: "myl.collections.v1",
   trade: "myl.trade.v1",
   tradeLog: "myl.tradelog.v1",
+  editions: "myl.editions.v1",
   settings: "myl.settings.v1",
   meta: "myl.meta.v1",
   custom: "myl.customcards.v1",
@@ -208,6 +209,55 @@ export function migrateKeys(map) {
   return changed;
 }
 
+/* ===== Ediciones personalizadas del usuario =====
+   [{ slug, name, description, format, expectedTotal, updatedAt }]
+   El slug es la identidad (las cartas manuales se ligan por su campo edition);
+   renombrar cambia solo el nombre visible y NO el slug, así las cartas y
+   colecciones existentes no se desconectan. */
+let customEditions = read(KEYS.editions, []);
+
+export function getCustomEditions() { return customEditions.slice(); }
+export function getCustomEdition(slug) { return customEditions.find((e) => e.slug === slug) || null; }
+export function createCustomEdition(ed) {
+  const e = {
+    slug: ed.slug,
+    name: ed.name || ed.slug,
+    description: ed.description || "",
+    format: ed.format || "OT",
+    expectedTotal: ed.expectedTotal ?? null,
+    updatedAt: Date.now(),
+  };
+  customEditions.push(e);
+  write(KEYS.editions, customEditions);
+  notify();
+  return e;
+}
+export function updateCustomEdition(slug, patch) {
+  const i = customEditions.findIndex((e) => e.slug === slug);
+  if (i === -1) return;
+  customEditions[i] = { ...customEditions[i], ...patch, slug, updatedAt: Date.now() };
+  write(KEYS.editions, customEditions);
+  notify();
+}
+export function deleteCustomEdition(slug) {
+  customEditions = customEditions.filter((e) => e.slug !== slug);
+  write(KEYS.editions, customEditions);
+  notify();
+}
+export function replaceCustomEditions(arr, origin = "local") {
+  if (Array.isArray(arr)) { customEditions = arr; write(KEYS.editions, customEditions); notify(origin); }
+}
+// Renombrar en bloque: actualiza el nombre visible de la edición en todas sus
+// cartas manuales de una sola vez (un solo write/notify)
+export function renameEditionOnCards(slug, newName) {
+  let changed = false;
+  for (const c of customCards) {
+    if (c.edition === slug && c.editionName !== newName) { c.editionName = newName; changed = true; }
+  }
+  if (changed) { write(KEYS.custom, customCards); notify(); }
+  return changed;
+}
+
 /* ===== Cartas manuales del usuario (se sincronizan en la nube) ===== */
 let customCards = read(KEYS.custom, []);
 export function getCustomCards() { return customCards.slice(); }
@@ -240,6 +290,7 @@ export function getSnapshot() {
     collections: JSON.parse(JSON.stringify(collections)),
     trade: getTradeList(),
     tradeLog: tradeLog.slice(),
+    editions: getCustomEditions(),
     customCards: getCustomCards(),
     updatedAt: getUpdatedAt(),
   };
@@ -252,6 +303,7 @@ export function applySnapshot(snap) {
   if (Array.isArray(snap.collections)) { collections = snap.collections; write(KEYS.collections, collections); }
   if (snap.trade && typeof snap.trade === "object") { trade = { ...snap.trade }; write(KEYS.trade, trade); }
   if (Array.isArray(snap.tradeLog)) { tradeLog = snap.tradeLog; write(KEYS.tradeLog, tradeLog); }
+  if (Array.isArray(snap.editions)) { customEditions = snap.editions; write(KEYS.editions, customEditions); }
   if (Array.isArray(snap.customCards)) { customCards = snap.customCards; write(KEYS.custom, customCards); }
   if (snap.updatedAt) setUpdatedAt(snap.updatedAt);
   notify("remote");

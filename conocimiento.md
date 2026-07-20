@@ -44,6 +44,7 @@ abriendo `index.html` (o sirviéndolo con cualquier servidor estático / GitHub 
 | `myl.decks.v1` | `[{ id, name, cards:{cardId:n}, updatedAt }]` |
 | `myl.collections.v1` | `[{ id, name, edition (slug), updatedAt }]` — las cantidades NO viven aquí; una colección es una "vista" de una edición sobre el inventario. |
 | `myl.trade.v1` | `{ cardId: copias ofrecidas para cambio }` — nunca mayor que lo que hay en inventario (el store lo recorta solo). |
+| `myl.editions.v1` | Ediciones personalizadas: `[{ slug, name, description, format, expectedTotal }]`. El slug es la identidad; renombrar no lo cambia (las cartas/colecciones no se desconectan). |
 | `myl.tradelog.v1` | Historial de intercambios: `[{ given, received, date }]` (ids de carta, más reciente primero). |
 | `myl.customcards.v1` | Cartas manuales del usuario |
 | `myl.settings.v1` | Preferencias (`theme`, `activeDeckId`, `activeCollectionId`, `cloudAuto`, …) |
@@ -88,6 +89,23 @@ incluye lo mismo.
   Extendido → Nueva Era/Imperio), no el alfabético.
 
 ## Registro de cambios
+
+### 2026-07-20 (5ª iteración) — Gestor de ediciones personalizadas con importador CSV
+- **Nuevo apartado "Ediciones"** (botón en la barra del Catálogo): crear, editar y
+  eliminar ediciones propias con nombre, descripción, bloque/formato y **total
+  esperado de cartas**; renombrar actualiza todas sus cartas en bloque (el slug no
+  cambia, así inventario y colecciones no se desconectan).
+- **Listado de cartas numerado** por edición: agregar/editar/quitar cartas una a una
+  (el formulario de carta manual ganó el campo "Número en la edición"; con "Guardar
+  y agregar otra" el número avanza solo).
+- **Importador CSV UTF-8** con plantilla descargable (BOM incluido para Excel),
+  columnas `numero,nombre,tipo,raza,rareza,coste,fuerza,habilidad,historia,imagen`
+  (imagen = URL https). Valida el archivo y muestra vista previa con errores por
+  fila antes de importar; el número identifica la carta, por lo que **reimportar
+  actualiza en vez de duplicar**.
+- Las ediciones propias aparecen agrupadas como "Mis ediciones" en los selectores,
+  se pueden coleccionar (la barra de progreso usa el total esperado si está definido)
+  y se sincronizan en la nube (`myl.editions.v1`, incluida en respaldo/importación).
 
 ### 2026-07-20 (4ª iteración) — Corrección de cartas manuales, botón arriba y búsqueda global
 - **Bug corregido**: las cartas manuales perdían la marca `userCustom` al normalizarse

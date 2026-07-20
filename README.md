@@ -18,6 +18,10 @@ Los datos de las cartas provienen de [tor.myl.cl](https://tor.myl.cl/cartas/toda
 - 📚 **Colecciones**: elige una edición y síguela carta por carta, ordenada por
   número; las cartas que aún no tienes se ven en **blanco y negro** y recuperan
   el color al marcarlas. Una barra muestra tu progreso.
+- 🧩 **Ediciones propias**: crea tus ediciones (nombre, descripción, bloque y
+  listado de cartas numerado), carga las cartas una a una o importándolas desde
+  un **CSV UTF-8** (plantilla descargable, imágenes por URL) y coleccionalas
+  como cualquier edición oficial.
 - 🔄 **Cambios**: marca copias repetidas como disponibles para intercambio y
   registra cada cambio: la carta entregada se descuenta, la recibida se suma y
   entra sola a la colección de su edición (se crea si no existe). Con historial.

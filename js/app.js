@@ -9,6 +9,7 @@
      · Render grid .............. grilla de cartas del Catálogo (paginada)
      · Modal detalle ............ ficha ampliada de una carta (API en vivo)
      · Carta manual ............. formulario para cartas fuera del catálogo
+     · Ediciones personalizadas . gestor de ediciones propias + importador CSV
      · Colecciones .............. cuaderno digital por edición (cartas en B/N)
      · Cambios .................. inventario de intercambio + historial
      · Mazos .................... CRUD de mazos + resumen + exportaciones
@@ -114,6 +115,8 @@ function rebuildCards() {
     c.searchText = normText(c.name + " " + c.ability);
   }
   state.cards = (state.baseCards || []).concat(userCustom);
+  // Las ediciones personalizadas aportan su nombre legible al mapa global
+  for (const e of store.getCustomEditions()) state.editionName[e.slug] = e.name;
   editionCardsCache.clear(); // el catálogo cambió: invalida la caché de Colecciones
   cardIndex = null;          // y el índice id→carta de la vista Cambios
 }
@@ -196,6 +199,12 @@ function editionOptionGroups(fmt) {
     const g = e.formatName || e.format || "Otros";
     if (!groups.has(g)) groups.set(g, []);
     groups.get(g).push({ value: e.slug, label: e.name });
+  }
+  // Ediciones creadas por el usuario en el gestor (aunque aún no tengan cartas)
+  const customs = store.getCustomEditions().filter((e) => !fmt || e.format === fmt);
+  if (customs.length) {
+    groups.set("Mis ediciones", customs.map((e) => ({ value: e.slug, label: e.name })));
+    for (const e of customs) present.delete(e.slug);
   }
   if (present.size) {
     const extra = [...present]
@@ -496,6 +505,7 @@ function openModal(card) {
     if (!confirm(`¿Eliminar la carta manual «${card.name}»?`)) return;
     store.deleteCustomCard(card.id);
     rebuildCards(); populateFilters(); applyFilters(); closeModal();
+    refreshEditionsModalIfOpen();
     showToast("Carta eliminada");
   };
   box.querySelectorAll("[data-m]").forEach((b) => {
@@ -607,14 +617,17 @@ function populateEditionDatalist() {
   const names = [...new Set(state.cards.map((c) => c.editionName).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
   dl.innerHTML = names.map((n) => `<option value="${escapeAttr(n)}"></option>`).join("");
 }
-function openCardForm(card) {
+// preset (opcional): { editionName, format, nextNum } para prellenar el
+// formulario al agregar cartas desde el gestor de ediciones
+function openCardForm(card, preset) {
   populateEditionDatalist();
   const editing = card && card.userCustom;
   $("#cf-title").textContent = editing ? "Editar carta" : "Agregar carta manual";
   $("#cf-id").value = editing ? card.id : "";
   $("#cf-name").value = editing ? card.name : "";
-  $("#cf-edition").value = editing ? (card.editionName || "") : "";
-  $("#cf-format").value = editing ? (card.format || "NE") : "NE";
+  $("#cf-edition").value = editing ? (card.editionName || "") : (preset?.editionName || "");
+  $("#cf-number").value = editing ? (card.edid ? parseInt(card.edid, 10) : "") : (preset?.nextNum || "");
+  $("#cf-format").value = editing ? (card.format || "NE") : (preset?.format || "NE");
   $("#cf-race").value = editing && card.race !== "—" ? card.race : "";
   $("#cf-type").value = editing ? card.type : "Aliado";
   $("#cf-rarity").value = editing && card.rarity !== "—" ? card.rarity : "";
@@ -638,10 +651,24 @@ function saveCardForm(another) {
   const name = $("#cf-name").value.trim();
   if (!name) { showToast("Escribe al menos el nombre"); return; }
   const edName = $("#cf-edition").value.trim() || "Personalizada";
+  // Resuelve la edición POR NOMBRE: si coincide con una edición del gestor o
+  // una oficial, se reutiliza su slug real (crítico tras renombrar: el slug
+  // original no cambia, y derivarlo del nombre nuevo crearía una edición
+  // duplicada y desconectada)
+  let slug, finalEdName = edName;
+  const matchCustom = store.getCustomEditions().find((e) => normText(e.name) === normText(edName));
+  if (matchCustom) { slug = matchCustom.slug; finalEdName = matchCustom.name; }
+  else {
+    const official = Object.entries(state.editionName).find(([, n]) => normText(n) === normText(edName));
+    if (official) { slug = official[0]; finalEdName = official[1]; }
+    else slug = editionSlug(edName);
+  }
+  const numVal = $("#cf-number").value;
   const card = {
     name,
-    edition: editionSlug(edName),
-    editionName: edName,
+    edition: slug,
+    editionName: finalEdName,
+    edid: numVal === "" ? "" : String(Math.max(1, Math.floor(Number(numVal)))).padStart(3, "0"),
     format: $("#cf-format").value,
     type: $("#cf-type").value,
     race: $("#cf-race").value.trim() || "—",
@@ -656,10 +683,13 @@ function saveCardForm(another) {
   if (id) store.updateCustomCard(id, card);
   else store.addCustomCard(card);
   rebuildCards(); populateFilters(); applyFilters(); refreshActiveDeckUI();
+  refreshEditionsModalIfOpen();
   if (another) {
-    // Mantiene edición/formato/raza/rareza; limpia lo específico de la carta
+    // Mantiene edición/formato/raza/rareza; limpia lo específico de la carta.
+    // El número avanza solo al siguiente para cargar la edición en orden.
     $("#cf-id").value = "";
     $("#cf-name").value = "";
+    $("#cf-number").value = numVal === "" ? "" : Number(numVal) + 1;
     $("#cf-cost").value = "";
     $("#cf-strength").value = "";
     $("#cf-ability").value = "";
@@ -686,6 +716,7 @@ function bindCardFormEvents() {
     if (id && confirm("¿Eliminar esta carta manual?")) {
       store.deleteCustomCard(id);
       rebuildCards(); populateFilters(); applyFilters(); closeCardForm();
+      refreshEditionsModalIfOpen();
       showToast("Carta eliminada");
     }
   });
@@ -698,6 +729,305 @@ function bindCardFormEvents() {
     const reader = new FileReader();
     reader.onload = () => { cfImageData = reader.result; $("#cf-image-url").value = ""; renderCfPreview(); };
     reader.readAsDataURL(f);
+  });
+}
+
+/* ===================== Ediciones personalizadas (gestor) =====================
+   Apartado "Ediciones" de la barra del Catálogo. Permite crear/editar/eliminar
+   ediciones propias con nombre, descripción, bloque, total esperado de cartas
+   y su listado numerado. Las cartas se agregan de dos formas complementarias:
+   - Importando un CSV UTF-8 (plantilla descargable; columna imagen = URL).
+     El número identifica la carta: reimportar actualiza en vez de duplicar.
+   - Una a una con el formulario de carta manual (botón "Agregar carta").
+   Renombrar la edición actualiza el nombre en todas sus cartas (el slug no
+   cambia, así colecciones e inventario no se desconectan). */
+
+const ED_FORMATS = [
+  ["NE", "Nueva Era / Imperio"], ["PB", "Primer Bloque"], ["PE", "Primera Era"],
+  ["SB", "Segundo Bloque"], ["FX", "Furia Extendido"], ["OT", "Otro"],
+];
+const CSV_HEADERS = ["numero", "nombre", "tipo", "raza", "rareza", "coste", "fuerza", "habilidad", "historia", "imagen"];
+
+// Estado del modal: lista de ediciones o editor de una edición concreta
+let edModal = { mode: "list", slug: null, csv: null };
+
+function openEditionsModal(slug) {
+  edModal = { mode: slug ? "edit" : "list", slug: slug || null, csv: null };
+  renderEditionsModal();
+  $("#editions-modal").classList.remove("hidden");
+}
+function closeEditionsModal() { $("#editions-modal").classList.add("hidden"); }
+function refreshEditionsModalIfOpen() {
+  if (!$("#editions-modal").classList.contains("hidden")) renderEditionsModal();
+}
+
+function renderEditionsModal() {
+  const box = $("#editions-box");
+  if (edModal.mode === "edit") { renderEditionEditor(box); return; }
+
+  const eds = store.getCustomEditions();
+  const rows = eds.map((e) => {
+    const count = state.cards.filter((c) => c.edition === e.slug && c.userCustom).length;
+    return `<div class="ed-row" data-slug="${escapeAttr(e.slug)}">
+      <span class="ed-name">${escapeHtml(e.name)}</span>
+      <span class="ed-meta">${count} carta${count === 1 ? "" : "s"}${e.expectedTotal ? " de " + e.expectedTotal : ""}</span>
+      <button class="btn small" data-ed-edit>Editar</button>
+      <button class="btn small" data-ed-del>Eliminar</button>
+    </div>`;
+  }).join("");
+  box.innerHTML = `
+    <button class="modal-close" data-close-ed>×</button>
+    <h2>Mis ediciones</h2>
+    <p class="muted">Crea tus propias ediciones con nombre, descripción y listado de cartas numerado. Se usan igual que las oficiales: aparecen en los filtros y puedes coleccionarlas.</p>
+    <div class="sync-row" style="align-items:flex-end">
+      <label class="field" style="flex:1;min-width:200px;margin:0"><span>Nombre de la nueva edición</span><input id="ed-new-name" type="text" placeholder="Ej: Brotherhood" /></label>
+      <button class="btn primary" id="ed-create">Crear edición</button>
+    </div>
+    <div class="ed-list">${rows || `<p class="muted">Aún no tienes ediciones propias.</p>`}</div>`;
+
+  box.querySelector("[data-close-ed]").onclick = closeEditionsModal;
+  box.querySelector("#ed-create").onclick = () => {
+    const name = $("#ed-new-name").value.trim();
+    if (!name) { showToast("Escribe el nombre de la edición"); return; }
+    const slug = editionSlug(name);
+    if (store.getCustomEdition(slug) || (state.editionName[slug] && !store.getCustomEdition(slug))) {
+      showToast(`Ya existe una edición llamada «${state.editionName[slug] || name}»`, 3500);
+      return;
+    }
+    store.createCustomEdition({ slug, name });
+    rebuildCards(); populateFilters();
+    edModal = { mode: "edit", slug, csv: null };
+    renderEditionsModal();
+    showToast(`Edición «${name}» creada`);
+  };
+  box.querySelectorAll(".ed-row").forEach((row) => {
+    const slug = row.dataset.slug;
+    row.querySelector("[data-ed-edit]").onclick = () => { edModal = { mode: "edit", slug, csv: null }; renderEditionsModal(); };
+    row.querySelector("[data-ed-del]").onclick = () => deleteEditionFlow(slug);
+  });
+}
+
+function deleteEditionFlow(slug) {
+  const ed = store.getCustomEdition(slug);
+  if (!ed) return;
+  const cards = state.cards.filter((c) => c.edition === slug && c.userCustom);
+  if (!confirm(`¿Eliminar la edición «${ed.name}»?`)) return;
+  if (cards.length && confirm(`La edición tiene ${cards.length} carta(s) manual(es).\n\nAceptar = eliminar también sus cartas\nCancelar = conservar las cartas (quedarán como edición suelta)`)) {
+    for (const c of cards) store.deleteCustomCard(c.id);
+  }
+  store.deleteCustomEdition(slug);
+  rebuildCards(); populateFilters(); applyFilters();
+  edModal = { mode: "list", slug: null, csv: null };
+  renderEditionsModal();
+  showToast(`Edición «${ed.name}» eliminada`);
+}
+
+function editionCustomCards(slug) {
+  return state.cards
+    .filter((c) => c.edition === slug && c.userCustom)
+    .sort((a, b) => cardNum(a) - cardNum(b) || a.name.localeCompare(b.name, "es"));
+}
+
+function renderEditionEditor(box) {
+  const ed = store.getCustomEdition(edModal.slug);
+  if (!ed) { edModal = { mode: "list", slug: null, csv: null }; renderEditionsModal(); return; }
+  const cards = editionCustomCards(ed.slug);
+  const fmtOpts = ED_FORMATS.map(([v, l]) => `<option value="${v}" ${ed.format === v ? "selected" : ""}>${l}</option>`).join("");
+  const cardRows = cards.map((c) => {
+    const n = cardNum(c);
+    return `<div class="ed-card-row" data-id="${escapeAttr(c.id)}">
+      <span class="ec-num">${Number.isFinite(n) ? "#" + n : "—"}</span>
+      <span class="ec-name">${escapeHtml(c.name)}</span>
+      <button class="btn small" data-ec-edit>Editar</button>
+      <button class="btn small" data-ec-del>Quitar</button>
+    </div>`;
+  }).join("");
+
+  box.innerHTML = `
+    <button class="modal-close" data-close-ed>×</button>
+    <button class="btn small" id="ed-back">← Mis ediciones</button>
+    <h2 style="margin-top:10px">${escapeHtml(ed.name)}</h2>
+    <div class="cf-grid">
+      <label class="field"><span>Nombre *</span><input id="ed-name" type="text" value="${escapeAttr(ed.name)}" /></label>
+      <label class="field"><span>Bloque / formato</span><select id="ed-format">${fmtOpts}</select></label>
+      <label class="field cf-full"><span>Descripción</span><textarea id="ed-desc" rows="2">${escapeHtml(ed.description || "")}</textarea></label>
+      <label class="field"><span>Número de cartas de la edición (opcional)</span><input id="ed-total" type="number" min="0" value="${ed.expectedTotal ?? ""}" placeholder="Ej: 100" /></label>
+    </div>
+    <div class="sync-row"><button class="btn primary" id="ed-save">Guardar cambios</button></div>
+
+    <h3 class="sync-h3">Listado de cartas (${cards.length}${ed.expectedTotal ? " de " + ed.expectedTotal : ""})</h3>
+    <div class="ed-cards">${cardRows || `<p class="muted">Aún no tiene cartas. Agrégalas una a una o importa el listado desde un CSV.</p>`}</div>
+    <div class="sync-row"><button class="btn" id="ed-add-card">Agregar carta</button></div>
+
+    <h3 class="sync-h3">Importar listado desde CSV (UTF-8)</h3>
+    <p class="muted">Columnas: <b>numero, nombre, tipo, raza, rareza, coste, fuerza, habilidad, historia, imagen</b>. La imagen debe ser un enlace (https://…) donde se vea la carta. El número identifica cada carta: si reimportas el archivo, las filas con el mismo número <b>actualizan</b> la carta en vez de duplicarla.</p>
+    <div class="sync-row">
+      <button class="btn" id="ed-tpl">Descargar plantilla CSV</button>
+      <label class="btn" style="cursor:pointer">Elegir archivo CSV<input id="ed-csv" type="file" accept=".csv,text/csv" hidden /></label>
+    </div>
+    <div id="ed-csv-preview" class="csv-report"></div>`;
+
+  box.querySelector("[data-close-ed]").onclick = closeEditionsModal;
+  $("#ed-back").onclick = () => { edModal = { mode: "list", slug: null, csv: null }; renderEditionsModal(); };
+  $("#ed-save").onclick = () => {
+    const name = $("#ed-name").value.trim();
+    if (!name) { showToast("El nombre no puede quedar vacío"); return; }
+    const totalRaw = $("#ed-total").value;
+    store.updateCustomEdition(ed.slug, {
+      name,
+      description: $("#ed-desc").value.trim(),
+      format: $("#ed-format").value,
+      expectedTotal: totalRaw === "" ? null : Math.max(0, Math.floor(Number(totalRaw))),
+    });
+    if (name !== ed.name) store.renameEditionOnCards(ed.slug, name); // renombra en bloque
+    rebuildCards(); populateFilters(); applyFilters();
+    if (state.view === "colecciones") renderCollectionsView();
+    renderEditionsModal();
+    showToast("Edición guardada ✓");
+  };
+  $("#ed-add-card").onclick = () => {
+    const nums = cards.map(cardNum).filter(Number.isFinite);
+    openCardForm(null, { editionName: ed.name, format: ed.format === "OT" ? "NE" : ed.format, nextNum: (nums.length ? Math.max(...nums) : 0) + 1 });
+  };
+  box.querySelectorAll(".ed-card-row").forEach((row) => {
+    const card = cardById(row.dataset.id);
+    row.querySelector("[data-ec-edit]").onclick = () => { if (card) openCardForm(card); };
+    row.querySelector("[data-ec-del]").onclick = () => {
+      if (!card || !confirm(`¿Quitar «${card.name}» de la edición? (Se elimina la carta manual)`)) return;
+      store.deleteCustomCard(card.id);
+      rebuildCards(); populateFilters(); applyFilters();
+      renderEditionsModal();
+    };
+  });
+  $("#ed-tpl").onclick = downloadCSVTemplate;
+  $("#ed-csv").onchange = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => { edModal.csv = parseEditionCSV(String(reader.result), ed); renderCSVPreview(ed); };
+    reader.readAsText(f, "utf-8");
+    e.target.value = "";
+  };
+}
+
+function downloadCSVTemplate() {
+  const tpl =
+    CSV_HEADERS.join(",") + "\n" +
+    `1,Ejemplo Aliado,Aliado,Guerrero,Cortesano,3,2,"Cuando entra en juego, roba una carta.","Texto de ambientación.",https://ejemplo.com/carta1.png\n` +
+    `2,Ejemplo Talismán,Talismán,,Real,2,,"Destierra un Oro en juego.",,\n`;
+  // BOM para que Excel lo abra directo como UTF-8
+  download("plantilla_edicion.csv", "\uFEFF" + tpl, "text/csv;charset=utf-8");
+  showToast("Plantilla descargada: llénala en Excel/Sheets y guárdala como CSV UTF-8");
+}
+
+/* --- Parseo CSV robusto: soporta comillas, comas y saltos de línea entre comillas --- */
+function parseCSV(text) {
+  text = String(text).replace(/^\uFEFF/, ""); // quita el BOM si viene de Excel
+  const rows = [];
+  let row = [], cell = "", inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQ) {
+      if (ch === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else inQ = false; }
+      else cell += ch;
+    } else if (ch === '"') inQ = true;
+    else if (ch === ",") { row.push(cell); cell = ""; }
+    else if (ch === "\n" || ch === "\r") {
+      if (ch === "\r" && text[i + 1] === "\n") i++;
+      row.push(cell); cell = "";
+      if (row.some((c) => c.trim() !== "")) rows.push(row);
+      row = [];
+    } else cell += ch;
+  }
+  row.push(cell);
+  if (row.some((c) => c.trim() !== "")) rows.push(row);
+  return rows;
+}
+
+// Valida el CSV y lo convierte en cartas listas para importar a la edición.
+// Devuelve { cards: [...], errors: ["fila N: motivo", ...] }
+function parseEditionCSV(text, ed) {
+  const rows = parseCSV(text);
+  if (!rows.length) return { cards: [], errors: ["El archivo está vacío."] };
+  const header = rows[0].map((h) => normText(h).trim());
+  const idx = {};
+  for (const col of CSV_HEADERS) idx[col] = header.indexOf(col);
+  if (idx.nombre === -1) return { cards: [], errors: ['Falta la columna "nombre" en la primera fila. Descarga la plantilla para ver el formato.'] };
+
+  const cards = [], errors = [], seenNums = new Set();
+  const get = (r, col) => (idx[col] === -1 ? "" : (r[idx[col]] ?? "").trim());
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i], fila = i + 1;
+    const nombre = get(r, "nombre");
+    if (!nombre) { errors.push(`fila ${fila}: sin nombre`); continue; }
+    const numRaw = get(r, "numero");
+    let num = null;
+    if (numRaw !== "") {
+      num = Number(numRaw);
+      if (!Number.isInteger(num) || num < 1) { errors.push(`fila ${fila} («${nombre}»): número inválido "${numRaw}"`); continue; }
+      if (seenNums.has(num)) { errors.push(`fila ${fila} («${nombre}»): número ${num} repetido en el archivo`); continue; }
+      seenNums.add(num);
+    }
+    const imagen = get(r, "imagen");
+    if (imagen && !/^https?:\/\//i.test(imagen)) { errors.push(`fila ${fila} («${nombre}»): la imagen debe ser un enlace https://…`); continue; }
+    const numOrEmpty = (col) => { const v = get(r, col); if (v === "") return null; const n = Number(v); return Number.isFinite(n) ? n : NaN; };
+    const coste = numOrEmpty("coste"), fuerza = numOrEmpty("fuerza");
+    if (Number.isNaN(coste) || Number.isNaN(fuerza)) { errors.push(`fila ${fila} («${nombre}»): coste o fuerza no numérico`); continue; }
+    cards.push({
+      name: nombre,
+      edition: ed.slug,
+      editionName: ed.name,
+      edid: num ? String(num).padStart(3, "0") : "",
+      format: ed.format === "OT" ? "NE" : ed.format,
+      type: get(r, "tipo") || "—",
+      race: get(r, "raza") || "—",
+      rarity: get(r, "rareza") || "—",
+      cost: coste, strength: fuerza,
+      ability: get(r, "habilidad"),
+      flavour: get(r, "historia"),
+      image: imagen,
+      _num: num,
+    });
+  }
+  return { cards, errors };
+}
+
+function renderCSVPreview(ed) {
+  const boxp = $("#ed-csv-preview");
+  const { cards, errors } = edModal.csv || { cards: [], errors: [] };
+  const errList = errors.slice(0, 12).map((e) => `<div class="err">✗ ${escapeHtml(e)}</div>`).join("") +
+    (errors.length > 12 ? `<div class="err">… y ${errors.length - 12} error(es) más</div>` : "");
+  boxp.innerHTML = `
+    <p><b>${cards.length}</b> carta(s) lista(s) para importar${errors.length ? ` · <b>${errors.length}</b> fila(s) con error que se omitirán` : " · sin errores"}.</p>
+    ${errList}
+    ${cards.length ? `<div class="sync-row"><button class="btn primary" id="ed-import">Importar ${cards.length} carta(s)</button></div>` : ""}`;
+  const btn = $("#ed-import");
+  if (btn) btn.onclick = () => importCSVCards(ed);
+}
+
+// Importa las filas válidas: crea cartas nuevas o actualiza las existentes de
+// la edición que tengan el mismo número (o el mismo nombre si no hay número)
+function importCSVCards(ed) {
+  const existing = store.getCustomCards().filter((c) => c.edition === ed.slug);
+  let created = 0, updated = 0;
+  for (const nc of edModal.csv.cards) {
+    const { _num, ...card } = nc;
+    const match = existing.find((c) =>
+      _num ? parseInt(c.edid, 10) === _num : normText(c.name) === normText(card.name)
+    );
+    if (match) { store.updateCustomCard(match.id, card); updated++; }
+    else { store.addCustomCard(card); created++; }
+  }
+  edModal.csv = null;
+  rebuildCards(); populateFilters(); applyFilters();
+  renderEditionsModal();
+  showToast(`Importación lista: ${created} carta(s) nueva(s), ${updated} actualizada(s)`, 4500);
+}
+
+function bindEditionEvents() {
+  $("#btn-editions").addEventListener("click", () => openEditionsModal());
+  $("#editions-modal").addEventListener("click", (e) => {
+    if (e.target.classList.contains("modal-backdrop")) closeEditionsModal();
   });
 }
 
@@ -810,11 +1140,15 @@ function collectionCards(col) {
   }
   return arr;
 }
-// Progreso de la colección: únicas poseídas / total de la edición
+// Progreso de la colección: únicas poseídas / total de la edición.
+// En ediciones personalizadas con "total esperado" definido, el denominador
+// usa ese total aunque aún no se hayan cargado todas las cartas.
 function collectionStats(col) {
   const cards = collectionCards(col);
   const owned = cards.filter((c) => store.getQty(c.id) > 0).length;
-  return { total: cards.length, owned, pct: cards.length ? Math.round((owned / cards.length) * 100) : 0 };
+  const ce = store.getCustomEdition(col.edition);
+  const total = Math.max(cards.length, Number(ce?.expectedTotal) || 0);
+  return { total, owned, pct: total ? Math.round((owned / total) * 100) : 0 };
 }
 
 // Panel lateral: lista de colecciones con su barra de progreso.
@@ -1774,6 +2108,9 @@ function bindEvents() {
 
   // Carta manual
   bindCardFormEvents();
+
+  // Gestor de ediciones personalizadas
+  bindEditionEvents();
 
   // Tema
   $("#theme-toggle").addEventListener("click", toggleTheme);
