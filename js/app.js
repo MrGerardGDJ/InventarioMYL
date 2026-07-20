@@ -31,6 +31,8 @@ async function loadData() {
   state.baseCards = [...scraped, ...bundledCustom];
   state.editions = Array.isArray(edRes) ? edRes : [];
   state.editionName = Object.fromEntries(state.editions.map((e) => [e.slug, e.name]));
+  // Orden real de publicación (editions.json viene ordenado por bloque/era)
+  state.editionOrder = Object.fromEntries(state.editions.map((e, i) => [e.slug, i]));
 
   // Asegura nombre legible de edición y precalcula texto de búsqueda (una vez)
   for (const c of state.baseCards) {
@@ -150,13 +152,52 @@ function populateFilters() {
 }
 
 function refreshEditionOptions() {
-  const fmt = $("#f-format").value;
-  // ediciones presentes en el dataset (respeta el formato seleccionado)
-  const present = uniqueSorted(
-    state.cards.filter((c) => !fmt || c.format === fmt).map((c) => c.edition)
-  );
-  const opts = present.map((slug) => ({ value: slug, label: state.editionName[slug] || slug }));
-  fillSelect("#f-edition", opts);
+  const sel = $("#f-edition");
+  const prev = sel.value;
+  fillEditionSelect(sel, $("#f-format").value, "Todas");
+  if ([...sel.options].some((o) => o.value === prev)) sel.value = prev;
+}
+
+// Agrupa las ediciones presentes en el dataset por bloque/era, respetando el
+// orden de publicación de editions.json (no alfabético)
+function editionOptionGroups(fmt) {
+  const present = new Set(state.cards.filter((c) => !fmt || c.format === fmt).map((c) => c.edition));
+  const groups = new Map();
+  for (const e of state.editions) {
+    if (!present.has(e.slug)) continue;
+    present.delete(e.slug);
+    const g = e.formatName || e.format || "Otros";
+    if (!groups.has(g)) groups.set(g, []);
+    groups.get(g).push({ value: e.slug, label: e.name });
+  }
+  if (present.size) {
+    const extra = [...present]
+      .sort((a, b) => (state.editionName[a] || a).localeCompare(state.editionName[b] || b, "es"))
+      .map((s) => ({ value: s, label: state.editionName[s] || s }));
+    groups.set("Otras / personalizadas", extra);
+  }
+  return groups;
+}
+
+function fillEditionSelect(el, fmt, placeholder) {
+  el.innerHTML = "";
+  if (placeholder != null) {
+    const o = document.createElement("option");
+    o.value = "";
+    o.textContent = placeholder;
+    el.appendChild(o);
+  }
+  for (const [gname, items] of editionOptionGroups(fmt)) {
+    const og = document.createElement("optgroup");
+    og.label = gname;
+    for (const it of items) {
+      const o = document.createElement("option");
+      o.value = it.value;
+      o.textContent = it.label;
+      og.appendChild(o);
+    }
+    el.appendChild(og);
+  }
 }
 
 function fillSelect(sel, opts) {
@@ -202,10 +243,12 @@ function applyFilters() {
   out.sort((a, b) => {
     switch (sort) {
       case "name_desc": return b.name.localeCompare(a.name, "es");
+      case "number": return cardNum(a) - cardNum(b) || editionOrd(a) - editionOrd(b) || a.name.localeCompare(b.name, "es");
+      case "number_desc": return cardNum(b) - cardNum(a) || editionOrd(a) - editionOrd(b) || a.name.localeCompare(b.name, "es");
       case "cost": return (a.cost ?? 99) - (b.cost ?? 99);
       case "cost_desc": return (b.cost ?? -1) - (a.cost ?? -1);
       case "strength_desc": return (b.strength ?? -1) - (a.strength ?? -1);
-      case "edition": return (a.editionName || "").localeCompare(b.editionName || "", "es");
+      case "edition": return editionOrd(a) - editionOrd(b) || cardNum(a) - cardNum(b) || a.name.localeCompare(b.name, "es");
       case "qty_desc": return store.getQty(b.id) - store.getQty(a.id);
       default: return a.name.localeCompare(b.name, "es");
     }
@@ -216,6 +259,17 @@ function applyFilters() {
   renderGrid(true);
   updateResultCount();
   updateOrphanNote();
+}
+
+// Número de la carta dentro de su edición (edid "037" → 37); sin número → al final
+function cardNum(c) {
+  const n = parseInt(c.edid, 10);
+  return Number.isFinite(n) ? n : Infinity;
+}
+// Posición de la edición según el orden de publicación (editions.json)
+function editionOrd(c) {
+  const i = state.editionOrder?.[c.edition];
+  return i == null ? 9999 : i;
 }
 
 /* ===================== Cartas fuera de catálogo (huérfanas) ===================== */
@@ -300,6 +354,7 @@ function cardEl(card) {
     <div class="card-img" data-act="detail">
       ${card.cost != null ? `<span class="badge-cost">${card.cost}</span>` : ""}
       ${card.strength != null ? `<span class="badge-str">${card.strength}</span>` : ""}
+      ${Number.isFinite(cardNum(card)) ? `<span class="badge-num">#${cardNum(card)}</span>` : ""}
       ${img}
     </div>
     <div class="card-body">
@@ -331,6 +386,7 @@ function changeQty(el, card, delta) {
   numEl.classList.toggle("zero", qty === 0);
   el.classList.toggle("owned", qty > 0);
   updateResultCount();
+  if (state.view === "colecciones") updateCollectionProgress();
 }
 
 /* ===================== Modal detalle ===================== */
@@ -408,6 +464,7 @@ function openModal(card) {
         gridCard.classList.toggle("owned", newQty > 0);
       }
       updateResultCount();
+      if (state.view === "colecciones") updateCollectionProgress();
     };
   });
 
@@ -667,6 +724,145 @@ function bindDeckBarEvents() {
     showToast(`Mazo «${d.name}» creado y activo`);
   });
   $$("[data-close-deck]").forEach((el) => el.addEventListener("click", closeDeckModal));
+}
+
+/* ===================== Colecciones (completar una edición) ===================== */
+function collectionCards(col) {
+  return state.cards
+    .filter((c) => c.edition === col.edition)
+    .sort((a, b) => cardNum(a) - cardNum(b) || a.name.localeCompare(b.name, "es"));
+}
+function collectionStats(col) {
+  const cards = collectionCards(col);
+  const owned = cards.filter((c) => store.getQty(c.id) > 0).length;
+  return { total: cards.length, owned, pct: cards.length ? Math.round((owned / cards.length) * 100) : 0 };
+}
+
+function renderCollectionsView() {
+  const list = $("#collection-list");
+  const cols = store.getCollections();
+  const activeId = store.getSetting("activeCollectionId");
+  list.innerHTML = cols.length ? "" : `<p class="muted">Aún no tienes colecciones.</p>`;
+  for (const col of cols) {
+    const s = collectionStats(col);
+    const row = document.createElement("div");
+    row.className = "col-item" + (col.id === activeId ? " active" : "");
+    row.dataset.colId = col.id;
+    row.innerHTML = `
+      <div class="col-top">
+        <span class="d-name">${escapeHtml(col.name)}</span>
+        <button class="qty-btn" data-del title="Eliminar colección">🗑</button>
+      </div>
+      <div class="col-ed muted">${escapeHtml(state.editionName[col.edition] || col.edition)}</div>
+      <span class="ep-bar"><span class="ep-fill" style="width:${s.pct}%"></span></span>
+      <div class="col-nums muted">${s.owned}/${s.total} (${s.pct}%)</div>`;
+    row.querySelector(".d-name").onclick = () => {
+      store.setSetting("activeCollectionId", col.id);
+      renderCollectionsView();
+    };
+    row.querySelector("[data-del]").onclick = () => {
+      if (!confirm(`¿Eliminar la colección «${col.name}»?\n\n(No borra las cantidades de tu inventario)`)) return;
+      store.deleteCollection(col.id);
+      if (store.getSetting("activeCollectionId") === col.id) store.setSetting("activeCollectionId", null);
+      renderCollectionsView();
+    };
+    list.appendChild(row);
+  }
+  renderCollectionDetail();
+}
+
+function renderCollectionDetail() {
+  const wrap = $("#collection-detail");
+  const col = store.getCollection(store.getSetting("activeCollectionId"));
+  if (!col) {
+    wrap.innerHTML = `<p class="muted">Crea una colección con <b>+ Nueva colección</b>: eliges una edición y verás todas sus cartas ordenadas por número, marcando tu progreso.</p>`;
+    return;
+  }
+  const s = collectionStats(col);
+  wrap.innerHTML = `
+    <div class="col-head">
+      <h2><input id="col-name-edit" value="${escapeAttr(col.name)}" /></h2>
+      <span class="tag">${escapeHtml(state.editionName[col.edition] || col.edition)}</span>
+      <div class="spacer"></div>
+      <label class="field inline"><span>Mostrar</span>
+        <select id="col-filter">
+          <option value="all">Todas las cartas</option>
+          <option value="missing">Solo las que faltan</option>
+          <option value="owned">Solo las que tengo</option>
+        </select>
+      </label>
+    </div>
+    <div class="col-progress-big">
+      <span class="ep-bar"><span class="ep-fill" id="col-fill" style="width:${s.pct}%"></span></span>
+      <span class="muted" id="col-progress-text">${s.owned}/${s.total} cartas (${s.pct}%)</span>
+    </div>
+    <div id="collection-grid" class="cards-grid collection-grid"></div>
+    <div id="col-empty" class="empty hidden">No hay cartas con este filtro.</div>`;
+
+  $("#col-name-edit").onchange = (e) => {
+    store.renameCollection(col.id, e.target.value.trim() || "Colección");
+    renderCollectionsView();
+  };
+  const filterSel = $("#col-filter");
+  filterSel.value = state.colFilter || "all";
+  filterSel.onchange = (e) => { state.colFilter = e.target.value; renderCollectionGrid(col); };
+  renderCollectionGrid(col);
+}
+
+function renderCollectionGrid(col) {
+  const grid = $("#collection-grid");
+  if (!grid) return;
+  let cards = collectionCards(col);
+  const f = state.colFilter || "all";
+  if (f === "missing") cards = cards.filter((c) => store.getQty(c.id) === 0);
+  else if (f === "owned") cards = cards.filter((c) => store.getQty(c.id) > 0);
+  grid.innerHTML = "";
+  const frag = document.createDocumentFragment();
+  for (const c of cards) frag.appendChild(cardEl(c));
+  grid.appendChild(frag);
+  scheduleNameCorrection(cards);
+  $("#col-empty").classList.toggle("hidden", cards.length !== 0);
+}
+
+// Actualiza barras de progreso (detalle + panel lateral) al cambiar cantidades
+function updateCollectionProgress() {
+  const col = store.getCollection(store.getSetting("activeCollectionId"));
+  if (!col) return;
+  const s = collectionStats(col);
+  const fill = $("#col-fill");
+  if (fill) fill.style.width = s.pct + "%";
+  const txt = $("#col-progress-text");
+  if (txt) txt.textContent = `${s.owned}/${s.total} cartas (${s.pct}%)`;
+  const row = document.querySelector(`.col-item[data-col-id="${CSS.escape(col.id)}"]`);
+  if (row) {
+    row.querySelector(".ep-fill").style.width = s.pct + "%";
+    row.querySelector(".col-nums").textContent = `${s.owned}/${s.total} (${s.pct}%)`;
+  }
+}
+
+function openCollectionModal() {
+  fillEditionSelect($("#col-edition"), "", "— Elige una edición —");
+  $("#col-name").value = "";
+  $("#collection-modal").classList.remove("hidden");
+}
+function closeCollectionModal() { $("#collection-modal").classList.add("hidden"); }
+function createCollectionFromModal() {
+  const ed = $("#col-edition").value;
+  if (!ed) { showToast("Elige una edición para la colección"); return; }
+  const name = $("#col-name").value.trim() || (state.editionName[ed] || ed);
+  const col = store.createCollection(name, ed);
+  store.setSetting("activeCollectionId", col.id);
+  closeCollectionModal();
+  renderCollectionsView();
+  showToast(`Colección «${name}» creada ✓`);
+}
+function bindCollectionEvents() {
+  $("#new-collection").addEventListener("click", openCollectionModal);
+  $("#col-create").addEventListener("click", createCollectionFromModal);
+  $$("[data-close-col]").forEach((el) => el.addEventListener("click", closeCollectionModal));
+  $("#collection-modal").addEventListener("click", (e) => {
+    if (e.target.classList.contains("modal-backdrop")) closeCollectionModal();
+  });
 }
 
 /* ===================== Mazos ===================== */
@@ -942,6 +1138,7 @@ function exportCollection(format) {
       exportedAt: new Date().toISOString(),
       inventory: inv,
       decks: store.getDecks(),
+      collections: store.getCollections(),
     };
     download(`coleccion_myl_${today()}.json`, JSON.stringify(data, null, 2));
     showToast("Colección exportada (JSON)");
@@ -980,6 +1177,7 @@ function importCollection(file) {
       if (merge) store.mergeInventory(inv);
       else store.replaceInventory(inv);
       if (Array.isArray(data.decks)) store.replaceDecks(data.decks);
+      if (Array.isArray(data.collections)) store.replaceCollections(data.collections);
       applyFilters();
       renderDecksView();
       showToast("Colección importada");
@@ -1028,6 +1226,7 @@ function flashChip(text, cls) {
 function refreshAll() {
   rebuildCards();
   applyFilters();
+  if (state.view === "colecciones") renderCollectionsView();
   if (state.view === "mazos") renderDecksView();
   if (state.view === "stats") renderStats();
   refreshActiveDeckUI();
@@ -1221,6 +1420,7 @@ function switchView(view) {
   state.view = view;
   $$(".tab").forEach((t) => t.classList.toggle("active", t.dataset.view === view));
   $$(".view").forEach((v) => v.classList.toggle("active", v.id === "view-" + view));
+  if (view === "colecciones") renderCollectionsView();
   if (view === "mazos") renderDecksView();
   if (view === "stats") renderStats();
 }
@@ -1254,7 +1454,7 @@ function bindEvents() {
 
   // Modal
   $("#modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeModal(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); } });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); closeCollectionModal(); } });
   $("#orphan-note").addEventListener("click", openOrphanModal);
   $("#orphan-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeOrphanModal(); });
   $$("[data-close-orphan]").forEach((el) => el.addEventListener("click", closeOrphanModal));
@@ -1276,6 +1476,9 @@ function bindEvents() {
     if (name !== null) { const d = store.createDeck(name); store.setSetting("activeDeckId", d.id); renderDecksView(); }
   });
   bindDeckBarEvents();
+
+  // Colecciones
+  bindCollectionEvents();
 
   // Estadísticas
   ["#stats-scope", "#stats-format"].forEach((s) => $(s).addEventListener("change", renderStats));
