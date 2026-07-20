@@ -6,6 +6,8 @@ const KEYS = {
   inv: "myl.inventory.v1",
   decks: "myl.decks.v1",
   collections: "myl.collections.v1",
+  trade: "myl.trade.v1",
+  tradeLog: "myl.tradelog.v1",
   settings: "myl.settings.v1",
   meta: "myl.meta.v1",
   custom: "myl.customcards.v1",
@@ -43,6 +45,12 @@ export function setQty(id, qty) {
   qty = Math.max(0, Math.floor(qty || 0));
   if (qty === 0) delete inventory[id];
   else inventory[id] = qty;
+  // No se pueden ofrecer para cambio más copias de las que quedan
+  if ((trade[id] || 0) > qty) {
+    if (qty === 0) delete trade[id];
+    else trade[id] = qty;
+    write(KEYS.trade, trade);
+  }
   write(KEYS.inv, inventory);
   notify();
 }
@@ -106,6 +114,46 @@ export function deckCount(deckId) {
 }
 export function replaceDecks(arr, origin = "local") {
   if (Array.isArray(arr)) { decks = arr; write(KEYS.decks, decks); notify(origin); }
+}
+
+/* ===== Cartas para cambio (inventario de intercambio) =====
+   trade: { cardId: copias ofrecidas }. Son copias del inventario marcadas como
+   disponibles para cambiar con otros jugadores; nunca puede haber más ofrecidas
+   que copias en el inventario (setQty y setTradeQty lo garantizan).
+   tradeLog: historial de intercambios registrados, del más reciente al más
+   antiguo: [{ given: cardId entregada, received: cardId recibida, date }]. */
+let trade = read(KEYS.trade, {});
+let tradeLog = read(KEYS.tradeLog, []);
+
+export function getTradeQty(id) { return trade[id] || 0; }
+export function setTradeQty(id, n) {
+  n = Math.max(0, Math.floor(n || 0));
+  const owned = getQty(id);
+  if (n > owned) n = owned; // tope: lo que realmente tienes
+  if (n === 0) delete trade[id];
+  else trade[id] = n;
+  write(KEYS.trade, trade);
+  notify();
+}
+export function addTradeQty(id, delta) { setTradeQty(id, getTradeQty(id) + delta); return getTradeQty(id); }
+export function getTradeList() { return { ...trade }; }
+export function replaceTrade(obj, origin = "local") {
+  trade = {};
+  for (const [id, n] of Object.entries(obj || {})) {
+    const v = Math.max(0, Math.floor(Number(n) || 0));
+    if (v > 0) trade[id] = v;
+  }
+  write(KEYS.trade, trade);
+  notify(origin);
+}
+export function getTradeLog() { return tradeLog.slice(); }
+export function addTradeLogEntry(entry) {
+  tradeLog.unshift({ given: entry.given, received: entry.received, date: entry.date || Date.now() });
+  write(KEYS.tradeLog, tradeLog);
+  notify();
+}
+export function replaceTradeLog(arr, origin = "local") {
+  if (Array.isArray(arr)) { tradeLog = arr; write(KEYS.tradeLog, tradeLog); notify(origin); }
 }
 
 /* ===== Colecciones (una edición que se quiere completar) =====
@@ -186,7 +234,15 @@ export function deleteCustomCard(id) {
 
 /* ===== Snapshot completo (para respaldo / nube) ===== */
 export function getSnapshot() {
-  return { inventory: getInventory(), decks: JSON.parse(JSON.stringify(decks)), collections: JSON.parse(JSON.stringify(collections)), customCards: getCustomCards(), updatedAt: getUpdatedAt() };
+  return {
+    inventory: getInventory(),
+    decks: JSON.parse(JSON.stringify(decks)),
+    collections: JSON.parse(JSON.stringify(collections)),
+    trade: getTradeList(),
+    tradeLog: tradeLog.slice(),
+    customCards: getCustomCards(),
+    updatedAt: getUpdatedAt(),
+  };
 }
 // Aplica un snapshot completo SIN marcarlo como cambio local (origin 'remote').
 export function applySnapshot(snap) {
@@ -194,6 +250,8 @@ export function applySnapshot(snap) {
   replaceInventory(snap.inventory || {}, "remote");
   if (Array.isArray(snap.decks)) { decks = snap.decks; write(KEYS.decks, decks); }
   if (Array.isArray(snap.collections)) { collections = snap.collections; write(KEYS.collections, collections); }
+  if (snap.trade && typeof snap.trade === "object") { trade = { ...snap.trade }; write(KEYS.trade, trade); }
+  if (Array.isArray(snap.tradeLog)) { tradeLog = snap.tradeLog; write(KEYS.tradeLog, tradeLog); }
   if (Array.isArray(snap.customCards)) { customCards = snap.customCards; write(KEYS.custom, customCards); }
   if (snap.updatedAt) setUpdatedAt(snap.updatedAt);
   notify("remote");

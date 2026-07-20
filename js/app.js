@@ -9,7 +9,8 @@
      · Render grid .............. grilla de cartas del Catálogo (paginada)
      · Modal detalle ............ ficha ampliada de una carta (API en vivo)
      · Carta manual ............. formulario para cartas fuera del catálogo
-     · Colecciones .............. cuaderno digital por edición (cartas bloqueadas)
+     · Colecciones .............. cuaderno digital por edición (cartas en B/N)
+     · Cambios .................. inventario de intercambio + historial
      · Mazos .................... CRUD de mazos + resumen + exportaciones
      · Estadísticas ............. tarjetas, gráficos y progreso por edición
      · Exportar / Importar ...... Excel, PDF, CSV y respaldo JSON
@@ -110,6 +111,7 @@ function rebuildCards() {
   }
   state.cards = (state.baseCards || []).concat(userCustom);
   editionCardsCache.clear(); // el catálogo cambió: invalida la caché de Colecciones
+  cardIndex = null;          // y el índice id→carta de la vista Cambios
 }
 // Minúsculas sin diacríticos (á→a, ñ→n) para comparar/buscar sin importar tildes
 function normText(s) {
@@ -262,6 +264,7 @@ function applyFilters() {
     if (ownership === "owned" && qty < 1) return false;
     if (ownership === "missing" && qty >= 1) return false;
     if (ownership === "dup" && qty < 2) return false;
+    if (ownership === "trade" && store.getTradeQty(c.id) < 1) return false;
     return true;
   });
 
@@ -390,6 +393,7 @@ function cardEl(card) {
       <div class="card-name">${escapeHtml(dName)}</div>
       <div class="card-meta">${escapeHtml(card.race)} · ${escapeHtml(card.type)}</div>
       <div class="card-meta">${escapeHtml(card.editionName || "")}</div>
+      ${store.getTradeQty(card.id) > 0 ? `<div class="card-meta card-trade">En cambio ×${store.getTradeQty(card.id)}</div>` : ""}
       <div class="qty-row">
         <button class="qty-btn" data-act="minus">−</button>
         <span class="qty-num ${qty === 0 ? "zero" : ""}" data-role="qty">${qty}</span>
@@ -463,6 +467,13 @@ function openModal(card) {
           <button class="qty-btn" data-m="plus">+</button>
           <button class="btn small" data-add-deck>🃏 Añadir a mazo</button>
         </div>
+        <div class="trade-ctl">
+          <span class="muted">Para cambio:</span>
+          <button class="qty-btn" data-t="minus">−</button>
+          <b data-role="tqty">${store.getTradeQty(card.id)}</b>
+          <button class="qty-btn" data-t="plus">+</button>
+          <span class="muted">copias ofrecidas (máximo: las que tienes)</span>
+        </div>
         ${card.userCustom ? `<div class="sync-row" style="margin-top:4px"><button class="btn small" data-edit-card>✏️ Editar</button><button class="btn small" data-del-card>🗑 Eliminar</button></div>` : ""}
         <div class="cd-section"><h4>Habilidad</h4><div id="cd-ability">${card.ability ? nl2br(card.ability) : "<span class='muted'>Sin texto.</span>"}</div></div>
         ${card.flavour ? `<div class="cd-section"><h4>Historia</h4><p class="cd-flavour">«${escapeHtml(card.flavour)}»</p></div>` : ""}
@@ -497,6 +508,20 @@ function openModal(card) {
       }
       updateResultCount();
       if (state.view === "colecciones") updateCollectionProgress();
+      // Si bajó la cantidad, el store recorta lo ofrecido: refleja el nuevo tope
+      const tq = box.querySelector('[data-role="tqty"]');
+      if (tq) tq.textContent = store.getTradeQty(card.id);
+    };
+  });
+  // Control "Para cambio" del detalle (marcar/desmarcar copias ofrecidas)
+  box.querySelectorAll("[data-t]").forEach((b) => {
+    b.onclick = () => {
+      const before = store.getTradeQty(card.id);
+      const after = store.addTradeQty(card.id, b.dataset.t === "plus" ? 1 : -1);
+      if (b.dataset.t === "plus" && after === before) {
+        showToast(before === 0 ? "Primero marca que tienes la carta (+)" : "Ya ofreces todas tus copias", 2800);
+      }
+      box.querySelector('[data-role="tqty"]').textContent = after;
     };
   });
 
@@ -793,7 +818,13 @@ function collectionStats(col) {
 function renderCollectionsView() {
   const list = $("#collection-list");
   const cols = store.getCollections();
-  const activeId = store.getSetting("activeCollectionId");
+  let activeId = store.getSetting("activeCollectionId");
+  // Si no hay colección activa (p. ej. recién creada desde un intercambio),
+  // se selecciona la primera para no mostrar un panel vacío
+  if (!store.getCollection(activeId) && cols.length) {
+    activeId = cols[0].id;
+    store.setSetting("activeCollectionId", activeId);
+  }
   list.innerHTML = cols.length ? "" : `<p class="muted">Aún no tienes colecciones.</p>`;
   for (const col of cols) {
     const s = collectionStats(col);
@@ -921,6 +952,169 @@ function bindCollectionEvents() {
   $$("[data-close-col]").forEach((el) => el.addEventListener("click", closeCollectionModal));
   $("#collection-modal").addEventListener("click", (e) => {
     if (e.target.classList.contains("modal-backdrop")) closeCollectionModal();
+  });
+}
+
+/* ===================== Cambios (inventario de intercambio) =====================
+   Flujo completo:
+   1) El usuario marca copias repetidas como "para cambio" — desde el buscador
+      de esta vista o desde el detalle de cualquier carta (control "Para cambio").
+      El store garantiza que nunca se ofrezcan más copias de las que se tienen.
+   2) Al registrar un intercambio (botón Intercambiar de una carta ofrecida):
+      se descuenta 1 copia de la entregada, se suma 1 de la recibida, y la
+      recibida entra automáticamente a la colección de su edición — si esa
+      colección no existe, se crea sola en ese momento.
+   3) Todo queda en el historial (myl.tradelog.v1), visible al pie de la vista. */
+
+// Índice id→carta para resolver nombres rápido (se invalida en rebuildCards)
+let cardIndex = null;
+function cardById(id) {
+  if (!cardIndex) cardIndex = new Map(state.cards.map((c) => [c.id, c]));
+  return cardIndex.get(id) || null;
+}
+
+function renderTradeView() {
+  renderTradeList();
+  renderTradeLog();
+}
+
+// Lista de cartas ofrecidas, con ajuste de copias y botón para intercambiar
+function renderTradeList() {
+  const wrap = $("#trade-list");
+  const entries = Object.entries(store.getTradeList());
+  const copies = entries.reduce((a, [, n]) => a + n, 0);
+  $("#trade-summary").textContent = entries.length
+    ? `${entries.length} carta${entries.length === 1 ? "" : "s"} distinta${entries.length === 1 ? "" : "s"} · ${copies} copia${copies === 1 ? "" : "s"} ofrecida${copies === 1 ? "" : "s"}`
+    : "Aún no marcas cartas para cambio.";
+  if (!entries.length) {
+    wrap.innerHTML = `<p class="muted">Busca arriba una carta que tengas repetida y ofrécela; también puedes hacerlo desde el detalle de cualquier carta.</p>`;
+    return;
+  }
+  wrap.innerHTML = entries.map(([id, n]) => {
+    const c = cardById(id);
+    const name = c ? escapeHtml(displayName(c)) : `<span class="mono">${escapeHtml(id)}</span>`;
+    const meta = c
+      ? `${escapeHtml(c.editionName || "")}${Number.isFinite(cardNum(c)) ? " · #" + cardNum(c) : ""} · tienes ${store.getQty(id)}`
+      : "fuera de catálogo";
+    return `<div class="trade-row" data-id="${escapeAttr(id)}">
+      <div class="tr-info"><span class="tr-name">${name}</span><span class="tr-meta">${meta}</span></div>
+      <div class="tr-qty"><button class="qty-btn" data-tr="minus">−</button><span>${n}</span><button class="qty-btn" data-tr="plus">+</button></div>
+      <button class="btn small" data-exchange ${c ? "" : "disabled"}>Intercambiar</button>
+    </div>`;
+  }).join("");
+  wrap.querySelectorAll(".trade-row").forEach((row) => {
+    const id = row.dataset.id;
+    row.querySelectorAll("[data-tr]").forEach((b) => {
+      b.onclick = () => { store.addTradeQty(id, b.dataset.tr === "plus" ? 1 : -1); renderTradeList(); };
+    });
+    row.querySelector("[data-exchange]").onclick = () => {
+      const c = cardById(id);
+      if (c) openTradeModal(c);
+    };
+  });
+}
+
+function renderTradeLog() {
+  const wrap = $("#trade-log");
+  const log = store.getTradeLog();
+  if (!log.length) { wrap.innerHTML = `<p class="muted">Todavía no registras intercambios.</p>`; return; }
+  wrap.innerHTML = log.map((e) => {
+    const g = cardById(e.given), r = cardById(e.received);
+    return `<div class="tlog-row">
+      <span class="muted">${new Date(e.date).toLocaleString("es-CL")}</span>
+      <span>Entregada: <b>${escapeHtml(g ? displayName(g) : e.given)}</b></span>
+      <span>Recibida: <b>${escapeHtml(r ? displayName(r) : e.received)}</b></span>
+    </div>`;
+  }).join("");
+}
+
+// Buscador de la vista: solo cartas con copias en el inventario (para ofrecerlas)
+function renderTradeSearchResults() {
+  const q = normText($("#trade-search").value.trim());
+  const res = $("#trade-search-results");
+  if (q.length < 2) { res.innerHTML = ""; return; }
+  const matches = state.cards.filter((c) => store.getQty(c.id) > 0 && c.searchText.includes(q)).slice(0, 30);
+  res.innerHTML = matches.map((c) => `
+    <div class="dsr" data-id="${escapeAttr(c.id)}">
+      <span class="dsr-name">${escapeHtml(displayName(c))}</span>
+      <span class="dsr-meta">${escapeHtml(c.editionName || "")} · tienes ${store.getQty(c.id)} · en cambio ${store.getTradeQty(c.id)}</span>
+      <button class="btn small" data-offer>Ofrecer copia</button>
+    </div>`).join("") || `<p class="muted">Sin resultados (solo se listan cartas con copias en tu inventario).</p>`;
+  res.querySelectorAll(".dsr").forEach((row) => {
+    row.querySelector("[data-offer]").onclick = () => {
+      const before = store.getTradeQty(row.dataset.id);
+      const after = store.addTradeQty(row.dataset.id, 1);
+      if (after === before) showToast("Ya ofreces todas las copias que tienes de esa carta", 3000);
+      renderTradeList();
+      renderTradeSearchResults(); // refresca los contadores de la fila
+    };
+  });
+}
+
+/* --- Modal para registrar el intercambio --- */
+let tradeGivenCard = null; // carta que se entrega en el intercambio en curso
+
+function openTradeModal(card) {
+  tradeGivenCard = card;
+  $("#tm-given").textContent = `«${displayName(card)}» (${card.editionName || "—"})`;
+  $("#tm-search").value = "";
+  $("#tm-results").innerHTML = "";
+  $("#trade-modal").classList.remove("hidden");
+  $("#tm-search").focus();
+}
+function closeTradeModal() {
+  $("#trade-modal").classList.add("hidden");
+  tradeGivenCard = null;
+}
+function renderTradeModalResults() {
+  const q = normText($("#tm-search").value.trim());
+  const res = $("#tm-results");
+  if (q.length < 2) { res.innerHTML = ""; return; }
+  const matches = state.cards.filter((c) => c.searchText.includes(q)).slice(0, 30);
+  res.innerHTML = matches.map((c) => `
+    <div class="dsr" data-id="${escapeAttr(c.id)}">
+      <span class="dsr-name">${escapeHtml(displayName(c))}</span>
+      <span class="dsr-meta">${escapeHtml(c.editionName || "")}${Number.isFinite(cardNum(c)) ? " · #" + cardNum(c) : ""}</span>
+      <button class="btn small" data-receive>Esta recibí</button>
+    </div>`).join("") || `<p class="muted">Sin resultados.</p>`;
+  res.querySelectorAll(".dsr").forEach((row) => {
+    row.querySelector("[data-receive]").onclick = () => {
+      const received = cardById(row.dataset.id);
+      if (received && tradeGivenCard) executeTrade(tradeGivenCard, received);
+    };
+  });
+}
+
+// Ejecuta el intercambio: ajusta inventario, colección automática e historial
+function executeTrade(given, received) {
+  if (store.getQty(given.id) < 1) { showToast("Ya no tienes copias de la carta entregada", 3000); return; }
+  if (!confirm(`¿Registrar este intercambio?\n\nEntregas: ${displayName(given)}\nRecibes: ${displayName(received)}`)) return;
+  store.addQty(given.id, -1);      // la copia entregada sale del inventario
+  store.addTradeQty(given.id, -1); // y deja de estar ofrecida
+  store.addQty(received.id, +1);   // la recibida entra al inventario
+  // Colección automática: la carta recibida debe quedar dentro de la
+  // colección de su edición; si no existe, se crea en este momento.
+  let col = store.getCollections().find((c) => c.edition === received.edition);
+  let created = false;
+  if (!col) {
+    const name = state.editionName[received.edition] || received.editionName || received.edition || "Colección";
+    col = store.createCollection(name, received.edition);
+    created = true;
+  }
+  store.addTradeLogEntry({ given: given.id, received: received.id });
+  closeTradeModal();
+  renderTradeView();
+  showToast(
+    `Cambio registrado: entregaste «${displayName(given)}» y recibiste «${displayName(received)}», ` +
+    `sumada a la colección «${col.name}»${created ? " (creada automáticamente)" : ""}.`, 5500);
+}
+
+function bindTradeEvents() {
+  $("#trade-search").addEventListener("input", debounce(renderTradeSearchResults, 180));
+  $("#tm-search").addEventListener("input", debounce(renderTradeModalResults, 180));
+  $$("[data-close-trade]").forEach((el) => el.addEventListener("click", closeTradeModal));
+  $("#trade-modal").addEventListener("click", (e) => {
+    if (e.target.classList.contains("modal-backdrop")) closeTradeModal();
   });
 }
 
@@ -1198,6 +1392,8 @@ function exportCollection(format) {
       inventory: inv,
       decks: store.getDecks(),
       collections: store.getCollections(),
+      trade: store.getTradeList(),
+      tradeLog: store.getTradeLog(),
     };
     download(`coleccion_myl_${today()}.json`, JSON.stringify(data, null, 2));
     showToast("Colección exportada (JSON)");
@@ -1237,6 +1433,8 @@ function importCollection(file) {
       else store.replaceInventory(inv);
       if (Array.isArray(data.decks)) store.replaceDecks(data.decks);
       if (Array.isArray(data.collections)) store.replaceCollections(data.collections);
+      if (data.trade && typeof data.trade === "object") store.replaceTrade(data.trade);
+      if (Array.isArray(data.tradeLog)) store.replaceTradeLog(data.tradeLog);
       applyFilters();
       renderDecksView();
       showToast("Colección importada");
@@ -1286,6 +1484,7 @@ function refreshAll() {
   rebuildCards();
   applyFilters();
   if (state.view === "colecciones") renderCollectionsView();
+  if (state.view === "cambios") renderTradeView();
   if (state.view === "mazos") renderDecksView();
   if (state.view === "stats") renderStats();
   refreshActiveDeckUI();
@@ -1480,6 +1679,7 @@ function switchView(view) {
   $$(".tab").forEach((t) => t.classList.toggle("active", t.dataset.view === view));
   $$(".view").forEach((v) => v.classList.toggle("active", v.id === "view-" + view));
   if (view === "colecciones") renderCollectionsView();
+  if (view === "cambios") renderTradeView();
   if (view === "mazos") renderDecksView();
   if (view === "stats") renderStats();
 }
@@ -1513,7 +1713,7 @@ function bindEvents() {
 
   // Modal
   $("#modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeModal(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); closeCollectionModal(); } });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); closeCollectionModal(); closeTradeModal(); } });
   $("#orphan-note").addEventListener("click", openOrphanModal);
   $("#orphan-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeOrphanModal(); });
   $$("[data-close-orphan]").forEach((el) => el.addEventListener("click", closeOrphanModal));
@@ -1538,6 +1738,9 @@ function bindEvents() {
 
   // Colecciones
   bindCollectionEvents();
+
+  // Cambios (intercambio)
+  bindTradeEvents();
 
   // Estadísticas
   ["#stats-scope", "#stats-format"].forEach((s) => $(s).addEventListener("change", renderStats));

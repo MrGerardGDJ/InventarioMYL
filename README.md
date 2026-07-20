@@ -16,8 +16,11 @@ Los datos de las cartas provienen de [tor.myl.cl](https://tor.myl.cl/cartas/toda
 - ↕️ **Ordenar** por nombre, **número de carta**, coste, fuerza, edición
   (en orden de publicación por bloque) o cantidad que posees.
 - 📚 **Colecciones**: elige una edición y síguela carta por carta, ordenada por
-  número; las cartas que aún no tienes se ven **bloqueadas** (blanco y negro
-  con candado) y una barra muestra tu progreso.
+  número; las cartas que aún no tienes se ven en **blanco y negro** y recuperan
+  el color al marcarlas. Una barra muestra tu progreso.
+- 🔄 **Cambios**: marca copias repetidas como disponibles para intercambio y
+  registra cada cambio: la carta entregada se descuenta, la recibida se suma y
+  entra sola a la colección de su edición (se crea si no existe). Con historial.
 - 📦 **Inventario**: marca cuántas copias tienes de cada carta (+/−). Filtra por
   *las que tengo*, *las que me faltan* o *duplicadas*.
 - 🗂️ **Mazos**: crea mazos, añade cartas desde la colección y comprueba qué
