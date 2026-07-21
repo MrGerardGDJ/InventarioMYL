@@ -23,6 +23,7 @@ import { exportExcel, exportPDF, exportDeckExcel, exportDeckImage, deckSummary }
 import { renderCharts } from "./charts.js";
 import * as cloud from "./cloud.js";
 import { typeIcon, raceIcon, NO_STRENGTH_TYPES } from "./icons.js";
+import { importEditionFromWiki } from "./wiki-import.js";
 
 /* ===================== Estado global ===================== */
 const state = {
@@ -887,6 +888,16 @@ function renderEditionEditor(box) {
     <div class="ed-cards">${normals.map(cardRow).join("") || `<p class="muted">Aún no tiene cartas numeradas. Agrégalas una a una o importa el listado desde un CSV.</p>`}</div>
     <div class="sync-row"><button class="btn" id="ed-add-card">Agregar carta</button></div>
 
+    <h3 class="sync-h3">Cargar cartas desde myl.fandom.com</h3>
+    <p class="muted">Trae automáticamente el listado numerado (y sus promocionales, si indicas la página) directo desde el wiki, sin pasar por un archivo CSV. Solo completa las cartas que encuentra por su página exacta — las que no puede identificar con certeza quedan listadas abajo para completarlas a mano o pidiéndole a Claude que las resuelva con la skill <span class="mono">importar-edicion-myl-wiki</span>. Si tu navegador no logra conectar (algunos sitios bloquean estas peticiones), usa el CSV de más abajo como alternativa.</p>
+    <div class="cf-grid">
+      <label class="field"><span>Nombre de la edición en el wiki</span><input id="wi-name" type="text" value="${escapeAttr(ed.name)}" placeholder="Ej: Bruderschaft" /></label>
+      <label class="field"><span>Página de promocionales (opcional)</span><input id="wi-promo" type="text" placeholder="Ej: Lista de cartas Promo de Brotherhood" /></label>
+    </div>
+    <div class="sync-row"><button class="btn primary" id="wi-load">Buscar y cargar cartas</button></div>
+    <div id="wi-status" class="muted" style="margin-top:8px"></div>
+    <div id="wi-report" class="csv-report"></div>
+
     <h3 class="sync-h3">Importar listado desde CSV (UTF-8)</h3>
     <p class="muted">Columnas: <b>numero, especial, nombre, tipo, raza, rareza, coste, fuerza, habilidad, historia, imagen</b>. Usa <b>numero</b> para las cartas normales o <b>especial</b> (ej: Promo, P-001) para las promocionales — una de las dos, no ambas. La imagen debe ser un enlace (https://…). El número o identificador especial identifica cada carta: si reimportas el archivo, esas filas <b>actualizan</b> la carta en vez de duplicarla.</p>
     <div class="sync-row">
@@ -930,6 +941,7 @@ function renderEditionEditor(box) {
       renderEditionsModal();
     };
   });
+  $("#wi-load").onclick = () => loadEditionFromWiki(ed);
   $("#ed-tpl").onclick = downloadCSVTemplate;
   $("#ed-csv").onchange = (e) => {
     const f = e.target.files[0];
@@ -1049,23 +1061,83 @@ function renderCSVPreview(ed) {
 // Importa las filas válidas: crea cartas nuevas o actualiza las existentes de
 // la edición que tengan el mismo número, el mismo identificador especial, o el
 // mismo nombre si la fila no trae ninguno de los dos
-function importCSVCards(ed) {
+// Crea o actualiza cartas manuales de una edición, emparejando por número o
+// identificador especial (o por nombre si la carta no trae ninguno de los
+// dos) para que reimportar el mismo listado actualice en vez de duplicar.
+// La usan tanto el importador CSV como la carga desde el wiki.
+function mergeEditionCards(ed, cards, matchKeyOf) {
   const existing = store.getCustomCards().filter((c) => c.edition === ed.slug);
   let created = 0, updated = 0;
-  for (const nc of edModal.csv.cards) {
-    const { _num, _esp, ...card } = nc;
+  for (const card of cards) {
+    const key = matchKeyOf(card);
     const match = existing.find((c) =>
-      _esp ? normText(c.specialId || "") === normText(_esp)
-        : _num ? parseInt(c.edid, 10) === _num
+      key.esp ? normText(c.specialId || "") === normText(key.esp)
+        : key.num != null ? parseInt(c.edid, 10) === key.num
         : normText(c.name) === normText(card.name)
     );
     if (match) { store.updateCustomCard(match.id, card); updated++; }
     else { store.addCustomCard(card); created++; }
   }
+  return { created, updated };
+}
+
+function importCSVCards(ed) {
+  const { created, updated } = mergeEditionCards(
+    ed,
+    edModal.csv.cards.map(({ _num, _esp, ...card }) => card),
+    (card) => ({ num: card.edid ? parseInt(card.edid, 10) : null, esp: card.specialId })
+  );
   edModal.csv = null;
   rebuildCards(); populateFilters(); applyFilters();
   renderEditionsModal();
   showToast(`Importación lista: ${created} carta(s) nueva(s), ${updated} actualizada(s)`, 4500);
+}
+
+// Trae el listado de una edición directamente desde myl.fandom.com (ver
+// js/wiki-import.js) y lo fusiona en la edición actual. Igual que el CSV,
+// nunca sobrescribe con datos inciertos: lo que el módulo no pudo resolver
+// con certeza llega vacío y se lista aparte para completar a mano.
+async function loadEditionFromWiki(ed) {
+  const wikiName = $("#wi-name").value.trim();
+  if (!wikiName) { showToast("Escribe el nombre de la edición en el wiki"); return; }
+  const promoPage = $("#wi-promo").value.trim() || null;
+  const btn = $("#wi-load");
+  const statusEl = $("#wi-status");
+  const reportEl = $("#wi-report");
+  reportEl.innerHTML = "";
+  btn.disabled = true;
+  statusEl.textContent = "Conectando con myl.fandom.com…";
+  try {
+    const { cards, report } = await importEditionFromWiki({
+      wikiEditionName: wikiName,
+      editionSlug: ed.slug,
+      editionDisplayName: ed.name,
+      format: ed.format === "OT" ? "NE" : ed.format,
+      promoPage,
+      onProgress: (msg) => { statusEl.textContent = msg; },
+    });
+    const { created, updated } = mergeEditionCards(
+      ed, cards, (card) => ({ num: card.edid ? parseInt(card.edid, 10) : null, esp: card.specialId })
+    );
+    rebuildCards(); populateFilters(); applyFilters();
+    // renderEditionsModal() reconstruye el DOM del modal (box.innerHTML = ...),
+    // así que statusEl/reportEl/btn quedan apuntando a nodos ya desprendidos:
+    // hay que volver a pedir las referencias DESPUÉS de re-renderizar.
+    renderEditionsModal();
+    const gaps = report.sinResolver.length;
+    $("#wi-status").textContent = `Listo: ${created} carta(s) nueva(s), ${updated} actualizada(s).`;
+    $("#wi-report").innerHTML = gaps
+      ? `<p>${gaps} carta(s) no se pudieron identificar con certeza en el wiki y quedaron con datos mínimos (nombre, tipo, rareza):</p>` +
+        report.sinResolver.slice(0, 30).map((e) => `<div class="err">✗ ${escapeHtml(e.nombre)}</div>`).join("") +
+        (gaps > 30 ? `<div class="err">… y ${gaps - 30} más</div>` : "") +
+        `<p class="muted">Pídele a Claude que las complete con la skill <span class="mono">importar-edicion-myl-wiki</span>, o edítalas a mano arriba.</p>`
+      : `<p>Todas las cartas se identificaron con certeza ✓</p>`;
+    showToast(`Cargado desde el wiki: ${created + updated} carta(s)`, 4500);
+  } catch (e) {
+    statusEl.textContent = "";
+    reportEl.innerHTML = `<p class="err">✗ ${escapeHtml(e.message)}</p>`;
+    btn.disabled = false;
+  }
 }
 
 function bindEditionEvents() {

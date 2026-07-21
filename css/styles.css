@@ -322,7 +322,8 @@ main { padding: 0; }
 .orphan-note:hover { background: rgba(229,72,77,0.2); }
 .orphan-list { margin-top: 12px; max-height: 50vh; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
 .orphan-row { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-3); }
-.orphan-row .mono { font-family: ui-monospace, monospace; font-size: 13px; flex: 1; }
+.mono { font-family: ui-monospace, monospace; font-size: 13px; }
+.orphan-row .mono { flex: 1; }
 
 .load-more { margin: 20px auto; display: block; }
 .empty { text-align: center; color: var(--muted); padding: 40px; }
