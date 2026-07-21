@@ -26,6 +26,8 @@ abriendo `index.html` (o sirviéndolo con cualquier servidor estático / GitHub 
 | `data/cards.json` | Catálogo scrapeado de `api.myl.cl` (~19.800 cartas, 133 ediciones). |
 | `data/editions.json` | Lista de ediciones **en orden por bloque/formato** (`slug`, `format`, `formatName`, `name`). Este orden se usa en la UI. |
 | `data/custom-cards.json` | Cartas empaquetadas que TOR/api no tiene (p. ej. promos). |
+| `js/wiki-import.js` | Trae el listado de una edición directo desde myl.fandom.com (API de MediaWiki, con CORS) para el botón "Buscar y cargar cartas" del gestor de Ediciones. Ver más abajo. |
+| `.claude/skills/importar-edicion-myl-wiki/` | Skill de Claude Code: extrae una edición completa desde el wiki por línea de comandos (Python) cuando el botón del navegador no alcanza (ver más abajo). |
 | `scraper/` | Scraper Node (`scrape.js` + `editions.js`) que regenera `data/*.json`. Corre también por GitHub Actions (`.github/workflows/scrape-data.yml`). |
 | `docs/FUENTES-DATOS.md` | Investigación de fuentes de datos (api.myl.cl, mazos.cl, etc.). |
 
@@ -88,7 +90,69 @@ incluye lo mismo.
   `data/editions.json` (bloques: Primera Era → Primer Bloque → Segundo Bloque → Furia
   Extendido → Nueva Era/Imperio), no el alfabético.
 
+## Carga de ediciones desde el wiki (myl.fandom.com)
+
+Hay **dos caminos** para traer el listado de una edición completa desde el
+wiki, con el mismo diseño de fondo: nunca adivinar. Se comprobó en la
+práctica (edición Bruderschaft, ver registro del 21-07-2026 más abajo) que
+aceptar automáticamente el primer resultado de búsqueda cuyo tipo coincide
+puede asignarle a una carta los datos de OTRA carta — a "Daphne und Gregor"
+casi se le asignan por error la imagen y el texto de "Niamh" (ambas Aliado/
+Vasallo, pero cartas distintas). Por eso ambos caminos solo completan una
+carta cuando encuentran su página **exacta** (de la edición o una página
+base compartida); lo que no pueden resolver así queda listado aparte, nunca
+se rellena con una conjetura.
+
+1. **Botón "Buscar y cargar cartas"** (dentro de Ediciones → una edición
+   → sección "Cargar cartas desde myl.fandom.com"): corre en el propio
+   navegador, sin backend, llamando a la API de MediaWiki
+   (`https://myl.fandom.com/es/api.php`) que expone CORS
+   (`access-control-allow-origin: *`, confirmado con `curl`). Es la opción
+   rápida para el caso simple. Implementado en `js/wiki-import.js` y cableado
+   en `renderEditionEditor()`/`loadEditionFromWiki()` de `js/app.js`.
+   - **Limitación conocida, sin confirmar en producción**: durante el
+     desarrollo, un navegador automatizado (headless, sin pantalla, en un
+     entorno de pruebas en la nube) no pudo completar ninguna petición a
+     myl.fandom.com —ni siquiera a la API con CORS— mientras que `curl`
+     desde la misma red sí. Es un patrón típico de protección anti-bot
+     (Cloudflare) que distingue tráfico automatizado del de un navegador
+     real; no hay forma de confirmar desde ese entorno si también afecta a
+     un navegador real de un usuario. El botón atrapa cualquier error de
+     red y lo explica con claridad (ver `apiGet()` en `wiki-import.js`) en
+     vez de fallar en silencio, derivando al camino 2 si no conecta.
+2. **Skill `importar-edicion-myl-wiki`** (`.claude/skills/…`): mismo proceso
+   pero corrido por Claude desde la terminal con Python, para cuando el
+   botón no conecta, o para resolver a mano —con verificación cruzada de
+   varias señales, algo que no es seguro automatizar en un botón— las cartas
+   que ni el botón ni la skill lograron ubicar por su página exacta. Ver el
+   `SKILL.md` para el detalle completo del proceso y sus gotchas (namespace
+   de archivo localizado de la API, bloques `<tabber>`, cartas con coste o
+   fuerza "X").
+
+Los dos comparten exactamente el mismo modelo de datos de salida (mismos
+campos que produce el importador CSV) y el mismo criterio de fusión: se
+empareja por número o identificador especial (o por nombre si la carta no
+trae ninguno) para que repetir la carga actualice en vez de duplicar.
+
 ## Registro de cambios
+
+### 2026-07-21 — Botón "Cargar desde wiki" en el gestor de Ediciones
+- Nuevo `js/wiki-import.js`: versión en el navegador (sin backend) de la
+  skill `importar-edicion-myl-wiki`, usando la API de MediaWiki con CORS.
+  Mismo diseño de "nunca adivinar" que la skill (ver sección arriba).
+- Nueva sección "Cargar cartas desde myl.fandom.com" en el editor de una
+  edición: nombre de la edición en el wiki, página de promocionales
+  opcional, botón "Buscar y cargar cartas", estado de progreso e informe de
+  huecos (cartas que no se pudieron identificar con certeza).
+- Refactor: `mergeEditionCards()` extrae la lógica de fusión (emparejar por
+  número/especial/nombre, crear o actualizar) que antes solo usaba el
+  importador CSV, ahora compartida con la carga desde wiki.
+- Verificado con la API real mockeada en Playwright (resolución por página
+  específica, por página base, cartas con coste "X", cartas especiales,
+  reimportación idempotente sin duplicar, y manejo de error con mensaje
+  claro). Contra el wiki real, desde el navegador automatizado de pruebas de
+  este entorno, la conexión sigue bloqueada (mismo patrón que con las
+  imágenes del CDN) — **queda pendiente que se confirme en un navegador real**.
 
 ### 2026-07-20 (6ª iteración) — Cartas especiales / promocionales por edición
 - Las cartas manuales ganan el campo **`specialId`** (identificador libre: "Promo",
