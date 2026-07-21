@@ -3,3 +3,4 @@ scraper/node_modules/
 .DS_Store
 *.log
 .playwright/
+__pycache__/
