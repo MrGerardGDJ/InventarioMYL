@@ -274,9 +274,29 @@ ni de la Nota) — para cualquier otro caso, dejar la carta sin imagen es
 mejor que arriesgarse a mostrar la carta equivocada; se completa a mano
 después (foto/escaneo del dueño de la carta física). El script conserva un
 flag de escape, `--trust-fallback-images`, solo para cuando se sabe con
-certeza que la edición es una reimpresión 1:1 estable de otra (ej.
-Bruderschaft/La Cofradía, donde esto no causaba problemas porque casi todas
-las cartas sí tenían página específica).
+certeza que la edición es una reimpresión 1:1 estable de otra.
+
+**Mejora del 02-08-2026** (reportado por el dueño del inventario: varias
+cartas de sus colecciones personales "Brotherhood", "Brotherhood (V2)" y
+"Bruderschaft" — traducciones al inglés/alemán de "La Cofradía" — tenían
+imagen equivocada): se detectó que "página base" no siempre significa
+"compartida con otra edición". Ediciones traducidas suelen titular la
+página de una carta directamente con su nombre traducido sin
+desambiguador (ej. "Harpyie", "Weißer Büffel" en Bruderschaft; "Ah Pooch",
+"Achilles" en Brotherhood (V2)) porque ese nombre no colisiona con nada
+más — la página SÍ es específica de esa edición, solo que el título no lo
+delata. Se agregó un chequeo adicional en `resolveCardContent`/
+`resolve_card_content`: cuando la página encontrada es "base" (mismo
+título, sin paréntesis), se revisa el campo `edición=` de su propia
+plantilla `{{Carta}}` — si declara la edición que se está cargando, se
+trata como **específica** igual que si tuviera el paréntesis en el título;
+si declara otra edición (o no declara nada), se mantiene como "base" (sin
+imagen). Resultado al reprocesar: Brotherhood (V2) pasó a 170/170 cartas
+con imagen (antes varias se descartaban sin necesidad); Bruderschaft y
+Brotherhood (V1) mejoraron pero siguen con huecos reales — no toda carta
+tiene página propia todavía en el wiki, y la versión V1 de 2003 tiene 28
+filas de su tabla de listado directamente vacías (ni nombre ni carta) que
+es un hueco del propio wiki, no del extractor.
 
 Si el usuario tiene ediciones **propias** (creadas en su navegador con el
 botón, no bundled en el repo) con este mismo problema de antes de esta
@@ -297,6 +317,25 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 `data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-08-02 (4ª iteración) — Imágenes recuperadas en páginas traducidas sin desambiguador
+- El dueño del inventario reportó imágenes equivocadas en sus colecciones
+  personales "Brotherhood", "Brotherhood V.2" y "Bruderschaft". Se agregó
+  un chequeo del campo `edición=` de la propia plantilla `{{Carta}}` de la
+  página base, para reconocer como específicas las páginas de cartas
+  traducidas que no llevan desambiguador en el título (detalle completo en
+  "Imágenes de ediciones remake/aniversario" arriba). Aplica a todas las
+  ediciones, tanto en el script de la skill como en el botón del navegador.
+- Se generaron CSV corregidos con el script para las 3 ediciones y se le
+  entregaron al dueño para reimportar sobre sus colecciones existentes
+  (`Ediciones → [edición] → Elegir archivo CSV`); la fusión es por número,
+  así que sobreescribe la imagen equivocada (o la deja en blanco si de
+  verdad no hay ninguna confiable) sin duplicar cartas.
+- Se corrigió además una afirmación desactualizada en `conocimiento.md`
+  que decía que Bruderschaft "no tenía este problema" — no era cierto,
+  nunca se había medido: al extraerla se comprobó que solo 78/170 cartas
+  tienen página específica con imagen confiable (antes de esta mejora, sin
+  ella hubiera sido incluso menos).
 
 ### 2026-08-02 (3ª iteración) — 8 ediciones "Mundos Perdidos" agregadas
 - El dueño del inventario pidió cargar el lanzamiento más reciente de la

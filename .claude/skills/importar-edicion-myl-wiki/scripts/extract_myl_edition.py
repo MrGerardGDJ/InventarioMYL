@@ -353,6 +353,13 @@ def first_image_file(imagen_field):
     return m.group(1).strip() if m else None
 
 
+def first_wikilink_target(s):
+    if not s:
+        return ""
+    m = re.match(r"\[\[([^\]|]+)", s.strip())
+    return m.group(1).strip() if m else strip_wiki(s).strip()
+
+
 def norm(s):
     s = (s or "").lower()
     for a, b in zip("áéíóúñ", "aeioun"):
@@ -398,7 +405,22 @@ def resolve_card_content(card, edition_name, contents, report):
     if title != base and title in contents:
         return contents[title], title, "específica"
     if base in contents:
-        return contents[base], base, "página base (compartida con otra edición)"
+        base_txt = contents[base]
+        # Aunque el ENLACE del listado no traiga paréntesis (title == base,
+        # caso arriba), la página puede seguir siendo específica de esta
+        # edición: algunas ediciones traducidas (ej. Bruderschaft, Brotherhood
+        # (V2)) le ponen a la carta directamente su nombre traducido como
+        # título ("Harpyie", "Weißer Büffel") sin desambiguador, porque ese
+        # nombre no colisiona con nada más — pero la propia plantilla
+        # {{Carta}} de esa página declara "edición=[[<esta edición>]]", que es
+        # una confirmación tan buena como el desambiguador en el título.
+        # Comprobado en la práctica (Bruderschaft): sin este chequeo, cartas
+        # con nombre traducido único quedaban sin imagen por las dudas aunque
+        # el wiki mismo diga de qué edición son.
+        declared = first_wikilink_target(parse_card_template(base_txt).get("edición", ""))
+        if declared and norm(declared) == norm(edition_name):
+            return base_txt, base, "específica"
+        return base_txt, base, "página base (compartida con otra edición)"
     note_title = card.get("note_title")
     if note_title and note_title in contents:
         return contents[note_title], note_title, "fuente citada en la Nota del listado"
