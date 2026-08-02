@@ -308,7 +308,7 @@
    "strength": 3,
    "ability": "Puede atacar cuando entra en juego.<br>Cuando este Aliado sea destruido, puedes destruir un Aliado oponente de Fuerza igual o menor a la de este Aliado.",
    "flavour": "El dragón que amenaza el paraíso, emerge del abismo, sus escamas de sombra y fuego destruyen la armonía. Su aliento ardiente desola jardines y templos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/80/LBPE24-02-21.png/revision/latest?cb=20251105034215&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -342,7 +342,7 @@
    "strength": null,
    "ability": "Destierra un Aliado en juego.<br>Luego, ambos jugadores botan cartas igual a la Fuerza del Aliado desterrado.",
    "flavour": "Tras la caída del Dragón, la tierra empapada por su sangre da lugar a un milagro. Flores rojas, vibrantes y radiantes, surgen del suelo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/bb/HPE-04-21.png/revision/latest?cb=20250715200630&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -376,7 +376,7 @@
    "strength": 3,
    "ability": "Sólo puedes tener un Silencio en juego.<br>Cuando entra en juego, puedes desterrar un Aliado oponente de Coste 3 o menos.",
    "flavour": "El cazador de brujas emerge de las sombras con un aire de misterio imperturbable. Su figura está cubierta por una capa oscura que se agita con la promesa de secretos insondables.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/7a/MPS_03-18.png/revision/latest?cb=20250323184703&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -393,7 +393,7 @@
    "strength": 4,
    "ability": "En tu Fase de Vigilia, puedes pagar 3 de Oro para jugar este Aliado desde tu Cementerio sin pagar su Coste. Si esta carta está en tu Mano, puedes descartarla para robar 1 carta.",
    "flavour": "El lobo vampiro que regresa de la tumba, la bestia sin razón que ofende a la naturaleza, la abominación que todo lo devora.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c3/LPE23-125-300.png/revision/latest?cb=20250215002246&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -444,7 +444,7 @@
    "strength": null,
    "ability": "Cuando juegues este Talismán, destiérralo.<br>Juega un Aliado o Tótem de Coste 3 o menos de tu Cementerio sin pagar su Coste.",
    "flavour": "En sagradas letras se esconden misterios profundos. El alma busca respuestas ocultas. En símbolos, números y palabras, el universo se revela.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/16/TKPE25-26-28.png/revision/latest?cb=20250925202413&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -478,7 +478,7 @@
    "strength": 3,
    "ability": "Relámpago. Imbloqueable. <br>Cuando entra en juego, roba 4 cartas.",
    "flavour": "texto=Dicen tus hermanos, los astros del cielo, que tu resplandor por siempre nos protegerá.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/43/ON-065-140.jpg/revision/latest?cb=20240425200855&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -495,7 +495,7 @@
    "strength": 2,
    "ability": "Cuando Huáscar entra en juego, elige un Aliado en juego para que Huáscar tenga esa habilidad por el resto del juego.",
    "flavour": "El fraticidio cometido por su hermano marcó el fin de Huáscar, de sus generales y aquello que pudo ser y ya jamás será.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/49/VE-002-180.png/revision/latest?cb=20240609171703&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -512,7 +512,7 @@
    "strength": null,
    "ability": "Destierra un Aliado oponente en juego. Luego, puedes robar 1 carta.",
    "flavour": "Fuera de este mundo, ahí es donde están quienes fundaron Inti Llaqta, ¿regresarán? Eso no lo puedo afirmar.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/58/MPC-12-18.png/revision/latest?cb=20250706045705&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -529,7 +529,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Perdida en los confines de la leyenda, ni por mar ni por tierra llegarás a la asamblea de los césares. Quizás con la brújula que apunta al sur...,  más al sur.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8d/IN-126.png/revision/latest?cb=20251002035622&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -563,7 +563,7 @@
    "strength": 2,
    "ability": "Puede atacar cuando entra en juego.<br>Cuando hace daño al Mazo Castillo oponente, puedes desterrar una carta del Cementerio oponente.",
    "flavour": "Valiente paladín de Carlomagno, viaja por tierras legendarias, enfrentando monstruos y defendiendo la justicia. Su espada, Cortana, brilla en la batalla.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/66/HPE-14-21.png/revision/latest?cb=20250715200633&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -580,7 +580,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, puedes descartar una carta de tu Mano para que pueda atacar este turno. Tus demás Aliados Dios que controles ganan 1 a la Fuerza.",
    "flavour": "Diosa germánica del invierno, señora de la calma y la reunión. Su manto trae finales y nuevos comienzos, uniendo comunidades.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/49/MPV-09-18.png/revision/latest?cb=20250708165658&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -631,7 +631,7 @@
    "strength": 2,
    "ability": "No puede ser bloqueado por Aliados de Fuerza 3 o más. Cada vez que ataque, puedes buscar un Arma en tu Mazo Castillo y ponerla en tu Mano.",
    "flavour": "Alumna de la diosa Lishan Laomu, la joven heroína representa el fuego del país de Liang, el cual arderá contra viento y marea.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/39/XINNIAN-01-32.png/revision/latest?cb=20250908025548&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -648,7 +648,7 @@
    "strength": 5,
    "ability": "Imbloqueable. Sólo puedes tener un Bashe en juego. Cuando entra en juego, pon un Aliado oponente en la parte inferior del Mazo Castillo de su dueño. Luego, tu oponente bota 2 cartas.",
    "flavour": "Conocida por devorar elefantes enteros, su poder es tal que una sola gota de su veneno podría contaminar un río entero.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/12/XINNIAN-2-05-30.png/revision/latest?cb=20250912005008&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -682,7 +682,7 @@
    "strength": 4,
    "ability": "Cuando entra en juego, tu oponente bota 1 carta de su Mazo Castillo por cada carta en su Destierro.",
    "flavour": "Fu Hsi enseñó a sus súbditos a cocinar, pescar con redes y cazar con armas hechas de hueso, madera o bambú. Instituyó el matrimonio y ofreció los primeros sacrificios al aire libre.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/5d/LPE23-053-300.png/revision/latest?cb=20250214153737&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -699,7 +699,7 @@
    "strength": null,
    "ability": "Cuando entra en juego, una carta en juego pierde su habilidad por el turno. Esta habilidad no puede ser cancelada.<br>En tu Vigilia, una vez por turno, puedes pagar un Oro para Barajar hasta dos Aliados de los Cementerios. Luego, Roba una carta.",
    "flavour": "Resuena con la fuerza del espíritu guerrero. Su sonido enérgico y rítmico eleva el alma y marca el ritmo de la vida.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f3/ESP-121-166_C.png/revision/latest?cb=20240930210944&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -716,7 +716,7 @@
    "strength": 4,
    "ability": "Imbloqueable.",
    "flavour": "Poderoso guerrero, sus manos tienen la sangre del Rey Lot.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/ce/Lamorak.png/revision/latest?cb=20141129070144&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -750,7 +750,7 @@
    "strength": 1,
    "ability": "Durante el turno en que Las Musas entra en juego, no se pueden jugar Talismanes.",
    "flavour": "Ahondando en el espíritu todo es más leve, se penetra en la lejanía que inunda el alma con el susurro de una musa.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f0/Las_Musas.png/revision/latest?cb=20200704055946&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -767,7 +767,7 @@
    "strength": 3,
    "ability": "Furia <i>(Este Aliado no necesita pasar por una Fase de Agrupación para ser declarado atacante).</i><br>Este aliado no puede ser Anulado.",
    "flavour": "Siente mi ira, mi eterna búsqueda de venganza y mi hambre imperecedera. Escucha mi canto y acepta tu fin.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b5/Camelot-dragon-blanco.png/revision/latest?cb=20230519210728&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -852,7 +852,7 @@
    "strength": 3,
    "ability": "Furia (Este Aliado no necesita pasar por una Fase de Agrupación para ser declarado atacante).<br>En la Fase Final, si este Aliado hizo daño al Mazo Castillo oponente, puedes buscar una carta en el Mazo Castillo oponente y Desterrarla.",
    "flavour": "Una muerte violenta creó a este vampiro bebedor de almas, corruptor de poblados.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9e/AI-086-227.png/revision/latest?cb=20241227190131&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -869,7 +869,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, puedes elegir un Arma o Tótem oponente en juego para que pierda su habilidad permanentemente.",
    "flavour": "El cazador de monstruos, emerge bajo la luna con máscara de sombras. Con agilidad felina y destreza letal, acecha criaturas de la noche.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/46/HPE-05-21.png/revision/latest?cb=20250715200631&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -886,7 +886,7 @@
    "strength": 4,
    "ability": "Sólo puedes tener un Hombre de Negro en juego.<br>Cuando entra en juego, pon una carta oponente en juego de Coste 3 o menos en la parte inferior del Mazo Castillo de su dueño.",
    "flavour": "Una amalgama de oscuridad y malevolencia, camina entre mundos con la elegancia de un depredador ancestral. Su figura se desdibuja entre las sombras como un espectro que desafía la realidad.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/62/MPS_09-18.png/revision/latest?cb=20250323184704&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1073,7 +1073,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, busca un Bárbaro de fuerza 2 o menos en tu Castillo y ponlo en juego sin pagar su coste.",
    "flavour": "",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/99/CRPE-22-72.png/revision/latest?cb=20220925045619&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1107,7 +1107,7 @@
    "strength": null,
    "ability": "En tu Fase de Vigilia, una vez por turno, puedes pagar 3 Oros para buscar un Arma o Tótem en tu Cementerio y ponerlo en tu Mano.",
    "flavour": "Una estela rúnica, situada en Östergötland, cercana a la orilla este del lago Vättern, cuyo fin es honrar la memoria de fallecidos guerreros",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f5/EXPE-079-120.png/revision/latest?cb=20260123132824&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1124,7 +1124,7 @@
    "strength": 4,
    "ability": "Puedes convertir este Aliado, desde tu mano, en un Arma y portarla a un Caballero. Cuando sea Destruida, ponla en juego como un Aliado.<br>El portador gana 3 de Fuerza y Furia.<br>Si esta carta es Aliado, puedes Destruir un arma que controles para Robar dos cartas.",
    "flavour": "Luego de casi cuarenta años viviendo de guerra, se ha proclamado soberano, el centro mismo del estado: el primer emperador.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/66/Qin_Shi_Huang.png/revision/latest?cb=20210501194123&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1192,7 +1192,7 @@
    "strength": null,
    "ability": "El portador no puede ser destruido.<br>Cuando entra en juego, busca un Aliado de Coste 1 en tu Mazo Castillo y ponlo en juego sin pagar su Coste.",
    "flavour": "Las luces iluminan el firmamento, celebrando quiénes fuimos y anunciando quiénes seremos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c0/XINNIAN-18-32.png/revision/latest?cb=20250908025553&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1209,7 +1209,7 @@
    "strength": null,
    "ability": "Sólo puedes tener un Monte Wudang en juego. Al comienzo de la Fase de Vigilia oponente, tu oponente destruye una carta que controle que no sea Oro.",
    "flavour": "Quemé incienso, barrí la tierra y quedé a la espera de un poema; Entonces reí y subí la vieja montaña.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/1a/XINNIAN-17-32.png/revision/latest?cb=20250908025553&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1226,7 +1226,7 @@
    "strength": null,
    "ability": "Si este Oro está en tu Reserva de Oros, puedes desterrarlo para buscar un Oro en tu Cementerio y ponerlo en tu Reserva de Oros.",
    "flavour": "El Zodiaco Chino es un esquema de clasificación tradicional que asigna un animal y sus supuestos atributos a cada año en un ciclo repetido de doce años.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/cb/XINNIAN-19-32.png/revision/latest?cb=20250908025553&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1243,7 +1243,7 @@
    "strength": null,
    "ability": "Única. Anula un Talismán de coste 3 o menos.",
    "flavour": "Un arte marcial de movimientos veloces, aparentemente lineales y potencia explosiva que se aplica con mayor frecuencia desde un rango corto.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/e7/LPE23-056-300.png/revision/latest?cb=20250214153737&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1260,7 +1260,7 @@
    "strength": null,
    "ability": "Destierra una carta oponente en juego que no sea Oro (Carta Única).",
    "flavour": "Tiamath es la madre de los grandes lagartos del viento, los hijos del desierto y los dragones del alba. Todos portan un pedazo de su alma.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/95/EXPE-007-120.png/revision/latest?cb=20260107031047&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1294,7 +1294,7 @@
    "strength": null,
    "ability": "Indestructible.<br>En tu Vigilia, puedes Barajar una carta de tu mano para Desterrar el Aliado objetivo de coste igual o menor al coste de esa carta y poner un contador en este Tótem.<br>Cuando el tercer contador sea puesto en este Tótem, Destiérralo y Roba tres cartas.",
    "flavour": "Nadie va en busca de aquello que se ha olvidado, es por eso que la belleza de Rapunzel debe ser negada al mundo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a4/Torre_del_Olvido.png/revision/latest?cb=20200627055312&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1311,7 +1311,7 @@
    "strength": null,
    "ability": "",
    "flavour": "El hombre extrae el áureo espíritu de la Tierra y lo transforma en preciados instrumentos de riqueza y poder.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/4a/RTO-066.jpg/revision/latest?cb=20200601115132&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1328,7 +1328,7 @@
    "strength": null,
    "ability": "",
    "flavour": "En su interior se refleja el alma indómita de los mares del tiempo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c7/Diamante_turquesa.jpg/revision/latest?cb=20201008084926&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1345,7 +1345,7 @@
    "strength": null,
    "ability": "Anula un Arma o un Talismán de Coste 4 o menos.",
    "flavour": "La ira de las brujas era tan justa y limpia que hasta el mundo vegetal se prestó para su guerra con el hombre y sus rojas llamas de culpa.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/6f/LPE23-037-300.png/revision/latest?cb=20250212233830&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1362,7 +1362,7 @@
    "strength": null,
    "ability": "En respuesta que un Aliado oponente entre en juego, juega Posesión Mayor para que ese Aliado entre en juego sin habilidad hasta la Fase Final.",
    "flavour": "Tu cuerpo será el hogar para mi poder, pero como premio te dejaré ver todo lo que haga con él.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/83/TKPE1-09-13.png/revision/latest?cb=20250914231726&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1379,7 +1379,7 @@
    "strength": null,
    "ability": "En tu Fase de Vigilia, una vez por turno, puedes mostrar las 2 primeras cartas de tu Mazo, pon una en tu Mano y la otra en tu Cementerio.",
    "flavour": "Según los antiguos mitos, se trataría de un temible árbol vampiro siempre sediento de sangre. Una abominación terrible que mancha la tierra donde crece.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/33/EXPE-029-120.png/revision/latest?cb=20260117172920&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1396,7 +1396,7 @@
    "strength": null,
    "ability": "Cuando entra en juego, puedes barajar una carta de tu Cementerio en tu Mazo Castillo. Puedes destruir este Oro para desterrar una carta de un Cementerio.",
    "flavour": "El vampiro depende de su sarcófago para regresar a este cada noche.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ed/EXPE-030-120.png/revision/latest?cb=20260117173447&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1413,7 +1413,7 @@
    "strength": null,
    "ability": "",
    "flavour": "De ti fluyen generosas la verdad y la vida.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a7/Bafometh.png/revision/latest?cb=20201121041330&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1430,7 +1430,7 @@
    "strength": null,
    "ability": "Cuando juegues este Talismán, Destiérralo.<br>Sólo puedes jugar un Forma Voladora por turno.<br>Busca en tu Castillo un Aliado de coste 4 o más y juégalo sin pagar su coste.<br>Ese Aliado no dispara sus habilidades este turno.",
    "flavour": "Mensajeras y dadoras de augurios, llevan los mensajes de vida o muerte que dan los brujos, teniendo el permiso de matar a la persona que interrumpa sus funciones como Voladora.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/52/Forma_Voladora.png/revision/latest?cb=20201213052743&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1447,7 +1447,7 @@
    "strength": null,
    "ability": "Cada jugador Bota tres cartas. Luego, Sube la carta objetivo que no sea H'ain, de tu Cementerio a tu mano. Si esa carta tiene coste 3 o más, Agrupa el Oro objetivo.<br>Cuando este Talismán se resuelva, conviértelo en un Oro sin habilidad y ponlo en tu Oro Pagado.",
    "flavour": "Los Kloketen tiemblan, el paso a la vida adulta es una labor heroica, una en la que se debe derrotar a los demonios del miedo interior.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/15/H%27ain.png/revision/latest?cb=20201213053802&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1464,7 +1464,7 @@
    "strength": null,
    "ability": "En el momento que tu oponente juegue un aliado desde su mano, puedes jugar esta carta y botar al cementerio a dicho aliado.",
    "flavour": "En la cuarta casa de tormento en Xilbalba, me aguardaban murciélagos que chillan y revolotean, ansiosos de ensartar mi cabeza. ¿Dónde vagaba mi corazón para llegar hasta aquí?",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/96/Sotz%27_Na_2.png/revision/latest?cb=20211020022713&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1481,7 +1481,7 @@
    "strength": null,
    "ability": "Cuando este Oro sea utilizado para pagar el coste de un Aliado de Raza Bestia, ese Aliado entra en juego Alimentado.",
    "flavour": "El felino simbolizaba la lucha por imponer el conocimiento y superar los defectos de los hombres.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/91/SOL-073-232.jpg/revision/latest?cb=20250225120110&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1498,7 +1498,7 @@
    "strength": null,
    "ability": "",
    "flavour": "El Imperio Chibcha es un lugar de tesoros de oro y toda clase de piedras preciosas, un lugar perdido en alguna parte de Cundirumarca, el país del Cóndor.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/12/El_Dorado_2.png/revision/latest?cb=20211021030705&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1515,7 +1515,7 @@
    "strength": null,
    "ability": "Para jugar esta carta debes destruir un Aliado que controles.<br>Gana el control de un Aliado oponente por el resto del juego.",
    "flavour": "El rapto de la diosa puso en jaque la juventud y la renovación de los dioses nórdicos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/29/TKPE24-13-28.png/revision/latest?cb=20250919170646&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1532,7 +1532,7 @@
    "strength": null,
    "ability": "Gana el control de un Tótem o Arma oponente.",
    "flavour": "Lindisfarne es una isla con un castillo monasterio, localizada al norte de Gran Bretaña. Fue el primer monasterio atacado por los vikingos el 8 de junio del año 793, inicio de la era vikinga.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/94/EXPE-073-120.png/revision/latest?cb=20260123011455&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1549,7 +1549,7 @@
    "strength": null,
    "ability": "Única. Nombra un tipo de carta que no sea Oro, baraja todas las cartas en juego del tipo de carta nombrada.",
    "flavour": "El Malstrøm traga barcos y almas por igual, un viaducto a un marino mundo de la muerte, donde el silencio es lo que reina y sólo se sueña la última pesadilla que hayas tenido.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/46/LPE23-048-300.png/revision/latest?cb=20250212233836&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1566,7 +1566,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Navega por los gélidos mares llevando la prosperidad o la muerte. Tras los mares viaja implacable.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/bb/AG-223-236.png/revision/latest?cb=20211106142105&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1583,7 +1583,7 @@
    "strength": null,
    "ability": "",
    "flavour": "La defensa y la invulnerable transfiguración de la mágica armadura protegen a la doncella que escoge a los muertos valientemente en los campos de batalla.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d9/Armadura_de_Valkyria.jpg/revision/latest?cb=20210125064056&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1600,7 +1600,7 @@
    "strength": null,
    "ability": "Si en el turno anterior fuiste atacado, tu oponente bota de su castillo tantas cartas como aliados te hayan atacado.",
    "flavour": "Hay varias técnicas de escape. En momentos extremos se usa la desaparición pero acorta la vida en diez años.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/7d/Nukewaza.jpg/revision/latest?cb=20210218201121&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1617,7 +1617,7 @@
    "strength": null,
    "ability": "Cada jugador destruye el Aliado de menor fuerza que controle.",
    "flavour": "Musashi tiene un duelo con un ser espectral, un Yokai que ha estado atormentando al Castillo de la Garza.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/64/TKPE2-09-13.png/revision/latest?cb=20250917160514&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1634,7 +1634,7 @@
    "strength": null,
    "ability": "Busca un Aliado Indestructible de coste 2 o menos en tu Castillo y ponlo en tu mano.",
    "flavour": "Con más de mil quinientos años de historia, este estilo era obligatorio para los soldados imperiales.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/04/DIN-129-192.png/revision/latest?cb=20241217110940&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1651,7 +1651,7 @@
    "strength": null,
    "ability": "Si este Oro está en tu Reserva de Oros, y tienes 3 o menos cartas en tu mano, puedes desterrarlo para robar 2 cartas.",
    "flavour": "El Go-rin no sho es mucho más que un tratado sobre Kenjutsu. Miyamoto Musashi creó un testamento de estrategia, ética y filosofía único en su tiempo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b1/EXPE-119-120.png/revision/latest?cb=20230530090154&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1668,7 +1668,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Sakura, Sakura, Cerezo, Cerezo, florecen bajo el cielo de marzo. Son como bruma o nube. Perfuman deliciosamente. Ahora vamos a verlas. Cerezo, Cerezo, florecen en el campo y en la montaña. Son como bruma o nube. Despiden su perfume en la luz de la mañana. Cerezo, Cerezo, ahora florecen con abundancia.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/70/Sakura.jpg/revision/latest?cb=20210222182926&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1804,7 +1804,7 @@
    "strength": 4,
    "ability": "Imbloqueable. Cuando entra en juego, mira la Mano de tu oponente. Luego, descarta una carta que no sea un Oro de Coste 3 o menos de la Mano de tu oponente.",
    "flavour": "Su historia se entrelaza con pruebas de honor y justicia, enfrentando desafíos que prueban su carácter y determinación.<br>Su legado, marcado por la búsqueda de redención y verdad, inspira a futuras generaciones de caballeros.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9d/MPA-19-18.png/revision/latest?cb=20250824025614&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1821,7 +1821,7 @@
    "strength": null,
    "ability": "En tu Fase de Vigilia, sólo una vez por turno, puedes robar tantas cartas como Aliados tengas en juego.",
    "flavour": "La isla de las hadas, donde descansará el rey de Inglaterra.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b7/Avalon_Daana.png/revision/latest?cb=20210416213648&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1838,7 +1838,7 @@
    "strength": 1,
    "ability": "En tu Fase de Vigilia, una vez por turno, tu oponente Bota 1 carta.",
    "flavour": "La vida es simple para mi: busco, encuentro, destruyo y humillo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c9/Camelot-101-wyvern-negro.png/revision/latest?cb=20230520000531&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1855,7 +1855,7 @@
    "strength": 3,
    "ability": "Única <i>(Sólo puedes tener una copia de esta carta en tu Mazo Castillo).</i><br>En tu Fase de Vigilia, una vez por turno, puedes buscar en el Mazo Castillo oponente una carta y ponerla en su Cementerio.<br>En tu Fase de Vigilia, una vez por turno, puedes desterrar un Aliado de Raza Sombra de tu mano para robar dos cartas.",
    "flavour": "Solamente las sombras han respondido a mi ruego, a ellas voy a llamar amigas, hermanas y amantes.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/2a/Camelot-Morgause.png/revision/latest?cb=20230519015608&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1872,7 +1872,7 @@
    "strength": 2,
    "ability": "Paga 2 Oros 30px - Regresa el Aliado objetivo 30px o 30px a la Mano de su dueño. Límite 2.",
    "flavour": "Es una gran serpiente alada de muchas cabezas; es tan poderosa que su cola podía arrastrar las estrellas del cielo...",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/ff/AP-80-180_C.png/revision/latest?cb=20240623140919&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1974,7 +1974,7 @@
    "strength": null,
    "ability": "Tu oponente descarta tres cartas de su castillo.",
    "flavour": "Los 7 ojos lo abarcan todo con una sola mirada. Ese es su verdadero rostro, nada se oculta detrás.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8f/Mascara_de_jade.png/revision/latest?cb=20201019070007&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2008,7 +2008,7 @@
    "strength": 1,
    "ability": "Cuando entra en juego, Destruye un Aliado de coste 2 o menos en juego.<br>Este Aliado gana 1 de Fuerza por cada Sombra en juego.",
    "flavour": "No existe ningún vicio, deseo, avaricia, lujuria o embriaguez que las hijas de Lilith no conozcan.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/3b/Las_Lilim.png/revision/latest?cb=20210812163027&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2025,7 +2025,7 @@
    "strength": 2,
    "ability": "Sólo puedes tener un Mary Bradbury en juego.<br>Los demás Cazadores declarados atacantes que controles ganan 1 a la Fuerza hasta la Fase Final.",
    "flavour": "Movida por un profundo sentido de justicia y una voluntad inquebrantable de luchar contra la verdadera oscuridad, aceptó el llamado a convertirse en cazadora.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/09/MPS_19-18.png/revision/latest?cb=20250323211604&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2042,7 +2042,7 @@
    "strength": 3,
    "ability": "Sólo puedes tener un Gran Coyote en juego.<br>Cuando entra en juego, puedes barajar una carta en juego de Coste 3 o menos en el Mazo Castillo de su dueño. Luego, descarta 2 cartas de tu Mano.",
    "flavour": "Danza en las sombras del desierto. Con ojos brillantes y risa burlona, desafía a los intrépidos, guiando a los perdidos hacia la sabiduría de la tierra.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/0a/MPS_05-18.png/revision/latest?cb=20250323184703&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2059,7 +2059,7 @@
    "strength": null,
    "ability": "Tu oponente no puede jugar Talismanes a menos que Destierre dos cartas de su Castillo.<br>Cuando resuelvas un Talismán, puedes Descartar una carta para volver a repetir su efecto. Si Descartaste una Bruja, además puedes Destruir una carta que no sea Oro.",
    "flavour": "Salem Massachusetts, hoy llamada Ciudad de las Brujas, esconde una historia de horror humano que ha dejado su marca en el tiempo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ef/DGO-016-200.png/revision/latest?cb=20250324124106&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2076,7 +2076,7 @@
    "strength": null,
    "ability": "Baraja hasta 4 cartas de tu Cementerio en tu Mazo Castillo o destierra 2 de cartas de un Cementerio.",
    "flavour": "En el horizonte, la oscuridad se cierne como un manto siniestro, mientras el viento aúlla con ferocidad. Las nubes, pesadas y cargadas de secretos, se alinean en formaciones ominosas.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d5/TKPE24-25-28.png/revision/latest?cb=20250919170653&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2178,7 +2178,7 @@
    "strength": 5,
    "ability": "Puede bloquear a más de un aliado.",
    "flavour": "La dueña del mar se oculta en la profundidad de los pozos de los pueblos para inundarlos y hacer así, otro mar.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b3/Acihuatl.jpg/revision/latest?cb=20210103223325&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2195,7 +2195,7 @@
    "strength": 2,
    "ability": "Gana +1 de fuerza por cada arma que tengas en juego.",
    "flavour": "Como guerreros muertos en la guerra, las mujeres muertas en el parto, ayudan al sol en su recorrido por el cielo, recogiéndolo en su apogeo para llevarlo hasta el occidente.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/59/Cihuate_Teotl_2.png/revision/latest?cb=20211021005035&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2212,7 +2212,7 @@
    "strength": null,
    "ability": "El oponente descarta 2 cartas de su mano al cementerio y tú robas la carta superior de tu castillo.",
    "flavour": "En la sexta casa de tormento en Xibalba, me aguardaban brazas ardiendo y fuego ansiosos de quemarme. ¿Dónde vagaba mi corazón para llegar hasta aquí?",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d5/K%27_Ak%27_Na_2.png/revision/latest?cb=20211020021707&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2229,7 +2229,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Los sabios escribían: Todo año, toda luna, todo día, todo viento, camina y pasa también. Así entendían los misterios y así enseñaban los secretos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/ba/Tzolkin_2.png/revision/latest?cb=20211021025416&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2246,7 +2246,7 @@
    "strength": null,
    "ability": "Un Aliado es Imbloqueable y gana 3 a la Fuerza hasta la Fase Final.",
    "flavour": "En la selva los antiguos penetraban los secretos de la tierra con forma de animal, ser uno con el espíritu que lo es todo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/09/Forma_de_Jaguar.jpg/revision/latest?cb=20221019124600&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2263,7 +2263,7 @@
    "strength": null,
    "ability": "En tu Fase de Vigilia, puedes pagar este Oro y otro Oro que controles para que un Aliado que controles sea Imbloqueable hasta la Fase Final.",
    "flavour": "Guardado por enigmas y custodiado por la naturaleza, su brillo seduce a buscadores de sueños, forjando destinos y desencadenando odiseas en el corazón del mundo desconocido.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/11/MPC-15-18.png/revision/latest?cb=20250706045707&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2280,7 +2280,7 @@
    "strength": null,
    "ability": "Mientras este Tótem este en juego, los jugadores solo pueden declarar ataque con un Aliado.",
    "flavour": "Yo no tengo porque detenerme ante el peso del mundo, yo floto entre universos y soy uno con la voz universal.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/78/TKPE1-10-13.png/revision/latest?cb=20250914231726&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2399,7 +2399,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, puedes buscar un Oro sin habilidad en tu Mazo Castillo y ponerlo en tu Mano.",
    "flavour": "Un líder con los ojos fijos en su meta, una ambición siempre sana y fresca, poseedor de un brazo fuerte y una espada templada por los dioses.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/16/LPE23-155-300.png/revision/latest?cb=20250215003521&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2433,7 +2433,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Este árbol colosal y majestuoso creció del suelo, las altas ramas del fresno se ciernen sobre todos los mundos y llegan por encima de los cielos. Sus tres raíces que lo mantienen erecto beben de las fuentes de Urd, Mimir y Hvergelmir.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/35/Codex_Runicus.jpg/revision/latest?cb=20210125064949&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2467,7 +2467,7 @@
    "strength": null,
    "ability": "En tu Fase de Vigilia, puedes pagar este Oro para generar 2 Oros para jugar Armas. Sólo puedes activar un La Saga de Volsung por turno.",
    "flavour": "Narra el épico linaje de Volsung, desde el heroico Sigmund hasta el valiente Sigurd. Historias de amor, traición, y búsqueda de gloria entre dioses y dragones.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8f/MPV-00-18.png/revision/latest?cb=20250708165657&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2484,7 +2484,7 @@
    "strength": null,
    "ability": "Única. Pon un Aliado en juego en la parte inferior del Mazo Castillo de su dueño. Luego, un Aliado que controles no puede salir del juego hasta la Fase Final.",
    "flavour": "Sigurd, tras vencer al dragón Fafnir, se baña en su sangre, adquiriendo piel invulnerable. Sólo una hoja de tilo en su espalda queda sin cubrir, marcando su único punto débil.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ed/MPV-11-18.png/revision/latest?cb=20250708165658&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2552,7 +2552,7 @@
    "strength": 4,
    "ability": "Cuando entra en juego, puedes subir una carta oponente en juego que no sea Oro a la Mano de su dueño. Mientras este Aliado esté en juego esa carta no puede ser jugada.",
    "flavour": "Simboliza la sabiduría perfecta y la compasión infinita, enseña el camino hacia el despertar y la liberación del sufrimiento.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/32/MPO-06-18.png/revision/latest?cb=20250904013430&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2569,7 +2569,7 @@
    "strength": null,
    "ability": "Anula un Aliado oponente. Luego, Roba tres cartas.",
    "flavour": "Vacía la mente y encontrarás la felicidad. Sal de la mente y encontrarás la eternidad.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/e1/BU-089-236.png/revision/latest?cb=20240522211220&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2586,7 +2586,7 @@
    "strength": null,
    "ability": "Cuando este Oro entra en juego, puedes elegir una carta de un Cementerio y Purificarla (La carta elegida, puedes Desterrarla o Barajarla en el Mazo Castillo de su dueño).",
    "flavour": "Amuleto para la protección del mal de ojo y de cualquier otra fuerza negativa.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/02/AM-109-160.jpg/revision/latest?cb=20221103025456&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2603,7 +2603,7 @@
    "strength": 3,
    "ability": "Puede portar 2 Katanas, si lo hace es imbloqueable.",
    "flavour": "Marché a la capital Kyoto, luego por las provincias, luchando con guerreros de todo tipo y formación. Ninguno pudo vencerme. He estudiado sin cesar los cinco principios para comprender el camino del guerrero.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b4/Miyamoto_Musashi.jpg/revision/latest?cb=20210210072611&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2620,7 +2620,7 @@
    "strength": 6,
    "ability": "Mientras este aliado esté en juego siempre que juegues una criatura descarta una carta al azar de la mano de tu oponente.",
    "flavour": "El feroz tigre preside la remota región de las estrellas occidentales.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/57/Fu.jpg/revision/latest?cb=20210214060555&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2654,7 +2654,7 @@
    "strength": 4,
    "ability": "En batalla mitológica puedes descartar una carta de tu castillo para que este aliado sea imbloqueable.",
    "flavour": "Perdida en las montañas, se le apareció Lü Dong Pin mostrando el camino a casa y con un durazno para saciar hambre y cansancio. Al comer la fruta, recibió la gracia de la profecía y la inmortalidad.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/0e/He_Xian_Gu.jpg/revision/latest?cb=20210208010247&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2671,7 +2671,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Al contemplarla se ve la relación en el mundo de lo superior e inferior y los cambios que regulan la existencia cósmica.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/42/Calabaza_del_Inmortal.jpg/revision/latest?cb=20210222073348&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2688,7 +2688,7 @@
    "strength": null,
    "ability": "Puedes jugar esta carta desde tu Cementerio, si lo haces destiérrala.<br>Destierra un Tótem o un Arma en juego.",
    "flavour": "Espíritus agresivos que buscan saciar su sed de sangre, tratando de probar la carne de Tang Sanzang.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/5f/MPO-10-18.png/revision/latest?cb=20250904013431&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2705,7 +2705,7 @@
    "strength": 1,
    "ability": "Sin Habilidad",
    "flavour": "Montando un ágil delfín, el señor del mundo subterráneo fertiliza y llena de prosperidad las tierras de los hombres.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/7c/Cernunno.jpg/revision/latest?cb=20201014205617&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2722,7 +2722,7 @@
    "strength": 1,
    "ability": "Solo puedes tener un Oberon en juego. En tu fase de vigilia y una vez por turno, puedes pagar el coste de un Aliado oponente y destruirlo.",
    "flavour": "Lejos, en el sur, un rey ve como muere su reino... Oberon, rey de encantos, canciones y leyendas, tan sólo quiere volver a su trono de cristal... lejos de dragones y humanos, lejos de violencia y destrucción.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/1d/Oberon.png/revision/latest?cb=20210809143930&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2739,7 +2739,7 @@
    "strength": 1,
    "ability": "Mientras Titania esté en juego,  tus demás Faeries ganan + 1 a la fuerza y pueden atacar cuando entran en juego.",
    "flavour": "En tierras invisibles para el ojo humano, una reina guiada sólo por sus deseos comanda los corazones de una raza que se retira a la donde siempre es crepúsculo de verano.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/24/Titania.png/revision/latest?cb=20210809210827&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2756,7 +2756,7 @@
    "strength": 3,
    "ability": "Para que este Aliado pueda ser declarado atacante o bloqueador, debes botar 1 carta de tu Mazo Castillo.",
    "flavour": "Su lema es \"orden y verdad\". Portador de la espada Chrysaor, su misión es corregir injusticias, guiado por la implacable figura de Talus, su escudero de hierro.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/27/LBPE24-01-21.png/revision/latest?cb=20251105034215&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2773,7 +2773,7 @@
    "strength": 1,
    "ability": "Si es destruido por una carta oponente, ésta es también destruida.",
    "flavour": "El dragón Fafnir cae víctima de la astucia y valor del joven héroe.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/e0/Sigurd.jpg/revision/latest?cb=20200618053301&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2790,7 +2790,7 @@
    "strength": 1,
    "ability": "",
    "flavour": "Gigantes y dragones tiemblan al oír su nombre. No ha nacido quien pueda detener al rey de gotlandia.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8c/Beowulf.jpg/revision/latest?cb=20201009022342&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2807,7 +2807,7 @@
    "strength": 6,
    "ability": "Furia.<br>No puede ser Anulado.<br>Cuando entra en juego, Destierra el Aliado objetivo.<br>En tu Vigilia, puedes jugar un Dragón de tu mano, de coste 3 o menos sin pagar su coste. Al comienzo de tu Fase Final Destruye ese Aliado.",
    "flavour": "",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/1e/Y_Ddraig_Goch.jpg/revision/latest?cb=20210706061759&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2824,7 +2824,7 @@
    "strength": null,
    "ability": "Una carta imbloqueable puede ser bloqueada en este turno.",
    "flavour": "En el cielo nocturno brilla el espíritu del creador. Los hombres honran al eterno protector cuyo nombre susurra el viento.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9f/Quetzalcoatl.jpg/revision/latest?cb=20201014192955&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2841,7 +2841,7 @@
    "strength": null,
    "ability": "Única. Cuando juegues este Talismán destiérralo. Destruye todos los Aliados de Coste 2 o menos.",
    "flavour": "Voy a cantar la canción del fuego, ésta será escuchada por hombres y bestias. No habrá duda alguna de quien es el rey de todas las cosas.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c1/LPE23-029-300.png/revision/latest?cb=20250212233829&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2858,7 +2858,7 @@
    "strength": null,
    "ability": "Única, relámpago, inmunidad, exhumar.<br>Cuando salga del juego, remuévelo.<br>Tu Castillo no puede recibir daño de combate o directo.<br>No puedes robar cartas en tu Fase Final.<br>Cada vez que juegues una carta, roba una carta.",
    "flavour": "Una luz emana del árbol protector de los dioses, es el encanto del cielo...",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/0e/Fresno_Yggdrasil.jpg/revision/latest?cb=20201218192558&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2875,7 +2875,7 @@
    "strength": null,
    "ability": "Puedes pagar este Oro y otro Oro que controles para que una carta en juego pierda su habilidad hasta la Fase Final.",
    "flavour": "La orden nació como un sueño y se transformó en la pesadilla de los infieles. Los misterios que rodean a los caballeros son tan grandes como lo fue su fortuna.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d6/LPE23-033-300.png/revision/latest?cb=20250212233831&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2892,7 +2892,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Algunos signos divinos están esparcidos entre los hombres, como huellas de un camino que puede salvar o matar.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9a/Fruto_Sagrado.png/revision/latest?cb=20201006162953&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2909,7 +2909,7 @@
    "strength": 5,
    "ability": "Cuando entra en juego, puedes buscar un Aliado de Coste 2 o menos en tu Cementerio y jugarlo sin pagar su Coste.",
    "flavour": "Maestro del Ars Theurgia. Sus rituales, velados en misterio, prometen poder, sabiduría divina y la unión con lo oculto.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/31/LBPE24-05-21.png/revision/latest?cb=20251105034215&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2926,7 +2926,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, muestra la primera carta del Mazo Castillo de un oponente, luego ese jugador bota tantas cartas como coste tenga esa carta.<br>Cuando salga del juego, muestra la primera carta del Mazo Castillo de un oponente, luego ese jugador bota tantas cartas como coste tenga esa carta.",
    "flavour": "Hijo de un demonio de la noche y una campesina, ahora su meta es destruir a los monstruos que infestan las tierras más tristes de la Tierra.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f2/Dhampir.jpg/revision/latest?cb=20210612185145&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2943,7 +2943,7 @@
    "strength": 4,
    "ability": "Reanimado.<br>Puedes Botar cuatro cartas de tu Castillo para Transformarlo en Vampiro.<br>Puedes convertir una carta oponente que no sea Oro en un Arma sin habilidad y portarla a un Caballero o Reanimado que controles.",
    "flavour": "Capellán, hombre de negocios y poderoso terrateniente, una de las fuerzas principales tras los juicios contra las Brujas de Salem. Un acusador sin piedad ni miramientos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/62/DGO-055-200.png/revision/latest?cb=20250324125207&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2960,7 +2960,7 @@
    "strength": 3,
    "ability": "En respuesta a la declaración de ataque oponente, puedes pagar 3 de Oro para jugar este Aliado desde tu Cementerio sin pagar su Coste. Debe ser declarado bloqueador este turno.",
    "flavour": "Monstruoso caníbal, merodea con su cráneo expuesto y colmillos afilados. Su risa macabra resuena en la noche, mientras devora carne putrefacta.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d4/HPE-06-21.png/revision/latest?cb=20250715200631&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2977,7 +2977,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, roba 1 carta. Luego, descarta 1 carta de tu Mano. Mientras Neuri esté en juego, cada vez que otro Licántropo que controles salga del juego, puedes robar 1 carta.",
    "flavour": "Una vez al año los jóvenes guerreros del pueblo Neuri se transformaban en lobos, usando su furia vital e insaciable, acababan con los invasores que atacaban desde el este.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d6/LPE23-036-300.png/revision/latest?cb=20250212233831&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -2994,7 +2994,7 @@
    "strength": 3,
    "ability": "Tus demás Licántropos no pueden ser afectados por Talismanes oponentes.",
    "flavour": "Brujos cuyos oscuros caminos les permiten tomar la forma de una hiena manchada. Un sendero que nos une a la bestia y no tiene retorno.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/db/EXPE-024-120.png/revision/latest?cb=20260117152937&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3011,7 +3011,7 @@
    "strength": 2,
    "ability": "En respuesta a que tu oponente baje un Aliado de raza Olímpico, puedes subir Lycaón a tu mano para barajar dicho Aliado oponente.",
    "flavour": "Transformado en un licántropo por los dioses, ahora ve la creación con ojos de fiera.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/04/Lycaon.png/revision/latest?cb=20200712051354&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3045,7 +3045,7 @@
    "strength": 2,
    "ability": "Una vez por turno, cada vez que otro Vampiro que controles salga del juego, tu oponente descarta una carta de su Mano.",
    "flavour": "Se levanta la bestia. Su otrora blanca piel está manchada de óxido y sangre añeja; él, que era joven y bello, se ha convertido en polvo,  ceniza del averno.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/59/LPE23-035-300.png/revision/latest?cb=20250212233831&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3062,7 +3062,7 @@
    "strength": null,
    "ability": "Única. Una carta en juego de Coste 3 o menos pierde su habilidad y es barajada en el Mazo Castillo de su dueño.",
    "flavour": "Un oscuro capítulo de paranoia y superstición. Acusaciones de brujería llevaron a la ejecución de inocentes, dejando un legado de temor y reflexión sobre la justicia humana.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b9/MPS_10-18.png/revision/latest?cb=20250323184704&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3079,7 +3079,7 @@
    "strength": null,
    "ability": "Una vez por turno, un Aliado en juego gana o pierde 1 a la Fuerza permanentemente. Si esta carta está en tu Cementerio, puedes desterrar una carta de tu Cementerio para ponerla en tu Mano.",
    "flavour": "Herramienta de los justos, retumba en la batalla por la libertad y la fe. Con cada disparo, defiende la tierra de los intrusos y los opresores.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/02/MPS_13-18.png/revision/latest?cb=20250323184705&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3096,7 +3096,7 @@
    "strength": null,
    "ability": "Cuando entra en juego, cada jugador elige entre descartar una carta de su Mano o botar 3 cartas de su Mazo Castillo.",
    "flavour": "Guía celestial para invocar protección y sabiduría. Sus páginas, cargadas de poder espiritual, revelan rituales que conectan lo humano con lo divino.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9b/LBPE24-08-21.png/revision/latest?cb=20251105034217&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3113,7 +3113,7 @@
    "strength": 3,
    "ability": "Puede atacar cuando entra en juego.<br>Cada vez que ataque, baraja 1 carta de tu Cementerio en tu Mazo Castillo.",
    "flavour": "La muerte viene de las honduras oceánicas, de aquel mar oculto en las entrañas de la tierra.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/71/LPE23-138-300.png/revision/latest?cb=20250215002250&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3130,7 +3130,7 @@
    "strength": 3,
    "ability": "Imbloqueable. Si controlas 3 o más Bestias, este Aliado puede atacar cuando entra en juego.",
    "flavour": "El monstruo busca retribuir el daño que sufrió, atacando a sus víctimas con enfermedades misteriosas o accidentes fatales, considerados como castigos divinos por sus ofensas.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/87/HPE-09-21.png/revision/latest?cb=20250715200631&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3147,7 +3147,7 @@
    "strength": 1,
    "ability": "Puedes destruir este Aliado para que un Aliado oponente no haga daño de combate este turno.",
    "flavour": "Emerge de lagos sagrados al amanecer. Sus plumas brillan con colores etéreos, y su canto resuena como un eco divino.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/0b/LBPE24-09-21.png/revision/latest?cb=20251105034216&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3164,7 +3164,7 @@
    "strength": 3,
    "ability": "Sólo puedes tener un Xólotl Huetzi en juego. Si es declarado bloqueador no puede ser destruido hasta la Fase Final. En tu Fase Final, si controlas 3 o más Aliados Chamán y/o Tótem, tu oponente bota 2 cartas.",
    "flavour": "Simboliza el crepúsculo y el tránsito de los vivos al mundo de los muertos, actuando como intermediario entre el día y la noche.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/99/HPE-10-21.png/revision/latest?cb=20250715200631&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3181,7 +3181,7 @@
    "strength": 1,
    "ability": "Puedes Descartar este Aliado de tu mano para Robar una carta.<br>Cuando un Tótem entre en juego bajo tu control, si este Aliado está en tu Cementerio, puedes ponerlo en tu mano.",
    "flavour": "Tres son sus rostros: Kuyén Ulcha, la luna doncella, Kuyén Ñuque la luna madre y Kuyén Cushe la luna vieja.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/58/SOL-078-232.jpg/revision/latest?cb=20250226152853&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3198,7 +3198,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, puedes destruir un Tótem que controles para robar 2 cartas.<br>Cuando este Aliado sea destruido, tu oponente bota 2 cartas de su Mazo Castillo.",
    "flavour": "Con su halo plateado, guía a los guerreros y protege a los soñadores. Su luz suave ilumina caminos oscuros, revelando destinos ocultos y ancestrales misterios.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/30/LBPE24-10-21.png/revision/latest?cb=20251105034217&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3215,7 +3215,7 @@
    "strength": 3,
    "ability": "Imbloqueable.<br>Puedes pagar el coste de un Aliado en juego para Barajarlo.",
    "flavour": "Brujos ordenados en las artes oscuras se reúnen en la Raja de Manquehua, un conjunto de cavernas que recorrería todo el país, permitiéndoles realizar sus Aquelarres en muchas latitudes.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a0/Brujo_de_Salamanca.png/revision/latest?cb=20201213203217&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3232,7 +3232,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, los jugadores botan 1 carta de su Mazo Castillo.<br>Cuando salga del juego, busca un Tótem en tu Mazo Castillo y ponlo en tu Mano.",
    "flavour": "Centinela celestial, forjado en llamas divinas. Defensor de la luz contra la oscuridad eterna. Su espada brilla como el alba, custodiando el día, protector de Inti Llaqta.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/87/MPC-06-18.png/revision/latest?cb=20250706045704&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3249,7 +3249,7 @@
    "strength": 3,
    "ability": "Cuando ataca, si es el único Aliado declarado atacante este turno, puedes buscar un Guerrero en tu Mazo Castillo y ponerlo en tu Mano.",
    "flavour": "Noble distinguido de la mítica Ciudad de los Césares, se erige como pilar de sabiduría y valentía. En tierras envueltas en leyenda, su liderazgo ilumina caminos ocultos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d0/MPC-07-18.png/revision/latest?cb=20250706045704&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3266,7 +3266,7 @@
    "strength": 3,
    "ability": "Puede atacar cuando entra en juego.<br>Cuando es declarado atacante, puedes barajar 1 carta o 2 Guerreros de tu Cementerio en tu Mazo Castillo.",
    "flavour": "Atravesó tierras ignotas con valor inquebrantable, talló caminos hacia lo desconocido, uniendo pueblos bajo su liderazgo. En cada batalla, su espíritu indomable forjó leyendas eternas.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/64/MPC-09-18.png/revision/latest?cb=20250706045705&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3283,7 +3283,7 @@
    "strength": 5,
    "ability": "Furia. Indestructible. Inmunidad: Talismanes.<br>Cada vez que ataque, puedes elegir el Aliado que lo bloquee.",
    "flavour": "Que me llamen los truenos, que me citen los terremotos, que tu sacrificio me dé la fuerza para combatir.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b4/BE-049-285.jpg/revision/latest?cb=20221207094030&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3300,7 +3300,7 @@
    "strength": null,
    "ability": "El portador gana 1 a la fuerza.<br>Cuando entra en juego, tu oponente baraja un Aliado que controle.",
    "flavour": "Un arma veloz y eficaz que se siguió ocupando, incluso, tras la conquista española.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/66/EXPE-048-120.png/revision/latest?cb=20260120005318&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3317,7 +3317,7 @@
    "strength": 2,
    "ability": "Imbloqueable. Si este Aliado es mostrado o descartado por un efecto o habilidad que controles, roba 1 carta.",
    "flavour": "La bestia trajo consigo una nube de dolor. Las flores del lago están marchitas; y ningún pájaro canta. Los héroes han muerto y pálido luce nuestro destino.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/68/LPE23-047-300.png/revision/latest?cb=20250212233836&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3334,7 +3334,7 @@
    "strength": 5,
    "ability": "Furia, exhumar. <br>Cuando entra en juego, puedes jugar una carta de Dragón desde tu Castillo o Cementerio reduciendo su coste en 1 por cada Dragón que controles. <br>Los Aliados que controles tienen \"Destruye una carta que controles - Cancela una habilidad.\"",
    "flavour": "¿Qué esconde el dueño del oro maldito? ¿La perdición para los codiciosos?.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/71/VK_021_-_220.jpg/revision/latest?cb=20221111065338&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3351,7 +3351,7 @@
    "strength": 2,
    "ability": "En tu Fase de Vigilia, una vez por turno, puedes generar 2 Oros para jugar Abominaciones de Coste 4 o más. Una vez por turno, cuando juegues un Aliado de Coste 3 o más, puedes robar 1 carta.",
    "flavour": "Esta bruja adopta la forma de un lobo, y devorará uno a uno a los hijos de Volsung que están prisioneros, solo se salvarán Signy y Sigmund.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/eb/MPV-02-18.png/revision/latest?cb=20250708165657&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3368,7 +3368,7 @@
    "strength": 4,
    "ability": "Cuando entra en juego, busca una Abominación de Coste 3 o menos en tu Mazo Castillo y juégala sin pagar su Coste.",
    "flavour": "Una bestia burlona y venenosa, un ser que contamina las fuentes de agua y busca nuevos desafíos para probar su fuerza.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/42/EXPE-062-120.png/revision/latest?cb=20260121231330&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3385,7 +3385,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego, puedes buscar 2 Armas en tu Mazo Castillo, pon una en tu Mano y la otra en el Cementerio. Cada vez que juegues un Arma, puedes robar 1 carta.",
    "flavour": "Campeón mítico nórdico, famoso por matar al dragón Fafnir. Su valor y destino fueron entrelazados con runas y profecías, forjando su leyenda como el más grande de los guerreros.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/68/MPV-04-18.png/revision/latest?cb=20250708165657&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3402,7 +3402,7 @@
    "strength": 2,
    "ability": "En tu Fase de Vigilia, una vez por turno, puedes mirar las dos primeras cartas de tu Mazo Castillo. Pon una en tu mano y Destierra la otra.",
    "flavour": "La tragedia separaría a los amantes. El cálido abrazo del fuego la reunirá con su amado Hagbard.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ec/Signy.png/revision/latest?cb=20210608185216&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3419,7 +3419,7 @@
    "strength": 2,
    "ability": "Cuando este Aliado sea declarado atacante con otros dos o mas Aliados de Raza Bárbaro, gana 1 a la Fuerza hasta la Fase Final. <br>Mientras tengas cuatro o menos cartas en tu mano, los Aliados que controles ganan 1 a la Fuerza.",
    "flavour": "El violento guerrero se inmortalizará en una época de leyendas. El caudillo de Rerir reina en la era de Vendel.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a0/MG-061-128.png/revision/latest?cb=20220831135207&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3436,7 +3436,7 @@
    "strength": 2,
    "ability": "Mientras este Aliado esté en juego, tus demás Bárbaros pueden atacar cuando entran en juego y ganan 1 a la fuerza.",
    "flavour": "Ivar es una figura legendaria, según la leyenda fue hijo de Ragnar Lodbrok cuando este ya superaba los cien años de edad. La historia lo recuerda como el líder vikingo que invadió Inglaterra e Irlanda.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/78/EXPE-066-120.png/revision/latest?cb=20260122022434&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3453,7 +3453,7 @@
    "strength": 3,
    "ability": "Errante.<br>Sólo puede ser jugada desde tu Mano.<br>Sólo una vez por turno, puedes pagar el coste de un Talismán para anularlo.",
    "flavour": "En los oscuros bosques, o en la cumbre de una montaña,el señor de la sabiduría custodia al hombre. Algún día, los valientes se unirán a él en su palacio.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/47/BA-006-260.png/revision/latest?cb=20220925041340&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3470,7 +3470,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego, copia la habilidad de un Aliado en tu Cementerio por el resto del juego.",
    "flavour": "Hijo de gigantes y quebrantador de reglas. Embaucador de los dioses, asesino de tontos. Él es la vista de la primavera, sembrador de avena, amante del caos, las ilusiones, el fuego y el humo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/5d/LPE23-046-300.png/revision/latest?cb=20250212233836&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3487,7 +3487,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego o cuando sea destruido, puedes barajar una carta de tu Cementerio en tu Mazo Castillo.",
    "flavour": "La madre va susurrando secretos antiguos, vaga entre sombras y bosques. Su presencia, envuelta en niebla, guarda promesas y advertencias.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/43/HPE-15-21.png/revision/latest?cb=20250715200633&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3504,7 +3504,7 @@
    "strength": null,
    "ability": "El portador gana 2 a la Fuerza.<br>Cuando entra en juego, destruye una carta en juego de Coste 3 o más.",
    "flavour": "Espada de poder inigualable, forjada por enanos, regalo de Odín. Destinada a Sigmund y Sigurd, corta todo a su paso, símbolo de valentía, destino entrelazado con el linaje Völsung.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a3/MPV-13-18.png/revision/latest?cb=20250708165700&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3521,7 +3521,7 @@
    "strength": 2,
    "ability": "Este Aliado entra en juego con un contador de Honor.<br>En tu Fase de Vigilia, una vez por turno, puedes quitar un contador de Honor de un Aliado que controles para Desterrar el Arma objetivo que controles. Luego, puedes jugar esa Arma sin pagar su coste.",
    "flavour": "Guerreros sagrados que representan el florecer de la juventud y la vida. Fueron invencibles, bellos y símbolos de su cultura.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/05/Hwarang.png/revision/latest?cb=20210620235245&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3538,7 +3538,7 @@
    "strength": 2,
    "ability": "Este Aliado puede portar un Arma adicional.<br>Cuando este Aliado entra en juego, elige hasta dos cartas de tu Cementerio y Barájalas en tu Mazo Castillo.",
    "flavour": "El temor es siempre la confesión de una debilidad que desaconseja la lucha y no se atreve a entender el adversario.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/af/Yoritomo.png/revision/latest?cb=20210422173546&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3555,7 +3555,7 @@
    "strength": 7,
    "ability": "Errante. Inmunidad. - <i>Talismanes</i><br>Si sólo controlas Dragones, puedes pagar dos Oros y Botar cinco cartas para jugar este Aliado desde tu Cementerio sin pagar su coste.<br>Cuando entra en juego, juega el Dragón objetivo de tu Cementerio, de coste 4 o menos, sin pagar su coste.",
    "flavour": "El emperador es el más sagrado de los dragones, representa la quintaesencia, la energía más pura. La unión entre las dinastías humanas y divinas.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/44/DIN-004-192.png/revision/latest?cb=20241230190906&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3572,7 +3572,7 @@
    "strength": 2,
    "ability": "En tu Fase de Vigilia y una vez por turno, puedes botar una carta de tu Mazo Castillo para que una Criatura que controles gane 2 a la fuerza hasta la Fase Final.",
    "flavour": "Una terrible maldición la ha transformado en un Yokai, se dice que este embrujo afecta a mujeres que no alimentan a sus hijastros dejándolos morir.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/ff/EXPE-105-120.png/revision/latest?cb=20260127020756&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3589,7 +3589,7 @@
    "strength": 2,
    "ability": "Una vez por turno, tu oponente bota 2 cartas de su Mazo Castillo.",
    "flavour": "Desde la dinastía Han son guardianes divinos de las puertas en las religiones populares chinas, utilizados para protegerse contra las malas influencias.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a4/EXPE-101-120.png/revision/latest?cb=20260126155228&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3606,7 +3606,7 @@
    "strength": 3,
    "ability": "Cuando entre en juego o un Sacerdote sea puesto en tu Destierro, hasta tres veces por turno, cada jugador Bota tres cartas. Luego, Baraja hasta tres cartas de los Cementerios. Una vez en tu Vigilia, busca un Sacerdote en tu Castillo y ponlo en tu mano.",
    "flavour": "Océanos de sabiduría, los portadores de este honor y responsabilidad son encarnaciones de Avalokitesvara, protector del Tibet.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/2a/EXP-007-146.png/revision/latest?cb=20231221145312&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3623,7 +3623,7 @@
    "strength": null,
    "ability": "Busca un Aliado en tu Cementerio y ponlo en tu Mano. Si el Aliado buscado es una Criatura, puedes jugarlo reduciendo su Coste en 2 Oros hasta la Fase Final.",
    "flavour": "Los Bueyes comienzan a rumiar lenta y cómodamente. Uno de ellos vigila el prado, dando seguridad y certeza al rebaño.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/07/XINNIAN-06-32.png/revision/latest?cb=20250908025550&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3640,7 +3640,7 @@
    "strength": null,
    "ability": "Puedes desterrar un Kami de tu Mano para jugar esta carta reduciendo su Coste en 2 Oros.<br>Baraja una carta en juego que no sea Oro en el Mazo Castillo de su dueño.",
    "flavour": "El Tigre acecha y muestra su ferocidad. La valentía y el miedo se encuentran aquí.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/e0/XINNIAN-07-32.png/revision/latest?cb=20250908025550&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3657,7 +3657,7 @@
    "strength": null,
    "ability": "Si sólo controlas Campeones, esta carta reduce su Coste en 1 Oro.<br>Busca hasta 2 Armas en tu Mazo Castillo y juégalas sin pagar su Coste bajo 2 Aliados que controles.",
    "flavour": "Los Dragones surcan el cielo para provocar lluvia, pero el Dragón Verde se levanta e impone orden.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/ce/XINNIAN-09-32.png/revision/latest?cb=20250908025552&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3674,7 +3674,7 @@
    "strength": null,
    "ability": "Tu oponente bota 3 cartas de su Mazo Castillo. Luego, si controlas Criaturas, tu oponente bota 1 carta de su Mazo Castillo.",
    "flavour": "La sabia Serpiente deja la cueva, su piel se ilumina con el Sol y se transforma en poesía.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/26/XINNIAN-10-32.png/revision/latest?cb=20250908025551&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3691,7 +3691,7 @@
    "strength": null,
    "ability": "Puedes desterrar un Kami de tu Mano para jugar esta carta reduciendo su Coste en 2 Oros.<br>Anula un Aliado.",
    "flavour": "El Caballo galopa hacia el Sol, su crin brilla, el animal se hace poderoso conforme avanza el día.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/36/XINNIAN-11-32.png/revision/latest?cb=20250908025551&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3708,7 +3708,7 @@
    "strength": null,
    "ability": "El portador gana 1 a la Fuerza por cada Arma en juego. Cuando entra en juego, puedes buscar un Arma en tu Mazo Castillo y ponerla en tu Mano.",
    "flavour": "La espada santa, canaliza poder espiritual en rituales y batallas, encarnando la justicia del rey.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/68/LBPE24-21-21.png/revision/latest?cb=20251105034214&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3725,7 +3725,7 @@
    "strength": 3,
    "ability": "Después de atacar, si no es destruido es devuelto a la mano.",
    "flavour": "La ambición invade los terrenos infernales y es derrotada por su reina. Los caprichos de una mujer pueden ser fatales.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a9/Isthar.jpg/revision/latest?cb=20201014070851&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3742,7 +3742,7 @@
    "strength": 3,
    "ability": "Si hay algún dragón en juego, gana +3 a la fuerza.",
    "flavour": "Los dioses pueden estar tranquilos. Marduk los guiará en la lucha contra los engendros del caos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/4b/Marduk.jpg/revision/latest?cb=20201008083920&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3759,7 +3759,7 @@
    "strength": 2,
    "ability": "Si es destruido, devuelve una carta de oro de tu oponente a su mano.",
    "flavour": "Furioso habitante de oscuros bosques. Al rugir libera el poder del trueno y sendos relámpagos incendian sus ojos. Sus fuertes mandíbulas destrozan todo lo que atrapan.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c9/Humbaba_RX.jpg/revision/latest?cb=20201014171535&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3776,7 +3776,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, debes mostrar tu mano a tu oponente.",
    "flavour": "Generosa deidad que habita las aguas del mar Mediterráneo y ayuda a los hombres que forjan una civilización.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/42/Dagon.jpg/revision/latest?cb=20201014210557&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3793,7 +3793,7 @@
    "strength": 2,
    "ability": "(Coste X) Destruye una carta de aliado en juego.",
    "flavour": "La irreverencia y el descaro se mezclan con la audacia. Las leyes están hechas para ser desobedecidas.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/be/Gnomos_Burlones.png/revision/latest?cb=20201004221055&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3827,7 +3827,7 @@
    "strength": null,
    "ability": "Puedes buscar un dragón en el castillo de tu oponente y descartarlo al cementerio.",
    "flavour": "Enfrentar el aliento del fuego, salvar doncellas y princesas, defender a los débiles habitantes de los feudos o rescatar tesoros perdidos es su misión.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/6f/Matador_de_dragones.jpg/revision/latest?cb=20201014201236&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3844,7 +3844,7 @@
    "strength": null,
    "ability": "Todos tus aliados ganan + 1 a la fuerza hasta el final del turno.",
    "flavour": "Los Chamanes vieron la profecía. Por el bien de la tribu, el albo emisario del mundo superior debe ser protegido.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/4c/B%C3%BAfalo_Blanco.png/revision/latest?cb=20201002051315&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3895,7 +3895,7 @@
    "strength": 4,
    "ability": "Si ataca debe ser acompañado por dos aliados.",
    "flavour": "Sus fauces son capaces de devorar el sol y sumir a los hombres en el frío y la oscuridad total.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/78/Fenrir.jpg/revision/latest?cb=20201008082910&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3912,7 +3912,7 @@
    "strength": null,
    "ability": "(Fuerza X) Bota X cartas de tu castillo (máximo 5) y gana un punto de fuerza por cada carta botada permanentemente.",
    "flavour": "Inmortal amo de la noche y la seducción. La palidez de la Luna se refleja en su condenada alma.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/dc/Vampiro.png/revision/latest?cb=20201003230202&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3946,7 +3946,7 @@
    "strength": null,
    "ability": "Un aliado en juego que elijas cambia su fuerza por su valor permanentemente.",
    "flavour": "No puedes resistir mas, eres una jaula oxidada que no puede contenerme.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/60/Licantropia.png/revision/latest?cb=20201016053028&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3963,7 +3963,7 @@
    "strength": null,
    "ability": "Los licántropos ganan +1 de fuerza por este turno.",
    "flavour": "Cuenta las noches cada uno de los trece meses del año, en espera del plenilunio. La de mil formas cambiantes incrementa el poder de quienes seguimos su pálido rostro. Y con largos aullidos esa noche celebramos su magnífico esplendor.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/cc/Luna_llena.png/revision/latest?cb=20201019062057&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3980,7 +3980,7 @@
    "strength": null,
    "ability": "Su portador, si no es destruido después de atacar, vuelve a la línea de defensa.",
    "flavour": "Defensa y defensor feroz a la vez, protege a quien lo usa con su aliento de fuego.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/41/Escudo_hiperboreo.png/revision/latest?cb=20201020040958&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -3997,7 +3997,7 @@
    "strength": null,
    "ability": "Una vez por turno, puedes descartar 1 carta de tu Mano para buscar un Oro en tu Cementerio y ponerlo en tu Mano.",
    "flavour": "El Mahabharata y otros textos sagrados nos hablan de esta ciudad, la que ostentaba 900.000 palacios reales, todos construidos con cristal y plata. Hoy condenada a ser un fantasma entre dimensiones.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/cd/LPE23-200-300.png/revision/latest?cb=20250215003519&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4031,7 +4031,7 @@
    "strength": 1,
    "ability": "La Serpiente Emplumada no puede ser bloqueada.",
    "flavour": "Montada en los vientos de la fe, la serpiente entrega a los hombres el dulce veneno de la cultura.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a6/Serpiente_emplumada.jpg/revision/latest?cb=20201009025001&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4048,7 +4048,7 @@
    "strength": 1,
    "ability": "Si ataca y hace daño al castillo oponente puedes buscar un Chamán en tu castillo y ponerlo en tu mano.",
    "flavour": "De una piedra llamó a salir a las cañas, que se lanzaron a matarle. Wiraqocha hizo caer fuego del cielo, muchos murieron. Apagó el fuego y dijo: \"Soy vuestro Hacedor\", las cañas se postraron ante él.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/09/Wiraqocha_2.png/revision/latest?cb=20211020175656&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4065,7 +4065,7 @@
    "strength": 1,
    "ability": "Puede llevar un Arma gratis.",
    "flavour": "Con la onda y la masa, con el granizo y el rayo, retumba el dios en las alturas, para romper el cántaro y hacer bajar el agua de los cielos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/19/Apu_Illa_2.png/revision/latest?cb=20211020181326&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4082,7 +4082,7 @@
    "strength": 2,
    "ability": "Puede atacar cuando entra en juego. (Imbloqueable)",
    "flavour": "Cuando el mundo acabe, habrá terremotos y las tzitzimime que rodean a Huitzcilopochtli bajarán del segundo cielo convertidas en jaguares a devorar a la humanidad, antes que los terremotos arruinen al Sol.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9f/Tzitzimime_2.png/revision/latest?cb=20211020183359&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4099,7 +4099,7 @@
    "strength": 3,
    "ability": "Si es bloqueado, puedes buscar un Arma en tu castillo y ponerla en tu mano.",
    "flavour": "Tenochtitlán estaba destruida. En el ocaso el águila desciende y entra en la Tierra. No se perderá esta guerra aquí, en esta tierra. Esta tierra volverá a nacer.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/0c/Cuauht%C3%A9moc_2.png/revision/latest?cb=20211021015639&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4116,7 +4116,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, si controlas uno o más Armas, baraja un Aliado oponente en el Mazo Castillo de su dueño.",
    "flavour": "La leyenda cuenta que Janequeo cabalgó las sierras sureñas junto a cuatro mil guerreros, todos con el alma bien en alto y con un grito de guerra en la garganta.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/41/LPE23-204-300.png/revision/latest?cb=20250215010606&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4133,7 +4133,7 @@
    "strength": 1,
    "ability": "Puede llevar un Arma extra.",
    "flavour": "Peri Pillán y los suyos tratan de huir de su prisión de roca, sus cuerpos se resbalan como enormes culebras de fuego por los costados del cerro y en vez de ser luz, se apagan y se convierten en piedra: es el castigo de Antü.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/93/Peri_Pill%C3%A1n_2.png/revision/latest?cb=20211021005035&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4167,7 +4167,7 @@
    "strength": null,
    "ability": "Destruye un Aliado oponente a tu elección.",
    "flavour": "Canciones de pájaros multicolores llenan la selva. La vida libre es buena para quien se hace cargo de sí mismo y de los suyos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c1/Yanomami_2.png/revision/latest?cb=20211020011746&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4184,7 +4184,7 @@
    "strength": null,
    "ability": "El Aliado portador de esta Arma es imbloqueable.",
    "flavour": "Con vida propia, con fuerza propia, el afilado pedernal guía la mano del sacerdote en su tarea.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d0/Tecpatl.png/revision/latest?cb=20211020164553&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4201,7 +4201,7 @@
    "strength": null,
    "ability": "Por cada Aliado que te ataque, tu oponente deberá botar una carta de su castillo al final del ataque.",
    "flavour": "La vida se renueva en los ríos y la caricia del agua. El espíritu se renueva en el fuego y la mordida del relámpago.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/7f/T%C3%B3tem_de_Serpiente_2.png/revision/latest?cb=20211020034152&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4218,7 +4218,7 @@
    "strength": null,
    "ability": "Elige un tipo de Aliado en juego y todos tus Aliados serán de ese tipo.",
    "flavour": "Fiel señal, fiel guía, en el viaje nocturno por el río que lleva a la tierra de los muertos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/5e/T%C3%B3tem_de_Perro_2.png/revision/latest?cb=20211020032447&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4252,7 +4252,7 @@
    "strength": 2,
    "ability": "Si es la primera carta que pones en juego podrás buscar un Tótem en tu castillo y ponerlo en tu mano.",
    "flavour": "Creía saber todas las respuestas siendo el más sabio de todos los gigantes. Odin lo visitó para ver si esto era verdad. Muchas fueron las preguntas. Vavtrudnir fallo la última y perdió la cabeza.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/1c/Vavtrudnir.jpg/revision/latest?cb=20210121072232&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4269,7 +4269,7 @@
    "strength": 3,
    "ability": "En combate puedes descartarte de una carta de tu mano para que gane +1 de fuerza.",
    "flavour": "Hija de Loki y la giganta Angrboda. Hel y Fenrir son sus hermanos. Odin tiró la serpiente al fondo del océano, donde creció hasta ser tan enorme que rodea Midgard, la tierra, y se muerde su propia cola.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/62/Yormungand.jpg/revision/latest?cb=20210121070405&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4286,7 +4286,7 @@
    "strength": 2,
    "ability": "Si controlas 2 o menos Aliados, gana 2 a la Fuerza.",
    "flavour": "Su padre fue el gran Ragnar Lodbrok, junto a sus hermanos comandó el gran ejército pagano, sembrando el terror entre los sajones del norte.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f6/LPE23-214-300.png/revision/latest?cb=20250215010609&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4303,7 +4303,7 @@
    "strength": null,
    "ability": "Todos los aliados imbloqueables son devueltos a la mano de su dueño.",
    "flavour": "Loki disfrazado de vieja supo de Frigg que sólo un brote de muérdago a Baldur podría herir. Loki lo cortó y en la reunión preguntó a Hodur: ¿por qué no haces como los otros? Toma, lanza esta saeta, haz como los demás, yo te guiaré..., toma.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c2/Astucia_de_Loki.jpg/revision/latest?cb=20210114091221&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4320,7 +4320,7 @@
    "strength": null,
    "ability": "Busca dos cartas en tu castillo y tu oponente te descarta de una de ellas. La otra queda en tu mano.",
    "flavour": "Entre las grietas de los sueños encontrarás la cosa sin fundamento, los nidos de yegua nocturna hechos de pelos blancos de yegua y plumas de aves proféticas; en su interior hallarás mandíbulas y entrañas de poetas.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/71/Nidos_de_Pesadilla.jpg/revision/latest?cb=20210114085037&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4354,7 +4354,7 @@
    "strength": null,
    "ability": "Agrega +1 a la fuerza de su portador. Siempre que este aliado haga daño al castillo oponente y se resuelva el daño podrás ver las primeras tres cartas del castillo oponente y ordenarlas como quieras.",
    "flavour": "Con esta rama de magia la razón del enemigo será nublada y perdida, oscurecida y extraviada. Hlebard el Gigante la había regalado esta vara mágica al astuto enmascarado y éste le enloqueció con ella.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/92/Gambantein.jpg/revision/latest?cb=20210119103446&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4371,7 +4371,7 @@
    "strength": null,
    "ability": "Tu oponente no puede atacarte más. Un jugador puede descartar tres cartas de su castillo y destruir este Tótem.",
    "flavour": "A nueve mundos llegué..., nueve mundos del árbol. Al oeste está la comarca de los dioses Vanir, amos de la magia, la fertilidad, la suerte y la abundancia. ¿Cuáles son los favores que tú vienes a pedir? Cuando sus puertas se abran entra con decisión.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/21/Vanaheim.jpg/revision/latest?cb=20210118154722&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4388,7 +4388,7 @@
    "strength": null,
    "ability": "Cada vez que tu oponente juegue un aliado deberá descartar una carta de su castillo.",
    "flavour": "A nueve mundos llegué..., nueve mundos del árbol. Al este están los Gigantes de hielo y de roca, su comarca es inmensa y todo allí es de proporciones descomunales; un río que nunca se congela lo separa de Asgard. ¿Cuáles con los favores que te atreves a pedir en la fortaleza de Outgard?",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d9/Yotunheim.jpg/revision/latest?cb=20210119102452&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4422,7 +4422,7 @@
    "strength": 2,
    "ability": "Si es destruido destierra tres cartas del cementerio oponente que tú elijas.",
    "flavour": "Monstruo de las aguas de inmensa fuerza, no hay quién le venza en la lucha Sumo. Su poder está en el charco de agua sobre su cabeza.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/84/Kappa.jpg/revision/latest?cb=20210214055214&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4456,7 +4456,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego puedes devolver de tu cementerio a tu castillo un campeón. Luego baraja tu castillo.",
    "flavour": "En las tres montañas de Dewa, miles de Yamabushi en la vía del Haguro Shugendo, el camino de cultivar poderes espirituales, siguen el ejemplo del príncipe Hachioko y someten primero a sus propios demonios.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/76/Yama_Bushi.jpg/revision/latest?cb=20210210044427&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4473,7 +4473,7 @@
    "strength": 2,
    "ability": "Sólo puede bloquear. Cuando bloquea gana +3 a la fuerza hasta el final del turno.",
    "flavour": "Tan alto como las nubes, el poderoso Kami de las montañas pasea con sus hijas Iha Naga, la mayor y Sengen, la menor.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/6e/ED-010.jpg/revision/latest?cb=20181104014640&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4490,7 +4490,7 @@
    "strength": 2,
    "ability": "Por cada Xian en juego, te cuesta uno menos de oro jugar a este Xian.",
    "flavour": "El Emperador de Jade determina todo en el cielo, la tierra y las regiones inferiores; a su disposición celestial. En Da-lou-tian, el más alto cielo, está su palacio.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/35/Yu_Huang.jpg/revision/latest?cb=20210210041339&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4507,7 +4507,7 @@
    "strength": null,
    "ability": "Tu oponente destruye un aliado con fuerza mayor a su valor de oro.",
    "flavour": "El camino de la espada. Primero se aprende a caminar, después a portar la espada, luego viene el golpe y las variadas técnicas. La práctica constante es el camino.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/ac/Kendo.jpg/revision/latest?cb=20210218040824&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4524,7 +4524,7 @@
    "strength": null,
    "ability": "Roba tres cartas de tu castillo, muéstralas a tu oponente y éste destierra dos de esas cartas y la otra queda en tu mano.",
    "flavour": "En el camino del arco, el esfuerzo consciente implica la posibilidad de equivocarse. El arquero se ha unido al arco y al blanco, la flecha no recorre ninguna distancia.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/93/Kyudo.jpg/revision/latest?cb=20210216030220&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4541,7 +4541,7 @@
    "strength": null,
    "ability": "Juega este talismán en respuesta a que una carta oponente utilice su habilidad de texto. La cancelas por este turno.",
    "flavour": "Supera las 18 cámaras hasta abrazar el ardiente caldero de hierro..., hasta merecer las marcas del tigre y del dragón..., las marcas del maestro Shaolin.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/4a/Marca_del_Tigre.jpg/revision/latest?cb=20210215225358&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4575,7 +4575,7 @@
    "strength": 2,
    "ability": "",
    "flavour": "Su audacia y gallardía molestan y seducen a los dioses, quienes no pueden detenerlo ni con la espada ni con besos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/1e/Gilgamesh.jpg/revision/latest?cb=20201008074348&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4592,7 +4592,7 @@
    "strength": 3,
    "ability": "Mientras este Aliado esté en juego, tus Caballeros pueden atacar cuando entran en juego.",
    "flavour": "La perversa hechicera Morgana marcó a sangre y espada el destino de los Caballeros de la Mesa Redonda.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/64/EXPE-012-120.png/revision/latest?cb=20260108033811&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4609,7 +4609,7 @@
    "strength": 1,
    "ability": "",
    "flavour": "El heroísmo como única razón de existencia, motor que conduce la vida hacia la leyenda.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/3b/Caballero_Blanco.jpg/revision/latest?cb=20201009023519&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4626,7 +4626,7 @@
    "strength": 1,
    "ability": "",
    "flavour": "La eterna lucha entre el bien y el mal se traslada a los mares y tierras del sur de Chile.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/62/Tentenvilu-Coicoivilu.jpg/revision/latest?cb=20201008080629&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4643,7 +4643,7 @@
    "strength": 2,
    "ability": "",
    "flavour": "En el oscuro pantano de Lerna, angustia, tormento, dolor, martirio, sufrimiento, agonía y muerte tienen un solo nombre.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f4/R-104.jpg/revision/latest?cb=20201009035128&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4660,7 +4660,7 @@
    "strength": null,
    "ability": "Tu oponente no roba en el próximo turno.",
    "flavour": "No solo la magia sirve para hechizar. La belleza y la pasión de una joven mujer son más poderosas que cualquier pócima.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a4/Hada_viviana.jpg/revision/latest?cb=20201014203804&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4694,7 +4694,7 @@
    "strength": 1,
    "ability": "",
    "flavour": "Tenaz ser que desentraña las preciosas esencias del corazón del mundo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/6c/Gnomo.jpg/revision/latest?cb=20201006043536&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4711,7 +4711,7 @@
    "strength": null,
    "ability": "Mira la mano de tu oponente.",
    "flavour": "Efímera serpiente del alba, jamás podrá evitar el tránsito del carruaje solar.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8e/Seth.png/revision/latest?cb=20201002185452&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4728,7 +4728,7 @@
    "strength": null,
    "ability": "Mira la carta superior del mazo de tu oponente.",
    "flavour": "En los mares del mundo, el rey utiliza un tridente como cetro y su poder como autoridad.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/ac/Poseid%C3%B3n.jpg/revision/latest?cb=20200526055059&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4745,7 +4745,7 @@
    "strength": null,
    "ability": "Baal te permite robar una nueva carta.",
    "flavour": "Las tormentas viven en sus manos. Es la personificación de las fuerzas de la naturaleza.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/4e/Baal.jpg/revision/latest?cb=20201008073442&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4779,7 +4779,7 @@
    "strength": 2,
    "ability": "",
    "flavour": "El destino les junta, para que se cuiden las espaldas el uno al otro, para hacer de su tragedia un triunfo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/ad/Daphne_y_gregor.png/revision/latest?cb=20201121015411&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4796,7 +4796,7 @@
    "strength": 2,
    "ability": "",
    "flavour": "Un lobo arrancó mi brazo. Encontré mi fe y la voluntad para combatir a las abominaciones de la noche.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a8/Armstrong.png/revision/latest?cb=20201121014646&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4813,7 +4813,7 @@
    "strength": 1,
    "ability": "Puede llevar dos armas.",
    "flavour": "Nuevas destrezas afloran como retribución a las pérdidas de antaño. Todo se compensa en la vida. El manco sonríe a la luna.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/07/Brazo_Fuerte.png/revision/latest?cb=20201202182616&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4830,7 +4830,7 @@
    "strength": 1,
    "ability": "Puedes destruirlo cuando desees; produce oro igual al número de licántropos que tengas en juego, sólo por el turno.",
    "flavour": "La vía de la acción, la vía de la contemplación o la vía del sacrificio... ¿cuál elegirá el asceta...? ¿estará preparado con sus ayunos y prácticas?.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/54/Fribert.png/revision/latest?cb=20201202194123&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4847,7 +4847,7 @@
    "strength": 1,
    "ability": "-",
    "flavour": "¿Quién ha hecho esto de mí? ¿El destino me premia o me castiga? Quien creó al cordero, ¿me creó a mí?.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/fe/Lupo.png/revision/latest?cb=20201027035851&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4864,7 +4864,7 @@
    "strength": 1,
    "ability": "",
    "flavour": "Ni sus maneras son amables ni su gesto es simpático... en una batalla, ¿a quién sirven estas cosas?.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/7d/Corot.png/revision/latest?cb=20201202193813&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4881,7 +4881,7 @@
    "strength": 3,
    "ability": "Sólo puede bloquear.",
    "flavour": "Proteger es mi deber y honor. Hay siete días para vivir a vida y hay siete caminos para morir.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/ae/Guardia_del_Escudo.png/revision/latest?cb=20201202184101&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4898,7 +4898,7 @@
    "strength": 1,
    "ability": "Puede atacar cuando entra en juego.",
    "flavour": "Como en todo rapaz, todo en él es afilado, peligroso y cruel.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/74/Von_Krieg.png/revision/latest?cb=20201202021838&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4932,7 +4932,7 @@
    "strength": 2,
    "ability": "",
    "flavour": "Conoce las fibras de su red y manipula a su antojo los corazones y las voluntades, como un juego, como una casualidad.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/db/Virna.png/revision/latest?cb=20201201024919&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4949,7 +4949,7 @@
    "strength": 2,
    "ability": "",
    "flavour": "¿Quién respira en tu garganta?. La sombra se sirve de porcelana y en tus sueños roba tu vida, suavemente, como porcelana.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/26/Judy.png/revision/latest?cb=20201201012711&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4966,7 +4966,7 @@
    "strength": null,
    "ability": "Los vampiros no hacen daño en este turno.",
    "flavour": "¿El enemigo es más fuerte que tú? Eleva tus ojos al cielo, nuevas y mayores energías te inflamarán. El verdadero guerrero ofrenda su victoria a lo alto.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f4/Custodio.png/revision/latest?cb=20201019062824&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -4983,7 +4983,7 @@
    "strength": null,
    "ability": "Un vampiro oponente no hace daño al atacar en este turno.",
    "flavour": "Fascinado por su belleza, seducido por sus miradas, no alcanzó a gritar por ayuda. Lo último que vio fueron sus agudos colmillos. Pobres incautos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8c/Mordida.png/revision/latest?cb=20201019061530&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5017,7 +5017,7 @@
    "strength": null,
    "ability": "",
    "flavour": "El recuerdo de los más orgullosos. Los más salvajes. De la estirpe maldita fluye y se perpetua con astucia por los siglos de los siglos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/fa/Raza_nocturna.png/revision/latest?cb=20201121045540&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5034,7 +5034,7 @@
    "strength": 1,
    "ability": "Sin Habilidad",
    "flavour": "Su dorado pelaje ilumina las oscuras profundidades de los mares del sur. Coicoi-Vilu lo nombró amo absoluto de las aguas.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9c/Millalobo.jpg/revision/latest?cb=20201014205115&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5051,7 +5051,7 @@
    "strength": 3,
    "ability": "",
    "flavour": "Sus cuatro vasijas contienen las lluvias, las enfermedades, las heladas y las sequías. Dueño de los destinos de los pueblos que viven en la tierra.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/6d/Tlaloc.jpg/revision/latest?cb=20201014163825&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5068,7 +5068,7 @@
    "strength": 2,
    "ability": "Todos los Aliados en juego son Imbloqueables.<br>",
    "flavour": "Kukulcán, señor de los elementos. Maíz, porque gobernarás sobre la tierra y los hombres. Lagarto, porque gobernarás sobre la guerra y el fuego. Pez, porque gobernarás sobre el agua y el hambre. Buitre, porque gobernarás sobre el aire y el espacio.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/93/Kukulc%C3%A1n.jpg/revision/latest?cb=20211009012218&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5085,7 +5085,7 @@
    "strength": 2,
    "ability": "En tu Fase de Vigilia, hasta 3 veces por turno, puedes pagar 1 Oro para que tu oponente bote 1 carta de su Mazo Castillo.",
    "flavour": "Entre sus dones está la curación, volar al cielo para consultar a los seres cosmológicos, conseguir un nombre para un recién nacido, ir a las montañas de los pecaríes para pedir abundancia de caza y conocer el fondo de todos los ríos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/7b/LPE23-264-300.png/revision/latest?cb=20250215020623&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5102,7 +5102,7 @@
    "strength": 3,
    "ability": "Llevar Armas en este Aliado te cuesta un Oro menos.",
    "flavour": "Ser veloz, ser astuto, conocer la tierra y la selva, vivir en armonía. Honrar a los antepasados.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/76/Karib_2.png/revision/latest?cb=20211021005030&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5119,7 +5119,7 @@
    "strength": null,
    "ability": "Su portador puede bloquear cartas imbloqueables.",
    "flavour": "Guerrero, con valor, empuña contra nuestro enemigo su lanza afilada.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/0c/Tepoztopilli_2.png/revision/latest?cb=20211020162430&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5136,7 +5136,7 @@
    "strength": null,
    "ability": "Su portador es del tipo que elijas.",
    "flavour": "Más que un derecho, esta insignia es el deber de un líder en el camino de la guerra.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d4/Insignia_de_Toqui_2.png/revision/latest?cb=20211020034152&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5170,7 +5170,7 @@
    "strength": 2,
    "ability": "Si es destruido, todos tus Aliados en juego ganan +1 de fuerza permanentemente.",
    "flavour": "La cueva guardada por feroces invunches acoge a la mayoría. El consejo de los brujos dicta fatales sentencias prontas a realizarse.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ee/Cueva_de_Quicav%C3%AD.png/revision/latest?cb=20211020164940&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5187,7 +5187,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego puedes devolver a tu castillo una carta del cementerio de valor 2 o menos.",
    "flavour": "En la cima de Yggdrasil anida el águila Hraesvelg, entre sus ojos se posa el halcón Vaderfolne. Sopla un gran viento en el mundo cuando mueve sus alas. Siempre está discutiendo con el dragón Nidhoggr en las raíces.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/40/Hraesvelg.jpg/revision/latest?cb=20210125054151&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5204,7 +5204,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego puedes devolver a tu castillo una carta del cementerio de valor 1 o menos.",
    "flavour": "Bestia fatídica, hijo de Loki. El lobo fue encadenado para evitar que siguiese creciendo, así Tyr perdió su mano. Cuando se libere su hocico inmenso cubrirá la distancia entre la tierra y el cielo tragando todo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/1f/Fenoeiself.jpg/revision/latest?cb=20201020174714&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5221,7 +5221,7 @@
    "strength": 1,
    "ability": "Si está en la línea de ataque puede volver a la línea de defensa para bloquear.",
    "flavour": "Freya la hermosa, los gatos tiran tu carro, en tu salón hay muchos asientos para recibir a los muertos en batalla, que eliges primero que Odin. Tu magia y tu favor son poderosos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/93/Freya.jpg/revision/latest?cb=20210125041702&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5238,7 +5238,7 @@
    "strength": 2,
    "ability": "Paga uno de Oro y podrás robar una carta extra (una vez por turno)",
    "flavour": "Forseti preside el thing el tribunal de los dioses. Es magnifico en resolver riñas, escucha atento y toma resoluciones de inapelable justicia para ambas partes del conflicto.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ed/Forseti.jpg/revision/latest?cb=20210125050413&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5255,7 +5255,7 @@
    "strength": 3,
    "ability": "",
    "flavour": "Diosa del invierno, hija del gigante Tyatsi, casada con Nyord, al que confundió con Baldur, alterna entre los palacios de Thrymheim y Noatun. Ella decreta el castigo de Loki, vengando así la muerte de su padre.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/fc/Skadi.jpg/revision/latest?cb=20210125053319&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5272,7 +5272,7 @@
    "strength": 5,
    "ability": "",
    "flavour": "El mejor, más valiente y disciplinado guerrero de Asgard dirige su ejército. Su arma preferida es la espada. En la batalla de Ragnarok el mata al infernal perro Garm.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/28/Tyr.jpg/revision/latest?cb=20210125050028&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5306,7 +5306,7 @@
    "strength": null,
    "ability": "La fuerza de un aliado en juego se reduce en 3 con un mínimo de 0.",
    "flavour": "Encadenado firmemente, con tripas de tu hijo Narfi a tres piedras de agudo canto, éste es tu castigo mal compañero. Sigyn, fiel esposa, la ponzoña de serpiente recoge. Al vaciar ella el tazón, te retuerces en terremotos de dolor y agonía. Ragnarok es la esperanza del embustero.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d8/Suplicio_de_Loki.jpg/revision/latest?cb=20210121081140&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5323,7 +5323,7 @@
    "strength": null,
    "ability": "Una vez por turno, puedes pagar 1 de Oro para barajar 2 cartas de tu Cementerio en tu Mazo Castillo.",
    "flavour": "Öpir, gran maestro cantero, hizo esta inscripción que hasta hoy nos cuenta una historia y un homenaje a un hombre, su viuda y su hija.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/12/LPE23-283-300.png/revision/latest?cb=20250215020625&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5357,7 +5357,7 @@
    "strength": 2,
    "ability": "Si es destruido roba una carta.",
    "flavour": "El espíritu vuelve de entre los muertos con un solo propósito: la venganza.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f0/Yurei.jpg/revision/latest?cb=20210214072214&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5374,7 +5374,7 @@
    "strength": 2,
    "ability": "Si este aliado es destruido barájalo en tu castillo.",
    "flavour": "Próspero señor de grandes poderes, guardia del trueno y del relámpago, asegura el provecho de estas transacciones comerciales. Haz que todos seamos beneficiados.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/43/Cai_Shen.jpg/revision/latest?cb=20210207232204&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5408,7 +5408,7 @@
    "strength": null,
    "ability": "Destruye un aliado oponente a tu elección.",
    "flavour": "Con guardia baja se ejecuta este veloz golpe. Como la luna que crece hasta estar medio llena.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9f/T%C3%A9cnica_de_la_Media_Luna.jpg/revision/latest?cb=20210219030013&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5425,7 +5425,7 @@
    "strength": null,
    "ability": "Su portador gana +1 a la fuerza.",
    "flavour": "Utilizada por los samurai y sus mujeres. Su ventaja es que el golpe logrado es mucho más rápido que el de la katana.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/0a/Nanigata.jpg/revision/latest?cb=20210222062951&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5442,7 +5442,7 @@
    "strength": null,
    "ability": "Durante tu fase de reagrupación busca un oro en tu cementerio y barájalo con tu castillo una vez por turno.",
    "flavour": "El cielo en su movimiento creativo está lleno de fuerza. Así el hombre superior se fortalece con su luz.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/94/Chien.jpg/revision/latest?cb=20210219035435&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5612,7 +5612,7 @@
    "strength": null,
    "ability": "Una carta oponente no puede bloquear en este turno.",
    "flavour": "Oscura figura del mal. Sus hechizos contaminan las vidas de todos los que la rodean.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/85/Bruja_Carabusse.jpg/revision/latest?cb=20201009041535&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5680,7 +5680,7 @@
    "strength": null,
    "ability": "Destruye un aliado en juego y no puedes ser atacado el próximo turno.",
    "flavour": "¿Pagarán justos por pecadores?. ¡Disparad, es una orden! ¡Que dios sabrá distinguir a los suyos!",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a9/Justos_por_pecadores.png/revision/latest?cb=20201019195232&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5697,7 +5697,7 @@
    "strength": null,
    "ability": "Paga un Oro y anula la habilidad de todas las Armas en juego (una vez por turno).",
    "flavour": "Cuando llegue el final de las cosas, entre los últimos jirones del saber antiguo, escucharás los cánticos de la resurrección.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/2f/Totem_ultimo.png/revision/latest?cb=20201027024538&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5748,7 +5748,7 @@
    "strength": null,
    "ability": "Destruye todos tus Aliados en juego y pon gratis un Aliado en juego desde tu mano.",
    "flavour": "Tendremos que perecer. Señores Águilas y Jaguares, aunque fuerais de jade o de oro, también iremos a su casa, al lugar de los descarnados.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/68/Ah_Puch_2.png/revision/latest?cb=20211020032442&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5765,7 +5765,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Las diferentes ramas de las tribus se iban reuniendo y éste fue el lugar de su ciudad... Allí hicieron sus casas y construyeron el templo. Mientras otras ciudades-estado declinan, Uxmal se alza.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/27/Uxmal_2.png/revision/latest?cb=20211021023150&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5816,7 +5816,7 @@
    "strength": null,
    "ability": "Cuando un aliado sea destruido juega inmediatamente este Talismán para que dicho aliado siga en juego. Luego podrás robar una carta de tu castillo.",
    "flavour": "Qué podría darte... ¿el valor de osar en lo imposible? Hecho singular es este amor de un ser que no es de esta tierra y un mortal.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b3/Amor_de_Valkyria.jpg/revision/latest?cb=20210114093436&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5833,7 +5833,7 @@
    "strength": null,
    "ability": "Agrega +1 a la fuerza de su portador. Si su portador ataca tú tienes la primera acción en combate.",
    "flavour": "Desde el principio de los tiempos los pedazos de cuero que los hombres arrancan de las puntas de los talones de sus zapatos ayudan a conformar el invencible calzado de Vidar, hijo de Odín.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d6/Zapatos_de_Hierro.jpg/revision/latest?cb=20210119102955&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5850,7 +5850,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Sortilegios milenarios se ocultan en su interior, esperando la señal del elegido para liberarlos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/de/L%C3%A1mpara_M%C3%A1gica.png/revision/latest?cb=20200929190042&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5867,7 +5867,7 @@
    "strength": 1,
    "ability": "Al jugarlo puedes robar una carta.",
    "flavour": "Surge de las profundidades marinas para dirigir las conciencias de los seres humanos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8d/Oannes_%28Reto%29.jpg/revision/latest?cb=20201008080243&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5884,7 +5884,7 @@
    "strength": 2,
    "ability": "Si ataca, debe ser acompañado por un aliado.",
    "flavour": "Cuidado con sus palabras de confusión, cuidado con su mirada embustera, cuidado con sus alas negras.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/50/Strix.png/revision/latest?cb=20200818045251&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5901,7 +5901,7 @@
    "strength": 2,
    "ability": "Cuando ataca este aliado gana +1 a la fuerza",
    "flavour": "Al comenzar la lucha, parco y resuelto observa a sus compañeros... El sabe que no está solo y que combatirán codo con codo. Así la unión hace la fuerza.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/95/Corazon_de_leon.png/revision/latest?cb=20201121010139&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5918,7 +5918,7 @@
    "strength": 1,
    "ability": "Si ataca y hace daño al castillo oponente puedes buscar un Chamán en tu castillo y ponerlo en tu mano.",
    "flavour": "De una piedra llamó a salir a las cañas, que se lanzaron a matarle. Wiraqocha hizo caer fuego del cielo, muchos murieron. Apagó el fuego y dijo: \"Soy vuestro Hacedor\", las cañas se postraron ante él.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/09/Wiraqocha_2.png/revision/latest?cb=20211020175656&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5935,7 +5935,7 @@
    "strength": null,
    "ability": "El oponente descarta 2 cartas de su mano al cementerio y tú robas la carta superior de tu castillo.",
    "flavour": "En la sexta casa de tormento en Xibalba, me aguardaban brazas ardiendo y fuego ansiosos de quemarme. ¿Dónde vagaba mi corazón para llegar hasta aquí?",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d5/K%27_Ak%27_Na_2.png/revision/latest?cb=20211020021707&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5952,7 +5952,7 @@
    "strength": null,
    "ability": "Todos los aliados imbloqueables son devueltos a la mano de su dueño.",
    "flavour": "Loki disfrazado de vieja supo de Frigg que sólo un brote de muérdago a Baldur podría herir. Loki lo cortó y en la reunión preguntó a Hodur: ¿por qué no haces como los otros? Toma, lanza esta saeta, haz como los demás, yo te guiaré..., toma.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c2/Astucia_de_Loki.jpg/revision/latest?cb=20210114091221&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5969,7 +5969,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Este árbol colosal y majestuoso creció del suelo, las altas ramas del fresno se ciernen sobre todos los mundos y llegan por encima de los cielos. Sus tres raíces que lo mantienen erecto beben de las fuentes de Urd, Mimir y Hvergelmir.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/35/Codex_Runicus.jpg/revision/latest?cb=20210125064949&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5986,7 +5986,7 @@
    "strength": 3,
    "ability": "Cuando asignes el bloqueo, paga uno de oro y bloquea a un aliado extra.",
    "flavour": "Sus técnicas y sus armas son sutiles, como el engaño, como la flor venenosa.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f1/Kunoichi.jpg/revision/latest?cb=20210210062310&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -6003,7 +6003,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Al contemplarla se ve la relación en el mundo de lo superior e inferior y los cambios que regulan la existencia cósmica.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/42/Calabaza_del_Inmortal.jpg/revision/latest?cb=20210222073348&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -6020,7 +6020,7 @@
    "strength": 2,
    "ability": "Al entrar en juego, todo los demás caballeros ganan +1 de fuerza permanentemente.",
    "flavour": "Su imagen se pierde en las noches del tiempo. Espíritu que vaga sin calma ni perdón.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c6/Caballero_negro.jpg/revision/latest?cb=20201009035646&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-01"
   },
@@ -6038,7 +6038,7 @@
    "strength": 4,
    "ability": "Todos tus aliados se consideran caballeros cuando Kordrag está en juego.",
    "flavour": "Indómito e imbatible guerrero, como todos los de su terrible casta, la más temida del reino de Drako.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/53/Kordrag.jpg/revision/latest?cb=20201009030854&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-02"
   },
@@ -6056,7 +6056,7 @@
    "strength": 2,
    "ability": "Cuando Reina Guinivere entra en juego, puedes buscar un Caballero en tu mazo castillo y ponerlo en tu mano. En tu fase de vigilia, genera 2 para bajar armas o 1 para bajar Caballeros.",
    "flavour": "Ni el sol se compara con su belleza, Y su corazón es justo como el oro. La reina es la joya más valiosa del reino.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/e9/Reina_Guinivere.jpg/revision/latest?cb=20210301143255&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-03"
   },
@@ -6074,7 +6074,7 @@
    "strength": 3,
    "ability": "Cuando Dragón de Magma entra en juego, destruye un Aliado oponente.",
    "flavour": "La tierra está enferma y su enfermedad se llama humanidad; entonces él será la cura.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/82/Drag%C3%B3n_de_Magma.png/revision/latest?cb=20210606005233&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-04"
   },
@@ -6092,7 +6092,7 @@
    "strength": 5,
    "ability": "Puede bloquear a más de un aliado oponente hasta acabar su fuerza.",
    "flavour": "Sirviente fiel, en sus ojos vacíos el alma esclava arde como un fuego salvaje. Sus garras son afiladas y obedientes.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/50/Knochen.png/revision/latest?cb=20201027030610&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-05"
   },
@@ -6110,7 +6110,7 @@
    "strength": 6,
    "ability": "Este dragón no puede ser bloqueado.",
    "flavour": "Fabuloso soberano del aire y del fuego. Su gigantesca sombra vaga sobre las tierras condenadas al sufrimiento.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/66/Dragon_Medieval.jpg/revision/latest?cb=20201008073954&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-06"
   },
@@ -6128,7 +6128,7 @@
    "strength": 2,
    "ability": "Solo puedes tener una Morgana en juego. En tu fase de vigilia y una vez por turno, puedes destruir uno de tus aliados para desterrar un aliado oponente.",
    "flavour": "Si la venganza no corrompiese su alma, si el odio no corrompiese su corazón, ella sería tan poderosa como Merlín, pero gracias al creador, ella sólo es la esclava de su hijo Mordred.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8c/ESP-032.png/revision/latest?cb=20221209055527&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-07"
   },
@@ -6146,7 +6146,7 @@
    "strength": 2,
    "ability": "",
    "flavour": "Eterna condenada a la transformación. Cola de serpiente y alas de murciélago son su maldición.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/1b/Melusina.jpg/revision/latest?cb=20201009043758&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-08"
   },
@@ -6164,7 +6164,7 @@
    "strength": 1,
    "ability": "",
    "flavour": "Sus ropajes son tan delicados como sus alas. Su mágica belleza es tan irresistible como su destino.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/88/Hadas.jpg/revision/latest?cb=20201008081021&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-09"
   },
@@ -6182,7 +6182,7 @@
    "strength": null,
    "ability": "Destruye un aliado en el juego y puedes buscar 2 cartas de oro en tu castillo.",
    "flavour": "Con sus ojos llenos de fuego y maldad vigila con furia las puertas del infierno.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d7/Cancerbero.jpg/revision/latest?cb=20221117121024&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-10"
   },
@@ -6200,7 +6200,7 @@
    "strength": null,
    "ability": "Elige un aliado en juego de tu oponente y éste lo debe barajar en su castillo.",
    "flavour": "La civilización del Nilo surge por su divina intervención. El dios halcón defiende y vigila a su pueblo, al igual que el sol en el cielo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/fe/Horus.jpg/revision/latest?cb=20221117114604&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-11"
   },
@@ -6218,7 +6218,7 @@
    "strength": null,
    "ability": "Un aliado gana + 3 a la fuerza hasta el final del turno.",
    "flavour": "Sangre y muerte son la única forma de apaciguar al dios del sol y el fuego.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/5e/Hutzilopochtli.jpg/revision/latest?cb=20221115080946&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-12"
   },
@@ -6236,7 +6236,7 @@
    "strength": null,
    "ability": "Devuelve una carta del cementerio a tu mano.",
    "flavour": "La justiciera flecha del guerrero surca el aire buscando el cruel corazón de Kenabeek.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/eb/ER-113.jpg/revision/latest?cb=20201009042023&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-13"
   },
@@ -6254,7 +6254,7 @@
    "strength": null,
    "ability": "Roba dos cartas y bota una de tu mano.",
    "flavour": "El aroma de la sangre se mezcla con las milenarias sedas de su ropaje.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a1/ER-109.jpg/revision/latest?cb=20221117113211&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-14"
   },
@@ -6272,7 +6272,7 @@
    "strength": null,
    "ability": "Elige una carta de aliado en juego y cámbiala por una de tu oponente (sólo por el juego).",
    "flavour": "Los condenados a la perpetua noche infernal tiemblan ante el amo de las sombras y la muerte.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/23/Hades.jpg/revision/latest?cb=20221115181437&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-15"
   },
@@ -6290,7 +6290,7 @@
    "strength": null,
    "ability": "Busca una carta de Caballero en tu castillo y ponla en juego.",
    "flavour": "Poseedor del secreto de la creación. Su alma se mezcla con el espíritu del dragón.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9d/Merlin.jpg/revision/latest?cb=20201009043203&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-16"
   },
@@ -6308,7 +6308,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego, todos tus demás cazadores ganan +1 de fuerza permanentemente.",
    "flavour": "La ciencia y la tradición son armas en nuestra lucha contra la sombra del alma, el vampiro.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/5e/Van_Helsing.png/revision/latest?cb=20240120131445&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-17"
   },
@@ -6326,7 +6326,7 @@
    "strength": 1,
    "ability": "",
    "flavour": "Agazapada entre las ruinas, con un puñal como única defensa, parece inofensiva... Las apariencias engañan.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/7c/Zara.png/revision/latest?cb=20201121021052&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-18"
   },
@@ -6344,7 +6344,7 @@
    "strength": 1,
    "ability": "",
    "flavour": "Audaz y hábil en su oficio, como el mejor. Aprende a valerse de algo nuevo todo los días.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/dd/Niamh.png/revision/latest?cb=20201121015106&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-19"
   },
@@ -6362,7 +6362,7 @@
    "strength": 12,
    "ability": "No puede ser bloqueado. Cuando entra en juego bota todas las cartas de tu mano al cementerio.",
    "flavour": "Para él todo es pequeño, su fuerza es inmensa, su ímpetu imparable y su furia.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/2d/Tit%C3%A1n_Lic%C3%A1ntropo.png/revision/latest?cb=20201202030738&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-20"
   },
@@ -6380,7 +6380,7 @@
    "strength": 1,
    "ability": "",
    "flavour": "Atormentado humano condenado por los dioses a contemplar la luna llena con ojos de lobo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/16/Hombre_lobo.jpg/revision/latest?cb=20201008082224&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-21"
   },
@@ -6398,7 +6398,7 @@
    "strength": 3,
    "ability": "Destruye un licántropo que controles y gana +1 de fuerza.",
    "flavour": "Entre la algarabía de los salvajes batallones, y los vítores de voces inhumanas, relucieron los terribles dientes amarillos de la bestia, aullando con sus fauces muy abiertas en señal de completo triunfo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/40/MGO-057.png/revision/latest?cb=20200529181026&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-22"
   },
@@ -6416,7 +6416,7 @@
    "strength": 1,
    "ability": "",
    "flavour": "¿Qué es más peligroso, un enemigo grande o uno pequeño?",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a1/Enjambre.png/revision/latest?cb=20201119225254&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-23"
   },
@@ -6434,7 +6434,7 @@
    "strength": 4,
    "ability": "Todos los vampiros que controles ganan +1 de fuerza cuando ataquen.",
    "flavour": "El altivo soberano de la tiniebla retorna en un nuevo cuerpo desde la noche de los tiempos. Errante y sin corona, al que se distingue por el estigma todavía ardiendo en su frente.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d6/MGO-071.png/revision/latest?cb=20221204122535&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-24"
   },
@@ -6452,7 +6452,7 @@
    "strength": 3,
    "ability": "Debe atacar cuando es puesto en juego.",
    "flavour": "En los yermos, cualquier peregrino inexperto es una presa codiciada por él, y su única compañía, el hambre prolongada por los siglos.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/17/Vampiro_del_desierto.png/revision/latest?cb=20201201010850&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-25"
   },
@@ -6470,7 +6470,7 @@
    "strength": null,
    "ability": "Son destruidos todos los aliados en juego de los jugadores que participan.",
    "flavour": "El terrible soplo de los vientos, el rayo destructor y la ira de la tempestad reverencian tu gesto.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/bd/Stribog.png/revision/latest?cb=20221204122304&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-26"
   },
@@ -6488,7 +6488,7 @@
    "strength": null,
    "ability": "Puedes buscar un oro en tu castillo y ponerlo en tu mano.",
    "flavour": "Celosamente administra la fortuna de su amo. Pide, se te prestará. Recuerda pagar a tiempo o...toda una vida de esclavitud será insuficiente.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9b/Dycom_el_recaudador..png/revision/latest?cb=20201130062650&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-27"
   },
@@ -6506,7 +6506,7 @@
    "strength": null,
    "ability": "Puedes buscar un aliado en tu castillo y ponerlo en la línea de defensa. Al final del turno éste es destruido.",
    "flavour": "Ven como aliado, ven como amigo, ven en socorro de los míos, que nada te detenga en tu camino.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/fe/Evocaci%C3%B3n.png/revision/latest?cb=20201130055702&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-28"
   },
@@ -6524,7 +6524,7 @@
    "strength": null,
    "ability": "Su portador no puede atacar o bloquear.",
    "flavour": "Tensa el arco de tu ballesta con una potente flecha. Darás en el blanco sin demora a una distancia de muchas leguas.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/e1/Ballesta.png/revision/latest?cb=20201024032452&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-29"
   },
@@ -6542,7 +6542,7 @@
    "strength": null,
    "ability": "Todos tus vampiros en juego ganan +1 a la fuerza, mientras este tótem esté en juego.",
    "flavour": "Como recuerdos que renacen de las cenizas. La tierra se torna en fuego. Para hacer del mundo un mosaico.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c7/Totem_de_magma.png/revision/latest?cb=20201128131231&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-30"
   },
@@ -6560,7 +6560,7 @@
    "strength": null,
    "ability": "Jugar cartas de licántropo, mientras este tótem esté en juego.",
    "flavour": "Las criaturas que están en su presencia disfrutan con la bendita abundancia del verdor.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d2/Totem_del_bosque.png/revision/latest?cb=20201128061908&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-31"
   },
@@ -6578,7 +6578,7 @@
    "strength": null,
    "ability": "Todos los licántropos ganan +1 a la fuerza, mientras este tótem esté en juego.",
    "flavour": "Bañada por las manos de la diosa, la fuerza de incontables cazadores se acumula en la piedra de los ancestros.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/42/Totem_lunar.png/revision/latest?cb=20201128174756&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-32"
   },
@@ -6596,7 +6596,7 @@
    "strength": 2,
    "ability": "Gana +1 a la fuerza por cada Trauko aliado en juego.",
    "flavour": "Desprecia a los hombres, pero profesa un apasionado amor por las mujeres jóvenes.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/61/Trauko.png/revision/latest?cb=20201002140246&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-33"
   },
@@ -6614,7 +6614,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego toda tus bestias ganan +1 de fuerza permanentemente.",
    "flavour": "Temido monstruo de las profundidades acecha a sus presas, en las orillas de los ríos y lagos para matarlos y beberse su sangre.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d8/Cuchivilu.jpg/revision/latest?cb=20210106223326&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-34"
   },
@@ -6632,7 +6632,7 @@
    "strength": 1,
    "ability": "While Sisiutl is in play, you may pay 2 Gold to make one of your Allies +2 Strength until the Final Phase.",
    "flavour": "Glorius warriors try to destroy her and skin her hide, a fountain of immortality and endless power.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/75/Sisiutl_Brotherhood.jpg/revision/latest?cb=20230315191317&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-35"
   },
@@ -6650,7 +6650,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego puedes buscar un Tótem y ponerlo en juego.",
    "flavour": "El mago se revuelca en el cuero diciendo las palabras secretas, se levanta transformado en feroz jaguar.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/32/Runa_Urutrungu.jpg/revision/latest?cb=20201214190431&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-36"
   },
@@ -6668,7 +6668,7 @@
    "strength": 1,
    "ability": "Cuando entra en juego busca un Tótem en tu cementerio y ponlo en tu mano.",
    "flavour": "Por ti caen y por ti se elevan hombre e imperios. Tú, siempre joven, el primero en llegar, el que engaña y no será engañado. El que se inventa a si mismo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ef/Tezcaltlipoca_2.png/revision/latest?cb=20211020182201&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-37"
   },
@@ -6686,7 +6686,7 @@
    "strength": 4,
    "ability": "Para entrar en juego bota al cementerio dos cartas de tu castillo. (Imbloqueable. Carta única)",
    "flavour": "¿Quién será el quinto sol? Se preguntaron los dioses en Teotihuacán. El dios rico tuvo miedo ante el bracero, Teotexcalli. Nanahuatzin, el desvalido, cerró los ojos y saltó.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8a/Nanahuatzin.jpg/revision/latest?cb=20221204122747&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-38"
   },
@@ -6704,7 +6704,7 @@
    "strength": 3,
    "ability": "Puede atacar cuando entra en juego, al final del turno en que ataques es destruido. (Imbloqueable)",
    "flavour": "Rayo de una pierna, rayo pequeño y rayo largo, son el corazón del cielo, los tres como uno soplan el aliento de vida sobre las aguas de la creación informe.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/69/Huracan.jpg/revision/latest?cb=20201223040053&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-39"
   },
@@ -6722,7 +6722,7 @@
    "strength": 2,
    "ability": "",
    "flavour": "El abuelo Arutam, el tigre de la mañana, lo llevó a caminar por la selva inmensa y le relató, cómo el luminoso Etsa devolvió la vida a los pájaros.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/02/Shuar_2.png/revision/latest?cb=20211021012519&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-40"
   },
@@ -6740,7 +6740,7 @@
    "strength": null,
    "ability": "(Fuerza X) Cuando entra en juego destruye todos tus Aliados  en juego. Por cada Aliado destruido, Lautaro gana +1 de fuerza permanentemente. (Imbloqueable)",
    "flavour": "Nuestro líder indomable, astuto estratega, el libertador al que seguimos en esta guerra como un relámpago. ¡¡¡Diez veces venceremos!!!",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/58/Lautaro_2.png/revision/latest?cb=20211020185110&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-41"
   },
@@ -6758,7 +6758,7 @@
    "strength": null,
    "ability": "Todos tus aliados que ataquen son imbloqueables por este turno.",
    "flavour": "El mago convertido en su otro yo, en su doble, actúa en éste y otros mundos. Así la justicia abate al intrigante, al traidor, al usurpador.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/47/Ira_del_Nahual.jpg/revision/latest?cb=20201204144856&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-42"
   },
@@ -6776,7 +6776,7 @@
    "strength": null,
    "ability": "Puedes buscar un aliado en tu castillo y ponerlo en tu mano.",
    "flavour": "Madre nuestra, eres tiempo que cura los dolores, tiempo que distribuye las estaciones, tierra fecunda. Todos venimos de ti y aceptamos tu ley.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b5/Pachamama.jpg/revision/latest?cb=20201204152156&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-43"
   },
@@ -6794,7 +6794,7 @@
    "strength": null,
    "ability": "Reduce a cero todo el daño hecho por tu oponente en este turno.",
    "flavour": "En la purificación, la machi en trance, dirige oraciones a los dioses mayores y los antepasados. La familia canta y grita, todos luchan juntos para limpiar el cuerpo del wekufe.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/97/Machit%C3%BAn.jpg/revision/latest?cb=20201206124135&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-44"
   },
@@ -6812,7 +6812,7 @@
    "strength": null,
    "ability": "En el momento que tu oponente juegue un Talismán desde su mano, puedes jugar esta carta y mandar a su cementerio dicho Talismán.",
    "flavour": "Distinguido en su carrera como brujo, el verdugo implacable ejecuta la pena de muerte sentenciada por la mayoría.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/64/Flechero.png/revision/latest?cb=20221213082716&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-45"
   },
@@ -6830,7 +6830,7 @@
    "strength": null,
    "ability": "Te cuesta un oro menos jugar Chamanes.",
    "flavour": "Poderoso en las alturas, desde el espacio infinito donde moras, otórganos la intrepidez en el combate.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/6c/T%C3%B3tem_del_%C3%81guila.jpg/revision/latest?cb=20201212150003&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-46"
   },
@@ -6848,7 +6848,7 @@
    "strength": null,
    "ability": "Todos tu aliados ganan +1 de fuerza.",
    "flavour": "Poderoso don de la noche estrellada, otórganos valor y fortaleza en el combate.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/24/T%C3%B3tem_de_Jaguar.png/revision/latest?cb=20211020034633&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-47"
   },
@@ -6866,7 +6866,7 @@
    "strength": null,
    "ability": "Devuelve un oro a tu mano, luego pon esta carta en tu reserva de oro.<br>Al utilizarlo cuenta como 2 oros.",
    "flavour": "Rostro del día auspicioso, tus rayos, como serpientes, zigzaguean cálidos por los cuatro rincones del mundo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/fb/Puchao.png/revision/latest?cb=20221213083221&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-48"
   },
@@ -6884,7 +6884,7 @@
    "strength": 4,
    "ability": "Todos tu abominaciones pueden atacar cuando entren en juego y mientras este aliado esté en juego.",
    "flavour": "Capaz de nadar por la piedra sólida con la fuerza de un buey. El asesino camina después de la muerte aterrorizando poblados y se escabulle.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9d/Draugar.jpg/revision/latest?cb=20210114043532&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-49"
   },
@@ -6902,7 +6902,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego tu oponente baraja en su castillo un aliado que tenga en juego.",
    "flavour": "Renombrado por sus banquetes es Aegir, el gigante del océano, el fabricante de cerveza, esposo de Ran; nueve olas son sus hijas.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/db/Aegir.jpg/revision/latest?cb=20210121070843&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-50"
   },
@@ -6920,7 +6920,7 @@
    "strength": 4,
    "ability": "Siempre que bloquee a un aliado oponente deberás buscar un Oro en tu castillo y ponerlo en tu mano.",
    "flavour": "Se jacta Rugnir de ser el más fuerte de Yotunheim. Su cabeza es de piedra, su corazón también. Como terrible maza empuña su piedra de afilar.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ed/Rugnir.jpg/revision/latest?cb=20210121073852&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-51"
   },
@@ -6938,7 +6938,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego destruye un aliado oponente de fuerza 4 o menos.",
    "flavour": "Por muchos nombres se conoce a un hombre. Gracias a las polainas y tu valor, en ese nido de serpientes, tu nombre y la fama de tus hazañas pasan de boca en boca.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ef/Ragnar_Lodbrog.jpg/revision/latest?cb=20210114060820&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-52"
   },
@@ -6956,7 +6956,7 @@
    "strength": 4,
    "ability": "Cuando entra en juego destruye un aliado oponente.",
    "flavour": "En Valhalla los héroes muertos con gran valor en batalla, se entrenan luchando hasta cortarse en pedazos. Festejan con Odín al anochecer y sus heridas curan por milagro. El día de Ragnarok, los más feroces marcharán con Odin contra los enemigos de los dioses.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/19/RAGNAROK_031.png/revision/latest?cb=20240630220213&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-53"
   },
@@ -6974,7 +6974,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego destruye un aliado oponente de fuerza 3 o menos.",
    "flavour": "E l cruel gigante hace frente a Thor, confiado en su victoria. El tres veces poderoso no se percata de que ya ha perdido,",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/15/Trivaldi.jpg/revision/latest?cb=20210121074923&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-54"
   },
@@ -6992,7 +6992,7 @@
    "strength": 0,
    "ability": "Cuando Hodur entra en juego se convierte en una copia total de un aliado oponente. Este es barajado en su castillo y no podrá ser jugado mientras Hodur esté en juego.",
    "flavour": "La reunión disfrutaba usando a Baldur como blanco, festejaba su invulnerabilidad. Ciego como la guerra, Hodur se mantenía apartado... Una maliciosa voz le instó a participar, le facilitó para disparar una inocente saeta de muérdago...",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/94/Hodur.jpg/revision/latest?cb=20221217221804&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-55"
   },
@@ -7010,7 +7010,7 @@
    "strength": 1,
    "ability": "Si algún jugador juega un Talismán puedes destruir esta carta y anular a dicho Talismán.",
    "flavour": "Unidos en la vida Nanna y Baldur, ahora que él ha partido, ¿acaso la muerte los podrá separar? ¿Quién es más fiel que una esposa que a su marido se ha unido en la pira del funeral?",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8c/RGK-013.jpg/revision/latest?cb=20221217221856&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-56"
   },
@@ -7028,7 +7028,7 @@
    "strength": 8,
    "ability": "",
    "flavour": "Cabellos rojos como la sangre derramada por los enemigos. Ojos azules como el cielo que les arrebata a los gigantes de la escarcha.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/23/Thor.jpg/revision/latest?cb=20201008071133&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-57"
   },
@@ -7046,7 +7046,7 @@
    "strength": null,
    "ability": "Copia la habilidad de un Talismán que esté en tu cementerio.",
    "flavour": "Sé un cántico de poder y varios más que presto entono cuando me hallo en la necesidad y la adversidad. La aflicción se devuelve así a quien mal me  desea.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c3/Galdar.jpg/revision/latest?cb=20210107152348&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-58"
   },
@@ -7064,7 +7064,7 @@
    "strength": null,
    "ability": "Puedes buscar una carta de Oro en tu castillo y ponerla en juego.<br>Este Oro no afecta el límite de Oros por turno.",
    "flavour": "Con este canto se evocan los tiempos primeros, cuando el gigante Ymir bebió la leche de Adumla, cuando Adumla lamió una piedra que tomó la forma de un hombre...",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/08/Cuernos_de_Adumla.jpg/revision/latest?cb=20210121075343&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-59"
   },
@@ -7082,7 +7082,7 @@
    "strength": null,
    "ability": "Cada aliado oponente ve disminuida su fuerza a un mínimo de 0, por el número de cartas que tengas en la mano.",
    "flavour": "Colgué del árbol retorcido nueve noches. Allí permanecí. Yo mismo sacrificado por mi mismo. Nadie me dio pan, nadie me dio vino. A las profundidades me asomé para con un profundo grito las runas asir",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/98/Sacrificio_de_Od%C3%ADn.jpg/revision/latest?cb=20210114093009&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-60"
   },
@@ -7100,7 +7100,7 @@
    "strength": null,
    "ability": "Destruye cualquier carta en juego que no sea un Oro y luego puedes robar una carta.",
    "flavour": "Esta es la fuente de Mimir bajo la raíz media del Yggdrasil. ¿Cuál es el costo de la sabiduría? Que ofrenda, qué sacrificio, estás dispuesto a realizar. Un ojo de la cara es el valor de la sabiduría. ¡Si! ¡Nada más, nada menos!.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/97/Fuente_de_Mimir.jpg/revision/latest?cb=20221217222214&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-61"
   },
@@ -7118,7 +7118,7 @@
    "strength": null,
    "ability": "Elige 3 cartas en tu cementerio y barájalas con tu castillo. Luego roba 2 cartas.",
    "flavour": "Hecha de la sangre del sabio Kvasir mezclada con miel, por los pérfidos enanos Fjalar y Galar. Esta bebida milagrosa hace de quien la toma un poeta inspirado de ingenio ilimitado.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/3f/RGK-079.jpg/revision/latest?cb=20200522171139&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-62"
   },
@@ -7136,7 +7136,7 @@
    "strength": null,
    "ability": "Puedes destruir este Oro para que genere el doble por este turno.",
    "flavour": "¿Quién leerá en los costados de este tu ataúd las runas talladas de tus hazañas de tiempos ya idos y olvidados?... ¡Cuando tú moriste, contigo murió una parte del mundo!",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/94/Ata%C3%BAd_de_Marfil.jpg/revision/latest?cb=20221217222003&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-63"
   },
@@ -7154,7 +7154,7 @@
    "strength": null,
    "ability": "Destruye este Oro y un aliado en juego tendrá fuerza 0 por ese turno.",
    "flavour": "Juguemos... son veintidós \"hombres\" rojos y veintidós blancos en la tabla, el centro y los rincones se dejan vacíos. Las piezas blancas abren el juego colocándose en el centro, las rojas lo toman saltando sobre él y el juego procede... hasta que uno tenga menos de cinco piezas y pierda.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/0b/Halatafl.jpg/revision/latest?cb=20221217222055&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-64"
   },
@@ -7172,7 +7172,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego tus demás campeones ganan +2 a la fuerza por el resto del juego.",
    "flavour": "Líder de los cinco tigres generales de Shu. Hermano jurado de Liu Bei y Zhang Fei. Valiente y leal combate a las fuerzas de Cao Cao... hasta el final.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/83/Guan_Yu.jpg/revision/latest?cb=20210210064000&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-65"
   },
@@ -7190,7 +7190,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego elige entre buscar un campeón en tu castillo o robar dos cartas de tu castillo.",
    "flavour": "Soy Hattori Hanzo Masashige, el \"Diablo Hanzo\", Jonin de 200 hombres de Iga. Nadie tocará al señor Tokugawa Ieyasu, está bajo mi protección. Las amenazas serán seguidas hasta su extinción.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/81/EDD-081-236.png/revision/latest?cb=20240101225708&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-66"
   },
@@ -7208,7 +7208,7 @@
    "strength": 1,
    "ability": "Cuando entra en juego, este campeón busca otro campeón igual a éste en tu castillo y ponlo en juego.",
    "flavour": "Son un tesoro de lealtad. Vengan la injusta muerte de su señor para después seguirlo al más allá.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/26/47_Ronin.jpg/revision/latest?cb=20210213014551&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-67"
   },
@@ -7226,7 +7226,7 @@
    "strength": 4,
    "ability": "Una vez por turno y en tu fase de reagrupar, baraja una carta de tu cementerio con tu castillo o roba una carta de tu mazo castillo.",
    "flavour": "El Mapache es el amo de la transformación y del disfraz. Vive innumerables y divertidas aventuras por bosques y aldeas.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/71/Tanuki.jpg/revision/latest?cb=20210214064612&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-68"
   },
@@ -7244,7 +7244,7 @@
    "strength": 3,
    "ability": "Puedes destruir este aliado para barajar en su castillo un aliado oponente en juego.",
    "flavour": "El que muere lejos de su hogar reanimado por perversos nigromantes, es un siervo sin voluntad ni pensamiento.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/64/Geon_Si.jpg/revision/latest?cb=20210214041910&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-69"
   },
@@ -7262,7 +7262,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego puedes buscar una copia de esta criatura en tu castillo o cementerio y ponerla en tu mano.",
    "flavour": "Torpe pero dañino es el pueblo de los Oni, gusta de causar daño con enfermedades y epidemias.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a7/Oni.jpg/revision/latest?cb=20210214041538&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-70"
   },
@@ -7280,7 +7280,7 @@
    "strength": 3,
    "ability": "Una vez en tu turno y en la fase de reagrupar podrás barajar una carta de tu cementerio con tu castillo.",
    "flavour": "Reina-sol de la Alta Planicie Celestial. Asustada por los destrozos de Susano se ocultó en la caverna de las Rocas Celestiales sumiendo al universo en la oscuridad. Los Kami discurren un ardid para tentarla a salir.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8b/Amateratsu.jpg/revision/latest?cb=20210206053937&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-71"
   },
@@ -7298,7 +7298,7 @@
    "strength": 0,
    "ability": "Si este Kami está en juego podrás robar hasta dos cartas más al final de tu turno.",
    "flavour": "Abundancia del mar, protector de la pesca y patrono de los pescadores. Era adorado en la región costera cerca de Osaka.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/65/Ebisu.jpg/revision/latest?cb=20210207202128&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-72"
   },
@@ -7316,7 +7316,7 @@
    "strength": 1,
    "ability": "Hasta dos veces por turno toma un talismán de tu mano y barájalo con tu castillo, luego roba dos cartas de tu castillo.",
    "flavour": "Abundancia de la tierra, protector del suelo y patrono de los granjeros. Con su mazo mágico realiza todos los deseos de los mortales.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/90/Daikoku.jpg/revision/latest?cb=20210206060926&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-73"
   },
@@ -7334,7 +7334,7 @@
    "strength": 5,
    "ability": "Cuando entra en juego puedes elegir de tu oponente una carta de aliado de fuerza 6 o menos y barajarla en su mazo; luego tu oponente se descarta de una carta de su mano.",
    "flavour": "Con mi gran poder y sabiduría me opongo a todos aquellos que perturban la paz. Así guardo el reino de todo enemigo, sea hombre o demonio.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8d/Guan_Ti.jpg/revision/latest?cb=20210207234905&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-74"
   },
@@ -7352,7 +7352,7 @@
    "strength": 1,
    "ability": "Cuando entra en juego, busca una carta en el castillo oponente que no sea un oro y destiérrala.",
    "flavour": "El arquero celestial abatió a los soles-cuervos que abrazan con su calor el mundo. Xi Wang Mu le ayudó en la búsqueda de su esposa. Ascendiendo al cielo como inmortal del palacio del sol.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/62/Shen_Yi.jpg/revision/latest?cb=20210208021231&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-75"
   },
@@ -7370,7 +7370,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, tu oponente sube a su mano una carta de aliado en juego que tú elijas.",
    "flavour": "Patrono de los exámenes para oficial imperial. En su vida terrenal era un profesor que , luego de fracasar en el examen, se arrojó al mar y fue salvado por una mágica criatura marina.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/57/Kuei_Xing.jpg/revision/latest?cb=20210209235328&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-76"
   },
@@ -7388,7 +7388,7 @@
    "strength": null,
    "ability": "Tu oponente bota de su mazo tantas cartas como oro tenga en juego.",
    "flavour": "Ella ni siquiera se dió cuenta cuando el astuto espíritu del zorro la poseyó, entró por sus uñas, parecía como loca.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/3b/Kitsune-Tsuki.jpg/revision/latest?cb=20210218054200&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-77"
   },
@@ -7406,7 +7406,7 @@
    "strength": null,
    "ability": "Señala tres cartas de tu oponente en juego, elige dos que permanecen en juego y la otra va al cementerio.",
    "flavour": "El geomante, siguiendo el método tradicional, determina el lugar más favorable para construir utilizando el Lo Pan, la brújula, buscando la armonía de las corrientes del viento y el agua.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b1/Feng_Shui.jpg/revision/latest?cb=20210215184657&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-78"
   },
@@ -7424,7 +7424,7 @@
    "strength": null,
    "ability": "Al final de cada turno puedes reagrupar este oro.",
    "flavour": "Amateratsu dio tres presentes a la tierra: la joya de Jade Yasaka-no-Magatama, el espejo Yaata-no-Kagami y la espada Kusanagi-no-Tsurugi, objetos que aún hoy en día se consideran emblemas imperiales.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8d/Yasakani.jpg/revision/latest?cb=20210222184516&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-79"
   },
@@ -7442,7 +7442,7 @@
    "strength": null,
    "ability": "Destruye este oro y elige un aliado oponente. Tu oponente lo sube a su mano.",
    "flavour": "El Kabuki fue creado al final del periodo Edo, contemplando tanto por las clases altas como por las clases más bajas. Es muy popular.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/16/Teatro_Kabuki.jpg/revision/latest?cb=20210222185034&path-prefix=es",
+   "image": "",
    "custom": true,
    "specialId": "SC-80"
   }

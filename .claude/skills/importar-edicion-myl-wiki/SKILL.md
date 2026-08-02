@@ -114,6 +114,37 @@ Si te encuentras con una edición cuya tabla no calza con ninguno de estos
 patrones, el script fallará con un error claro ("no se encontró la tabla de
 cartas") — ahí sí hay que extender `parse_list_table` a mano.
 
+### `--strict-images`: ediciones "remake" / aniversario / compilatorias
+
+Usa este flag cuando la edición reimprime cartas de ediciones anteriores
+CON POSIBLES CAMBIOS (habilidad, tratamiento visual) — reconócela por
+palabras como "remake", "aniversario", "4.0"/"3.0", o porque la propia
+página de la edición dice que "todas las cartas poseen un nuevo código de
+coleccionista". Se comprobó con Leyendas - Primera Era 4.0 que, cuando el
+wiki todavía no tiene el escaneo específico de una carta nueva (edición
+recién lanzada), el extractor puede terminar trayendo — con confianza
+aparente, porque SÍ encontró una página — el arte de la versión ANTERIOR de
+la carta, que en los hechos puede ser una impresión distinta (ej. Bjorn
+Ragnarsson cambia de habilidad entre Leyendas 3.0 y 4.0 aunque comparta
+nombre y arte parecido). Con `--strict-images`, la imagen solo se usa
+cuando viene de una página específica de la edición que estás extrayendo;
+para el resto, mejor sin imagen que con la de otra carta — el usuario la
+completa a mano cuando escanea su carta física.
+
+Sin este flag el script sigue confiando en la imagen de la página base o de
+la Nota (útil para ediciones que son una reimpresión 1:1 estable de otra,
+ej. Bruderschaft/La Cofradía, donde eso no causó problemas). Ante la duda,
+mejor pasar `--strict-images` y preguntarle al usuario si quiere que se
+complete alguna imagen puntual a mano después — no al revés.
+
+**Mismo riesgo, sin resolver todavía, para habilidad/historia**: el texto
+de una carta resuelta por página base o Nota puede corresponder también a
+la versión ANTERIOR, no solo la imagen — no hay una señal tan clara para
+detectarlo automáticamente como con la imagen (que se puede rastrear por su
+página de origen). Si el usuario reporta una habilidad incorrecta, corrígela
+a mano contra la página específica de la edición (o pídele que confirme el
+texto de su carta física).
+
 ## Paso 3 — Resuelve el reporte (`sin_resolver`)
 
 Cada entrada trae `nombre`, `pagina_intentada` y, si los hubo,
