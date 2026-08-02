@@ -17,6 +17,17 @@
    pedirle a Claude que las resuelva con la skill (que sí hace verificación
    cruzada con juicio, algo que no es seguro automatizar en un botón).
 
+   IMPORTANTE #2 — la IMAGEN es todavía más estricta que el resto de los
+   datos: solo se usa cuando viene de una página ESPECÍFICA de la edición
+   que se está cargando, nunca de una página base/compartida. Se comprobó
+   en la práctica (edición Leyendas - Primera Era 4.0) que una carta
+   "remake"/reimpresa puede compartir nombre y página base con una versión
+   ANTERIOR de la carta que tiene otra habilidad y otro arte (ej. Bjorn
+   Ragnarsson cambia entre Leyendas 3.0 y 4.0); usar la imagen de esa
+   página base mostró cartas con el arte de la edición equivocada. Mejor
+   una carta sin imagen (el usuario la escanea después) que una con la
+   imagen de otra carta.
+
    LIMITACIÓN CONOCIDA (sin confirmar en producción): en las pruebas hechas
    para construir esto, un navegador AUTOMATIZADO (headless, sin pantalla,
    corriendo en un sandbox) no pudo completar las peticiones a myl.fandom.com
@@ -250,19 +261,36 @@ function firstImageFile(imagenField) {
 
 /* ===================== Resolución de la página de cada carta ===================== */
 // Solo página específica de la edición o página base compartida — nunca
-// búsqueda + adivinanza (ver nota al inicio del archivo).
+// búsqueda + adivinanza (ver nota al inicio del archivo). Devuelve además
+// una "confianza": "especifica" cuando la página encontrada es propia de
+// esta edición, "base" cuando es una página compartida con otra edición
+// (fallback). Esa distinción decide si se confía en la imagen (ver
+// buildCard) — se comprobó en la práctica (edición Leyendas - Primera Era
+// 4.0) que una carta "remake"/reimpresa puede compartir nombre y página
+// base con una versión ANTERIOR que tiene otra habilidad y otro arte
+// (ej. Bjorn Ragnarsson cambia entre Leyendas 3.0 y 4.0); usar la imagen de
+// esa página base como si fuera la de esta edición mostró cartas con el
+// arte equivocado.
 function resolveCardContent(card, editionName, contents, report) {
   const title = card.pageTitle;
-  const specific = title.includes(`(${editionName})`) ? title : `${title} (${editionName})`;
-  if (contents.has(specific)) return contents.get(specific);
-  if (contents.has(title)) return contents.get(title);
   const base = title.replace(/\s*\([^)]*\)\s*$/, "").trim();
-  if (contents.has(base)) return contents.get(base);
+  // OJO: cuando el enlace del wiki no trae ningún paréntesis de
+  // desambiguación (ej. "[[Carta Dos]]"), "title" y "base" son literalmente
+  // el mismo string — comprobar "title in contents" en ese caso encuentra
+  // exactamente la misma página compartida que "base in contents", así que
+  // NO es prueba de que sea específica de esta edición. Solo cuenta como
+  // "especifica" cuando title trae su propio paréntesis (title !== base):
+  // ahí sí el wiki está distinguiendo esta versión de otras (ej. "(LPE4)",
+  // "(Secreta)", "(Bruderschaft)").
+  const specific = title.includes(`(${editionName})`) ? title : `${title} (${editionName})`;
+  if (contents.has(specific)) return { txt: contents.get(specific), confidence: "especifica" };
+  if (title !== base && contents.has(title)) return { txt: contents.get(title), confidence: "especifica" };
+  if (contents.has(base)) return { txt: contents.get(base), confidence: "base" };
   report.sinResolver.push({ nombre: card.name, paginaIntentada: title });
-  return null;
+  return { txt: null, confidence: null };
 }
 
-function buildCard(card, txt, editionSlug, editionDisplayName, format, specialId) {
+function buildCard(card, txt, editionSlug, editionDisplayName, format, specialId, trustImage) {
   const d = txt ? parseCardTemplate(txt) : {};
   let coste = (d["coste de oro"] || "").trim();
   let fuerza = (d["ataque"] || "").trim();
@@ -272,7 +300,9 @@ function buildCard(card, txt, editionSlug, editionDisplayName, format, specialId
   // la habilidad para no perder la información (mismo criterio que el CSV).
   if (fuerza.toUpperCase() === "X") { fuerza = ""; habilidad = "(Fuerza X) " + habilidad; }
   if (coste.toUpperCase() === "X") { coste = ""; habilidad = "(Coste X) " + habilidad; }
-  const imgFile = firstImageFile(d["imagen"] || "");
+  // Solo se confía en la imagen cuando viene de una página específica de
+  // esta edición (trustImage) — ver el comentario de resolveCardContent.
+  const imgFile = trustImage ? firstImageFile(d["imagen"] || "") : null;
   return {
     name: card.name,
     edition: editionSlug,
@@ -334,19 +364,27 @@ export async function importEditionFromWiki({
   const contents = await fetchContents(titlesNeeded, (done, total) =>
     progress(`Descargando páginas… ${done}/${total}`));
 
-  const report = { sinResolver: [], sinImagen: [] };
+  const report = { sinResolver: [], sinImagen: [], imagenDescartadaPorConfianza: [] };
   const cards = [];
   for (const c of numbered) {
-    const txt = resolveCardContent(c, wikiEditionName, contents, report);
-    const card = buildCard(c, txt, editionSlug, editionDisplayName, format);
+    const { txt, confidence } = resolveCardContent(c, wikiEditionName, contents, report);
+    const trustImage = confidence === "especifica";
+    const card = buildCard(c, txt, editionSlug, editionDisplayName, format, null, trustImage);
     cards.push(card);
-    if (!card._imageFile) report.sinImagen.push(c.name);
+    if (!card._imageFile) {
+      report.sinImagen.push(c.name);
+      if (txt && !trustImage) report.imagenDescartadaPorConfianza.push(c.name);
+    }
   }
   for (const c of specials) {
-    const txt = resolveCardContent(c, wikiEditionName, contents, report);
-    const card = buildCard(c, txt, editionSlug, editionDisplayName, format, c.specialId);
+    const { txt, confidence } = resolveCardContent(c, wikiEditionName, contents, report);
+    const trustImage = confidence === "especifica";
+    const card = buildCard(c, txt, editionSlug, editionDisplayName, format, c.specialId, trustImage);
     cards.push(card);
-    if (!card._imageFile) report.sinImagen.push(c.name);
+    if (!card._imageFile) {
+      report.sinImagen.push(c.name);
+      if (txt && !trustImage) report.imagenDescartadaPorConfianza.push(c.name);
+    }
   }
 
   progress("Resolviendo imágenes…");

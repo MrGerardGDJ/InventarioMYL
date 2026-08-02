@@ -371,12 +371,20 @@ def resolve_card_content(card, edition_name, contents, report):
        antes de aceptarlos — nunca se rellenan solos en el CSV.
     """
     title = card["page_title"]
+    base = re.sub(r"\s*\([^)]*\)\s*$", "", title).strip()
+    # OJO: cuando el enlace del wiki no trae ningún paréntesis de
+    # desambiguación (ej. "[[Carta Dos]]"), "title" y "base" son literalmente
+    # el mismo string — comprobar "title in contents" en ese caso encuentra
+    # exactamente la misma página compartida que "base in contents", así que
+    # NO es prueba de que sea específica de esta edición. Solo cuenta como
+    # "específica" cuando title trae su propio paréntesis (title != base):
+    # ahí sí el wiki está distinguiendo esta versión de otras (ej. "(LPE4)",
+    # "(Secreta)", "(Bruderschaft)").
     specific = f"{title} ({edition_name})" if f"({edition_name})" not in title else title
     if specific in contents:
         return contents[specific], specific, "específica"
-    if title in contents:
+    if title != base and title in contents:
         return contents[title], title, "específica"
-    base = re.sub(r"\s*\([^)]*\)\s*$", "", title).strip()
     if base in contents:
         return contents[base], base, "página base (compartida con otra edición)"
     note_title = card.get("note_title")
@@ -452,15 +460,18 @@ def main():
     ap.add_argument("--promo-page", help='Página de cartas Promo, ej. "Lista de cartas Promo de Brotherhood"')
     ap.add_argument("--out", help="Ruta del CSV de salida (por defecto <edicion>.csv)")
     ap.add_argument(
-        "--strict-images", action="store_true",
+        "--trust-fallback-images", action="store_true",
         help=(
-            "Solo usa la imagen cuando viene de una página específica de esta "
-            "edición (no de la página base ni de la fuente citada en la Nota). "
-            "Actívalo para ediciones tipo 'remake'/aniversario donde el arte "
-            "puede reciclarse de una carta con habilidad o tratamiento "
-            "distinto — visto en la práctica con Leyendas - Primera Era 4.0, "
-            "donde el wiki aún no tenía escaneadas muchas cartas nuevas y el "
-            "fallback traía por error el arte de una edición anterior."
+            "Por defecto SOLO se usa la imagen cuando viene de una página "
+            "específica de la edición que se está extrayendo (nunca de la "
+            "página base ni de la fuente citada en la Nota): se comprobó en "
+            "más de una edición que el arte de la página base puede "
+            "corresponder a una impresión ANTERIOR distinta de la carta "
+            "(mismo nombre, arte parecido, pero otra habilidad — ej. Bjorn "
+            "Ragnarsson entre Leyendas 3.0 y 4.0). Pasa este flag SOLO si "
+            "estás seguro de que esta edición es una reimpresión 1:1 estable "
+            "de otra (mismo arte y misma habilidad en todas las cartas, sin "
+            "remakes) y quieres recuperar más imágenes a costa de ese riesgo."
         ),
     )
     args = ap.parse_args()
@@ -503,7 +514,7 @@ def main():
     contents = fetch_contents(titles_needed)
 
     def image_trusted(confidence):
-        return (not args.strict_images) or confidence == "específica"
+        return args.trust_fallback_images or confidence == "específica"
 
     rows = []
     for c in cards:
@@ -551,8 +562,8 @@ def main():
     print(f"\n{len(rows)} cartas escritas en {out_csv}")
     print(f"  con imagen: {sum(1 for r in rows if url_by_file.get(r['_image_file']))}")
     print(f"  sin resolver: {len(report['sin_resolver'])}  |  sin imagen: {len(report['sin_imagen'])}")
-    if args.strict_images and report["imagen_descartada_por_confianza"]:
-        print(f"  imagen descartada por --strict-images (de página no específica de esta edición): {len(report['imagen_descartada_por_confianza'])}")
+    if not args.trust_fallback_images and report["imagen_descartada_por_confianza"]:
+        print(f"  imagen descartada por venir de página no específica de esta edición: {len(report['imagen_descartada_por_confianza'])} (usa --trust-fallback-images para recuperarlas si estás seguro de que aplica)")
     print(f"Reporte de huecos: {report_path}")
 
 

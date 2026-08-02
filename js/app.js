@@ -889,7 +889,7 @@ function renderEditionEditor(box) {
     <div class="sync-row"><button class="btn" id="ed-add-card">Agregar carta</button></div>
 
     <h3 class="sync-h3">Cargar cartas desde myl.fandom.com</h3>
-    <p class="muted">Trae automáticamente el listado numerado (y sus promocionales, si indicas la página) directo desde el wiki, sin pasar por un archivo CSV. Solo completa las cartas que encuentra por su página exacta — las que no puede identificar con certeza quedan listadas abajo para completarlas a mano o pidiéndole a Claude que las resuelva con la skill <span class="mono">importar-edicion-myl-wiki</span>. Si tu navegador no logra conectar (algunos sitios bloquean estas peticiones), usa el CSV de más abajo como alternativa.</p>
+    <p class="muted">Trae automáticamente el listado numerado (y sus promocionales, si indicas la página) directo desde el wiki, sin pasar por un archivo CSV. Solo completa las cartas que encuentra por su página exacta — las que no puede identificar con certeza quedan listadas abajo para completarlas a mano o pidiéndole a Claude que las resuelva con la skill <span class="mono">importar-edicion-myl-wiki</span>. La imagen es aún más estricta: solo se usa si viene de una página propia de esta edición, nunca de una compartida con otra (una carta "remake" puede tener el mismo nombre y arte parecido a una versión anterior, pero con distinta habilidad) — si no hay imagen confirmada, la carta queda sin imagen para que la completes a mano. Si tu navegador no logra conectar (algunos sitios bloquean estas peticiones), usa el CSV de más abajo como alternativa.</p>
     <div class="cf-grid">
       <label class="field"><span>Nombre de la edición en el wiki</span><input id="wi-name" type="text" value="${escapeAttr(ed.name)}" placeholder="Ej: Bruderschaft" /></label>
       <label class="field"><span>Página de promocionales (opcional)</span><input id="wi-promo" type="text" placeholder="Ej: Lista de cartas Promo de Brotherhood" /></label>
@@ -1125,13 +1125,22 @@ async function loadEditionFromWiki(ed) {
     // hay que volver a pedir las referencias DESPUÉS de re-renderizar.
     renderEditionsModal();
     const gaps = report.sinResolver.length;
+    const noImg = report.imagenDescartadaPorConfianza.length;
     $("#wi-status").textContent = `Listo: ${created} carta(s) nueva(s), ${updated} actualizada(s).`;
-    $("#wi-report").innerHTML = gaps
-      ? `<p>${gaps} carta(s) no se pudieron identificar con certeza en el wiki y quedaron con datos mínimos (nombre, tipo, rareza):</p>` +
+    let reportHtml = "";
+    if (gaps) {
+      reportHtml +=
+        `<p>${gaps} carta(s) no se pudieron identificar con certeza en el wiki y quedaron con datos mínimos (nombre, tipo, rareza):</p>` +
         report.sinResolver.slice(0, 30).map((e) => `<div class="err">✗ ${escapeHtml(e.nombre)}</div>`).join("") +
         (gaps > 30 ? `<div class="err">… y ${gaps - 30} más</div>` : "") +
-        `<p class="muted">Pídele a Claude que las complete con la skill <span class="mono">importar-edicion-myl-wiki</span>, o edítalas a mano arriba.</p>`
-      : `<p>Todas las cartas se identificaron con certeza ✓</p>`;
+        `<p class="muted">Pídele a Claude que las complete con la skill <span class="mono">importar-edicion-myl-wiki</span>, o edítalas a mano arriba.</p>`;
+    }
+    if (noImg) {
+      reportHtml +=
+        `<p>${noImg} carta(s) se identificaron bien pero se dejaron <b>sin imagen a propósito</b>: la única imagen encontrada venía de una página de OTRA edición (una carta "remake"/reimpresa puede compartir arte con una versión anterior que tiene distinta habilidad). Complétalas a mano cuando escanees tu carta física, en el listado de arriba.</p>`;
+    }
+    if (!reportHtml) reportHtml = `<p>Todas las cartas se identificaron con certeza, con imagen propia de esta edición ✓</p>`;
+    $("#wi-report").innerHTML = reportHtml;
     showToast(`Cargado desde el wiki: ${created + updated} carta(s)`, 4500);
   } catch (e) {
     statusEl.textContent = "";
