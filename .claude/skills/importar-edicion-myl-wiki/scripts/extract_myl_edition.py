@@ -133,40 +133,97 @@ def resolve_image_urls(files):
 
 
 # ===================== Parseo de la tabla de listado =====================
-def parse_list_table(wikitext):
-    """Tabla con columnas N°/Nombre/Tipo/Frecuencia/Arte. Devuelve cartas
-    numeradas ordinariamente (no promocionales)."""
-    m = re.search(r"!'''N°'''", wikitext)
-    if not m:
-        raise RuntimeError(
-            "No se encontró la tabla de cartas (columna N°). Puede que esta "
-            "edición liste las cartas de otra forma; revisa el wikitext a mano."
-        )
-    start = m.start()
-    end = wikitext.find("|}", start)
-    table = wikitext[start:end if end != -1 else len(wikitext)]
+# El wiki usa (al menos) dos convenciones de encabezado para la tabla de
+# cartas:
+#   1) "!'''N°'''" con la primera celda de cada fila como un número plano
+#      (la mayoría de las ediciones, ej. Bruderschaft: "1", "2", "3"…).
+#   2) "!Código" con un código compuesto en la primera celda, ej.
+#      "LPE4 - 01/320 S" (ediciones "Leyendas X.0"). Además, estas tablas
+#      compilatorias suelen mezclar en la MISMA tabla un segundo subconjunto
+#      con su propia numeración — ej. "Set Clásico" con prefijo "SC" y
+#      códigos como "SCLPE4 - 77/80" — que no es la carta #77 de la edición,
+#      sino la #77 de OTRO subconjunto paralelo de 80 cartas. Tratar esas
+#      filas como si fueran del mismo número llevaría a que dos cartas
+#      distintas (ej. LPE4 #77 y SCLPE4 #77) choquen en el mismo edid. Por
+#      eso las filas con prefijo "SC" se devuelven como "especiales" (con un
+#      identificador propio "SC-NN"), reusando el mismo mecanismo de cartas
+#      promocionales/especiales que ya soporta la app — no es forzado: es
+#      exactamente lo que son, un subconjunto paralelo con su numeración.
+_CODE_RE = re.compile(r"^(SC)?[A-ZÀ-ÿ0-9]+\s*-\s*(\d+)\s*/\s*\d+")
 
-    cards = []
-    for raw in re.split(r"\n\|-\n", table):
-        raw = raw.strip()
-        if not raw or raw.startswith("!") or raw.startswith("class="):
-            continue
-        cells = [ln.strip()[1:].strip() for ln in raw.split("\n")
-                 if ln.strip().startswith("|")]
-        if len(cells) < 4 or not re.match(r"^\d+$", cells[0]):
-            continue
-        name_link = re.match(r"\[\[([^\]|]+)(?:\|([^\]]+))?\]\]", cells[1])
-        if not name_link:
-            continue
-        cards.append({
-            "num": int(cells[0]),
-            "page_title": name_link.group(1),
-            "name": name_link.group(2) or name_link.group(1),
-            "type": strip_wiki(cells[2]),
-            "rarity": strip_wiki(cells[3]) if len(cells) > 3 else "",
-        })
-    cards.sort(key=lambda c: c["num"])
-    return cards
+
+def parse_list_table(wikitext):
+    """Devuelve (numbered, specials): cartas numeradas normalmente, y las
+    que resultaron ser de un subconjunto paralelo con su propio código
+    (ver _CODE_RE arriba) como especiales.
+
+    Algunas páginas traen MÁS DE UNA tabla de cartas (ej. "Leyendas - Primera
+    Era 4.0": la tabla principal bajo "==Cartas==" y una segunda tabla del
+    "Set Clásico" bajo su propio subtítulo "===Set Clásico===", cada una con
+    su propio "|}" de cierre) — hay que recorrer TODAS las tablas de la
+    página, no solo la primera, o se pierde en silencio todo lo que viene
+    después del primer "|}"."""
+    markers = list(re.finditer(r"!'''N°'''|!Código", wikitext))
+    if not markers:
+        raise RuntimeError(
+            "No se encontró ninguna tabla de cartas (ni columna N° ni Código). "
+            "Puede que esta edición liste las cartas de otra forma; revisa "
+            "el wikitext a mano."
+        )
+
+    numbered, specials = [], []
+    for m in markers:
+        header_kind = "codigo" if m.group(0) == "!Código" else "numero"
+        start = m.start()
+        end = wikitext.find("|}", start)
+        table = wikitext[start:end if end != -1 else len(wikitext)]
+
+        for raw in re.split(r"\n\|-\n", table):
+            raw = raw.strip()
+            if not raw or raw.startswith("!") or raw.startswith("class="):
+                continue
+            cells = [ln.strip()[1:].strip() for ln in raw.split("\n")
+                     if ln.strip().startswith("|")]
+            if len(cells) < 4:
+                continue
+
+            if header_kind == "numero":
+                if not re.match(r"^\d+$", cells[0]):
+                    continue
+                num, special_id = int(cells[0]), None
+            else:
+                code_m = _CODE_RE.match(cells[0])
+                if not code_m:
+                    continue
+                if code_m.group(1):  # prefijo "SC": subconjunto paralelo
+                    num, special_id = None, f"SC-{int(code_m.group(2)):02d}"
+                else:
+                    num, special_id = int(code_m.group(2)), None
+
+            name_link = re.match(r"\[\[([^\]|]+)(?:\|([^\]]+))?\]\]", cells[1])
+            if not name_link:
+                continue
+            # La columna "Nota" (6ª, cuando existe) suele documentar de qué
+            # carta/edición proviene un reprint, ej. "Xing Yi Quan (LPE23)".
+            # Cuando no es un enlace (texto libre tipo "Nueva - Fulano de
+            # Tal" para cartas inéditas) no hay página fuente que probar.
+            note_title = None
+            if len(cells) > 5:
+                note_m = re.match(r"\[\[([^\]|]+)", cells[5])
+                if note_m:
+                    note_title = note_m.group(1)
+            card = {
+                "num": num, "special_id": special_id,
+                "page_title": name_link.group(1),
+                "note_title": note_title,
+                "name": name_link.group(2) or name_link.group(1),
+                "type": strip_wiki(cells[2]),
+                "rarity": strip_wiki(cells[3]) if len(cells) > 3 else "",
+            }
+            (specials if special_id else numbered).append(card)
+
+    numbered.sort(key=lambda c: c["num"])
+    return numbered, specials
 
 
 def parse_promo_table(wikitext):
@@ -297,7 +354,11 @@ def resolve_card_content(card, edition_name, contents, report):
     1) '{nombre} ({edición})' — página específica de esta edición.
     2) '{nombre}' — página base/genérica (frecuente en cartas Oro y
        reimpresiones que comparten arte/texto con la edición original).
-    3) Búsqueda por texto: NUNCA se aplica automáticamente, aunque el tipo
+    3) La página que el propio wiki cita como fuente en la columna "Nota"
+       de la tabla de listado (cuando existe), ej. "Xing Yi Quan (LPE23)"
+       para una carta reimpresa. No es una conjetura: es lo que el wiki
+       mismo documenta como el origen exacto de esa carta.
+    4) Búsqueda por texto: NUNCA se aplica automáticamente, aunque el tipo
        coincida. Se probó (con la edición Bruderschaft) que dos cartas
        distintas del mismo tipo/rareza pueden aparecer como candidato de
        búsqueda una de la otra — se llegó a asignar por error la imagen y el
@@ -318,6 +379,9 @@ def resolve_card_content(card, edition_name, contents, report):
     base = re.sub(r"\s*\([^)]*\)\s*$", "", title).strip()
     if base in contents:
         return contents[base], base, "página base (compartida con otra edición)"
+    note_title = card.get("note_title")
+    if note_title and note_title in contents:
+        return contents[note_title], note_title, "fuente citada en la Nota del listado"
 
     candidates = search_titles(base or card["name"])
     time.sleep(0.15)
@@ -392,16 +456,18 @@ def main():
         print(f"ERROR: no existe la página '{list_page}'. Revisa el nombre exacto en la URL del wiki.")
         sys.exit(1)
 
-    cards = parse_list_table(wikitext)
+    cards, specials = parse_list_table(wikitext)
     print(f"{len(cards)} cartas numeradas encontradas (rango {cards[0]['num']}-{cards[-1]['num']})")
+    if specials:
+        print(f"{len(specials)} cartas de un subconjunto paralelo (mismo listado, código propio) — se tratan como especiales")
 
-    specials = []
     if args.promo_page:
         print(f"Descargando promocionales: {args.promo_page}")
         promo_wt = fetch_wikitext(args.promo_page)
         if promo_wt:
-            specials = parse_promo_table(promo_wt)
-            print(f"{len(specials)} cartas especiales/promocionales encontradas")
+            promo_specials = parse_promo_table(promo_wt)
+            specials += promo_specials
+            print(f"{len(promo_specials)} cartas especiales/promocionales encontradas")
         else:
             print(f"Aviso: no se encontró '{args.promo_page}'; se omiten promocionales.")
 
@@ -411,6 +477,8 @@ def main():
         titles_needed.add(c["page_title"])
         titles_needed.add(f"{c['page_title']} ({edition_name})")
         titles_needed.add(re.sub(r"\s*\([^)]*\)\s*$", "", c["page_title"]).strip())
+        if c.get("note_title"):
+            titles_needed.add(c["note_title"])
     print(f"Descargando el contenido de {len(titles_needed)} páginas candidatas...")
     contents = fetch_contents(titles_needed)
 
@@ -423,7 +491,8 @@ def main():
             report["sin_imagen"].append(c["name"])
     for c in specials:
         txt, _, _ = resolve_card_content(
-            {"page_title": c["page_title"], "name": c["name"], "type": c["type"]},
+            {"page_title": c["page_title"], "name": c["name"], "type": c["type"],
+             "note_title": c.get("note_title")},
             edition_name, contents, report,
         )
         row = build_row(c, txt, special_id=c["special_id"])

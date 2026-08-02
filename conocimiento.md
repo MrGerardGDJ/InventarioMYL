@@ -134,7 +134,92 @@ campos que produce el importador CSV) y el mismo criterio de fusión: se
 empareja por número o identificador especial (o por nombre si la carta no
 trae ninguno) para que repetir la carga actualice en vez de duplicar.
 
+## ¿Cómo saber si TOR/la API ya tiene una edición nueva?
+
+El scraper (`scraper/scrape.js`) **ya hace esto automáticamente**, no hace
+falta tocar su código para eso: en el paso 1 consulta
+`https://api.myl.cl/cards/edition/todas` y arma el conjunto `discovered` con
+**todos** los `ed_slug` que encuentra ahí — no depende solo de la lista
+estática `EDITION_SLUGS` de `scraper/editions.js`. Cualquier edición que TOR
+agregue a su API aparece en `/todas` y el scraper la descubre sola. Además,
+`.github/workflows/scrape-data.yml` corre el scraper **automáticamente cada
+lunes a las 06:00 UTC** (y se puede disparar a mano desde la pestaña
+Actions), así que el catálogo se termina actualizando solo con el tiempo.
+
+Lo único que la detección automática NO resuelve sola: el **formato**
+(PE/PB/SB/FX/NE) de una edición recién descubierta se asigna por
+`formatFor(slug)`, que busca el slug en la lista estática conocida y usa
+"NE" por defecto si no lo encuentra — así que una edición nueva con un slug
+que el scraper nunca vio puede aparecer agrupada en el formato equivocado
+hasta que alguien agregue su slug a `EDITION_SLUGS` en `scraper/editions.js`
+(sí es una edición al código del scraper, deliberadamente fuera del alcance
+de lo que se automatizó acá).
+
+**Para chequear a mano si una edición específica ya está en la API**, sin
+tocar nada del repo:
+```bash
+curl -s "https://api.myl.cl/cards/edition/todas" | python3 -c "
+import json,sys
+d = json.load(sys.stdin)
+slugs = sorted(set(c['ed_slug'] for c in d['cards'] if c.get('ed_slug')))
+print([s for s in slugs if 'TU_TEXTO_A_BUSCAR' in s.lower()])
+"
+```
+
+### Ediciones agregadas manualmente porque TOR aún no las tenía
+
+Cuando una edición existe en el wiki pero no en la API de TOR (verificado
+con el chequeo de arriba), se extrae desde el wiki (skill
+`importar-edicion-myl-wiki`) y se agrega directo a `data/editions.json` +
+`data/custom-cards.json`, siguiendo el mismo mecanismo ya pensado para esto
+("cartas empaquetadas que TOR/api no tiene"). **Riesgo a futuro**: si TOR
+termina agregando esa misma edición (con otro slug, probablemente), sus
+cartas quedarían duplicadas (una vez desde el scraper, otra desde el bundle
+manual) — no hay una reconciliación automática todavía. Cuando se detecte
+que TOR ya la tiene, hay que **quitar manualmente** el bloque
+correspondiente de `custom-cards.json` y la entrada de `editions.json`.
+
+- **`leyendas_primera_era_4_0`** ("Leyendas - Primera Era 4.0", lanzada el
+  5-sep-2025): agregada el 21-07-2026, no está en `/todas` a esa fecha
+  (verificado con el chequeo de arriba). 432 cartas: 352 numeradas (1-352) +
+  80 del "Set Clásico" (subconjunto paralelo con su propio código
+  `SCLPE4-NN`, cargadas como especiales `SC-01`…`SC-80`, ver más abajo).
+
 ## Registro de cambios
+
+### 2026-07-21 (2ª iteración) — Nueva edición "Leyendas - Primera Era 4.0" y mejoras al extractor del wiki
+- **Nueva edición bundled** `leyendas_primera_era_4_0` en `data/editions.json`
+  (grupo Primera Era) y sus 432 cartas en `data/custom-cards.json`: no está
+  en la API de TOR (confirmado consultando `/todas` en vivo), así que se
+  extrajo del wiki y se sumó al catálogo compartido de la app (visible para
+  cualquiera que entre al sitio, no solo como "Mi edición" personal).
+- El script de la skill (`extract_myl_edition.py`) ganó soporte genérico
+  para casos que esta edición dejó en evidencia y que probablemente se
+  repitan en futuras ediciones "Leyendas X.0":
+  - **Tablas de listado con encabezado "Código"** en vez de "N°", donde la
+    primera celda es un código compuesto (ej. "LPE4 - 01/320 S"); se extrae
+    el número real de ahí.
+  - **Más de una tabla de cartas en la misma página**: antes solo se leía
+    la primera tabla (hasta el primer `|}`), perdiendo en silencio todo lo
+    que viniera después (acá, el "Set Clásico" en su propia subsección con
+    su propia tabla). Ahora se recorren todas las tablas de la página.
+  - **Subconjuntos paralelos con su propia numeración** (código con prefijo
+    "SC", ej. "SCLPE4 - 77/80"): se tratan como cartas **especiales** con
+    identificador `SC-NN` en vez de forzarlas al mismo número que una carta
+    distinta del set principal (evita que "SCLPE4 #77" choque con "LPE4
+    #77").
+  - **Columna "Nota"** de la tabla (declara la carta/edición de origen de un
+    reprint): se prueba como página candidata ANTES de rendirse — es un
+    dato que el propio wiki documenta, no una conjetura, así que es seguro
+    aplicarlo automáticamente (a diferencia de la búsqueda por texto+tipo,
+    que sigue sin aplicarse sola). Redujo de 56 a 44 las cartas sin
+    resolver en esta edición (bajaron exactamente las 12 que sí citaban una
+    fuente; las 44 restantes son cartas genuinamente nuevas sin artículo
+    propio todavía en el wiki — hueco real, no de la herramienta).
+- Se revisó `scraper/scrape.js` para confirmar cómo detecta ediciones
+  nuevas: ya lo hace solo, consultando `/todas` en cada corrida (no depende
+  solo de la lista estática), corriendo automáticamente cada lunes vía
+  GitHub Actions — ver sección de arriba.
 
 ### 2026-07-21 — Botón "Cargar desde wiki" en el gestor de Ediciones
 - Nuevo `js/wiki-import.js`: versión en el navegador (sin backend) de la
