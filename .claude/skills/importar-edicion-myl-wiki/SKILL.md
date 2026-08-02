@@ -86,6 +86,34 @@ curl -sS "https://myl.fandom.com/es/api.php?action=query&list=search&srsearch=Ha
 Esto es lo que usa el script por dentro; lo necesitas aparte para resolver a
 mano las entradas del reporte.
 
+### Formatos de tabla que el script ya reconoce
+
+No todas las páginas de listado usan la misma tabla. El script soporta:
+
+- **Encabezado "N°"** con número plano en la primera celda (la mayoría de
+  las ediciones, ej. Bruderschaft: `|1`, `|2`…).
+- **Encabezado "Código"** con un código compuesto en la primera celda, ej.
+  `LPE4 - 01/320 S` (ediciones "Leyendas X.0"). Se extrae el número real de
+  ahí con una regex — no hace falta tocar nada para este caso.
+- **Más de una tabla en la misma página**: algunas ediciones compilatorias
+  traen una segunda tabla en su propia subsección (ej. "Set Clásico" en
+  Leyendas - Primera Era 4.0, con su propio código `SCLPE4 - NN/80`). El
+  script recorre TODAS las tablas de la página, no solo la primera — si
+  algún día una edición tiene una tercera sub-tabla con otra convención de
+  código, es el lugar (`parse_list_table`) donde extenderlo.
+- **Subconjuntos paralelos con numeración propia** (código con prefijo
+  "SC", visto en "Set Clásico"): se cargan como cartas **especiales** con
+  identificador `SC-NN`, no como si fueran la carta número NN del set
+  principal — chocarían dos cartas distintas en el mismo `edid` si no.
+- **Columna "Nota"** (6ª columna, cuando existe): documenta de qué carta y
+  edición proviene un reprint (ej. "Xing Yi Quan (LPE23)"). El script la
+  usa como candidato adicional ANTES de rendirse — no es una conjetura, es
+  lo que el propio wiki declara como el origen exacto de esa carta.
+
+Si te encuentras con una edición cuya tabla no calza con ninguno de estos
+patrones, el script fallará con un error claro ("no se encontró la tabla de
+cartas") — ahí sí hay que extender `parse_list_table` a mano.
+
 ## Paso 3 — Resuelve el reporte (`sin_resolver`)
 
 Cada entrada trae `nombre`, `pagina_intentada` y, si los hubo,
@@ -135,11 +163,42 @@ verificación propio. Lo que sí puedes y debes hacer:
 2. **Entregar el archivo CSV al usuario** (herramienta de envío de archivos
    si está disponible) con instrucciones: abrir Inventario MyL → Catálogo →
    Ediciones → crear o abrir la edición → "Elegir archivo CSV".
-3. Si el usuario pide explícitamente que actualices el repositorio (por
-   ejemplo agregando la edición como parte del catálogo base en
-   `data/custom-cards.json`, no como carta manual del usuario), coordina con
-   él antes: eso es una decisión de producto, no un paso automático de esta
-   skill.
+3. Si el usuario pide explícitamente que la edición quede en el catálogo
+   **compartido** del sitio (para todo el que entre, no solo su propio
+   navegador — reconócelo en frases como "que aparezca en las ediciones de
+   [bloque]"), en vez de una edición personal creada con el botón "Cargar
+   desde wiki"/el gestor de Ediciones:
+   - **Primero verifica que TOR/api.myl.cl no la tenga ya** (ver
+     `conocimiento.md`, sección "¿Cómo saber si TOR/la API ya tiene una
+     edición nueva?" — un `curl` a `/todas` filtrando por slugs candidatos).
+     Si ya está ahí, no hace falta nada de esto: alcanza con correr el
+     scraper (`node scraper/scrape.js`) o esperar la corrida semanal
+     automática de GitHub Actions.
+   - Si de verdad no está: agrega una entrada en `data/editions.json` (slug
+     nuevo, formato/bloque correcto, nombre) en la posición cronológica que
+     corresponda dentro de su bloque.
+   - Convierte el CSV a objetos de carta y agrégalos a
+     `data/custom-cards.json` (`cards` es un array plano; conserva lo que ya
+     había). Cada carta necesita al menos `id` (único, ej.
+     `{slug}__custom__{numero_o_especial}_{nombre_slug}`), `name`,
+     `edition` (el slug nuevo), `editionName`, `format`, `edid` (o
+     `specialId` si es una carta especial — no ambos), `type`, `race`,
+     `rarity`, `cost`, `strength`, `ability`, `flavour`, `image`, y
+     `"custom": true`. No hace falta `slug`/`legacyId`/`keyword` (se
+     completan solos como vacíos).
+   - Dejá una nota clara en `custom-cards.json` → `meta.note` y en
+     `conocimiento.md` avisando que esta edición se agregó a mano porque
+     TOR no la tenía a esa fecha, y que si TOR la agrega después hay que
+     **quitar** este bloque para no duplicar las cartas (no hay
+     reconciliación automática entre el catálogo scrapeado y el bundled).
+   - Valida en la app corriendo de verdad (servidor estático + Playwright):
+     que la edición aparezca en el selector agrupada en el bloque correcto,
+     que las cartas se ordenen por número, y que una Colección de esa
+     edición muestre las especiales (si las hay) en su propia sección.
+   - Esto sí toca archivos del repo (`data/editions.json`,
+     `data/custom-cards.json`): commitea y sincroniza con la rama por
+     defecto y `main` igual que cualquier otro cambio que deba quedar en
+     GitHub Pages.
 
 ## Notas para editar `extract_myl_edition.py` a futuro
 
