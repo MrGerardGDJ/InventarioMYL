@@ -19,7 +19,7 @@ abriendo `index.html` (o sirviéndolo con cualquier servidor estático / GitHub 
 | `js/app.js` | Lógica principal: carga de datos, filtros, render de grillas, mazos, colecciones, estadísticas, sincronización UI. |
 | `js/store.js` | Persistencia en `localStorage`: inventario, mazos, colecciones, cartas manuales, preferencias. Notifica cambios (`onChange`). |
 | `js/cloud.js` | Sincronización opcional con Supabase (tabla `inventario_myl` + historial + realtime). |
-| `js/exporters.js` | Exportar a Excel (SheetJS), PDF (jsPDF), imagen de mazo y resumen de mazo. |
+| `js/exporters.js` | Exportar a Excel (SheetJS), PDF (jsPDF) —de tabla y de grilla visual—, imagen de mazo y resumen de mazo. |
 | `js/charts.js` | Gráficos de estadísticas (Chart.js, carga perezosa desde CDN). |
 | `js/cdn.js` | Carga perezosa de librerías externas (SheetJS, jsPDF, Chart.js, Supabase). |
 | `js/icons.js` | Iconos por tipo/raza y tipos sin fuerza (`NO_STRENGTH_TYPES`). |
@@ -67,6 +67,20 @@ incluye lo mismo.
   cantidad 0 se ven en blanco y negro y oscurecidas (vía CSS
   `.collection-grid .card:not(.owned)`); recuperan el color con transición al marcar la
   primera copia. Barra de progreso `poseídas/total`.
+- **Exportar PDF de una Colección** (botón "📄 Exportar PDF" en el detalle de
+  una colección): genera un PDF con una **grilla de miniaturas**, no una
+  tabla de texto — se ve igual que la vista en pantalla (`exportCollectionPDF`
+  en `exporters.js`): las cartas que faltan quedan en blanco y negro y
+  oscurecidas (mismo cálculo de píxeles que el filtro CSS de la vista:
+  escala de grises + brillo al 50%), aplicado directamente sobre la imagen
+  real de cada carta con un `<canvas>` fuera de pantalla antes de incrustarla
+  en el PDF (`crossOrigin="anonymous"`; funciona porque tanto `api.myl.cl`
+  como el CDN de imágenes del wiki envían `Access-Control-Allow-Origin: *`).
+  Pensado para llevarlo a una jornada de intercambio y ver de un vistazo qué
+  falta. Se pagina automáticamente (10 columnas × 4 filas por hoja A4
+  apaisada); las cartas sin imagen muestran un marcador con el nombre, igual
+  que en pantalla. Puede tardar con ediciones grandes (carga cada imagen con
+  concurrencia limitada) — muestra progreso en el toast mientras genera.
 - **Cambios** (`view-cambios`): inventario de intercambio. Se marcan copias repetidas
   como "para cambio" (desde esta vista o desde el detalle de una carta); al registrar un
   intercambio se descuenta la carta entregada, se suma la recibida y esta entra
@@ -241,6 +255,26 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 `data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-08-02 — Exportar PDF visual de una Colección
+- Nuevo botón "📄 Exportar PDF" en el detalle de una Colección
+  (`js/app.js`, `renderCollectionDetail` → `exportCollectionAsPDF`) que genera
+  un PDF (`exportCollectionPDF` en `js/exporters.js`) con la misma grilla de
+  miniaturas que se ve en pantalla — no una tabla de texto — pensado para
+  llevar impreso a una jornada de intercambio de cartas e identificar de un
+  vistazo cuáles faltan.
+- Las cartas que no se poseen se dibujan en blanco y negro y oscurecidas: se
+  cargan con un `<canvas>` fuera de pantalla (`crossOrigin="anonymous"`) y se
+  les aplica el mismo cálculo de píxeles que el filtro CSS de la vista
+  (escala de grises + brillo al 50%) antes de incrustarlas como JPEG en el
+  PDF con jsPDF. Funciona porque tanto `api.myl.cl` como el CDN de imágenes
+  del wiki (`static.wikia.nocookie.net`) envían
+  `Access-Control-Allow-Origin: *`.
+- Respeta el mismo orden que la vista (especiales primero, luego numeradas) y
+  pagina automáticamente en A4 apaisado. Las imágenes se cargan con
+  concurrencia limitada (6 a la vez) y se reporta el progreso vía toast; una
+  carta sin imagen (o que no cargó a tiempo) se reemplaza por un marcador con
+  el nombre, igual que en pantalla.
 
 ### 2026-07-22 — Regla de imágenes estricta por defecto (todas las ediciones) + bug de confianza
 - La regla "solo confiar en la imagen de una página específica de la edición"
