@@ -92,9 +92,12 @@ No todas las páginas de listado usan la misma tabla. El script soporta:
 
 - **Encabezado "N°"** con número plano en la primera celda (la mayoría de
   las ediciones, ej. Bruderschaft: `|1`, `|2`…).
-- **Encabezado "Código"** con un código compuesto en la primera celda, ej.
-  `LPE4 - 01/320 S` (ediciones "Leyendas X.0"). Se extrae el número real de
-  ahí con una regex — no hace falta tocar nada para este caso.
+- **Encabezado "Código"** (con o sin negrita: `!Código` o `!'''Código'''`,
+  varía por edición) con un código compuesto en la primera celda, ej.
+  `LPE4 - 01/320 S` (ediciones "Leyendas X.0") o `MPAT 01/18` sin guion
+  entre el prefijo y el número (ediciones "Mundos Perdidos"). Se extrae el
+  número real de ahí con una regex — no hace falta tocar nada para este
+  caso.
 - **Más de una tabla en la misma página**: algunas ediciones compilatorias
   traen una segunda tabla en su propia subsección (ej. "Set Clásico" en
   Leyendas - Primera Era 4.0, con su propio código `SCLPE4 - NN/80`). El
@@ -103,8 +106,13 @@ No todas las páginas de listado usan la misma tabla. El script soporta:
   código, es el lugar (`parse_list_table`) donde extenderlo.
 - **Subconjuntos paralelos con numeración propia** (código con prefijo
   "SC", visto en "Set Clásico"): se cargan como cartas **especiales** con
-  identificador `SC-NN`, no como si fueran la carta número NN del set
-  principal — chocarían dos cartas distintas en el mismo `edid` si no.
+  identificador `<prefijo>-NN` completo (ej. `SCLPE4-01`, no `SC-01` — el
+  prefijo real varía por edición), no como si fueran la carta número NN del
+  set principal — chocarían dos cartas distintas en el mismo `edid` si no.
+- **Carta "00"** (código como `MPA 00/18`, visto en varias ediciones
+  "Mundos Perdidos" — suele ser el tótem/carta firma del producto): la app
+  no acepta edid menor a 1, así que se carga como **especial** con
+  identificador `<prefijo>-00` en vez de forzarla a edid `000`.
 - **Columna "Nota"** (6ª columna, cuando existe): documenta de qué carta y
   edición proviene un reprint (ej. "Xing Yi Quan (LPE23)"). El script la
   usa como candidato adicional ANTES de rendirse — no es una conjetura, es

@@ -137,27 +137,36 @@ def resolve_image_urls(files):
 # cartas:
 #   1) "!'''N°'''" con la primera celda de cada fila como un número plano
 #      (la mayoría de las ediciones, ej. Bruderschaft: "1", "2", "3"…).
-#   2) "!Código" con un código compuesto en la primera celda, ej.
-#      "LPE4 - 01/320 S" (ediciones "Leyendas X.0"). Además, estas tablas
-#      compilatorias suelen mezclar en la MISMA tabla un segundo subconjunto
-#      con su propia numeración — ej. "Set Clásico" con prefijo "SC" y
-#      códigos como "SCLPE4 - 77/80" — que no es la carta #77 de la edición,
-#      sino la #77 de OTRO subconjunto paralelo de 80 cartas. Tratar esas
-#      filas como si fueran del mismo número llevaría a que dos cartas
-#      distintas (ej. LPE4 #77 y SCLPE4 #77) choquen en el mismo edid. Por
-#      eso las filas con prefijo "SC" se devuelven como "especiales", con el
-#      código COMPLETO del wiki como identificador (ej. "SCLPE4-77", no
-#      "SC-77" — el prefijo real varía por edición, ver conocimiento.md),
-#      reusando el mismo mecanismo de cartas promocionales/especiales que ya
-#      soporta la app — no es forzado: es exactamente lo que son, un
-#      subconjunto paralelo con su numeración.
-_CODE_RE = re.compile(r"^([A-ZÀ-ÿ0-9]+)\s*-\s*(\d+)\s*/\s*\d+")
+#   2) "!Código" o "!'''Código'''" (con o sin negrita — varía por edición)
+#      con un código compuesto en la primera celda, ej. "LPE4 - 01/320 S"
+#      (ediciones "Leyendas X.0") o "MPAT 01/18" (ediciones "Mundos
+#      Perdidos", sin guion entre el prefijo y el número). Además, estas
+#      tablas compilatorias suelen mezclar en la MISMA tabla un segundo
+#      subconjunto con su propia numeración — ej. "Set Clásico" con prefijo
+#      "SC" y códigos como "SCLPE4 - 77/80" — que no es la carta #77 de la
+#      edición, sino la #77 de OTRO subconjunto paralelo de 80 cartas.
+#      Tratar esas filas como si fueran del mismo número llevaría a que dos
+#      cartas distintas (ej. LPE4 #77 y SCLPE4 #77) choquen en el mismo
+#      edid. Por eso las filas con prefijo "SC" se devuelven como
+#      "especiales", con el código COMPLETO del wiki como identificador
+#      (ej. "SCLPE4-77", no "SC-77" — el prefijo real varía por edición, ver
+#      conocimiento.md), reusando el mismo mecanismo de cartas
+#      promocionales/especiales que ya soporta la app — no es forzado: es
+#      exactamente lo que son, un subconjunto paralelo con su numeración.
+#      También se trata como especial la carta "00" (ej. "MPA 00/18", el
+#      tótem/carta firma del producto en varias ediciones "Mundos
+#      Perdidos"): la app no acepta edid < 1 (el importador de CSV y el
+#      formulario de carta manual rechazan el número 0), así que se carga
+#      como especial con identificador "<prefijo>-00" — visualmente termina
+#      igual de bien, aparece primero en la colección, como corresponde a
+#      una carta "00".
+_CODE_RE = re.compile(r"^([A-ZÀ-ÿ0-9]+)[\s-]+(\d+)\s*/\s*\d+")
 
 
 def parse_list_table(wikitext):
     """Devuelve (numbered, specials): cartas numeradas normalmente, y las
-    que resultaron ser de un subconjunto paralelo con su propio código
-    (ver _CODE_RE arriba) como especiales.
+    que resultaron ser de un subconjunto paralelo con su propio código o de
+    la carta "00" (ver _CODE_RE arriba) como especiales.
 
     Algunas páginas traen MÁS DE UNA tabla de cartas (ej. "Leyendas - Primera
     Era 4.0": la tabla principal bajo "==Cartas==" y una segunda tabla del
@@ -165,7 +174,7 @@ def parse_list_table(wikitext):
     su propio "|}" de cierre) — hay que recorrer TODAS las tablas de la
     página, no solo la primera, o se pierde en silencio todo lo que viene
     después del primer "|}"."""
-    markers = list(re.finditer(r"!'''N°'''|!Código", wikitext))
+    markers = list(re.finditer(r"!'''N°'''|!'''Código'''|!Código", wikitext))
     if not markers:
         raise RuntimeError(
             "No se encontró ninguna tabla de cartas (ni columna N° ni Código). "
@@ -175,7 +184,7 @@ def parse_list_table(wikitext):
 
     numbered, specials = [], []
     for m in markers:
-        header_kind = "codigo" if m.group(0) == "!Código" else "numero"
+        header_kind = "numero" if m.group(0) == "!'''N°'''" else "codigo"
         start = m.start()
         end = wikitext.find("|}", start)
         table = wikitext[start:end if end != -1 else len(wikitext)]
@@ -197,11 +206,11 @@ def parse_list_table(wikitext):
                 code_m = _CODE_RE.match(cells[0])
                 if not code_m:
                     continue
-                prefix = code_m.group(1)
-                if prefix.startswith("SC"):  # subconjunto paralelo (ej. "SCLPE4")
-                    num, special_id = None, f"{prefix}-{int(code_m.group(2)):02d}"
+                prefix, n = code_m.group(1), int(code_m.group(2))
+                if prefix.startswith("SC") or n == 0:
+                    num, special_id = None, f"{prefix}-{n:02d}"
                 else:
-                    num, special_id = int(code_m.group(2)), None
+                    num, special_id = n, None
 
             name_link = re.match(r"\[\[([^\]|]+)(?:\|([^\]]+))?\]\]", cells[1])
             if not name_link:

@@ -129,19 +129,49 @@
     "slug": "mundos_perdidos_leyendas_de_avalon",
     "format": "PE",
     "formatName": "Primera Era",
-    "name": "Mundos Perdidos Leyendas De Avalon"
+    "name": "Mundos Perdidos - Leyendas de Avalon"
   },
   {
     "slug": "mundos_perdidos_viaje_al_oeste",
     "format": "PE",
     "formatName": "Primera Era",
-    "name": "Mundos Perdidos Viaje Al Oeste"
+    "name": "Mundos Perdidos - Viaje al Oeste"
   },
   {
     "slug": "mundos_perdidos_senores_del_trueno",
     "format": "PE",
     "formatName": "Primera Era",
-    "name": "Mundos Perdidos Senores Del Trueno"
+    "name": "Mundos Perdidos - Señores del Trueno"
+  },
+  {
+    "slug": "mundos_perdidos_nube_roja",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundos Perdidos - Nube Roja"
+  },
+  {
+    "slug": "mundos_perdidos_tombstone",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundos Perdidos - Tombstone"
+  },
+  {
+    "slug": "mundos_perdidos_aliento_de_fuego",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundos Perdidos - Aliento de Fuego"
+  },
+  {
+    "slug": "mundos_perdidos_locura_de_dragon",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundos Perdidos - Locura de Dragón"
+  },
+  {
+    "slug": "mundos_perdidos_horda_esteparia",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Mundos Perdidos - Horda Esteparia"
   },
   {
     "slug": "vigilantes_de_la_noche",
