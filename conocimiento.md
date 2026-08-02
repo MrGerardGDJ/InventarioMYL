@@ -213,6 +213,41 @@ correspondiente de `custom-cards.json` y la entrada de `editions.json`.
   inventario las va escaneando y cargando a mano por el gestor de
   Ediciones a medida que consigue los sobres físicos.
 
+- **8 ediciones `mundos_perdidos_*`** (agregadas el 02-08-2026, línea
+  "Mundos Perdidos" — remakes anuales de 18-20 cartas de Primera Era,
+  temáticos por raza/cultura). TOR solo tiene 3 de la línea completa
+  (`mundos_perdidos_ciudad_de_los_cesares`, `..._horrores_de_salem`,
+  `..._la_saga_de_volsung`, ya en `data/cards.json` desde el scraper). Las
+  otras 3 que ya figuraban en `editions.json` (`..._leyendas_de_avalon`,
+  `..._viaje_al_oeste`, `..._senores_del_trueno`) estaban **sin cartas en
+  ningún lado** — aparecían en el selector de edición pero la colección
+  salía vacía; un bug preexistente descubierto al revisar este pedido. Se
+  completaron sus 20 cartas cada una y se agregaron 5 ediciones más que ni
+  siquiera tenían entrada en `editions.json` (`..._nube_roja`,
+  `..._tombstone`, `..._aliento_de_fuego`, `..._locura_de_dragon`,
+  `..._horda_esteparia` — esta última junto con Locura de Dragón y Aliento
+  de Fuego son el lanzamiento más reciente de la línea, con las que el
+  dueño del inventario ya tiene sus 18 cartas físicas de Primera Era).
+  Todas se extrajeron del wiki con la skill. Cobertura de imagen dispar
+  según qué tan reciente es cada una — las 3 más nuevas (Horda Esteparia,
+  Locura de Dragón, Aliento de Fuego) tienen **varias cartas sin página
+  propia todavía en el wiki, ni siquiera una página base** (son cartas
+  nuevas del juego, recién lanzadas — el wiki aún no las documenta card por
+  card), así que quedaron con nombre/tipo/rareza nomás (sin habilidad ni
+  imagen) hasta que el wiki las complete o el dueño las escanee.
+  - **Formato de tabla nuevo que el extractor no soportaba**: estas 8
+    ediciones usan `!'''Código'''` (con negrita) en vez de `!Código`, y el
+    código no lleva guion entre el prefijo y el número (`MPAT 01/18`, no
+    `MPAT - 01/18` como en LPE4) — se generalizó `_CODE_RE` y el regex de
+    marcadores en `extract_myl_edition.py` para aceptar ambas variantes.
+  - **Carta "00"**: varias de estas ediciones traen una carta firma/tótem
+    numerada "00" (ej. `MPA 00/18` en Leyendas de Avalon). La app rechaza
+    edid < 1 (tanto el importador CSV como el formulario manual de carta),
+    así que el extractor ahora la carga como **especial** con identificador
+    `<prefijo>-00` (ej. `MPA-00`) en vez de intentar forzarla a edid `000` —
+    aparece primero en la colección, que es justamente el lugar visual que
+    le corresponde a la carta "00".
+
 ### Imágenes de ediciones "remake" / aniversario: no reciclar arte de otra edición
 
 Se detectó en la práctica (Leyendas - Primera Era 4.0, reportado por el
@@ -262,6 +297,29 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 `data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-08-02 (3ª iteración) — 8 ediciones "Mundos Perdidos" agregadas
+- El dueño del inventario pidió cargar el lanzamiento más reciente de la
+  línea "Mundos Perdidos" (Aliento de Fuego, Locura de Dragón, Horda
+  Esteparia — ya tiene las 18 cartas físicas de Primera Era de cada una) y
+  de paso "las que falten" de esa línea. Al revisar, TOR solo tenía 3 de la
+  línea completa; 3 ediciones más ya figuraban en `data/editions.json` pero
+  **sin ninguna carta cargada en ningún archivo** (bug preexistente: el
+  selector las mostraba pero la colección salía vacía), y otras 5 ni
+  siquiera tenían entrada. Se completaron las 3 con cartas faltantes y se
+  agregaron las 5 que faltaban por completo — 8 ediciones × 20 cartas
+  (18 numeradas + carta "00" y/o una extra "Promocional" según la edición)
+  extraídas del wiki con la skill `importar-edicion-myl-wiki`.
+- El extractor (`extract_myl_edition.py`) no reconocía el formato de tabla
+  de estas ediciones (`!'''Código'''` en negrita, código sin guion tipo
+  `MPAT 01/18`) ni el patrón de "carta 00"; se generalizó para soportar
+  ambos (detalle en "Ediciones agregadas manualmente" arriba).
+- Cobertura de imagen: Leyendas de Avalon 16/20, Viaje al Oeste 11/20,
+  Señores del Trueno 11/20, Nube Roja 8/20, Tombstone 5/20, Aliento de
+  Fuego 7/20, Locura de Dragón 5/20, Horda Esteparia 1/20 — las 3 más
+  nuevas (el lanzamiento que pidió el dueño) tienen varias cartas sin
+  ninguna página en el wiki todavía (ni siquiera base), no solo sin imagen
+  específica, por ser cartas nuevas recién salidas.
 
 ### 2026-08-02 (2ª iteración) — Identificador correcto del "Set Clásico" de LPE4
 - El dueño del inventario confirmó que sus 80 cartas físicas del "Set
