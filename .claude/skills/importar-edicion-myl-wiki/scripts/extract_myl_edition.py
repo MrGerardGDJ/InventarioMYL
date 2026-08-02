@@ -145,11 +145,13 @@ def resolve_image_urls(files):
 #      sino la #77 de OTRO subconjunto paralelo de 80 cartas. Tratar esas
 #      filas como si fueran del mismo número llevaría a que dos cartas
 #      distintas (ej. LPE4 #77 y SCLPE4 #77) choquen en el mismo edid. Por
-#      eso las filas con prefijo "SC" se devuelven como "especiales" (con un
-#      identificador propio "SC-NN"), reusando el mismo mecanismo de cartas
-#      promocionales/especiales que ya soporta la app — no es forzado: es
-#      exactamente lo que son, un subconjunto paralelo con su numeración.
-_CODE_RE = re.compile(r"^(SC)?[A-ZÀ-ÿ0-9]+\s*-\s*(\d+)\s*/\s*\d+")
+#      eso las filas con prefijo "SC" se devuelven como "especiales", con el
+#      código COMPLETO del wiki como identificador (ej. "SCLPE4-77", no
+#      "SC-77" — el prefijo real varía por edición, ver conocimiento.md),
+#      reusando el mismo mecanismo de cartas promocionales/especiales que ya
+#      soporta la app — no es forzado: es exactamente lo que son, un
+#      subconjunto paralelo con su numeración.
+_CODE_RE = re.compile(r"^([A-ZÀ-ÿ0-9]+)\s*-\s*(\d+)\s*/\s*\d+")
 
 
 def parse_list_table(wikitext):
@@ -195,8 +197,9 @@ def parse_list_table(wikitext):
                 code_m = _CODE_RE.match(cells[0])
                 if not code_m:
                     continue
-                if code_m.group(1):  # prefijo "SC": subconjunto paralelo
-                    num, special_id = None, f"SC-{int(code_m.group(2)):02d}"
+                prefix = code_m.group(1)
+                if prefix.startswith("SC"):  # subconjunto paralelo (ej. "SCLPE4")
+                    num, special_id = None, f"{prefix}-{int(code_m.group(2)):02d}"
                 else:
                     num, special_id = int(code_m.group(2)), None
 
