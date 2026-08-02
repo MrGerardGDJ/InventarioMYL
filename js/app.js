@@ -19,7 +19,7 @@
      · Navegación / eventos ..... tabs, listeners y arranque (init)
    ========================================================================== */
 import * as store from "./store.js";
-import { exportExcel, exportPDF, exportDeckExcel, exportDeckImage, deckSummary } from "./exporters.js";
+import { exportExcel, exportPDF, exportDeckExcel, exportDeckImage, exportCollectionPDF, deckSummary } from "./exporters.js";
 import { renderCharts } from "./charts.js";
 import * as cloud from "./cloud.js";
 import { typeIcon, raceIcon, NO_STRENGTH_TYPES } from "./icons.js";
@@ -1334,6 +1334,7 @@ function renderCollectionDetail() {
       <h2><input id="col-name-edit" value="${escapeAttr(col.name)}" /></h2>
       <span class="tag">${escapeHtml(state.editionName[col.edition] || col.edition)}</span>
       <div class="spacer"></div>
+      <button class="btn small" id="col-export-pdf" title="PDF con la grilla de cartas, tal como se ve acá — para llevar a una jornada de intercambio">📄 Exportar PDF</button>
       <label class="field inline"><span>Mostrar</span>
         <select id="col-filter">
           <option value="all">Todas las cartas</option>
@@ -1356,7 +1357,23 @@ function renderCollectionDetail() {
   const filterSel = $("#col-filter");
   filterSel.value = state.colFilter || "all";
   filterSel.onchange = (e) => { state.colFilter = e.target.value; renderCollectionGrid(col); };
+  $("#col-export-pdf").onclick = () => exportCollectionAsPDF(col);
   renderCollectionGrid(col);
+}
+
+// Genera el PDF de una colección: grilla de miniaturas tal como se ve en
+// pantalla (blanco y negro las que faltan), útil para llevar a una jornada
+// de intercambio y detectar de un vistazo qué falta. Descarga cientos de
+// imágenes en algunas ediciones, así que muestra progreso — puede tardar.
+function exportCollectionAsPDF(col) {
+  const cards = collectionCards(col); // especiales primero, luego numeradas — mismo orden que en pantalla
+  if (!cards.length) { showToast("Esta colección no tiene cartas todavía"); return; }
+  showToast("Generando PDF… 0%", 60000);
+  exportCollectionPDF(col, cards, store.getQty, displayName, (done, total) => {
+    showToast(`Generando PDF… ${Math.round((done / total) * 100)}%`, 60000);
+  })
+    .then(() => showToast("PDF descargado ✓"))
+    .catch((e) => showToast("Error al generar el PDF: " + e.message, 4500));
 }
 
 // Grilla del álbum: reutiliza cardEl() del Catálogo (mismos botones +/− y

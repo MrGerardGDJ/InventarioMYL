@@ -148,6 +148,171 @@ export async function exportPDF(cards, getQty, scopeLabel = "Colección") {
   doc.save(`inventario_myl_${today()}.pdf`);
 }
 
+/* ===================== COLECCIÓN: PDF visual (grilla tipo "Colecciones") =====================
+   A diferencia de exportPDF (tabla de texto), esto genera un PDF que se ve
+   como la vista Colecciones de la app: una grilla de miniaturas de cartas,
+   con las que no se tienen en blanco y negro y oscurecidas — el mismo
+   tratamiento visual que usa .collection-grid en styles.css — pensado para
+   llevarlo impreso o en el celular a una jornada de intercambio y detectar
+   de un vistazo qué falta, sin tener que leer una lista de texto. */
+const CARD_ASPECT = 88 / 63; // alto/ancho, igual que aspect-ratio del grid de Colecciones
+
+function cardNumOf(c) {
+  const n = parseInt(c.edid, 10);
+  return Number.isFinite(n) ? n : null;
+}
+
+function loadImageEl(url) {
+  return new Promise((resolve) => {
+    if (!url) { resolve(null); return; }
+    const img = new Image();
+    img.crossOrigin = "anonymous"; // ambos orígenes usados (api.myl.cl y el CDN del wiki) envían CORS
+    const timer = setTimeout(() => resolve(null), 12000);
+    img.onload = () => { clearTimeout(timer); resolve(img); };
+    img.onerror = () => { clearTimeout(timer); resolve(null); }; // sin imagen: se dibuja un marcador, nunca se aborta
+    img.src = url;
+  });
+}
+
+// Dibuja la miniatura de una carta en un canvas fuera de pantalla y
+// devuelve su dataURL. Si `owned` es false, aplica blanco y negro +
+// oscurecido a nivel de píxel (equivalente a filter: grayscale(1)
+// brightness(0.5) que usa la vista Colecciones) para que el PDF se vea
+// igual que la app.
+function renderCardThumb(img, owned, w, h, label) {
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const ctx = c.getContext("2d");
+  if (img && img.naturalWidth) {
+    // cubre el marco manteniendo proporción (equivalente a object-fit: cover)
+    const s = Math.max(w / img.naturalWidth, h / img.naturalHeight);
+    const dw = img.naturalWidth * s, dh = img.naturalHeight * s;
+    ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    if (!owned) {
+      const data = ctx.getImageData(0, 0, w, h);
+      const px = data.data;
+      for (let i = 0; i < px.length; i += 4) {
+        const gray = (0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2]) * 0.5;
+        px[i] = px[i + 1] = px[i + 2] = gray;
+      }
+      ctx.putImageData(data, 0, 0);
+    }
+  } else {
+    // Sin imagen: marcador oscuro con el nombre, como .placeholder en la app
+    ctx.fillStyle = owned ? "#1f2330" : "#14161e";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = owned ? "#e7e9ee" : "#5b6273";
+    ctx.font = `bold ${Math.round(h * 0.09)}px Arial`;
+    ctx.textAlign = "center";
+    const words = String(label || "").split(" ");
+    let line = "", ly = h * 0.42, lh = h * 0.11;
+    for (const w2 of words) {
+      const test = line ? line + " " + w2 : w2;
+      if (ctx.measureText(test).width > w * 0.85 && line) { ctx.fillText(line, w / 2, ly); line = w2; ly += lh; }
+      else line = test;
+    }
+    if (line) ctx.fillText(line, w / 2, ly);
+  }
+  return c.toDataURL("image/jpeg", 0.85);
+}
+
+function truncateText(doc, text, maxWidth) {
+  if (doc.getTextWidth(text) <= maxWidth) return text;
+  let s = text;
+  while (s.length > 1 && doc.getTextWidth(s + "…") > maxWidth) s = s.slice(0, -1);
+  return s + "…";
+}
+
+// collection: { name } · cards: cartas de la edición YA ordenadas como se
+// quieren mostrar (especiales primero, luego numeradas — mismo orden que
+// la vista Colecciones). onProgress(done, total): opcional, para la barra
+// de progreso mientras se cargan las imágenes (puede ser lento con
+// ediciones de 300+ cartas).
+export async function exportCollectionPDF(collection, cards, getQty, displayName, onProgress) {
+  await loadScript(CDN.jspdf);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+  const GOLD = [201, 161, 59];
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+
+  const ownedCount = cards.filter((c) => getQty(c.id) > 0).length;
+  const pct = cards.length ? Math.round((ownedCount / cards.length) * 100) : 0;
+
+  // Precarga las imágenes con concurrencia limitada (una edición puede tener
+  // 300+ cartas); cada una se rasteriza ya con su tratamiento visual final
+  // para no repetir el trabajo de canvas al dibujar la grilla.
+  const SCALE = 3, cardW = 68 * SCALE, cardH = Math.round(cardW * CARD_ASPECT);
+  const thumbs = new Array(cards.length);
+  let doneCount = 0;
+  const CONCURRENCY = 6;
+  let next = 0;
+  async function worker() {
+    while (next < cards.length) {
+      const i = next++;
+      const c = cards[i];
+      const isOwned = getQty(c.id) > 0;
+      const img = c.image ? await loadImageEl(c.image) : null;
+      const name = displayName ? displayName(c) : c.name;
+      thumbs[i] = renderCardThumb(img, isOwned, cardW, cardH, name);
+      doneCount++;
+      if (onProgress) onProgress(doneCount, cards.length);
+    }
+  }
+  await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+
+  // ---- Layout de la grilla ----
+  const marginX = 30, headerH = 66, marginBottom = 28;
+  const gutterX = 10, gutterY = 8, labelH = 20;
+  const cellW0 = 68, cellH0 = Math.round(cellW0 * CARD_ASPECT);
+  const cols = Math.max(1, Math.floor((W - marginX * 2) / (cellW0 + gutterX)));
+  const rows = Math.max(1, Math.floor((H - headerH - marginBottom) / (cellH0 + gutterY + labelH)));
+  const perPage = cols * rows;
+  const gridW = cols * (cellW0 + gutterX) - gutterX;
+  const startX = marginX + (W - marginX * 2 - gridW) / 2;
+
+  const totalPages = Math.max(1, Math.ceil(cards.length / perPage));
+  function drawHeader(pageNum) {
+    doc.setFillColor(15, 17, 23); doc.rect(0, 0, W, headerH, "F");
+    doc.setTextColor(...GOLD); doc.setFont("helvetica", "bold"); doc.setFontSize(16);
+    doc.text(collection.name, marginX, 26);
+    doc.setTextColor(200); doc.setFont("helvetica", "normal"); doc.setFontSize(9.5);
+    doc.text(
+      `${ownedCount}/${cards.length} cartas (${pct}%)  ·  ${new Date().toLocaleDateString("es-CL")}  ·  Página ${pageNum}/${totalPages}`,
+      marginX, 44
+    );
+    const barX = marginX, barY = 52, barW = 220, barH = 6;
+    doc.setFillColor(43, 48, 64); doc.roundedRect(barX, barY, barW, barH, 3, 3, "F");
+    if (pct > 0) { doc.setFillColor(...GOLD); doc.roundedRect(barX, barY, Math.max(6, barW * pct / 100), barH, 3, 3, "F"); }
+  }
+
+  for (let p = 0; p < totalPages; p++) {
+    if (p > 0) doc.addPage();
+    drawHeader(p + 1);
+    const slice = cards.slice(p * perPage, (p + 1) * perPage);
+    slice.forEach((c, idx) => {
+      const globalIdx = p * perPage + idx;
+      const col = idx % cols, row = Math.floor(idx / cols);
+      const x = startX + col * (cellW0 + gutterX);
+      const y = headerH + 14 + row * (cellH0 + gutterY + labelH);
+      const owned = getQty(c.id) > 0;
+      doc.addImage(thumbs[globalIdx], "JPEG", x, y, cellW0, cellH0);
+      const num = cardNumOf(c);
+      const ident = c.specialId || (num != null ? "#" + num : "");
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7);
+      doc.setTextColor(...(owned ? [40, 40, 40] : [150, 150, 150]));
+      doc.text(ident, x, y + cellH0 + 9);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(6.5);
+      doc.setTextColor(...(owned ? [70, 70, 70] : [170, 170, 170]));
+      const name = displayName ? displayName(c) : c.name;
+      doc.text(truncateText(doc, name, cellW0), x, y + cellH0 + 18);
+    });
+  }
+
+  const fname = collection.name.replace(/\s+/g, "_").replace(/[^\w-]/g, "");
+  doc.save(`coleccion_${fname}_${today()}.pdf`);
+}
+
 /* ===================== MAZO: helpers ===================== */
 function fmtDate(ts) {
   const d = ts ? new Date(ts) : new Date();
