@@ -6022,7 +6022,7 @@
    "flavour": "Su imagen se pierde en las noches del tiempo. Espíritu que vaga sin calma ni perdón.",
    "image": "",
    "custom": true,
-   "specialId": "SC-01"
+   "specialId": "SCLPE4-01"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_02_kordrag",
@@ -6040,7 +6040,7 @@
    "flavour": "Indómito e imbatible guerrero, como todos los de su terrible casta, la más temida del reino de Drako.",
    "image": "",
    "custom": true,
-   "specialId": "SC-02"
+   "specialId": "SCLPE4-02"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_03_reina_guinivere",
@@ -6058,7 +6058,7 @@
    "flavour": "Ni el sol se compara con su belleza, Y su corazón es justo como el oro. La reina es la joya más valiosa del reino.",
    "image": "",
    "custom": true,
-   "specialId": "SC-03"
+   "specialId": "SCLPE4-03"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_04_dragon_de_magma",
@@ -6076,7 +6076,7 @@
    "flavour": "La tierra está enferma y su enfermedad se llama humanidad; entonces él será la cura.",
    "image": "",
    "custom": true,
-   "specialId": "SC-04"
+   "specialId": "SCLPE4-04"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_05_knochen",
@@ -6094,7 +6094,7 @@
    "flavour": "Sirviente fiel, en sus ojos vacíos el alma esclava arde como un fuego salvaje. Sus garras son afiladas y obedientes.",
    "image": "",
    "custom": true,
-   "specialId": "SC-05"
+   "specialId": "SCLPE4-05"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_06_dragon_medieval",
@@ -6112,7 +6112,7 @@
    "flavour": "Fabuloso soberano del aire y del fuego. Su gigantesca sombra vaga sobre las tierras condenadas al sufrimiento.",
    "image": "",
    "custom": true,
-   "specialId": "SC-06"
+   "specialId": "SCLPE4-06"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_07_morgana",
@@ -6130,7 +6130,7 @@
    "flavour": "Si la venganza no corrompiese su alma, si el odio no corrompiese su corazón, ella sería tan poderosa como Merlín, pero gracias al creador, ella sólo es la esclava de su hijo Mordred.",
    "image": "",
    "custom": true,
-   "specialId": "SC-07"
+   "specialId": "SCLPE4-07"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_08_melusina",
@@ -6148,7 +6148,7 @@
    "flavour": "Eterna condenada a la transformación. Cola de serpiente y alas de murciélago son su maldición.",
    "image": "",
    "custom": true,
-   "specialId": "SC-08"
+   "specialId": "SCLPE4-08"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_09_hadas",
@@ -6166,7 +6166,7 @@
    "flavour": "Sus ropajes son tan delicados como sus alas. Su mágica belleza es tan irresistible como su destino.",
    "image": "",
    "custom": true,
-   "specialId": "SC-09"
+   "specialId": "SCLPE4-09"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_10_cancerbero",
@@ -6184,7 +6184,7 @@
    "flavour": "Con sus ojos llenos de fuego y maldad vigila con furia las puertas del infierno.",
    "image": "",
    "custom": true,
-   "specialId": "SC-10"
+   "specialId": "SCLPE4-10"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_11_horus",
@@ -6202,7 +6202,7 @@
    "flavour": "La civilización del Nilo surge por su divina intervención. El dios halcón defiende y vigila a su pueblo, al igual que el sol en el cielo.",
    "image": "",
    "custom": true,
-   "specialId": "SC-11"
+   "specialId": "SCLPE4-11"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_12_hutzilopochtli",
@@ -6220,7 +6220,7 @@
    "flavour": "Sangre y muerte son la única forma de apaciguar al dios del sol y el fuego.",
    "image": "",
    "custom": true,
-   "specialId": "SC-12"
+   "specialId": "SCLPE4-12"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_13_haiwatha",
@@ -6238,7 +6238,7 @@
    "flavour": "La justiciera flecha del guerrero surca el aire buscando el cruel corazón de Kenabeek.",
    "image": "",
    "custom": true,
-   "specialId": "SC-13"
+   "specialId": "SCLPE4-13"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_14_vampiro_oriental",
@@ -6256,7 +6256,7 @@
    "flavour": "El aroma de la sangre se mezcla con las milenarias sedas de su ropaje.",
    "image": "",
    "custom": true,
-   "specialId": "SC-14"
+   "specialId": "SCLPE4-14"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_15_hades",
@@ -6274,7 +6274,7 @@
    "flavour": "Los condenados a la perpetua noche infernal tiemblan ante el amo de las sombras y la muerte.",
    "image": "",
    "custom": true,
-   "specialId": "SC-15"
+   "specialId": "SCLPE4-15"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_16_merlin",
@@ -6292,7 +6292,7 @@
    "flavour": "Poseedor del secreto de la creación. Su alma se mezcla con el espíritu del dragón.",
    "image": "",
    "custom": true,
-   "specialId": "SC-16"
+   "specialId": "SCLPE4-16"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_17_van_helsing",
@@ -6310,7 +6310,7 @@
    "flavour": "La ciencia y la tradición son armas en nuestra lucha contra la sombra del alma, el vampiro.",
    "image": "",
    "custom": true,
-   "specialId": "SC-17"
+   "specialId": "SCLPE4-17"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_18_zara",
@@ -6328,7 +6328,7 @@
    "flavour": "Agazapada entre las ruinas, con un puñal como única defensa, parece inofensiva... Las apariencias engañan.",
    "image": "",
    "custom": true,
-   "specialId": "SC-18"
+   "specialId": "SCLPE4-18"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_19_niamh",
@@ -6346,7 +6346,7 @@
    "flavour": "Audaz y hábil en su oficio, como el mejor. Aprende a valerse de algo nuevo todo los días.",
    "image": "",
    "custom": true,
-   "specialId": "SC-19"
+   "specialId": "SCLPE4-19"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_20_titan_licantropo",
@@ -6364,7 +6364,7 @@
    "flavour": "Para él todo es pequeño, su fuerza es inmensa, su ímpetu imparable y su furia.",
    "image": "",
    "custom": true,
-   "specialId": "SC-20"
+   "specialId": "SCLPE4-20"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_21_hombre_lobo",
@@ -6382,7 +6382,7 @@
    "flavour": "Atormentado humano condenado por los dioses a contemplar la luna llena con ojos de lobo.",
    "image": "",
    "custom": true,
-   "specialId": "SC-21"
+   "specialId": "SCLPE4-21"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_22_guevadan",
@@ -6400,7 +6400,7 @@
    "flavour": "Entre la algarabía de los salvajes batallones, y los vítores de voces inhumanas, relucieron los terribles dientes amarillos de la bestia, aullando con sus fauces muy abiertas en señal de completo triunfo.",
    "image": "",
    "custom": true,
-   "specialId": "SC-22"
+   "specialId": "SCLPE4-22"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_23_enjambre",
@@ -6418,7 +6418,7 @@
    "flavour": "¿Qué es más peligroso, un enemigo grande o uno pequeño?",
    "image": "",
    "custom": true,
-   "specialId": "SC-23"
+   "specialId": "SCLPE4-23"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_24_kain",
@@ -6436,7 +6436,7 @@
    "flavour": "El altivo soberano de la tiniebla retorna en un nuevo cuerpo desde la noche de los tiempos. Errante y sin corona, al que se distingue por el estigma todavía ardiendo en su frente.",
    "image": "",
    "custom": true,
-   "specialId": "SC-24"
+   "specialId": "SCLPE4-24"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_25_vampiro_del_desierto",
@@ -6454,7 +6454,7 @@
    "flavour": "En los yermos, cualquier peregrino inexperto es una presa codiciada por él, y su única compañía, el hambre prolongada por los siglos.",
    "image": "",
    "custom": true,
-   "specialId": "SC-25"
+   "specialId": "SCLPE4-25"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_26_stribog",
@@ -6472,7 +6472,7 @@
    "flavour": "El terrible soplo de los vientos, el rayo destructor y la ira de la tempestad reverencian tu gesto.",
    "image": "",
    "custom": true,
-   "specialId": "SC-26"
+   "specialId": "SCLPE4-26"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_27_dycom_el_recaudador",
@@ -6490,7 +6490,7 @@
    "flavour": "Celosamente administra la fortuna de su amo. Pide, se te prestará. Recuerda pagar a tiempo o...toda una vida de esclavitud será insuficiente.",
    "image": "",
    "custom": true,
-   "specialId": "SC-27"
+   "specialId": "SCLPE4-27"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_28_evocacion",
@@ -6508,7 +6508,7 @@
    "flavour": "Ven como aliado, ven como amigo, ven en socorro de los míos, que nada te detenga en tu camino.",
    "image": "",
    "custom": true,
-   "specialId": "SC-28"
+   "specialId": "SCLPE4-28"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_29_ballesta",
@@ -6526,7 +6526,7 @@
    "flavour": "Tensa el arco de tu ballesta con una potente flecha. Darás en el blanco sin demora a una distancia de muchas leguas.",
    "image": "",
    "custom": true,
-   "specialId": "SC-29"
+   "specialId": "SCLPE4-29"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_30_totem_de_magma",
@@ -6544,7 +6544,7 @@
    "flavour": "Como recuerdos que renacen de las cenizas. La tierra se torna en fuego. Para hacer del mundo un mosaico.",
    "image": "",
    "custom": true,
-   "specialId": "SC-30"
+   "specialId": "SCLPE4-30"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_31_totem_del_bosque",
@@ -6562,7 +6562,7 @@
    "flavour": "Las criaturas que están en su presencia disfrutan con la bendita abundancia del verdor.",
    "image": "",
    "custom": true,
-   "specialId": "SC-31"
+   "specialId": "SCLPE4-31"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_32_totem_lunar",
@@ -6580,7 +6580,7 @@
    "flavour": "Bañada por las manos de la diosa, la fuerza de incontables cazadores se acumula en la piedra de los ancestros.",
    "image": "",
    "custom": true,
-   "specialId": "SC-32"
+   "specialId": "SCLPE4-32"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_33_trauko",
@@ -6598,7 +6598,7 @@
    "flavour": "Desprecia a los hombres, pero profesa un apasionado amor por las mujeres jóvenes.",
    "image": "",
    "custom": true,
-   "specialId": "SC-33"
+   "specialId": "SCLPE4-33"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_34_cuchivilu",
@@ -6616,7 +6616,7 @@
    "flavour": "Temido monstruo de las profundidades acecha a sus presas, en las orillas de los ríos y lagos para matarlos y beberse su sangre.",
    "image": "",
    "custom": true,
-   "specialId": "SC-34"
+   "specialId": "SCLPE4-34"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_35_sisiutl",
@@ -6634,7 +6634,7 @@
    "flavour": "Glorius warriors try to destroy her and skin her hide, a fountain of immortality and endless power.",
    "image": "",
    "custom": true,
-   "specialId": "SC-35"
+   "specialId": "SCLPE4-35"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_36_runa_urutrungu",
@@ -6652,7 +6652,7 @@
    "flavour": "El mago se revuelca en el cuero diciendo las palabras secretas, se levanta transformado en feroz jaguar.",
    "image": "",
    "custom": true,
-   "specialId": "SC-36"
+   "specialId": "SCLPE4-36"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_37_tezcaltlipoca",
@@ -6670,7 +6670,7 @@
    "flavour": "Por ti caen y por ti se elevan hombre e imperios. Tú, siempre joven, el primero en llegar, el que engaña y no será engañado. El que se inventa a si mismo.",
    "image": "",
    "custom": true,
-   "specialId": "SC-37"
+   "specialId": "SCLPE4-37"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_38_nanahuatzin",
@@ -6688,7 +6688,7 @@
    "flavour": "¿Quién será el quinto sol? Se preguntaron los dioses en Teotihuacán. El dios rico tuvo miedo ante el bracero, Teotexcalli. Nanahuatzin, el desvalido, cerró los ojos y saltó.",
    "image": "",
    "custom": true,
-   "specialId": "SC-38"
+   "specialId": "SCLPE4-38"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_39_huracan",
@@ -6706,7 +6706,7 @@
    "flavour": "Rayo de una pierna, rayo pequeño y rayo largo, son el corazón del cielo, los tres como uno soplan el aliento de vida sobre las aguas de la creación informe.",
    "image": "",
    "custom": true,
-   "specialId": "SC-39"
+   "specialId": "SCLPE4-39"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_40_shuar",
@@ -6724,7 +6724,7 @@
    "flavour": "El abuelo Arutam, el tigre de la mañana, lo llevó a caminar por la selva inmensa y le relató, cómo el luminoso Etsa devolvió la vida a los pájaros.",
    "image": "",
    "custom": true,
-   "specialId": "SC-40"
+   "specialId": "SCLPE4-40"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_41_lautaro",
@@ -6742,7 +6742,7 @@
    "flavour": "Nuestro líder indomable, astuto estratega, el libertador al que seguimos en esta guerra como un relámpago. ¡¡¡Diez veces venceremos!!!",
    "image": "",
    "custom": true,
-   "specialId": "SC-41"
+   "specialId": "SCLPE4-41"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_42_ira_del_nahual",
@@ -6760,7 +6760,7 @@
    "flavour": "El mago convertido en su otro yo, en su doble, actúa en éste y otros mundos. Así la justicia abate al intrigante, al traidor, al usurpador.",
    "image": "",
    "custom": true,
-   "specialId": "SC-42"
+   "specialId": "SCLPE4-42"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_43_pachamama",
@@ -6778,7 +6778,7 @@
    "flavour": "Madre nuestra, eres tiempo que cura los dolores, tiempo que distribuye las estaciones, tierra fecunda. Todos venimos de ti y aceptamos tu ley.",
    "image": "",
    "custom": true,
-   "specialId": "SC-43"
+   "specialId": "SCLPE4-43"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_44_machitun",
@@ -6796,7 +6796,7 @@
    "flavour": "En la purificación, la machi en trance, dirige oraciones a los dioses mayores y los antepasados. La familia canta y grita, todos luchan juntos para limpiar el cuerpo del wekufe.",
    "image": "",
    "custom": true,
-   "specialId": "SC-44"
+   "specialId": "SCLPE4-44"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_45_flechero",
@@ -6814,7 +6814,7 @@
    "flavour": "Distinguido en su carrera como brujo, el verdugo implacable ejecuta la pena de muerte sentenciada por la mayoría.",
    "image": "",
    "custom": true,
-   "specialId": "SC-45"
+   "specialId": "SCLPE4-45"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_46_totem_del_aguila",
@@ -6832,7 +6832,7 @@
    "flavour": "Poderoso en las alturas, desde el espacio infinito donde moras, otórganos la intrepidez en el combate.",
    "image": "",
    "custom": true,
-   "specialId": "SC-46"
+   "specialId": "SCLPE4-46"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_47_totem_de_jaguar",
@@ -6850,7 +6850,7 @@
    "flavour": "Poderoso don de la noche estrellada, otórganos valor y fortaleza en el combate.",
    "image": "",
    "custom": true,
-   "specialId": "SC-47"
+   "specialId": "SCLPE4-47"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_48_puchao",
@@ -6868,7 +6868,7 @@
    "flavour": "Rostro del día auspicioso, tus rayos, como serpientes, zigzaguean cálidos por los cuatro rincones del mundo.",
    "image": "",
    "custom": true,
-   "specialId": "SC-48"
+   "specialId": "SCLPE4-48"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_49_draugar",
@@ -6886,7 +6886,7 @@
    "flavour": "Capaz de nadar por la piedra sólida con la fuerza de un buey. El asesino camina después de la muerte aterrorizando poblados y se escabulle.",
    "image": "",
    "custom": true,
-   "specialId": "SC-49"
+   "specialId": "SCLPE4-49"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_50_aegir",
@@ -6904,7 +6904,7 @@
    "flavour": "Renombrado por sus banquetes es Aegir, el gigante del océano, el fabricante de cerveza, esposo de Ran; nueve olas son sus hijas.",
    "image": "",
    "custom": true,
-   "specialId": "SC-50"
+   "specialId": "SCLPE4-50"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_51_rugnir",
@@ -6922,7 +6922,7 @@
    "flavour": "Se jacta Rugnir de ser el más fuerte de Yotunheim. Su cabeza es de piedra, su corazón también. Como terrible maza empuña su piedra de afilar.",
    "image": "",
    "custom": true,
-   "specialId": "SC-51"
+   "specialId": "SCLPE4-51"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_52_ragnar_lodbrog",
@@ -6940,7 +6940,7 @@
    "flavour": "Por muchos nombres se conoce a un hombre. Gracias a las polainas y tu valor, en ese nido de serpientes, tu nombre y la fama de tus hazañas pasan de boca en boca.",
    "image": "",
    "custom": true,
-   "specialId": "SC-52"
+   "specialId": "SCLPE4-52"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_53_einheryar",
@@ -6958,7 +6958,7 @@
    "flavour": "En Valhalla los héroes muertos con gran valor en batalla, se entrenan luchando hasta cortarse en pedazos. Festejan con Odín al anochecer y sus heridas curan por milagro. El día de Ragnarok, los más feroces marcharán con Odin contra los enemigos de los dioses.",
    "image": "",
    "custom": true,
-   "specialId": "SC-53"
+   "specialId": "SCLPE4-53"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_54_trivaldi",
@@ -6976,7 +6976,7 @@
    "flavour": "E l cruel gigante hace frente a Thor, confiado en su victoria. El tres veces poderoso no se percata de que ya ha perdido,",
    "image": "",
    "custom": true,
-   "specialId": "SC-54"
+   "specialId": "SCLPE4-54"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_55_hodur",
@@ -6994,7 +6994,7 @@
    "flavour": "La reunión disfrutaba usando a Baldur como blanco, festejaba su invulnerabilidad. Ciego como la guerra, Hodur se mantenía apartado... Una maliciosa voz le instó a participar, le facilitó para disparar una inocente saeta de muérdago...",
    "image": "",
    "custom": true,
-   "specialId": "SC-55"
+   "specialId": "SCLPE4-55"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_56_nanna",
@@ -7012,7 +7012,7 @@
    "flavour": "Unidos en la vida Nanna y Baldur, ahora que él ha partido, ¿acaso la muerte los podrá separar? ¿Quién es más fiel que una esposa que a su marido se ha unido en la pira del funeral?",
    "image": "",
    "custom": true,
-   "specialId": "SC-56"
+   "specialId": "SCLPE4-56"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_57_thor",
@@ -7030,7 +7030,7 @@
    "flavour": "Cabellos rojos como la sangre derramada por los enemigos. Ojos azules como el cielo que les arrebata a los gigantes de la escarcha.",
    "image": "",
    "custom": true,
-   "specialId": "SC-57"
+   "specialId": "SCLPE4-57"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_58_galdar",
@@ -7048,7 +7048,7 @@
    "flavour": "Sé un cántico de poder y varios más que presto entono cuando me hallo en la necesidad y la adversidad. La aflicción se devuelve así a quien mal me  desea.",
    "image": "",
    "custom": true,
-   "specialId": "SC-58"
+   "specialId": "SCLPE4-58"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_59_cuernos_de_adumla",
@@ -7066,7 +7066,7 @@
    "flavour": "Con este canto se evocan los tiempos primeros, cuando el gigante Ymir bebió la leche de Adumla, cuando Adumla lamió una piedra que tomó la forma de un hombre...",
    "image": "",
    "custom": true,
-   "specialId": "SC-59"
+   "specialId": "SCLPE4-59"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_60_sacrificio_de_odin",
@@ -7084,7 +7084,7 @@
    "flavour": "Colgué del árbol retorcido nueve noches. Allí permanecí. Yo mismo sacrificado por mi mismo. Nadie me dio pan, nadie me dio vino. A las profundidades me asomé para con un profundo grito las runas asir",
    "image": "",
    "custom": true,
-   "specialId": "SC-60"
+   "specialId": "SCLPE4-60"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_61_fuente_de_mimir",
@@ -7102,7 +7102,7 @@
    "flavour": "Esta es la fuente de Mimir bajo la raíz media del Yggdrasil. ¿Cuál es el costo de la sabiduría? Que ofrenda, qué sacrificio, estás dispuesto a realizar. Un ojo de la cara es el valor de la sabiduría. ¡Si! ¡Nada más, nada menos!.",
    "image": "",
    "custom": true,
-   "specialId": "SC-61"
+   "specialId": "SCLPE4-61"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_62_hidromiel",
@@ -7120,7 +7120,7 @@
    "flavour": "Hecha de la sangre del sabio Kvasir mezclada con miel, por los pérfidos enanos Fjalar y Galar. Esta bebida milagrosa hace de quien la toma un poeta inspirado de ingenio ilimitado.",
    "image": "",
    "custom": true,
-   "specialId": "SC-62"
+   "specialId": "SCLPE4-62"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_63_ataud_de_marfil",
@@ -7138,7 +7138,7 @@
    "flavour": "¿Quién leerá en los costados de este tu ataúd las runas talladas de tus hazañas de tiempos ya idos y olvidados?... ¡Cuando tú moriste, contigo murió una parte del mundo!",
    "image": "",
    "custom": true,
-   "specialId": "SC-63"
+   "specialId": "SCLPE4-63"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_64_halatafl",
@@ -7156,7 +7156,7 @@
    "flavour": "Juguemos... son veintidós \"hombres\" rojos y veintidós blancos en la tabla, el centro y los rincones se dejan vacíos. Las piezas blancas abren el juego colocándose en el centro, las rojas lo toman saltando sobre él y el juego procede... hasta que uno tenga menos de cinco piezas y pierda.",
    "image": "",
    "custom": true,
-   "specialId": "SC-64"
+   "specialId": "SCLPE4-64"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_65_guan_yu",
@@ -7174,7 +7174,7 @@
    "flavour": "Líder de los cinco tigres generales de Shu. Hermano jurado de Liu Bei y Zhang Fei. Valiente y leal combate a las fuerzas de Cao Cao... hasta el final.",
    "image": "",
    "custom": true,
-   "specialId": "SC-65"
+   "specialId": "SCLPE4-65"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_66_hattori_hanzo",
@@ -7192,7 +7192,7 @@
    "flavour": "Soy Hattori Hanzo Masashige, el \"Diablo Hanzo\", Jonin de 200 hombres de Iga. Nadie tocará al señor Tokugawa Ieyasu, está bajo mi protección. Las amenazas serán seguidas hasta su extinción.",
    "image": "",
    "custom": true,
-   "specialId": "SC-66"
+   "specialId": "SCLPE4-66"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_67_47_ronin",
@@ -7210,7 +7210,7 @@
    "flavour": "Son un tesoro de lealtad. Vengan la injusta muerte de su señor para después seguirlo al más allá.",
    "image": "",
    "custom": true,
-   "specialId": "SC-67"
+   "specialId": "SCLPE4-67"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_68_tanuki",
@@ -7228,7 +7228,7 @@
    "flavour": "El Mapache es el amo de la transformación y del disfraz. Vive innumerables y divertidas aventuras por bosques y aldeas.",
    "image": "",
    "custom": true,
-   "specialId": "SC-68"
+   "specialId": "SCLPE4-68"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_69_geon_si",
@@ -7246,7 +7246,7 @@
    "flavour": "El que muere lejos de su hogar reanimado por perversos nigromantes, es un siervo sin voluntad ni pensamiento.",
    "image": "",
    "custom": true,
-   "specialId": "SC-69"
+   "specialId": "SCLPE4-69"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_70_oni",
@@ -7264,7 +7264,7 @@
    "flavour": "Torpe pero dañino es el pueblo de los Oni, gusta de causar daño con enfermedades y epidemias.",
    "image": "",
    "custom": true,
-   "specialId": "SC-70"
+   "specialId": "SCLPE4-70"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_71_amateratsu",
@@ -7282,7 +7282,7 @@
    "flavour": "Reina-sol de la Alta Planicie Celestial. Asustada por los destrozos de Susano se ocultó en la caverna de las Rocas Celestiales sumiendo al universo en la oscuridad. Los Kami discurren un ardid para tentarla a salir.",
    "image": "",
    "custom": true,
-   "specialId": "SC-71"
+   "specialId": "SCLPE4-71"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_72_ebisu",
@@ -7300,7 +7300,7 @@
    "flavour": "Abundancia del mar, protector de la pesca y patrono de los pescadores. Era adorado en la región costera cerca de Osaka.",
    "image": "",
    "custom": true,
-   "specialId": "SC-72"
+   "specialId": "SCLPE4-72"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_73_daikoku",
@@ -7318,7 +7318,7 @@
    "flavour": "Abundancia de la tierra, protector del suelo y patrono de los granjeros. Con su mazo mágico realiza todos los deseos de los mortales.",
    "image": "",
    "custom": true,
-   "specialId": "SC-73"
+   "specialId": "SCLPE4-73"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_74_guan_ti",
@@ -7336,7 +7336,7 @@
    "flavour": "Con mi gran poder y sabiduría me opongo a todos aquellos que perturban la paz. Así guardo el reino de todo enemigo, sea hombre o demonio.",
    "image": "",
    "custom": true,
-   "specialId": "SC-74"
+   "specialId": "SCLPE4-74"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_75_shen_yi",
@@ -7354,7 +7354,7 @@
    "flavour": "El arquero celestial abatió a los soles-cuervos que abrazan con su calor el mundo. Xi Wang Mu le ayudó en la búsqueda de su esposa. Ascendiendo al cielo como inmortal del palacio del sol.",
    "image": "",
    "custom": true,
-   "specialId": "SC-75"
+   "specialId": "SCLPE4-75"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_76_kuei_xing",
@@ -7372,7 +7372,7 @@
    "flavour": "Patrono de los exámenes para oficial imperial. En su vida terrenal era un profesor que , luego de fracasar en el examen, se arrojó al mar y fue salvado por una mágica criatura marina.",
    "image": "",
    "custom": true,
-   "specialId": "SC-76"
+   "specialId": "SCLPE4-76"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_77_kitsune_tsuki",
@@ -7390,7 +7390,7 @@
    "flavour": "Ella ni siquiera se dió cuenta cuando el astuto espíritu del zorro la poseyó, entró por sus uñas, parecía como loca.",
    "image": "",
    "custom": true,
-   "specialId": "SC-77"
+   "specialId": "SCLPE4-77"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_78_feng_shui",
@@ -7408,7 +7408,7 @@
    "flavour": "El geomante, siguiendo el método tradicional, determina el lugar más favorable para construir utilizando el Lo Pan, la brújula, buscando la armonía de las corrientes del viento y el agua.",
    "image": "",
    "custom": true,
-   "specialId": "SC-78"
+   "specialId": "SCLPE4-78"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_79_yasakani",
@@ -7426,7 +7426,7 @@
    "flavour": "Amateratsu dio tres presentes a la tierra: la joya de Jade Yasaka-no-Magatama, el espejo Yaata-no-Kagami y la espada Kusanagi-no-Tsurugi, objetos que aún hoy en día se consideran emblemas imperiales.",
    "image": "",
    "custom": true,
-   "specialId": "SC-79"
+   "specialId": "SCLPE4-79"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_80_teatro_kabuki",
@@ -7444,7 +7444,7 @@
    "flavour": "El Kabuki fue creado al final del periodo Edo, contemplando tanto por las clases altas como por las clases más bajas. Es muy popular.",
    "image": "",
    "custom": true,
-   "specialId": "SC-80"
+   "specialId": "SCLPE4-80"
   }
  ]
 }

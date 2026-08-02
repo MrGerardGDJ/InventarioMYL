@@ -196,15 +196,22 @@ correspondiente de `custom-cards.json` y la entrada de `editions.json`.
 - **`leyendas_primera_era_4_0`** ("Leyendas - Primera Era 4.0", lanzada el
   5-sep-2025): agregada el 21-07-2026, no está en `/todas` a esa fecha
   (verificado con el chequeo de arriba). 432 cartas: 352 numeradas (1-352) +
-  80 del "Set Clásico" (subconjunto paralelo con su propio código
-  `SCLPE4-NN`, cargadas como especiales `SC-01`…`SC-80`, ver más abajo).
+  80 del "Set Clásico" (subconjunto paralelo, tratamiento de barniz especial
+  sin Foil, cargadas como especiales con identificador `SCLPE4-01`…
+  `SCLPE4-80` — así es como el wiki y las cartas físicas las nombran; ver
+  más abajo).
   **Solo 56/432 tienen imagen** — ver "Imágenes de ediciones remake" abajo:
   el resto se dejó sin imagen a propósito porque el wiki aún no tiene el
   escaneo genuino de esas cartas y traer el arte de una edición anterior
   puede corresponder a una versión distinta de la carta (habilidad
-  diferente aunque el arte se vea igual). El dueño del inventario las va
-  escaneando y cargando a mano por el gestor de Ediciones a medida que
-  consigue los sobres físicos.
+  diferente aunque el arte se vea igual). Las 80 del Set Clásico están
+  **todas** sin imagen: el wiki lista para cada una una página propia
+  "Nombre (SCLPE4)" pero ninguna de esas 80 páginas existe todavía
+  (verificado el 02-08-2026 vía la API — las 80 dan `missingtitle`), así
+  que no hay ningún scan específico que se le pueda pedir prestado sin
+  violar la regla de "no reciclar arte de otra edición". El dueño del
+  inventario las va escaneando y cargando a mano por el gestor de
+  Ediciones a medida que consigue los sobres físicos.
 
 ### Imágenes de ediciones "remake" / aniversario: no reciclar arte de otra edición
 
@@ -255,6 +262,29 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 `data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-08-02 (2ª iteración) — Identificador correcto del "Set Clásico" de LPE4
+- El dueño del inventario confirmó que sus 80 cartas físicas del "Set
+  Clásico" de Leyendas - Primera Era 4.0 llevan el código `SCLPE4-NN`, no
+  `SC-NN` como se había cargado. Se renombró el campo `specialId` de esas
+  80 cartas en `data/custom-cards.json` (de `SC-01`…`SC-80` a
+  `SCLPE4-01`…`SCLPE4-80`); el `id` interno de cada carta no cambió, para
+  no perder las cantidades que el dueño ya tuviera registradas contra el id
+  anterior.
+- El extractor de la skill (`extract_myl_edition.py`) generaba el prefijo
+  `SC-` a mano (hardcodeado); se corrigió para que use el prefijo completo
+  tal cual aparece en el código del wiki (`_CODE_RE` ahora captura todo el
+  prefijo, no solo si empieza con "SC" o no) — así, si otra edición futura
+  trae un subconjunto paralelo con un prefijo distinto, se conserva tal
+  cual en vez de aplanarlo a `SC-`.
+- Se aprovechó para verificar si había imágenes disponibles para esas 80
+  cartas: el wiki lista, para cada una, un enlace a una página propia
+  ("Nombre (SCLPE4)"), pero se comprobó vía la API de MediaWiki que
+  **ninguna de las 80 páginas existe todavía** (`missingtitle` en las 80).
+  No hay entonces ningún scan específico del Set Clásico que se pueda
+  cargar sin violar la regla de "no reciclar arte de otra edición" — se
+  mantienen las 80 sin imagen hasta que el wiki las suba o el dueño las
+  escanee a mano.
 
 ### 2026-08-02 — Exportar PDF visual de una Colección
 - Nuevo botón "📄 Exportar PDF" en el detalle de una Colección
