@@ -184,8 +184,69 @@ correspondiente de `custom-cards.json` y la entrada de `editions.json`.
   (verificado con el chequeo de arriba). 432 cartas: 352 numeradas (1-352) +
   80 del "Set Clásico" (subconjunto paralelo con su propio código
   `SCLPE4-NN`, cargadas como especiales `SC-01`…`SC-80`, ver más abajo).
+  **Solo 63/432 tienen imagen** — ver "Imágenes de ediciones remake" abajo:
+  el resto se dejó sin imagen a propósito porque el wiki aún no tiene el
+  escaneo genuino de esas cartas y traer el arte de una edición anterior
+  puede corresponder a una versión distinta de la carta (habilidad
+  diferente aunque el arte se vea igual). El dueño del inventario las va
+  escaneando y cargando a mano por el gestor de Ediciones a medida que
+  consigue los sobres físicos.
+
+### Imágenes de ediciones "remake" / aniversario: no reciclar arte de otra edición
+
+Se detectó en la práctica (Leyendas - Primera Era 4.0, reportado por el
+dueño del inventario el 22-07-2026) que para ediciones tipo compilación o
+remake, una carta puede compartir el mismo nombre y a veces el mismo arte
+que su versión en una edición anterior, pero tener **habilidad u otros
+datos distintos** en la impresión nueva — ej. Bjorn Ragnarsson en
+Leyendas 4.0 (código `LPE4 - 62/320`) es una carta distinta a la de
+Leyendas 3.0 (`LPE23 - 154/300`). Cuando el wiki todavía no tiene el
+escaneo específico de la carta nueva (edición recién lanzada, comunidad del
+wiki aún documentándola), el extractor puede terminar trayendo — con
+confianza aparente — el arte de la carta de la edición ANTERIOR por la vía
+de "página base" o "fuente citada en la Nota", que en los hechos puede ser
+una carta distinta a la impresa en la edición nueva.
+
+**Regla aplicada**: el script (`extract_myl_edition.py`) ahora soporta
+`--strict-images`, que solo usa la imagen cuando proviene de una página
+**específica** de la edición que se está extrayendo (no de la página base
+ni de la Nota) — para cualquier otro caso, dejar la carta sin imagen es
+mejor que arriesgarse a mostrar la carta equivocada; se completa a mano
+después (foto/escaneo del dueño de la carta física). Se usó este flag para
+corregir retroactivamente `leyendas_primera_era_4_0` (bajó de 384 a 63
+imágenes) y debe usarse por defecto en cualquier edición "remake"/
+aniversario/compilatoria futura. Para ediciones que son una reimpresión 1:1
+de otra completa (ej. Bruderschaft, alemán de La Cofradía) esto no hizo
+falta — ahí las páginas específicas de la edición sí existían para casi
+todas las cartas.
+
+**Pendiente, no resuelto todavía**: el mismo problema puede afectar la
+**habilidad/historia** (no solo la imagen) de las cartas resueltas por
+"página base" o "Nota", ya que se probó que el texto de esas páginas
+también puede corresponder a la versión ANTERIOR de la carta, no a la
+impresión nueva. No hay todavía una forma automática de detectar esto (a
+diferencia de la imagen, que se puede rastrear por su página de origen, el
+texto de habilidad no tiene una señal tan clara de si cambió entre
+ediciones). Si el dueño del inventario nota una habilidad incorrecta en
+alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
+`data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-07-21 (3ª iteración) — Corrección: imágenes ajenas en Leyendas - Primera Era 4.0
+- El dueño del inventario detectó que muchas cartas de `leyendas_primera_era_4_0`
+  mostraban el arte de una edición ANTERIOR (Leyendas 3.0 u otras) en vez del
+  de la impresión nueva — y que, para esas cartas, la habilidad puede además
+  ser distinta aunque el arte se parezca (ej. Bjorn Ragnarsson). Se corrigió
+  quitando la imagen de toda carta cuya página de origen no fuera específica
+  de esta edición: bajó de 384 a **63** cartas con imagen; el resto queda
+  para que el dueño las escanee/cargue a mano por el gestor de Ediciones.
+- El script de la skill ganó el flag **`--strict-images`**: solo confía en la
+  imagen cuando la página de donde salió es específica de la edición
+  extraída (no la página base ni la fuente de la Nota). Ver la sección
+  "Imágenes de ediciones remake / aniversario" más arriba para el detalle y
+  el riesgo pendiente (la misma duda aplica a habilidad/historia, sin una
+  forma automática de detectarlo todavía).
 
 ### 2026-07-21 (2ª iteración) — Nueva edición "Leyendas - Primera Era 4.0" y mejoras al extractor del wiki
 - **Nueva edición bundled** `leyendas_primera_era_4_0` en `data/editions.json`

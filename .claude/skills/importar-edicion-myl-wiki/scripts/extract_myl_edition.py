@@ -406,7 +406,7 @@ def resolve_card_content(card, edition_name, contents, report):
     return None, None, None
 
 
-def build_row(card, txt, special_id=""):
+def build_row(card, txt, special_id="", trust_image=True):
     d = parse_card_template(txt) if txt else {}
     coste = d.get("coste de oro", "").strip()
     fuerza = d.get("ataque", "").strip()
@@ -420,7 +420,15 @@ def build_row(card, txt, special_id=""):
     if coste.upper() == "X":
         coste = ""
         habilidad = "(Coste X) " + habilidad
-    img_file = first_image_file(d.get("imagen", ""))
+    # trust_image=False: la página de donde salió el dato NO es específica de
+    # esta edición (se llegó por página base o por la Nota). Para ediciones
+    # "remake"/aniversario esa imagen puede ser la de OTRA impresión distinta
+    # de la carta (arte reciclado pero con habilidad/tratamiento distintos —
+    # comprobado en la práctica con Leyendas - Primera Era 4.0, donde el wiki
+    # aún no tenía escaneadas muchas cartas nuevas y el fallback traía el
+    # arte de Leyendas 3.0 u otra edición). En ese caso mejor sin imagen que
+    # con una que puede no ser la carta real — el usuario la escanea después.
+    img_file = first_image_file(d.get("imagen", "")) if trust_image else None
     return {
         "numero": "" if special_id else card.get("num", ""),
         "especial": special_id,
@@ -443,12 +451,24 @@ def main():
     ap.add_argument("--list-page", help="Título exacto de la página de listado, si difiere del patrón estándar")
     ap.add_argument("--promo-page", help='Página de cartas Promo, ej. "Lista de cartas Promo de Brotherhood"')
     ap.add_argument("--out", help="Ruta del CSV de salida (por defecto <edicion>.csv)")
+    ap.add_argument(
+        "--strict-images", action="store_true",
+        help=(
+            "Solo usa la imagen cuando viene de una página específica de esta "
+            "edición (no de la página base ni de la fuente citada en la Nota). "
+            "Actívalo para ediciones tipo 'remake'/aniversario donde el arte "
+            "puede reciclarse de una carta con habilidad o tratamiento "
+            "distinto — visto en la práctica con Leyendas - Primera Era 4.0, "
+            "donde el wiki aún no tenía escaneadas muchas cartas nuevas y el "
+            "fallback traía por error el arte de una edición anterior."
+        ),
+    )
     args = ap.parse_args()
 
     edition_name = args.edition.strip()
     list_page = args.list_page or f"Lista de cartas de {edition_name.replace('_', ' ')}"
     out_csv = args.out or re.sub(r"\s+", "_", edition_name.lower()) + ".csv"
-    report = {"edicion": edition_name, "sin_resolver": [], "sin_imagen": []}
+    report = {"edicion": edition_name, "sin_resolver": [], "sin_imagen": [], "imagen_descartada_por_confianza": []}
 
     print(f"Descargando listado: {list_page}")
     wikitext = fetch_wikitext(list_page)
@@ -482,23 +502,32 @@ def main():
     print(f"Descargando el contenido de {len(titles_needed)} páginas candidatas...")
     contents = fetch_contents(titles_needed)
 
+    def image_trusted(confidence):
+        return (not args.strict_images) or confidence == "específica"
+
     rows = []
     for c in cards:
-        txt, _, _ = resolve_card_content(c, edition_name, contents, report)
-        row = build_row(c, txt)
+        txt, _, confidence = resolve_card_content(c, edition_name, contents, report)
+        trust_image = image_trusted(confidence)
+        row = build_row(c, txt, trust_image=trust_image)
         rows.append(row)
         if not row["_image_file"]:
             report["sin_imagen"].append(c["name"])
+            if txt and not trust_image:
+                report["imagen_descartada_por_confianza"].append(c["name"])
     for c in specials:
-        txt, _, _ = resolve_card_content(
+        txt, _, confidence = resolve_card_content(
             {"page_title": c["page_title"], "name": c["name"], "type": c["type"],
              "note_title": c.get("note_title")},
             edition_name, contents, report,
         )
-        row = build_row(c, txt, special_id=c["special_id"])
+        trust_image = image_trusted(confidence)
+        row = build_row(c, txt, special_id=c["special_id"], trust_image=trust_image)
         rows.append(row)
         if not row["_image_file"]:
             report["sin_imagen"].append(c["name"])
+            if txt and not trust_image:
+                report["imagen_descartada_por_confianza"].append(c["name"])
 
     print("Resolviendo URLs de imagen...")
     files = {r["_image_file"] for r in rows if r["_image_file"]}
@@ -522,6 +551,8 @@ def main():
     print(f"\n{len(rows)} cartas escritas en {out_csv}")
     print(f"  con imagen: {sum(1 for r in rows if url_by_file.get(r['_image_file']))}")
     print(f"  sin resolver: {len(report['sin_resolver'])}  |  sin imagen: {len(report['sin_imagen'])}")
+    if args.strict_images and report["imagen_descartada_por_confianza"]:
+        print(f"  imagen descartada por --strict-images (de página no específica de esta edición): {len(report['imagen_descartada_por_confianza'])}")
     print(f"Reporte de huecos: {report_path}")
 
 
