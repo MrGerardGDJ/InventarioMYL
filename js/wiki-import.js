@@ -259,6 +259,19 @@ function firstImageFile(imagenField) {
   return m ? m[1].trim() : null;
 }
 
+function firstWikilinkTarget(s) {
+  if (!s) return "";
+  const m = s.trim().match(/^\[\[([^\]|]+)/);
+  return m ? m[1].trim() : stripWiki(s).trim();
+}
+
+function normEditionName(s) {
+  return (s || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z]/g, "");
+}
+
 /* ===================== Resolución de la página de cada carta ===================== */
 // Solo página específica de la edición o página base compartida — nunca
 // búsqueda + adivinanza (ver nota al inicio del archivo). Devuelve además
@@ -285,7 +298,24 @@ function resolveCardContent(card, editionName, contents, report) {
   const specific = title.includes(`(${editionName})`) ? title : `${title} (${editionName})`;
   if (contents.has(specific)) return { txt: contents.get(specific), confidence: "especifica" };
   if (title !== base && contents.has(title)) return { txt: contents.get(title), confidence: "especifica" };
-  if (contents.has(base)) return { txt: contents.get(base), confidence: "base" };
+  if (contents.has(base)) {
+    const baseTxt = contents.get(base);
+    // Aunque el enlace del listado no traiga paréntesis (title === base,
+    // arriba), la página puede seguir siendo específica de esta edición:
+    // ediciones traducidas (ej. Bruderschaft, Brotherhood (V2)) le ponen a
+    // la carta directamente su nombre traducido como título ("Harpyie",
+    // "Weißer Büffel") sin desambiguador porque no colisiona con nada más —
+    // pero la propia plantilla {{Carta}} de esa página declara
+    // "edición=[[<esta edición>]]", una confirmación tan buena como el
+    // desambiguador en el título. Sin este chequeo esas cartas quedaban sin
+    // imagen por las dudas aunque el wiki mismo diga de qué edición son
+    // (comprobado en la práctica con Bruderschaft).
+    const declared = firstWikilinkTarget(parseCardTemplate(baseTxt)["edición"] || "");
+    if (declared && normEditionName(declared) === normEditionName(editionName)) {
+      return { txt: baseTxt, confidence: "especifica" };
+    }
+    return { txt: baseTxt, confidence: "base" };
+  }
   report.sinResolver.push({ nombre: card.name, paginaIntentada: title });
   return { txt: null, confidence: null };
 }
