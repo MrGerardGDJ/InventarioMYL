@@ -818,7 +818,7 @@
    "strength": 2,
    "ability": "Puede atacar cuando entra en juego.<br>Cuando entra en juego, puedes subir otro Aliado que controles a la Mano de su dueño. Luego, puedes jugar un Arma de Coste 3 o menos sin pagar su Coste.",
    "flavour": "La mano sangrienta de las sombras, llega donde la luz no alcanza. Su rostro está velado por el miedo, su fe huele a hierro y ceniza. No interroga: sentencia.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/25/LPE4-047-320.png/revision/latest?cb=20251121023019&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -835,7 +835,7 @@
    "strength": 5,
    "ability": "Cuando entra en juego, puedes jugar un Aliado de tu Mano de Coste 3 o menos sin pagar su coste.<br>Cada vez otro Aliado Licántropo entre en juego bajo tu control, tu oponente bota 1 carta.",
    "flavour": "Aúlla donde muere la razón. Su carne cambia con la luna, pero su alma ya no es humana. Devora recuerdos, rompe huesos con hambre ancestral.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ec/LPE4-048-320.png/revision/latest?cb=20251121023019&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -920,7 +920,7 @@
    "strength": 4,
    "ability": "En tu Fase de Vigilia, una vez por turno, puedes destruir un Aliado con habilidad “No puede ser declarado atacante” que controles para que tu oponente bote tantas cartas como Fuerza tenga el Aliado destruido.",
    "flavour": "Espíritu guerrero de los Lakota, caminaba entre hombres y bestias con la fuerza del trueno y el corazón del bosque. Su rugido guiaba a la tribu, su lanza abría senderos en la nieve.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9f/LPE4-053-320.png/revision/latest?cb=20251121023019&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1039,7 +1039,7 @@
    "strength": 5,
    "ability": "No puede ser anulado.<br>Cuando entra en juego, puedes buscar hasta 2 Armas en tu Mazo Castillo y ponerlas en tu Mano. Luego, puedes jugar un Arma de Coste 3 o menos de tu Mano sin pagar su Coste.",
    "flavour": "Lobo entre reyes. Bautizado en el fuego de dos mundos, cristiano por alianza, vikingo por sangre. Navegó entre pactos y traiciones, entre cruz y cuervo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ed/LPE4-060-320.png/revision/latest?cb=20251121023021&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1753,7 +1753,7 @@
    "strength": null,
    "ability": "Única. Anula una carta de Coste 1 o menos.",
    "flavour": "Cuando la luz de la Luna toca la Tierra y el viento susurra en el lenguaje de lo antiguo, el portador de esta habilidad puede extender su voluntad al Otro Mundo.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d1/LPE4-102-320.png/revision/latest?cb=20251126034122&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -1957,7 +1957,7 @@
    "strength": null,
    "ability": "Puedes pagar este Oro para descartar 1 carta de tu Mano. Luego, puedes robar 1 carta.<br>Sólo puedes activar un Colgante Impio por turno.",
    "flavour": "No adorna: corrompe. Quien lo lleva oye voces que no vienen del mundo, siente pulsos bajo la piel. No concede poder lo exige.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/4f/LPE4-114-320.png/revision/latest?cb=20260218003952&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {
@@ -5595,7 +5595,7 @@
    "strength": null,
    "ability": "Cuando entra en juego, destierra la carta superior del Mazo Castillo oponente. Puedes desterrar este Tótem para buscar un Aliado en tu Mazo Castillo y ponerlo en tu Mano.",
    "flavour": "Dicen que fue erigido por los primeros paladines, y que su luz guía a los justos con poder y esperanza.",
-   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/6a/LPE4-328-320.png/revision/latest?cb=20251126034125&path-prefix=es",
+   "image": "",
    "custom": true
   },
   {

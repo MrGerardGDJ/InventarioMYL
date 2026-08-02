@@ -184,7 +184,7 @@ correspondiente de `custom-cards.json` y la entrada de `editions.json`.
   (verificado con el chequeo de arriba). 432 cartas: 352 numeradas (1-352) +
   80 del "Set Clásico" (subconjunto paralelo con su propio código
   `SCLPE4-NN`, cargadas como especiales `SC-01`…`SC-80`, ver más abajo).
-  **Solo 63/432 tienen imagen** — ver "Imágenes de ediciones remake" abajo:
+  **Solo 56/432 tienen imagen** — ver "Imágenes de ediciones remake" abajo:
   el resto se dejó sin imagen a propósito porque el wiki aún no tiene el
   escaneo genuino de esas cartas y traer el arte de una edición anterior
   puede corresponder a una versión distinta de la carta (habilidad
@@ -207,18 +207,27 @@ confianza aparente — el arte de la carta de la edición ANTERIOR por la vía
 de "página base" o "fuente citada en la Nota", que en los hechos puede ser
 una carta distinta a la impresa en la edición nueva.
 
-**Regla aplicada**: el script (`extract_myl_edition.py`) ahora soporta
-`--strict-images`, que solo usa la imagen cuando proviene de una página
+**Regla aplicada, y es el comportamiento POR DEFECTO desde el 22-07-2026**
+(el usuario avisó que esto mismo ya le había pasado en otras ediciones
+propias, cargadas con el botón del navegador, sin haberlo reportado antes —
+así que se corrigió para todas las ediciones, no solo Leyendas 4.0): tanto
+el script (`extract_myl_edition.py`) como el botón "Cargar desde wiki"
+(`js/wiki-import.js`) solo usan la imagen cuando proviene de una página
 **específica** de la edición que se está extrayendo (no de la página base
 ni de la Nota) — para cualquier otro caso, dejar la carta sin imagen es
 mejor que arriesgarse a mostrar la carta equivocada; se completa a mano
-después (foto/escaneo del dueño de la carta física). Se usó este flag para
-corregir retroactivamente `leyendas_primera_era_4_0` (bajó de 384 a 63
-imágenes) y debe usarse por defecto en cualquier edición "remake"/
-aniversario/compilatoria futura. Para ediciones que son una reimpresión 1:1
-de otra completa (ej. Bruderschaft, alemán de La Cofradía) esto no hizo
-falta — ahí las páginas específicas de la edición sí existían para casi
-todas las cartas.
+después (foto/escaneo del dueño de la carta física). El script conserva un
+flag de escape, `--trust-fallback-images`, solo para cuando se sabe con
+certeza que la edición es una reimpresión 1:1 estable de otra (ej.
+Bruderschaft/La Cofradía, donde esto no causaba problemas porque casi todas
+las cartas sí tenían página específica).
+
+Si el usuario tiene ediciones **propias** (creadas en su navegador con el
+botón, no bundled en el repo) con este mismo problema de antes de esta
+fecha, basta con volver a tocar "Buscar y cargar cartas" sobre esa edición:
+la fusión es por número/especial (`mergeEditionCards`), así que reimportar
+actualiza las cartas existentes — incluida su imagen, que ahora se
+recalcula con la regla estricta — sin duplicarlas.
 
 **Pendiente, no resuelto todavía**: el mismo problema puede afectar la
 **habilidad/historia** (no solo la imagen) de las cartas resueltas por
@@ -232,6 +241,32 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 `data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-07-22 — Regla de imágenes estricta por defecto (todas las ediciones) + bug de confianza
+- La regla "solo confiar en la imagen de una página específica de la edición"
+  (antes opt-in con `--strict-images`) pasó a ser el comportamiento **por
+  defecto** tanto en el script de la skill como en el botón "Cargar desde
+  wiki" (`js/wiki-import.js`) — el usuario reportó que el mismo problema le
+  había pasado en otras ediciones propias, cargadas desde el botón, sin
+  haberlo comentado antes. El script conserva `--trust-fallback-images`
+  como escape para reimpresiones 1:1 estables donde reciclar el arte de la
+  página base es seguro.
+- **Bug encontrado al generalizar**: cuando el enlace del wiki no trae
+  ningún paréntesis de desambiguación (ej. `[[Loup-Garou]]`), `title` y
+  `base` son el mismo string — el código anterior etiquetaba ese caso como
+  "específica" por estar en la primera rama del chequeo, cuando en realidad
+  es indistinguible de una página base compartida. Corregido en
+  `resolve_card_content`/`resolveCardContent` (Python y JS): solo cuenta
+  como específica cuando `title` trae su propio paréntesis. Afectó a 7
+  cartas de `leyendas_primera_era_4_0` que tenían imagen indebidamente
+  (bajó de 63 a 56 con imagen confirmada).
+- Al recalcular las imágenes de `leyendas_primera_era_4_0` con la lógica
+  corregida, aparecieron **nombres de carta duplicados dentro de la misma
+  edición** (25 casos — la versión "Secreta"/"Legendaria" de una carta
+  comparte nombre con su versión numerada normal, ej. "Dragón Blanco" x2).
+  Actualizar por nombre habría mezclado la imagen de una con la otra; se
+  corrigió emparejando por el `id` exacto de cada carta (que sí es único,
+  incluye el número o especial) en vez del nombre.
 
 ### 2026-07-21 (3ª iteración) — Corrección: imágenes ajenas en Leyendas - Primera Era 4.0
 - El dueño del inventario detectó que muchas cartas de `leyendas_primera_era_4_0`

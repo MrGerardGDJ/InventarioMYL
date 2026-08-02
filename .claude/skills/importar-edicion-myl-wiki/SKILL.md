@@ -114,28 +114,28 @@ Si te encuentras con una edición cuya tabla no calza con ninguno de estos
 patrones, el script fallará con un error claro ("no se encontró la tabla de
 cartas") — ahí sí hay que extender `parse_list_table` a mano.
 
-### `--strict-images`: ediciones "remake" / aniversario / compilatorias
+### Imágenes: por defecto solo se confía en la página específica de la edición
 
-Usa este flag cuando la edición reimprime cartas de ediciones anteriores
-CON POSIBLES CAMBIOS (habilidad, tratamiento visual) — reconócela por
-palabras como "remake", "aniversario", "4.0"/"3.0", o porque la propia
-página de la edición dice que "todas las cartas poseen un nuevo código de
-coleccionista". Se comprobó con Leyendas - Primera Era 4.0 que, cuando el
-wiki todavía no tiene el escaneo específico de una carta nueva (edición
-recién lanzada), el extractor puede terminar trayendo — con confianza
-aparente, porque SÍ encontró una página — el arte de la versión ANTERIOR de
-la carta, que en los hechos puede ser una impresión distinta (ej. Bjorn
-Ragnarsson cambia de habilidad entre Leyendas 3.0 y 4.0 aunque comparta
-nombre y arte parecido). Con `--strict-images`, la imagen solo se usa
-cuando viene de una página específica de la edición que estás extrayendo;
-para el resto, mejor sin imagen que con la de otra carta — el usuario la
-completa a mano cuando escanea su carta física.
+El script (y el botón "Cargar desde wiki" del navegador, `js/wiki-import.js`)
+**solo usan la imagen cuando viene de una página específica de la edición
+que se está extrayendo** — nunca de la página base compartida ni de la
+fuente citada en la Nota, aunque el resto de los datos (nombre, tipo,
+habilidad…) sí se completen desde ahí. Se comprobó en más de una edición
+(reportado por el usuario en Leyendas - Primera Era 4.0, y antes en otras
+sin que quedara registrado) que el arte de la página base puede corresponder
+a una impresión ANTERIOR de la carta, distinta de la que trae esta edición
+—mismo nombre, arte parecido, pero otra habilidad, ej. Bjorn Ragnarsson
+entre Leyendas 3.0 y 4.0— y mostrar esa imagen como si fuera la de esta
+edición es peor que no mostrar ninguna: mejor una carta sin imagen (el
+usuario la escanea después) que con la de otra carta.
 
-Sin este flag el script sigue confiando en la imagen de la página base o de
-la Nota (útil para ediciones que son una reimpresión 1:1 estable de otra,
-ej. Bruderschaft/La Cofradía, donde eso no causó problemas). Ante la duda,
-mejor pasar `--strict-images` y preguntarle al usuario si quiere que se
-complete alguna imagen puntual a mano después — no al revés.
+Si estás seguro de que la edición que estás extrayendo es una reimpresión
+1:1 **estable** de otra (mismo arte y misma habilidad en todas las cartas,
+sin remakes — ej. Bruderschaft, reimpresión alemana literal de La Cofradía)
+y quieres recuperar más imágenes a costa de ese riesgo, pasa
+`--trust-fallback-images`. Es la excepción, no la regla — ante la duda,
+deja el comportamiento por defecto y que el usuario decida si completa
+alguna imagen puntual a mano.
 
 **Mismo riesgo, sin resolver todavía, para habilidad/historia**: el texto
 de una carta resuelta por página base o Nota puede corresponder también a
