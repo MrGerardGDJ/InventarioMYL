@@ -62,6 +62,24 @@ incluye lo mismo.
 - **Catálogo** (`view-coleccion`): grilla con filtros (inventario, formato, edición agrupada
   por bloque, raza, tipo, rareza, coste) y ordenamientos, incluido **número de carta**.
   Botones +/− cambian cantidades; 🃏＋ agrega al mazo activo.
+- **Editar CUALQUIER carta desde su detalle** (botón "✏️ Editar", visible en el
+  modal de detalle de toda carta, no solo las manuales): al guardar, si la
+  carta todavía no era `userCustom` (viene del scraper o del bundle
+  compartido), se crea una copia local en `myl.customcards.v1` **con el mismo
+  `id`** — en `rebuildCards()` (`js/app.js`) esa copia reemplaza a la
+  original en vez de duplicarla, así que cantidades/mazos/para-cambio (todo
+  keyed por `id`) no se pierden. Pensado para el caso real de TOR: ediciones
+  como Leyendas 2023/2024 (tope 300) o Leyendas - Primera Era 4.0 (tope 320)
+  traen, después del último número "normal", varias cartas coleccionista que
+  en los hechos son **Promo** pero el scraper las numeró secuencialmente
+  (ej. Leyendas 2023 #301-#326) — con este botón se les pone `specialId`
+  ("Promo", "P-001"...) igual que a cualquier carta especial, y pasan a
+  listarse en la sección de especiales al inicio de la Colección. El botón
+  "🗑 Eliminar"/"↩ Revertir a la original" (mismo botón, texto según el caso:
+  `state.baseCardIds.has(id)` distingue "esto reemplaza a una carta real" de
+  "esto es 100% inventada por el usuario") borra la copia local — para una
+  carta oficial eso simplemente la vuelve a mostrar tal cual está en el
+  catálogo compartido, sin afectar tus cantidades.
 - **Colecciones** (`view-colecciones`): cada colección se crea eligiendo una **edición**;
   muestra solo las cartas de esa edición **ordenadas por número** (`edid`). Las cartas con
   cantidad 0 se ven en blanco y negro y oscurecidas (vía CSS
@@ -317,6 +335,36 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 `data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-08-02 (5ª iteración) — Editar cualquier carta (no solo las manuales) para marcarla Promo
+- El dueño del inventario pidió poder convertir a "Promo" cualquier carta,
+  no solo las manuales — el caso real: Leyendas 2023 y Leyendas - Primera
+  Era 4.0 traen, después de su tope oficial (300 y 320 respectivamente),
+  varias cartas coleccionista numeradas secuencialmente por el scraper de
+  TOR que en realidad son Promo (ver ejemplo completo arriba, "Conceptos
+  clave de la UI").
+- El botón "✏️ Editar" del detalle de carta ahora aparece siempre. Al
+  guardar una carta que no era `userCustom`, se crea una copia local con el
+  mismo `id` que reemplaza a la original en `rebuildCards()` (antes:
+  `state.cards` era una simple concatenación sin dedup por id, así que esto
+  habría duplicado la carta). "Eliminar" pasa a decir "↩ Revertir a la
+  original" cuando el id corresponde a una carta real del catálogo.
+- **Bug encontrado al generalizar** (se manifestó recién al probar con una
+  carta oficial real, no con una manual): el campo `editionName` que trae
+  cada carta del scraper de TOR a veces es una versión abreviada (ej. "LPE
+  2023") que no calza con el nombre "canónico" en `data/editions.json`
+  ("Leyendas - Primera Era 2023"). El formulario de edición precargaba ese
+  nombre abreviado en el campo Edición; al guardar, `saveCardForm` no lo
+  reconocía como la misma edición y creaba una edición fantasma nueva y
+  desconectada — la carta "desaparecía" de su colección real. Se corrigió
+  precargando el nombre por **slug** (`state.editionName[card.edition]`,
+  siempre el nombre correcto) en vez de confiar en `card.editionName`.
+- **Segundo bug encontrado**: `saveCardForm` refrescaba con `applyFilters()`
+  (solo la grilla del Catálogo). Como el botón Editar ahora es alcanzable
+  desde Colecciones/Cambios/Mazos, guardar ahí guardaba bien pero la vista
+  activa seguía mostrando los datos viejos hasta cambiar de pestaña.
+  Cambiado a `refreshAll()` (ya existía, usado en otros flujos globales como
+  la sincronización en la nube), que refresca la vista que esté activa.
 
 ### 2026-08-02 (4ª iteración) — Imágenes recuperadas en páginas traducidas sin desambiguador
 - El dueño del inventario reportó imágenes equivocadas en sus colecciones
