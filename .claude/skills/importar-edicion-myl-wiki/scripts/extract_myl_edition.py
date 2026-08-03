@@ -106,7 +106,17 @@ def resolve_image_urls(files):
                 # por el primer ":" en vez de hacer title.replace("File:","").
                 clean = title.split(":", 1)[1] if ":" in title else title
                 if not p.get("missing") and "imageinfo" in p:
-                    found[clean] = p["imageinfo"][0]["url"]
+                    url = p["imageinfo"][0]["url"]
+                    found[clean] = url
+                    # La API normaliza "_" a " " en el título que devuelve, pero
+                    # el nombre de archivo tal como aparece en el wikitext (la
+                    # clave por la que después se busca en este dict) puede
+                    # traer "_" — sin este alias, un archivo con guion bajo
+                    # (ej. "Promo_Conmemorativa_01.png") queda con imagen
+                    # resuelta pero invisible porque la clave nunca calza.
+                    alt = clean.replace(" ", "_")
+                    if alt != clean:
+                        found[alt] = url
             time.sleep(0.15)
         return found
 

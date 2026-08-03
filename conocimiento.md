@@ -276,6 +276,25 @@ correspondiente de `custom-cards.json` y la entrada de `editions.json`.
     aparece primero en la colección, que es justamente el lugar visual que
     le corresponde a la carta "00".
 
+- **`lootbox_pe_2024` y `lootbox_pe_2025`** (agregadas el 03-08-2026, 85 y
+  90 cartas). No son ediciones numeradas: son productos "grab bag" de
+  cartas coleccionista/promo repartidas en 5-6 categorías (Conmemorativas,
+  Secretas, Premium, Artes Alternativos, Nuevas, Exclusivas), cada una con
+  su propio código de origen — **todas** sus cartas se cargan como
+  especiales (`specialId` = el código tal cual del wiki, ej.
+  `PROMOCIONAL PE24 07`, `COLECCIONISTA...` no aplica acá pero mismo
+  criterio), nunca con `edid` numérico. `lootbox_pe_2024` ya figuraba
+  "fantasma" en `editions.json` (sin cartas, mismo bug que las 3 Mundos
+  Perdidos de arriba); `lootbox_pe_2025` es edición nueva. 144/175 con
+  imagen — el resto son reprints cuya página del wiki todavía no tiene un
+  scan específico de esta versión (se dejaron sin imagen a propósito, ver
+  regla de abajo). Extraídas con un script dedicado (no la skill
+  genérica: la estructura multi-tabla-por-categoría no encaja con
+  `parse_list_table`), reusando las funciones de resolución de
+  `extract_myl_edition.py`. **Sigue pendiente `pb_lootbox_2023`**
+  (también fantasma): no se encontró una página del wiki
+  ("Lista de cartas de Lootbox Primer Bloque 2023") que le corresponda.
+
 ### Imágenes de ediciones "remake" / aniversario: no reciclar arte de otra edición
 
 Se detectó en la práctica (Leyendas - Primera Era 4.0, reportado por el
@@ -345,6 +364,53 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 `data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-08-03 (2ª iteración) — Se cargan las ediciones Lootbox y 117 imágenes desde mesaredondatcg.cl
+- **Imágenes**: el dueño del inventario aprobó incorporar las 117
+  coincidencias verificadas por SKU contra mesaredondatcg.cl (ver iteración
+  anterior). Se descargaron las 117 fotos y se guardaron en el repo, en
+  `data/custom-images/mesaredonda/` (no se hotlinkearon — se bajó una copia
+  propia, mismo criterio que `data/custom-images/ismael.webp` ya usado para
+  Onyria), y se actualizó el campo `image` de esas 117 cartas en
+  `data/custom-cards.json` (78 de `leyendas_primera_era_4_0`, 39 repartidas
+  en 4 ediciones Mundos Perdidos). Cartas sin imagen en esas ediciones:
+  bajó de 472 a 355.
+- **Ediciones Lootbox**: se cargaron `lootbox_pe_2024` (85 cartas, la
+  entrada "fantasma" que ya existía en `editions.json` ahora tiene sus
+  cartas) y `lootbox_pe_2025` (90 cartas, edición nueva). A diferencia de
+  una edición normal, **todas** sus cartas son especiales (`specialId`,
+  sin `edid`) porque el producto en sí es una compilación de 5-6
+  categorías de coleccionista/promo, cada una con su propio código de
+  origen (`PROMO CONMEMORATIVA NN`, `SECRETA EXCLUSIVA PE NN`,
+  `PREMIUM PE NN`, `PROMOCIONAL PE24/PE25 NN`, `LBPE24/LBPE25 - NN/21`,
+  `EXCLUSIVA LPE24/25 NN`) — se conservó el código tal cual lo usa el
+  wiki como `specialId`, en vez de inventar una numeración propia, porque
+  es lo que va a coincidir con lo que el dueño ve impreso en su carta
+  física. 144/175 con imagen (69/85 en 2024, 75/90 en 2025); el resto
+  quedó sin imagen a propósito por la regla de "no reciclar arte de otra
+  edición" (son reprints/remakes de cartas viejas cuya página del wiki
+  todavía no tiene un scan específico de esta versión).
+  - **Bug del wiki detectado al extraer**: la tabla de 2024 repite el
+    código `PROMOCIONAL PE24 13` en dos filas distintas (Dinastía
+    Imperial y Cernunno) — error de tipeo del propio wiki, no nuestro. Se
+    resolvió agregando un sufijo de letra al segundo (`PROMOCIONAL PE24
+    13-b`) para no perder ninguna carta ni chocar identificadores.
+  - **Bug real encontrado y corregido** (afecta a cualquier edición, no
+    solo Lootbox): `resolve_image_urls`/`resolveImageUrls` guardaba la URL
+    de la imagen bajo la clave que la API de MediaWiki devuelve
+    NORMALIZADA (con espacios), pero el nombre de archivo tal como
+    aparece en el wikitext original (la clave por la que después se busca
+    en ese diccionario) puede traer guion bajo — sin este alias, un
+    archivo así (ej. `Promo_Conmemorativa_01.png`) quedaba con imagen
+    resuelta pero invisible porque la clave nunca calzaba. Corregido en
+    `extract_myl_edition.py` y `js/wiki-import.js` guardando también un
+    alias con "_" en vez de " ". Subió de 63 a 69 cartas con imagen en
+    Lootbox 2024 al aplicar el fix.
+- No se tocó `pb_lootbox_2023`: sigue "fantasma" (sin cartas) porque no se
+  encontró una página del wiki que le corresponda específicamente (a
+  diferencia de Lootbox Primera Era, no hay "Lista de cartas de Lootbox
+  Primer Bloque 2023" documentada) — queda pendiente si el dueño encuentra
+  la fuente correcta.
 
 ### 2026-08-03 — Ediciones "Lootbox" y descubrimiento de Leyendas - Primer Bloque 4.0
 - El dueño del inventario pidió investigar por qué no veía las ediciones

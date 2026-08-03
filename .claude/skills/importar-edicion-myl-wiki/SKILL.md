@@ -256,3 +256,10 @@ verificación propio. Lo que sí puedes y debes hacer:
   viceversa, o con otra extensión) — `resolve_image_urls` ya prueba esas
   variantes; si sigue faltando la imagen de alguna carta, es un hueco real
   del wiki (no hay scan subido), no un bug.
+- La API normaliza "_" a " " en el título de archivo que devuelve, aunque
+  se haya preguntado con "_" (ej. `Promo_Conmemorativa_01.png`) —
+  `resolve_image_urls` guarda un alias con "_" además del que devuelve la
+  API, o un archivo con guion bajo en el wikitext queda con imagen
+  resuelta pero invisible porque la clave nunca calza con la que se buscó
+  originalmente (bug real encontrado el 03-08-2026 al cargar Lootbox
+  Primera Era 2024).

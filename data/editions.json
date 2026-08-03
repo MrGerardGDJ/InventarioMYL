@@ -183,7 +183,13 @@
     "slug": "lootbox_pe_2024",
     "format": "PE",
     "formatName": "Primera Era",
-    "name": "Lootbox PE 2024"
+    "name": "Lootbox Primera Era 2024"
+  },
+  {
+    "slug": "lootbox_pe_2025",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Lootbox Primera Era 2025"
   },
   {
     "slug": "toolkit_honor_y_ferocidad",
