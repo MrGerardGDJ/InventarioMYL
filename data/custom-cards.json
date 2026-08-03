@@ -308,7 +308,7 @@
    "strength": 3,
    "ability": "Puede atacar cuando entra en juego.<br>Cuando este Aliado sea destruido, puedes destruir un Aliado oponente de Fuerza igual o menor a la de este Aliado.",
    "flavour": "El dragón que amenaza el paraíso, emerge del abismo, sus escamas de sombra y fuego destruyen la armonía. Su aliento ardiente desola jardines y templos.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_17_conquistador.webp",
    "custom": true
   },
   {
@@ -495,7 +495,7 @@
    "strength": 2,
    "ability": "Cuando Huáscar entra en juego, elige un Aliado en juego para que Huáscar tenga esa habilidad por el resto del juego.",
    "flavour": "El fraticidio cometido por su hermano marcó el fin de Huáscar, de sus generales y aquello que pudo ser y ya jamás será.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_28_huascar.webp",
    "custom": true
   },
   {
@@ -512,7 +512,7 @@
    "strength": null,
    "ability": "Destierra un Aliado oponente en juego. Luego, puedes robar 1 carta.",
    "flavour": "Fuera de este mundo, ahí es donde están quienes fundaron Inti Llaqta, ¿regresarán? Eso no lo puedo afirmar.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_29_destierro_astral.webp",
    "custom": true
   },
   {
@@ -716,7 +716,7 @@
    "strength": 4,
    "ability": "Imbloqueable.",
    "flavour": "Poderoso guerrero, sus manos tienen la sangre del Rey Lot.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_41_lamorak.webp",
    "custom": true
   },
   {
@@ -767,7 +767,7 @@
    "strength": 3,
    "ability": "Furia <i>(Este Aliado no necesita pasar por una Fase de Agrupación para ser declarado atacante).</i><br>Este aliado no puede ser Anulado.",
    "flavour": "Siente mi ira, mi eterna búsqueda de venganza y mi hambre imperecedera. Escucha mi canto y acepta tu fin.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_44_dragon_blanco.webp",
    "custom": true
   },
   {
@@ -835,7 +835,7 @@
    "strength": 5,
    "ability": "Cuando entra en juego, puedes jugar un Aliado de tu Mano de Coste 3 o menos sin pagar su coste.<br>Cada vez otro Aliado Licántropo entre en juego bajo tu control, tu oponente bota 1 carta.",
    "flavour": "Aúlla donde muere la razón. Su carne cambia con la luna, pero su alma ya no es humana. Devora recuerdos, rompe huesos con hambre ancestral.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_48_loup_garou.webp",
    "custom": true
   },
   {
@@ -852,7 +852,7 @@
    "strength": 3,
    "ability": "Furia (Este Aliado no necesita pasar por una Fase de Agrupación para ser declarado atacante).<br>En la Fase Final, si este Aliado hizo daño al Mazo Castillo oponente, puedes buscar una carta en el Mazo Castillo oponente y Desterrarla.",
    "flavour": "Una muerte violenta creó a este vampiro bebedor de almas, corruptor de poblados.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_49_brucolaco.webp",
    "custom": true
   },
   {
@@ -886,7 +886,7 @@
    "strength": 4,
    "ability": "Sólo puedes tener un Hombre de Negro en juego.<br>Cuando entra en juego, pon una carta oponente en juego de Coste 3 o menos en la parte inferior del Mazo Castillo de su dueño.",
    "flavour": "Una amalgama de oscuridad y malevolencia, camina entre mundos con la elegancia de un depredador ancestral. Su figura se desdibuja entre las sombras como un espectro que desafía la realidad.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_51_hombre_de_negro.webp",
    "custom": true
   },
   {
@@ -920,7 +920,7 @@
    "strength": 4,
    "ability": "En tu Fase de Vigilia, una vez por turno, puedes destruir un Aliado con habilidad “No puede ser declarado atacante” que controles para que tu oponente bote tantas cartas como Fuerza tenga el Aliado destruido.",
    "flavour": "Espíritu guerrero de los Lakota, caminaba entre hombres y bestias con la fuerza del trueno y el corazón del bosque. Su rugido guiaba a la tribu, su lanza abría senderos en la nieve.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_53_rey_de_los_osos.webp",
    "custom": true
   },
   {
@@ -937,7 +937,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_54_wakan_tanka.webp",
    "custom": true
   },
   {
@@ -954,7 +954,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_55_guardia_ceremonial.webp",
    "custom": true
   },
   {
@@ -1022,7 +1022,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_59_fenrisulfr.webp",
    "custom": true
   },
   {
@@ -1175,7 +1175,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_68_yu_shi.webp",
    "custom": true
   },
   {
@@ -1226,7 +1226,7 @@
    "strength": null,
    "ability": "Si este Oro está en tu Reserva de Oros, puedes desterrarlo para buscar un Oro en tu Cementerio y ponerlo en tu Reserva de Oros.",
    "flavour": "El Zodiaco Chino es un esquema de clasificación tradicional que asigna un animal y sus supuestos atributos a cada año en un ciclo repetido de doce años.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_71_horoscopo_chino.webp",
    "custom": true
   },
   {
@@ -1481,7 +1481,7 @@
    "strength": null,
    "ability": "Cuando este Oro sea utilizado para pagar el coste de un Aliado de Raza Bestia, ese Aliado entra en juego Alimentado.",
    "flavour": "El felino simbolizaba la lucha por imponer el conocimiento y superar los defectos de los hombres.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_86_ocelote_del_templo.webp",
    "custom": true
   },
   {
@@ -1498,7 +1498,7 @@
    "strength": null,
    "ability": "",
    "flavour": "El Imperio Chibcha es un lugar de tesoros de oro y toda clase de piedras preciosas, un lugar perdido en alguna parte de Cundirumarca, el país del Cóndor.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_87_el_dorado.webp",
    "custom": true
   },
   {
@@ -1566,7 +1566,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Navega por los gélidos mares llevando la prosperidad o la muerte. Tras los mares viaja implacable.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_91_knarr.webp",
    "custom": true
   },
   {
@@ -1651,7 +1651,7 @@
    "strength": null,
    "ability": "Si este Oro está en tu Reserva de Oros, y tienes 3 o menos cartas en tu mano, puedes desterrarlo para robar 2 cartas.",
    "flavour": "El Go-rin no sho es mucho más que un tratado sobre Kenjutsu. Miyamoto Musashi creó un testamento de estrategia, ética y filosofía único en su tiempo.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_96_los_cinco_anillos.webp",
    "custom": true
   },
   {
@@ -1685,7 +1685,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_98_agravain.webp",
    "custom": true
   },
   {
@@ -2892,7 +2892,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Algunos signos divinos están esparcidos entre los hombres, como huellas de un camino que puede salvar o matar.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_169_fruto_sagrado.webp",
    "custom": true
   },
   {
@@ -3096,7 +3096,7 @@
    "strength": null,
    "ability": "Cuando entra en juego, cada jugador elige entre descartar una carta de su Mano o botar 3 cartas de su Mazo Castillo.",
    "flavour": "Guía celestial para invocar protección y sabiduría. Sus páginas, cargadas de poder espiritual, revelan rituales que conectan lo humano con lo divino.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_181_grimorio_sacro.webp",
    "custom": true
   },
   {
@@ -6020,7 +6020,7 @@
    "strength": 2,
    "ability": "Al entrar en juego, todo los demás caballeros ganan +1 de fuerza permanentemente.",
    "flavour": "Su imagen se pierde en las noches del tiempo. Espíritu que vaga sin calma ni perdón.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_sc_01_caballero_negro.webp",
    "custom": true,
    "specialId": "SCLPE4-01"
   },
@@ -6056,7 +6056,7 @@
    "strength": 2,
    "ability": "Cuando Reina Guinivere entra en juego, puedes buscar un Caballero en tu mazo castillo y ponerlo en tu mano. En tu fase de vigilia, genera 2 para bajar armas o 1 para bajar Caballeros.",
    "flavour": "Ni el sol se compara con su belleza, Y su corazón es justo como el oro. La reina es la joya más valiosa del reino.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_sc_03_reina_guinivere.webp",
    "custom": true,
    "specialId": "SCLPE4-03"
   },
@@ -6092,7 +6092,7 @@
    "strength": 5,
    "ability": "Puede bloquear a más de un aliado oponente hasta acabar su fuerza.",
    "flavour": "Sirviente fiel, en sus ojos vacíos el alma esclava arde como un fuego salvaje. Sus garras son afiladas y obedientes.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_sc_05_knochen.webp",
    "custom": true,
    "specialId": "SCLPE4-05"
   },
@@ -6146,7 +6146,7 @@
    "strength": 2,
    "ability": "",
    "flavour": "Eterna condenada a la transformación. Cola de serpiente y alas de murciélago son su maldición.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_sc_08_melusina.webp",
    "custom": true,
    "specialId": "SCLPE4-08"
   },
@@ -6182,7 +6182,7 @@
    "strength": null,
    "ability": "Destruye un aliado en el juego y puedes buscar 2 cartas de oro en tu castillo.",
    "flavour": "Con sus ojos llenos de fuego y maldad vigila con furia las puertas del infierno.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_sc_10_cancerbero.webp",
    "custom": true,
    "specialId": "SCLPE4-10"
   },
@@ -6200,7 +6200,7 @@
    "strength": null,
    "ability": "Elige un aliado en juego de tu oponente y éste lo debe barajar en su castillo.",
    "flavour": "La civilización del Nilo surge por su divina intervención. El dios halcón defiende y vigila a su pueblo, al igual que el sol en el cielo.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_sc_11_horus.webp",
    "custom": true,
    "specialId": "SCLPE4-11"
   },
@@ -6308,7 +6308,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego, todos tus demás cazadores ganan +1 de fuerza permanentemente.",
    "flavour": "La ciencia y la tradición son armas en nuestra lucha contra la sombra del alma, el vampiro.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_sc_17_van_helsing.webp",
    "custom": true,
    "specialId": "SCLPE4-17"
   },
@@ -6326,7 +6326,7 @@
    "strength": 1,
    "ability": "",
    "flavour": "Agazapada entre las ruinas, con un puñal como única defensa, parece inofensiva... Las apariencias engañan.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_sc_18_zara.webp",
    "custom": true,
    "specialId": "SCLPE4-18"
   },
@@ -6344,7 +6344,7 @@
    "strength": 1,
    "ability": "",
    "flavour": "Audaz y hábil en su oficio, como el mejor. Aprende a valerse de algo nuevo todo los días.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_sc_19_niamh.webp",
    "custom": true,
    "specialId": "SCLPE4-19"
   },
@@ -6398,7 +6398,7 @@
    "strength": 3,
    "ability": "Destruye un licántropo que controles y gana +1 de fuerza.",
    "flavour": "Entre la algarabía de los salvajes batallones, y los vítores de voces inhumanas, relucieron los terribles dientes amarillos de la bestia, aullando con sus fauces muy abiertas en señal de completo triunfo.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_sc_22_guevadan.webp",
    "custom": true,
    "specialId": "SCLPE4-22"
   },
@@ -6434,7 +6434,7 @@
    "strength": 4,
    "ability": "Todos los vampiros que controles ganan +1 de fuerza cuando ataquen.",
    "flavour": "El altivo soberano de la tiniebla retorna en un nuevo cuerpo desde la noche de los tiempos. Errante y sin corona, al que se distingue por el estigma todavía ardiendo en su frente.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_sc_24_kain.webp",
    "custom": true,
    "specialId": "SCLPE4-24"
   },
@@ -6452,7 +6452,7 @@
    "strength": 3,
    "ability": "Debe atacar cuando es puesto en juego.",
    "flavour": "En los yermos, cualquier peregrino inexperto es una presa codiciada por él, y su única compañía, el hambre prolongada por los siglos.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_sc_25_vampiro_del_desierto.webp",
    "custom": true,
    "specialId": "SCLPE4-25"
   },
@@ -7562,7 +7562,7 @@
    "strength": 1,
    "ability": "Sólo puedes tener un Constantine III en juego. Puedes desterrar este Aliado para anular un Talismán de Coste 3 o menos.",
    "flavour": "Invocado como un rey mago en narrativas olvidadas, tejió su reino entre lo terrenal y lo místico. La alquimia y la sabiduría fueron su cetro y su corona.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_leyendas_de_avalon_7_constantine_iii.webp",
    "custom": true
   },
   {
@@ -7613,7 +7613,7 @@
    "strength": null,
    "ability": "Destierra una carta del Cementerio oponente. Luego, busca en el Cementerio y Mazo Castillo oponente todas las copias de esa carta y destiérralas.",
    "flavour": "Aquí, las antiguas diosas susurran, y el destino se entrelaza con la magia. En esta bruma, Avalon se oculta, guardando sus secretos ancestrales.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_leyendas_de_avalon_10_nieblas_profundas.webp",
    "custom": true
   },
   {
@@ -7766,7 +7766,7 @@
    "strength": 4,
    "ability": "Imbloqueable. Cuando entra en juego, mira la Mano de tu oponente. Luego, descarta una carta que no sea un Oro de Coste 3 o menos de la Mano de tu oponente.",
    "flavour": "Su historia se entrelaza con pruebas de honor y justicia, enfrentando desafíos que prueban su carácter y determinación.<br>Su legado, marcado por la búsqueda de redención y verdad, inspira a futuras generaciones de caballeros.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_leyendas_de_avalon_19_brunor.webp",
    "custom": true
   },
   {
@@ -8585,7 +8585,7 @@
    "strength": 4,
    "ability": "Cuando entra en juego, tu oponente bota 4 cartas.<br>Mientras este Aliado esté en juego, los Aliados que controle tu oponente pierden 1 a la Fuerza.",
    "flavour": "Genio militar, uno de los grandes líderes de los apache chiricahua, célebre por su valentía, astucia y resistencia.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_nube_roja_7_cochise.webp",
    "custom": true
   },
   {
@@ -9061,7 +9061,7 @@
    "strength": null,
    "ability": "Puedes pagar este Oro para mostrar la carta superior del Mazo Castillo oponente. Si la carta mostrada es un Aliado, la puedes botar al Cementerio. Si la carta mostrada no es un Aliado, ponla en la parte inferior del Mazo Castillo oponente.",
    "flavour": "Perteneció a un antiguo vampiro conocido solo como Padre, progenitor de linajes oscuros y señor de noches remotas.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_tombstone_15_ojo_del_padre.webp",
    "custom": true
   },
   {
@@ -9163,7 +9163,7 @@
    "strength": 2,
    "ability": "Puede atacar cuando entra en juego.<br>Mientras este Aliado esté en juego, gana 1 a la Fuerza por cada carta en tu Destierro.",
    "flavour": "Se alza Dietrich von Bern, señor del hierro y del exilio, cuya espada atravesó reinos en ruina. Donde pisa, tiemblan los soberbios y los viejos juramentos despiertan.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_1_dietrich_von_bern.webp",
    "custom": true
   },
   {
@@ -9180,7 +9180,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_2_hildebrand.webp",
    "custom": true
   },
   {
@@ -9197,7 +9197,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, ambos jugadores botan 2 cartas. En tu Fase de Vigilia, una vez por turno, puedes desterrar una carta de tu Cementerio para que un Aliado que controles gane 1 a la Fuerza permanentemente.",
    "flavour": "Ardiente en gloria y desventura, cabalgó hacia la muerte con el rostro limpio. Ni la traición ni el número apagaron el brillo feroz de su nombre.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_3_alphart.webp",
    "custom": true
   },
   {
@@ -9214,7 +9214,7 @@
    "strength": 6,
    "ability": "Cuando entra en juego, destruye todos los Aliados en juego de Coste 3 o menos. Luego, tu oponente bota tantas cartas como Aliados bajo su control hayan sido destruidos por esta habilidad.",
    "flavour": "En las aguas negras del pantano duerme el monstruo, hediondo y antiguo. Sus anillos de fango arrastran hombres y bestias, y su aliento corrompe la luna sobre los juncos.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_4_wurm_de_pantano.webp",
    "custom": true
   },
   {
@@ -9231,7 +9231,7 @@
    "strength": 3,
    "ability": "Sólo puede bloquear Aliados Dragón.<br>Cuando entra en juego, si controlas 2 o más Aliados, puedes buscar un Aliado de Coste 2 en tu Mazo Castillo y jugarlo sin pagar su Coste.",
    "flavour": "Matriz del espanto escamado, engendró monstruos entre cavernas y vapores. Su vientre conoció el fuego primero, y sus crías heredaron hambre, veneno y rencor milenario.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_5_madre_wyrm.webp",
    "custom": true
   },
   {
@@ -9248,7 +9248,7 @@
    "strength": 3,
    "ability": "Imbloqueable. Cuando entra en juego, tu oponente destierra la carta superior de su Mazo Castillo.<br>Cada vez que este Aliado hago daño al Mazo Castillo oponente, tu oponente destierra la carta superior de su Mazo Castillo.",
    "flavour": "Serpiente coronada de ruina, el Lindwurm se desliza entre torres caídas. Sus ojos arden como brasas viejas, y su paso deja cosechas muertas, pozos amargos y oración quebrada.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_6_lindwurm.webp",
    "custom": true
   },
   {
@@ -9282,7 +9282,7 @@
    "strength": 3,
    "ability": "Si controlas 1 o más Aliados, puedes jugar este Aliado desde tu Cementerio pagando su Coste. Cuando entra en juego, puedes botar tantas cartas del Mazo Castillo oponente como otros Aliados controles.",
    "flavour": "Rey de los enanos y señor del jardín encantado, guardó rosas más peligrosas que lanzas. Bajo su manto de maravilla se ocultaban orgullo, hechizo y amarga cólera.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_8_rey_laurin.webp",
    "custom": true
   },
   {
@@ -9316,7 +9316,7 @@
    "strength": null,
    "ability": "Única. Pon una carta en juego de Coste 2 o menos en la parte superior del Mazo Castillo de su dueño. Luego, tu oponente puede robar 1 carta. Si lo hace, puedes robar 1 carta.",
    "flavour": "Un raro poder para un caballero, un hálito que quema a los viejos estandartes y desafía incluso a los dragones.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_10_aliento_de_fuego.webp",
    "custom": true
   },
   {
@@ -9333,7 +9333,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_11_duelo_salvaje.webp",
    "custom": true
   },
   {
@@ -9350,7 +9350,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_12_tornado_de_rosas.webp",
    "custom": true
   },
   {
@@ -9367,7 +9367,7 @@
    "strength": null,
    "ability": "El portador gana 1 a la Fuerza.<br>Cuando entra en juego, puedes desterrar tantas cartas de tu Cementerio como Coste tenga un Aliado en juego para destruirlo.",
    "flavour": "Eckesachs, espada de nombre temido, fue forjada para abrir armaduras y destinos. Su filo bebió orgullo y linaje, y en cada batalla dejó un juicio sin apelación.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_13_eckesachs.webp",
    "custom": true
   },
   {
@@ -9384,7 +9384,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_14_jardin_de_las_rosas.webp",
    "custom": true
   },
   {
@@ -9401,7 +9401,7 @@
    "strength": null,
    "ability": "Cuando entra en juego, puedes pagar este Oro para que el próximo Aliado que juegues este turno pueda atacar cuando entre en juego. Luego, puedes elegir un Aliado que controles para que gane 2 a la Fuerza hasta la Fase Final.",
    "flavour": "La Joya de Baldung centellea con fulgor maldito, tesoro de un linaje oscuro. Promete fortuna y dominio, pero en su corazón duerme una antigua hambre jamás satisfecha.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_aliento_de_fuego_15_joya_de_baldung.webp",
    "custom": true
   },
   {
@@ -9503,7 +9503,7 @@
    "strength": 6,
    "ability": "Una vez por turno, puedes mostrar un Aliado de tu Mano para que un Aliado en juego pierda su Raza y 1 a la Fuerza hasta la Fase Final. Una vez por turno, puedes desterrar un Oro que controles para prevenir que este Aliado sea destruido o barajado.",
    "flavour": "Corrompido por el oro y la codicia, abandonó toda forma noble para ceñirse al espanto. En su cueva guardó tesoros, miedo y una maldición inmortal.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_1_fafner_el_avaro.webp",
    "custom": true
   },
   {
@@ -9537,7 +9537,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_3_bahkauv.webp",
    "custom": true
   },
   {
@@ -9571,7 +9571,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, si controlas 1 o más Armas, puedes robar 1 carta. Una vez por turno, puedes desterrar un Arma que controles para prevenir que este Aliado salga del juego.",
    "flavour": "Rey severo de gloria sombría, gobernó con mano temida sobre hombres y linajes. Su memoria quedó ligada al poder cruel, al orgullo y la ruina.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_5_jormunrek.webp",
    "custom": true
   },
   {
@@ -9588,7 +9588,7 @@
    "strength": 3,
    "ability": "Si controlas 2 o más Aliados, puede atacar cuando entra en juego. En tu Fase de Vigilia, una vez por turno, puedes elegir un Aliado en juego para que pierda 1 a la Fuerza hasta la Fase Final. Luego, si sólo controlas Aliados Bárbaro, puedes destruir un Aliado en juego de Fuerza 0.",
    "flavour": "Kriemhild, reina de dolor y venganza, guardó en su pecho una llama más feroz que el luto. Su duelo no pidió consuelo, sino sangre digna de memoria.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_6_kriemhild.webp",
    "custom": true
   },
   {
@@ -9605,7 +9605,7 @@
    "strength": 4,
    "ability": "Sólo puede ser declarado atacante si controlas 3 o más Aliados. Cuando entra en juego, puedes ganar el control de un Aliado de Coste 3 o menos que controle tu oponente hasta la Fase Final. Cuando sea destruido, puedes robar 1 carta.",
    "flavour": "Espíritu errante del fresno, vela entre raíces, cortezas y crepúsculos. Su presencia bendice o castiga a quienes olvidan que todo árbol antiguo escucha y recuerda.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_7_askafroa.webp",
    "custom": true
   },
   {
@@ -9622,7 +9622,7 @@
    "strength": 4,
    "ability": "Cuando entra en juego, puedes elegir entre robar 1 carta o que tu oponente bote 2 cartas.<br>En tu Fase de Vigilia, si este Aliado está en tu Cementerio, puedes destruir un Aliado que controles para ponerlo en tu Mano.",
    "flavour": "Hariasa, diosa guerrera de la furia justa, marchó entre armas consagradas y clamores rituales. Su nombre alentó a los valientes y pesó sobre enemigos como sentencia.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_8_hariasa.webp",
    "custom": true
   },
   {
@@ -9639,7 +9639,7 @@
    "strength": 6,
    "ability": "Cuando entra en juego, puedes descartar una carta de tu Mano para robar 2 cartas. Luego, elige hasta 2 Aliados en juego bajo tu control para que ganen 2 a la Fuerza hasta la Fase Final.",
    "flavour": "Belleza y fuerza desatada rompe la calma del cielo con voluntad de hierro. Donde cae su golpe, tiemblan las cumbres y despiertan juramentos antiguos.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_9_baldraz.webp",
    "custom": true
   },
   {
@@ -9656,7 +9656,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_10_elixir_de_dragon.webp",
    "custom": true
   },
   {
@@ -9673,7 +9673,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_11_punto_letal.webp",
    "custom": true
   },
   {
@@ -9690,7 +9690,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_12_lenguaje_aviar.webp",
    "custom": true
   },
   {
@@ -9707,7 +9707,7 @@
    "strength": 2,
    "ability": "Única.<br> Su portador gana 3 a la Fuerza, Furia y es Imbloqueable. Cuando el portador salga del juego, cambia el Aliado portador.",
    "flavour": "Creada para cortar armaduras y cotas de mallas, le dio la victoria a Sigfrido en muchas de sus legendarias batallas. Incluso contra colosales criaturas.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_13_balmung.webp",
    "custom": true
   },
   {
@@ -9724,7 +9724,7 @@
    "strength": null,
    "ability": "Sólo puedes tener una Caverna del Dragón en juego. Cuando entra en juego, puedes buscar un Oro en tu Mazo Castillo y ponerlo en tu Mano. Cada vez que un Oro entre en juego bajo tu control, puedes robar 1 carta.",
    "flavour": "Caverna del Dragón, hondura de sombra, oro y osamentas. Allí el aire pesa como una maldición, y cada piedra recuerda el aliento ardiente de la codicia encarnada.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_14_caverna_del_dragon.webp",
    "custom": true
   },
   {
@@ -9741,7 +9741,7 @@
    "strength": null,
    "ability": "Cuando entra en juego, si controlas igual o menor cantidad de Oros que tu oponente, puedes robar 1 carta.",
    "flavour": "Oro del Rin, tesoro nacido de aguas sagradas y ambición sacrílega. Su fulgor promete poder sin medida, pero a cada dueño le entrega traición, pérdida y condena.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_15_oro_del_rin.webp",
    "custom": true
   },
   {
@@ -9809,7 +9809,7 @@
    "strength": null,
    "ability": "Los Aliados que controles pierden su habilidad y ganan 3 a la Fuerza hasta la Fase Final.",
    "flavour": "Su locura nació del oro maldito y devoró cuanto quedaba de su grandeza. Bajo su peso, la razón cedió al hambre, al miedo y al espanto.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_locura_de_dragon_19_locura_de_fafner.webp",
    "custom": true
   },
   {
@@ -9860,7 +9860,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_2_bleda.webp",
    "custom": true
   },
   {
@@ -9877,7 +9877,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_3_caballo_de_viento.webp",
    "custom": true
   },
   {
@@ -9894,7 +9894,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_4_ro_langs.webp",
    "custom": true
   },
   {
@@ -9911,7 +9911,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_5_vairocana.webp",
    "custom": true
   },
   {
@@ -9928,7 +9928,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_6_ekajati.webp",
    "custom": true
   },
   {
@@ -9945,7 +9945,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_7_tangri.webp",
    "custom": true
   },
   {
@@ -9962,7 +9962,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_8_begtse.webp",
    "custom": true
   },
   {
@@ -9979,7 +9979,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_9_festin_huno.webp",
    "custom": true
   },
   {
@@ -9996,7 +9996,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_10_quemar_las_estepas.webp",
    "custom": true
   },
   {
@@ -10013,7 +10013,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_11_juramento.webp",
    "custom": true
   },
   {
@@ -10030,7 +10030,7 @@
    "strength": null,
    "ability": "Puedes pagar un Oro para que un oponente bote una carta.",
    "flavour": "El ligero arco Huno no dejada víctima capaz de quejarse.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_12_arco_huno.webp",
    "custom": true
   },
   {
@@ -10047,7 +10047,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_13_ovoo.webp",
    "custom": true
   },
   {
@@ -10064,7 +10064,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_14_monedas_romanas.webp",
    "custom": true
   },
   {
@@ -10081,7 +10081,7 @@
    "strength": 3,
    "ability": "Si ataca gana +2 a la fuerza hasta el final del turno.",
    "flavour": "Su padre, viejo y enfermo, recibió la orden de sumarse al ejército. Vestida de guerrero reemplazó a su padre y luchó con las tropas en sangrientas campañas.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_15_hua_mu_lan.webp",
    "custom": true
   },
   {
@@ -10098,7 +10098,7 @@
    "strength": 5,
    "ability": "No puede bloquear.",
    "flavour": "Las pesadillas son causadas por espíritus malvados. Diciendo \"Baku, come mis sueños\", invitas al comedor de sueños a tornar tus pesadillas en buena fortuna.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_16_baku.webp",
    "custom": true
   },
   {
@@ -10115,7 +10115,7 @@
    "strength": 4,
    "ability": "Todos tus Kami después de atacar vuelven a la línea de defensa, mientras esté en juego este aliado.",
    "flavour": "Diosa del amor, la elocuencia, la sabiduría, las artes, la música, el conocimiento, la buena fortuna y el agua. Patrona de geishas, bailarines y músicos. La isla de Enoshima se levantó para recibir tus pasos.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_17_benten.webp",
    "custom": true
   },
   {
@@ -10132,7 +10132,7 @@
    "strength": 3,
    "ability": "Destruye este Xian para destruir a todos los aliados que tengan la misma fuerza que él.",
    "flavour": "Guardiana de los duraznos de la inmortalidad. Esposa del emperador de jade, con el que tiene nueve hijas. Cada una rige en cada uno de los nueve cielos.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_18_wang_mu_niang_niang.webp",
    "custom": true
   },
   {
@@ -10149,7 +10149,7 @@
    "strength": null,
    "ability": "Sólo puedes jugar este Talismán en respuesta a que tu oponente juegue una carta.<br>Esa carta entra en juego sin habilidad por el turno. Si es un Talismán, esa carta se resuelve sin efecto.<br>Si está en tu Cementerio, puedes Desterrarla para que la carta objetivo pierda su habilidad hasta la Fase Final.",
    "flavour": "Se vieron desnudos y sintieron vergüenza. Adán y Eva fueron los portadores del pecado original, aquel signo maligno que la humanidad lleva consigo y que realmente no consigue borrar.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_19_expulsion.webp",
    "custom": true
   },
   {
@@ -10166,7 +10166,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_20_xiongnu.webp",
    "custom": true
   },
   {
@@ -11137,7 +11137,7 @@
    "strength": 3,
    "ability": "Para que este Aliado pueda ser declarado atacante o bloqueador, debes botar 1 carta de tu Mazo Castillo.",
    "flavour": "Su lema es \"orden y verdad\". Portador de la espada Chrysaor, su misión es corregir injusticias, guiado por la implacable figura de Talus, su escudero de hierro.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_01_21_artegall.webp",
    "custom": true,
    "specialId": "LBPE24 - 01/21"
   },
@@ -11155,7 +11155,7 @@
    "strength": 3,
    "ability": "Puede atacar cuando entra en juego.<br>Cuando este Aliado sea destruido, puedes destruir un Aliado oponente de Fuerza igual o menor a la de este Aliado.",
    "flavour": "El dragón que amenaza el paraíso, emerge del abismo, sus escamas de sombra y fuego destruyen la armonía. Su aliento ardiente desola jardines y templos.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_02_21_conquistador.webp",
    "custom": true,
    "specialId": "LBPE24 - 02/21"
   },
@@ -11209,7 +11209,7 @@
    "strength": 5,
    "ability": "Cuando entra en juego, puedes buscar un Aliado de Coste 2 o menos en tu Cementerio y jugarlo sin pagar su Coste.",
    "flavour": "Maestro del Ars Theurgia. Sus rituales, velados en misterio, prometen poder, sabiduría divina y la unión con lo oculto.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_05_21_abramelin_el_mago.webp",
    "custom": true,
    "specialId": "LBPE24 - 05/21"
   },
@@ -11263,7 +11263,7 @@
    "strength": null,
    "ability": "Cuando entra en juego, cada jugador elige entre descartar una carta de su Mano o botar 3 cartas de su Mazo Castillo.",
    "flavour": "Guía celestial para invocar protección y sabiduría. Sus páginas, cargadas de poder espiritual, revelan rituales que conectan lo humano con lo divino.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_08_21_grimorio_sacro.webp",
    "custom": true,
    "specialId": "LBPE24 - 08/21"
   },
@@ -11281,7 +11281,7 @@
    "strength": 1,
    "ability": "Puedes destruir este Aliado para que un Aliado oponente no haga daño de combate este turno.",
    "flavour": "Emerge de lagos sagrados al amanecer. Sus plumas brillan con colores etéreos, y su canto resuena como un eco divino.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_09_21_atotolin.webp",
    "custom": true,
    "specialId": "LBPE24 - 09/21"
   },
@@ -11299,7 +11299,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, puedes destruir un Tótem que controles para robar 2 cartas.<br>Cuando este Aliado sea destruido, tu oponente bota 2 cartas de su Mazo Castillo.",
    "flavour": "Con su halo plateado, guía a los guerreros y protege a los soñadores. Su luz suave ilumina caminos oscuros, revelando destinos ocultos y ancestrales misterios.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_10_21_metztli.webp",
    "custom": true,
    "specialId": "LBPE24 - 10/21"
   },
@@ -11317,7 +11317,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego, puedes jugar una copia de este Aliado de tu Mano sin pagar su Coste.",
    "flavour": "Su presencia mística encarna la conexión sagrada con la tierra, el cielo y el destino del pueblo mexica, guiando la fundación de Tenochtitlán.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_11_21_mexi.webp",
    "custom": true,
    "specialId": "LBPE24 - 11/21"
   },
@@ -11353,7 +11353,7 @@
    "strength": 4,
    "ability": "Cuando entra en juego, cada jugador bota cartas de su Mazo Castillo hasta mostrar un Oro.",
    "flavour": "Coronado como Rey de la Montaña. Vigila los antiguos senderos, invocando tormentas y protegiendo tesoros ocultos.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_13_21_bergsra.webp",
    "custom": true,
    "specialId": "LBPE24 - 13/21"
   },
@@ -11371,7 +11371,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, la siguiente Arma que juegues este turno reduce su Coste en 1 Oro.",
    "flavour": "Sus visiones atraviesan velos de tiempo y espacio, revelando futuros ocultos y secretos ancestrales.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_14_21_volva.webp",
    "custom": true,
    "specialId": "LBPE24 - 14/21"
   },
@@ -11389,7 +11389,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, puedes agrupar 1 Oro que controles.",
    "flavour": "Enigmático entre los dioses nórdicos, se alza en la penumbra de los bosques primigenios. Con su toque arcano, infunde alma y fuego vital en Askr y Embla, los primeros humanos.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_15_21_lodurr.webp",
    "custom": true,
    "specialId": "LBPE24 - 15/21"
   },
@@ -11443,7 +11443,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, puedes barajar hasta tres cartas de tu Cementerio en tu Mazo Castillo. Si barajaste una o más Criaturas, tu oponente bota una carta de su Mazo Castillo.",
    "flavour": "Nacido de hierro y fuego en la forja prohibida, crece devorando metal. Su hambre insaciable desata el terror, aplastando reinos con su colosal cuerpo.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_18_21_pulgasari.webp",
    "custom": true,
    "specialId": "LBPE24 - 18/21"
   },
@@ -11461,7 +11461,7 @@
    "strength": 4,
    "ability": "Cuando entra en juego, puedes buscar un Aliado de Coste 2 o menos en tu Mazo Castillo o Cementerio y ponerlo en tu Mano.",
    "flavour": "Los colosales guardianes de los templos budistas, empuñan fuerza divina con posturas imponentes y miradas feroces.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_19_21_nio.webp",
    "custom": true,
    "specialId": "LBPE24 - 19/21"
   },
@@ -11479,7 +11479,7 @@
    "strength": 3,
    "ability": "En tu Fase de Vigilia, una vez por turno, puedes pagar 2 de Oro para buscar una carta en el Mazo Castillo oponente y desterrarla.",
    "flavour": "Diosa mística de la fortuna doméstica. Con su toque divino, bendice a las familias y sus alimentos.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_20_21_jowangsin.webp",
    "custom": true,
    "specialId": "LBPE24 - 20/21"
   },
@@ -11497,7 +11497,7 @@
    "strength": null,
    "ability": "El portador gana 1 a la Fuerza por cada Arma en juego. Cuando entra en juego, puedes buscar un Arma en tu Mazo Castillo y ponerla en tu Mano.",
    "flavour": "La espada santa, canaliza poder espiritual en rituales y batallas, encarnando la justicia del rey.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_21_21_hwandudaedo.webp",
    "custom": true,
    "specialId": "LBPE24 - 21/21"
   },
@@ -11623,7 +11623,7 @@
    "strength": null,
    "ability": "¡Felicidades, encontraste la carta Ultra Secreta!<br>Con esta carta podrás canjear el set de cartas conmemorativas de Primera Era.",
    "flavour": "Las Primeras Leyendas se reúnen para festejar y compartir juntos en épocas festivas. ¿Qué le habrán regalado al oscuro Kain?",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_lbpe24_00_21_primeras_festividades.webp",
    "custom": true,
    "specialId": "LBPE24 - 00/21"
   },
@@ -11695,7 +11695,7 @@
    "strength": null,
    "ability": "Sólo puedes tener un Ñuke Napu en juego.<br>En tu Fase de Vigilia, una vez por turno, puedes pagar 1 Oro para barajar una carta de tu Cementerio en tu Mazo Castillo. Luego, roba 1 carta.",
    "flavour": "El pilar sagrado que sostiene la vida. Es la tierra fecunda y sus ríos cargados de vida. El corazón ancestral que late con fuerza y sabiduría inquebrantable.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2024_promo_cxc_pe_01_nuke_napu.webp",
    "custom": true,
    "specialId": "PROMO CXC PE 01"
   },
@@ -12739,7 +12739,7 @@
    "strength": 3,
    "ability": "Cuando entre o salga del juego, puedes poner una carta que no sea Talismán de tu Cementerio en la parte superior de tu Mazo Castillo.",
    "flavour": "Campeón incansable. Célebre dentro de la tradición caballeresca, famoso por su coraje y rebeldía frente a la autoridad.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2025_lbpe25_01_21_renaud.webp",
    "custom": true,
    "specialId": "LBPE25 - 01/21"
   },
@@ -12775,7 +12775,7 @@
    "strength": 3,
    "ability": "Cuando entre o salga del juego, puedes elegir otro Aliado en juego para que gane o pierda 1 a la Fuerza permanentemente.",
    "flavour": "Un curioso caballero que domina artes mágicas y alquímicas aprendidas durante años de estudio con sabios y hechiceros legendarios.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2025_lbpe25_03_21_maugris.webp",
    "custom": true,
    "specialId": "LBPE25 - 03/21"
   },
@@ -12811,7 +12811,7 @@
    "strength": 4,
    "ability": "No puede ser declarado atacante.<br>Una vez por turno, puedes desterrar una carta de un Cementerio.",
    "flavour": "Joven cazador húngaro, bendito por la luna, alza su estaca sagrada contra la noche. Desafía a los no-muertos. Su nombre es leyenda. Su furia, el alba del juicio.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2025_lbpe25_05_21_espino_blanco.webp",
    "custom": true,
    "specialId": "LBPE25 - 05/21"
   },
@@ -12829,7 +12829,7 @@
    "strength": 3,
    "ability": "No puede ser bloqueado por Aliados de Fuerza 3 o más.<br>En tu Fase Final, puedes robar 1 carta. Luego, descarta 1 carta.",
    "flavour": "El hombre lobo de Bedburg, devoró hijos y rezó con lengua ensangrentada. Bajo la luna, su alma maldita aullaba. No murió en la rueda: solo cambió de piel.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2025_lbpe25_06_21_peter_stumpp.webp",
    "custom": true,
    "specialId": "LBPE25 - 06/21"
   },
@@ -12865,7 +12865,7 @@
    "strength": null,
    "ability": "El portador pierde 2 a la Fuerza.<br>En cada Fase Final, destierra 2 cartas de tu Cementerio o destierra a su portador.",
    "flavour": "El Espino Blanco es un árbol sagrado que no crece bajo luna impura. Cada fibra ardía con luz antigua.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2025_lbpe25_08_21_bolg.webp",
    "custom": true,
    "specialId": "LBPE25 - 08/21"
   },
@@ -12883,7 +12883,7 @@
    "strength": 4,
    "ability": "No puede ser declarado atacante.<br>En tu Fase de Vigilia, una vez por turno, puedes botar tantas cartas de tu Mazo Castillo como el Coste de una carta en juego para que esa carta pierda su habilidad hasta que salga del juego.",
    "flavour": "La Pantera de Agua, acecha bajo lagos sagrados, con ojos que fulguran tormenta. Su rugido convoca relámpagos, la maldición de pescadores y canoeros.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2025_lbpe25_09_21_pantera_mishipeshu.webp",
    "custom": true,
    "specialId": "LBPE25 - 09/21"
   },
@@ -12901,7 +12901,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego, puedes buscar una carta en un Mazo Castillo y ponerla en el Cementerio de su dueño. Cuando sea destruido, puedes buscar una carta en el Mazo Castillo oponente y ponerla en su destierro.",
    "flavour": "Espíritu alado de las cumbres, con cuerpo de oso, garras de águila y aliento de hielo, habita el monte Katahdin. Protector del cielo, castiga a quien osa volar sin respeto.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2025_lbpe25_10_21_pamola.webp",
    "custom": true,
    "specialId": "LBPE25 - 10/21"
   },
@@ -12919,7 +12919,7 @@
    "strength": 3,
    "ability": "Cada vez que juegues un Arma, destierra la primera carta del Mazo Castillo oponente",
    "flavour": "Canta a los espíritus del río y la montaña. En batalla, es sombra y trueno. En paz, memoria viva del mundo antiguo.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2025_lbpe25_11_21_guerrero_abenaki.webp",
    "custom": true,
    "specialId": "LBPE25 - 11/21"
   },
@@ -12937,7 +12937,7 @@
    "strength": null,
    "ability": "Sólo puedes jugar este Talismán en la declaracion de ataque oponente. Agrupa los Aliados que controles. Luego, tu oponente bota 3 cartas.",
    "flavour": "En lo alto del monte, bajo truenos antiguos, Pamola descendió con alas de hielo, y Mishipeshu emergió rugiendo desde el lago. Viento contra agua, relámpago contra remolino.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2025_lbpe25_12_21_duelo_en_el_monte.webp",
    "custom": true,
    "specialId": "LBPE25 - 12/21"
   },
@@ -12955,7 +12955,7 @@
    "strength": 2,
    "ability": "Cuando este Aliado sea destruido, puedes elegir un Aliado que controle tu oponente para que no pueda ser declarado atacante ni bloqueador hasta que salga del juego.",
    "flavour": "Mujeres blancas del bosque germano, caminan envueltas en neblina. Son espíritus antiguos, ni vivas ni muertas, que tejen destinos y encantan a los que se pierden.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2025_lbpe25_13_21_witte_wiwer.webp",
    "custom": true,
    "specialId": "LBPE25 - 13/21"
   },
@@ -12991,7 +12991,7 @@
    "strength": 3,
    "ability": "Una vez por turno, cuando juegues un Talismán puedes robar 1 carta.",
    "flavour": "Diosa del saber oculto, escucha lo que otros callan. Nada escapa a su mirada: ni engaño, ni deseo. Guardiana de secretos y revelaciones, su nombre susurra verdad.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2025_lbpe25_15_21_vor.webp",
    "custom": true,
    "specialId": "LBPE25 - 15/21"
   },
@@ -13027,7 +13027,7 @@
    "strength": 3,
    "ability": "No puede ser destruido por Talismanes.<br>Cuando es declarado atacante, puedes elegir un Aliado que controle tu oponente para que bloquee a este Aliado.",
    "flavour": "El \"Dios de la Lanza\", dominaba el puño como relámpago. Maestro del Bajiquan, su golpe no se repetía: bastaba uno.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/lootbox_pe_2025_lbpe25_17_21_li_shuwen.webp",
    "custom": true,
    "specialId": "LBPE25 - 17/21"
   },

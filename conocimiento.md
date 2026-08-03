@@ -365,6 +365,40 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-03 (3ª iteración) — 112 imágenes más desde mylserena.cl
+- El dueño del inventario encontró una segunda tienda
+  (https://mylserena.cl/primera-era/singles-pe) con más cartas
+  fotografiadas. A diferencia de mesaredondatcg.cl, esta tienda **no trae
+  SKU/código en los datos del producto** (el campo está vacío en su HTML);
+  lo que sí trae es el nombre con un sufijo entre paréntesis (ej. "Lamorak
+  (LPE4 - MR)") y, más importante, el catálogo está organizado en
+  **subcategorías por edición/producto**
+  (`/primera-era/singles-pe/leyendas-pe-40`,
+  `/primera-era/singles-pe/lootbox-pe-2024`,
+  `/primera-era/singles-pe/mundos-perdidos-3`, etc.) — la propia tienda ya
+  declara de qué edición es cada carta, así que sirve como señal de
+  confianza igual de buena que un código exacto (mismo principio que el
+  campo `edición=` de las páginas del wiki).
+  - `mundos-perdidos-3` resultó ser una subcategoría "compilada" con varias
+    de nuestras ediciones mezcladas, distinguidas por un sufijo adicional
+    en el tag (`MP3 - Tombstone`, `MP3 - Nube Roja`, `MP3 - Aliento de
+    Fuego`, `MP3 - Locura de Dragón`, `MP3 - Horda Esteparia`) — justo las
+    5 ediciones con más huecos de imagen.
+  - Dentro de cada subcategoría se emparejó por **nombre normalizado**; si
+    el nombre se repetía dentro de la misma edición (pasa en LPE4, ver
+    "K' Ak' Na" en la iteración de LPE4/Bruderschaft) se desambiguó
+    comparando la rareza del tag de la tienda (MR/UR/Real/Legendaria/
+    Promocional) contra la rareza ya conocida de la carta; si seguía
+    ambiguo, se descartaba en vez de arriesgar — no hizo falta esta vez
+    (0 casos ambiguos de 119 coincidencias).
+  - Se bajaron y guardaron 112 fotos (7 eran duplicados de las 119
+    coincidencias) en `data/custom-images/mylserena/` (mismo criterio que
+    la iteración anterior: copia propia, no hotlink) a resolución 800×1067
+    (la tienda permite pedir un tamaño mayor cambiando el segmento
+    `/resize/W/H` de la URL de la imagen). Cartas sin imagen en total
+    (LPE4 + Mundos Perdidos + Lootbox): bajó de 386 a 274 — casi todo
+    Lootbox 2024 y las ediciones "MP3" quedaron completas.
+
 ### 2026-08-03 (2ª iteración) — Se cargan las ediciones Lootbox y 117 imágenes desde mesaredondatcg.cl
 - **Imágenes**: el dueño del inventario aprobó incorporar las 117
   coincidencias verificadas por SKU contra mesaredondatcg.cl (ver iteración
