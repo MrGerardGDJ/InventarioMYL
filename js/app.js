@@ -52,6 +52,11 @@ async function loadData() {
   const scraped = (cardsRes.cards || cardsRes || []).map(normalizeCard);
   const bundledCustom = (customRes.cards || []).map(normalizeCard);
   state.baseCards = [...scraped, ...bundledCustom];
+  // Ids del catálogo "oficial" (scraper + bundle compartido): distingue una
+  // carta genuinamente creada por el usuario de una edición personal (que se
+  // elimina del todo) de una edición LOCAL de una carta oficial (que al
+  // "eliminarla" en realidad revierte a los datos originales, ver openModal).
+  state.baseCardIds = new Set(state.baseCards.map((c) => c.id));
   state.editions = Array.isArray(edRes) ? edRes : [];
   state.editionName = Object.fromEntries(state.editions.map((e) => [e.slug, e.name]));
   // Orden real de publicación (editions.json viene ordenado por bloque/era)
@@ -112,14 +117,19 @@ function numOrNull(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : null;
 }
-// Combina las cartas base (catálogo + bundle) con las cartas manuales del usuario
+// Combina las cartas base (catálogo + bundle) con las cartas manuales del
+// usuario. Una carta manual puede reusar el id de una carta base (se crea al
+// "Editar" una carta oficial/bundled desde su detalle, ver openCardForm): en
+// ese caso reemplaza a la base en vez de duplicarla — mismo id, así que las
+// cantidades del inventario/mazos/colecciones no se pierden al editar.
 function rebuildCards() {
   const userCustom = store.getCustomCards().map(normalizeCard);
+  const overrideIds = new Set(userCustom.map((c) => c.id));
   for (const c of userCustom) {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
     c.searchText = normText(c.name + " " + c.ability);
   }
-  state.cards = (state.baseCards || []).concat(userCustom);
+  state.cards = (state.baseCards || []).filter((c) => !overrideIds.has(c.id)).concat(userCustom);
   // Las ediciones personalizadas aportan su nombre legible al mapa global
   for (const e of store.getCustomEditions()) state.editionName[e.slug] = e.name;
   editionCardsCache.clear(); // el catálogo cambió: invalida la caché de Colecciones
@@ -501,7 +511,12 @@ function openModal(card) {
           <button class="qty-btn" data-t="plus">+</button>
           <span class="muted">copias ofrecidas (máximo: las que tienes)</span>
         </div>
-        ${card.userCustom ? `<div class="sync-row" style="margin-top:4px"><button class="btn small" data-edit-card>✏️ Editar</button><button class="btn small" data-del-card>🗑 Eliminar</button></div>` : ""}
+        <div class="sync-row" style="margin-top:4px">
+          <button class="btn small" data-edit-card>✏️ Editar</button>
+          ${card.userCustom
+            ? `<button class="btn small" data-del-card>${state.baseCardIds?.has(card.id) ? "↩ Revertir a la original" : "🗑 Eliminar"}</button>`
+            : ""}
+        </div>
         <div class="cd-section"><h4>Habilidad</h4><div id="cd-ability">${card.ability ? nl2br(card.ability) : "<span class='muted'>Sin texto.</span>"}</div></div>
         ${card.flavour ? `<div class="cd-section"><h4>Historia</h4><p class="cd-flavour">«${escapeHtml(card.flavour)}»</p></div>` : ""}
         <div id="cd-extra" class="cd-extra"><p class="muted">Cargando detalle ampliado…</p></div>
@@ -516,11 +531,15 @@ function openModal(card) {
   if (editBtn) editBtn.onclick = () => { closeModal(); openCardForm(card); };
   const delBtn = box.querySelector("[data-del-card]");
   if (delBtn) delBtn.onclick = () => {
-    if (!confirm(`¿Eliminar la carta manual «${card.name}»?`)) return;
+    const isOverride = state.baseCardIds?.has(card.id);
+    const msg = isOverride
+      ? `¿Revertir «${card.name}» a los datos originales? (no pierdes tus cantidades, solo la edición que le hiciste)`
+      : `¿Eliminar la carta manual «${card.name}»?`;
+    if (!confirm(msg)) return;
     store.deleteCustomCard(card.id);
-    rebuildCards(); populateFilters(); applyFilters(); closeModal();
+    populateFilters(); refreshAll(); closeModal();
     refreshEditionsModalIfOpen();
-    showToast("Carta eliminada");
+    showToast(isOverride ? "Carta revertida a la versión original" : "Carta eliminada");
   };
   box.querySelectorAll("[data-m]").forEach((b) => {
     b.onclick = () => {
@@ -635,11 +654,26 @@ function populateEditionDatalist() {
 // formulario al agregar cartas desde el gestor de ediciones
 function openCardForm(card, preset) {
   populateEditionDatalist();
-  const editing = card && card.userCustom;
-  $("#cf-title").textContent = editing ? "Editar carta" : "Agregar carta manual";
+  // "editing" es true para CUALQUIER carta que se abre desde su detalle, sea
+  // oficial/bundled o ya manual: precarga sus datos igual. La diferencia está
+  // en qué pasa al guardar (ver saveCardForm) — si la carta todavía no es
+  // userCustom, guardar crea una copia local con el MISMO id (reemplaza a la
+  // original en vez de duplicarla, ver rebuildCards) en lugar de actualizar
+  // una carta manual ya existente.
+  const editing = !!card;
+  const isNewOverride = editing && !card.userCustom;
+  $("#cf-title").textContent = editing
+    ? (isNewOverride ? "Editar carta (crea una copia local)" : "Editar carta")
+    : "Agregar carta manual";
   $("#cf-id").value = editing ? card.id : "";
   $("#cf-name").value = editing ? card.name : "";
-  $("#cf-edition").value = editing ? (card.editionName || "") : (preset?.editionName || "");
+  // Prioriza el nombre "canónico" de la edición (por slug, el mismo que usa
+  // el resto de la app) sobre card.editionName: el scraper de TOR a veces
+  // guarda en la carta un nombre abreviado ("LPE 2023") que no calza con el
+  // de data/editions.json ("Leyendas - Primera Era 2023") — si se usara ese
+  // nombre acá, al guardar saveCardForm no lo reconocería como la MISMA
+  // edición y crearía una edición fantasma nueva y desconectada.
+  $("#cf-edition").value = editing ? (state.editionName[card.edition] || card.editionName || "") : (preset?.editionName || "");
   $("#cf-number").value = editing ? (card.edid ? parseInt(card.edid, 10) : "") : (preset?.nextNum || "");
   $("#cf-special").value = editing ? (card.specialId || "") : "";
   $("#cf-format").value = editing ? (card.format || "NE") : (preset?.format || "NE");
@@ -654,7 +688,7 @@ function openCardForm(card, preset) {
   $("#cf-image-file").value = "";
   cfImageData = editing ? (card.image || "") : "";
   renderCfPreview();
-  $("#cf-delete").style.display = editing ? "" : "none";
+  $("#cf-delete").style.display = editing && card.userCustom ? "" : "none";
   $("#card-form-modal").classList.remove("hidden");
   // Al agregar una carta especial desde el gestor, el foco va al identificador
   if (!editing && preset?.special) $("#cf-special").focus();
@@ -700,9 +734,19 @@ function saveCardForm(another) {
     image: $("#cf-image-url").value.trim() || cfImageData || "",
   };
   const id = $("#cf-id").value;
-  if (id) store.updateCustomCard(id, card);
-  else store.addCustomCard(card);
-  rebuildCards(); populateFilters(); applyFilters(); refreshActiveDeckUI();
+  // id puede venir de una carta oficial/bundled que todavía no es userCustom
+  // (se está editando por primera vez): en ese caso no existe en customCards
+  // todavía, así que hay que CREARLA ahí (con ese mismo id, para que
+  // reemplace a la original — ver rebuildCards) en vez de actualizarla.
+  const isExistingCustom = id && store.getCustomCards().some((c) => c.id === id);
+  if (isExistingCustom) store.updateCustomCard(id, card);
+  else store.addCustomCard(id ? { ...card, id } : card);
+  // refreshAll() (no solo applyFilters) porque este formulario ahora se abre
+  // desde CUALQUIER vista (Colecciones, Cambios, Mazos...), no solo el
+  // Catálogo — sin esto, editar una carta desde su detalle en Colecciones
+  // guardaba bien pero la grilla de la colección seguía mostrando los datos
+  // viejos hasta cambiar de vista y volver.
+  populateFilters(); refreshAll();
   refreshEditionsModalIfOpen();
   if (another) {
     // Mantiene edición/formato/raza/rareza; limpia lo específico de la carta.
