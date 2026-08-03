@@ -105,7 +105,17 @@ async function resolveImageUrls(files, onProgress) {
         // no "File:") aunque se haya preguntado con "File:" — no asumir el
         // prefijo, cortar por los dos puntos.
         const clean = p.title.includes(":") ? p.title.split(":").slice(1).join(":") : p.title;
-        if (!p.missing && p.imageinfo) found.set(clean, p.imageinfo[0].url);
+        if (!p.missing && p.imageinfo) {
+          const url = p.imageinfo[0].url;
+          found.set(clean, url);
+          // La API normaliza "_" a " " en el título que devuelve, pero el
+          // nombre de archivo tal como aparece en el wikitext (la clave por
+          // la que después se busca en este Map) puede traer "_" — sin este
+          // alias, un archivo con guion bajo queda con imagen resuelta pero
+          // invisible porque la clave nunca calza.
+          const alt = clean.replace(/ /g, "_");
+          if (alt !== clean) found.set(alt, url);
+        }
       }
     }
     return found;
