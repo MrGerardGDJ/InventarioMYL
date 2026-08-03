@@ -32,7 +32,7 @@ export const EDITION_SLUGS = {
     "colecciones_raciales_pb_2023", "helenica_aniversario", "shogun_ii", "dracula_pb",
     "pb_lootbox_2023", "leyendas_pb_3.0", "toolkit_pb_fuerza_y_destino", "toolkit_pb_magia_y_divinidad",
     "relatos_hel_mar_de_poseidon", "relatos_hel_camino_de_teseo", "relatos_hel_laberinto_del_minotauro",
-    "daana_aniversario", "shogun_iii", "dante_pb",
+    "daana_aniversario", "shogun_iii", "dante_pb", "lpb_4.0",
   ],
   SB: [
     "guerrero_jaguar", "vendaval", "barbarie", "reino_de_acero", "hordas", "bestiario",

@@ -354,6 +354,12 @@
     "name": "Leyendas PB 3.0"
   },
   {
+    "slug": "lpb_4.0",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Leyendas - Primer Bloque 4.0"
+  },
+  {
     "slug": "toolkit_pb_fuerza_y_destino",
     "format": "PB",
     "formatName": "Primer Bloque",

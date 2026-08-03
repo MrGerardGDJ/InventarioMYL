@@ -346,6 +346,57 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-03 — Ediciones "Lootbox" y descubrimiento de Leyendas - Primer Bloque 4.0
+- El dueño del inventario pidió investigar por qué no veía las ediciones
+  "Lootbox" de Primera Era. Se encontró: `lootbox_pe_2024` y
+  `pb_lootbox_2023` existen en `data/editions.json` pero **sin ninguna
+  carta cargada en ningún lado** (mismo bug "edición fantasma" que se
+  encontró y corrigió para 3 ediciones Mundos Perdidos el 02-08-2026) —
+  y ni siquiera están en la API de TOR (confirmado con `/todas` en vivo).
+  Tampoco existe `lootbox_pe_2025`. Las tres son ediciones "Lootbox"
+  reales del wiki (`Lista de cartas de Lootbox Primera Era 2024/2025`),
+  pero con una estructura muy distinta a una edición normal: son
+  **compilaciones de cartas promocionales/coleccionista de OTROS
+  productos** (secciones "Conmemorativas especiales", "Secretas Promo",
+  "Premium", "Artes Alternativos", "Nuevas", "Exclusivas", cada una con su
+  propio código de coleccionista) — no cartas numeradas de un set propio.
+  **Pendiente de decisión del dueño**: cargarlas requiere el mismo
+  cuidado categoría-por-categoría que "Coleccionista"/"Secreta Exclusiva"
+  de `leyendas_primera_era_2023`; no se cargaron todavía, solo se dejó
+  investigado y documentado acá.
+- Al revisar por qué faltaban ediciones, se detectó (comparando contra
+  https://mesaredondatcg.cl/categoria-producto/carta/, una tienda que
+  vende singles con el código de coleccionista real en el SKU) que TOR
+  agregó silenciosamente **`lpb_4.0`** ("Leyendas - Primer Bloque 4.0",
+  400 cartas) a su API — pero el `data/cards.json` commiteado tenía casi
+  3 semanas de antigüedad (generado el 13-07-2026) y nunca la había
+  recogido. **No era una edición que faltara en TOR (como LPE4/Mundos
+  Perdidos): es un catálogo desactualizado.** Se corrió el scraper
+  completo (`node scrape.js`, sin `--limit`) para ponerlo al día — pasó
+  de 129 a 137 ediciones. De paso: `lpb_4.0` no estaba en la lista
+  estática `EDITION_SLUGS` de `scraper/editions.js`, así que el scraper
+  la clasificaba con el formato por defecto ("NE") en vez de "PB" —
+  corregido (se agregó a `EDITION_SLUGS.PB`) y se corrigió también el
+  `format` de las 400 cartas ya generadas. Se agregó su entrada a
+  `data/editions.json`.
+- **Hallazgo aparte, sin aplicar todavía**: cruzando las 472 cartas sin
+  imagen de `leyendas_primera_era_4_0` + Mundos Perdidos contra los
+  SKU exactos de esa misma tienda (ej. "LPE4 - 19/320 UR" — el código
+  confirma edición Y número exactos, no solo el nombre — nombres
+  repetidos entre ediciones distintas son comunes, ver "Silencio" con 3
+  SKU distintos de 3 ediciones distintas en la búsqueda) se encontraron
+  **117 coincidencias verificadas por código** (78 de LPE4, 39 repartidas
+  en 4 ediciones Mundos Perdidos) con foto real disponible. **No se
+  hotlinkearon** las imágenes de la tienda a los datos compartidos: son
+  fotos de producto de un tercero comercial (no un wiki de fans ni la
+  API oficial), y además el CDN de esa tienda no manda cabecera CORS
+  (`Access-Control-Allow-Origin`), así que tampoco funcionarían con el
+  export a PDF (que necesita `crossOrigin="anonymous"` para el efecto
+  blanco y negro). Queda para que el dueño del inventario baje las
+  fotos de los 117 productos identificados y las suba él mismo por
+  "Editar carta" (que ya soporta subir un archivo de imagen local, sin
+  depender de hotlink).
+
 ### 2026-08-02 (7ª iteración) — Colecciones con varias ediciones agrupadas
 - El dueño del inventario notó que una colección solo aceptaba una edición,
   y pidió poder agrupar varias — el caso real: TOR lanza ~6 ediciones
