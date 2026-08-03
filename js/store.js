@@ -157,15 +157,28 @@ export function replaceTradeLog(arr, origin = "local") {
   if (Array.isArray(arr)) { tradeLog = arr; write(KEYS.tradeLog, tradeLog); notify(origin); }
 }
 
-/* ===== Colecciones (una edición que se quiere completar) =====
-   Una colección NO guarda cantidades: es una vista de una edición sobre el
-   inventario. Borrarla nunca borra cantidades. */
-let collections = read(KEYS.collections, []);
+/* ===== Colecciones (una o más ediciones que se quieren completar) =====
+   Una colección NO guarda cantidades: es una vista de un grupo de ediciones
+   sobre el inventario (ej. agrupar todas las "Mundos Perdidos" de un año en
+   una sola colección que se va completando con cada lanzamiento). Borrarla
+   nunca borra cantidades.
+   Campo `editions`: array de slugs, SIEMPRE no vacío. Formato viejo (una sola
+   edición en `edition`, de antes de que existiera esta función): se migra acá
+   una sola vez al cargar — así el resto de la app (y una colección que venga
+   de la nube de otro dispositivo con la versión vieja) nunca necesita el
+   fallback, siempre puede leer `col.editions` directo. */
+function migrateCollection(c) {
+  if (Array.isArray(c.editions) && c.editions.length) return c;
+  return { ...c, editions: c.edition ? [c.edition] : [] };
+}
+let collections = read(KEYS.collections, []).map(migrateCollection).filter((c) => c.editions.length);
+write(KEYS.collections, collections); // persiste la migración, no solo en memoria
 
 export function getCollections() { return collections; }
 export function getCollection(id) { return collections.find((c) => c.id === id) || null; }
-export function createCollection(name, edition) {
-  const col = { id: "c" + Date.now().toString(36), name: name || "Colección", edition, updatedAt: Date.now() };
+export function createCollection(name, editions) {
+  const eds = Array.isArray(editions) ? editions.filter(Boolean) : [editions].filter(Boolean);
+  const col = { id: "c" + Date.now().toString(36), name: name || "Colección", editions: eds, updatedAt: Date.now() };
   collections.push(col);
   write(KEYS.collections, collections);
   notify();
@@ -181,7 +194,11 @@ export function deleteCollection(id) {
   notify();
 }
 export function replaceCollections(arr, origin = "local") {
-  if (Array.isArray(arr)) { collections = arr; write(KEYS.collections, collections); notify(origin); }
+  if (Array.isArray(arr)) {
+    collections = arr.map(migrateCollection).filter((c) => c.editions.length);
+    write(KEYS.collections, collections);
+    notify(origin);
+  }
 }
 
 /* ===== Migración de claves de carta (legacyId → id estable) =====
@@ -302,7 +319,10 @@ export function applySnapshot(snap) {
   if (!snap) return;
   replaceInventory(snap.inventory || {}, "remote");
   if (Array.isArray(snap.decks)) { decks = snap.decks; write(KEYS.decks, decks); }
-  if (Array.isArray(snap.collections)) { collections = snap.collections; write(KEYS.collections, collections); }
+  if (Array.isArray(snap.collections)) {
+    collections = snap.collections.map(migrateCollection).filter((c) => c.editions.length);
+    write(KEYS.collections, collections);
+  }
   if (snap.trade && typeof snap.trade === "object") { trade = { ...snap.trade }; write(KEYS.trade, trade); }
   if (Array.isArray(snap.tradeLog)) { tradeLog = snap.tradeLog; write(KEYS.tradeLog, tradeLog); }
   if (Array.isArray(snap.editions)) { customEditions = snap.editions; write(KEYS.editions, customEditions); }

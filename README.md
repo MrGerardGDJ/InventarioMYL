@@ -15,10 +15,12 @@ Los datos de las cartas provienen de [tor.myl.cl](https://tor.myl.cl/cartas/toda
 - 🧰 **Filtros**: formato, edición, raza, tipo, rareza y coste máximo.
 - ↕️ **Ordenar** por nombre, **número de carta**, coste, fuerza, edición
   (en orden de publicación por bloque) o cantidad que posees.
-- 📚 **Colecciones**: elige una edición y síguela carta por carta, ordenada por
-  número; las cartas que aún no tienes se ven en **blanco y negro** y recuperan
-  el color al marcarlas. Una barra muestra tu progreso. Botón **"Exportar
-  PDF"** con la misma grilla, ideal para llevar a una jornada de intercambio.
+- 📚 **Colecciones**: elige **una o más ediciones** (agrupa, por ejemplo, todas
+  las "Mundos Perdidos" de un año en una sola) y síguelas carta por carta,
+  ordenadas por edición y número; las cartas que aún no tienes se ven en
+  **blanco y negro** y recuperan el color al marcarlas. Una barra muestra tu
+  progreso. Botón **"Exportar PDF"** con la misma grilla, ideal para llevar a
+  una jornada de intercambio.
 - 🧩 **Ediciones propias**: crea tus ediciones (nombre, descripción, bloque y
   listado de cartas numerado), carga las cartas una a una, con el botón
   **"Buscar y cargar cartas"** directo desde myl.fandom.com, o importándolas
