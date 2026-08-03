@@ -21,6 +21,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { allEditions, slugToName, FORMATS } from "./editions.js";
+import { LEYENDAS_2023_CORRECTIONS } from "./corrections.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(__dirname, "..", "data", "cards.json");
@@ -161,6 +162,19 @@ for (const slug of editionsToFetch) {
   console.log(`${added} cartas (${edTitle})`);
   await sleep(80);
 }
+
+/* ---------- 3.1) correcciones manuales conocidas (ver corrections.js) ---------- */
+// Pisa SOLO edid/specialId por id — nunca el id mismo, para no romper el
+// inventario/mazos ya guardados contra el id "de fábrica" de estas cartas.
+let corrected = 0;
+for (const c of all) {
+  const fix = LEYENDAS_2023_CORRECTIONS[c.id];
+  if (!fix) continue;
+  c.edid = fix.edid;
+  c.specialId = fix.specialId;
+  corrected++;
+}
+if (corrected) console.log(`Corregidas ${corrected} cartas (numeración leyendas_primera_era_2023)`);
 
 /* ---------- 3.5) enriquecer nombres con acentos/ñ desde el perfil ---------- */
 // El listado de la API entrega los nombres SIN diacríticos; el perfil sí los trae.
