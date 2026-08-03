@@ -221,6 +221,24 @@ main { padding: 0; }
 }
 .col-section-title:first-child { margin-top: 0; }
 
+/* Selector de ediciones (checkboxes) al crear/editar una colección */
+.col-edition-list {
+  max-height: 40vh; overflow-y: auto; border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 8px; background: var(--bg-3);
+}
+.col-edition-group-label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--muted); margin: 10px 0 4px; padding: 0 4px;
+}
+.col-edition-group-label:first-child { margin-top: 4px; }
+.col-edition-item {
+  display: flex; align-items: center; gap: 8px; padding: 6px 4px;
+  border-radius: 6px; font-size: 13px; cursor: pointer;
+}
+.col-edition-item:hover { background: var(--bg-2); }
+.col-edition-item input { flex: none; }
+.col-edition-empty { color: var(--muted); font-size: 13px; padding: 8px 4px; }
+
 /* Lista lateral de colecciones */
 .col-item {
   border: 1px solid var(--border); border-radius: 8px;
@@ -229,7 +247,10 @@ main { padding: 0; }
 .col-item.active { border-color: var(--accent); }
 .col-item .col-top { display: flex; align-items: center; gap: 8px; }
 .col-item .d-name { font-weight: 600; cursor: pointer; flex: 1; }
-.col-item .col-ed { font-size: 11px; margin: 2px 0 6px; }
+.col-item .col-ed {
+  font-size: 11px; margin: 2px 0 6px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 .col-item .ep-bar { display: block; height: 8px; }
 .col-item .col-nums { font-size: 11px; margin-top: 4px; }
 

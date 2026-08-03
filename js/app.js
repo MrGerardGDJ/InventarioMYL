@@ -327,10 +327,14 @@ function editionOrd(c) {
   const i = state.editionOrder?.[c.edition];
   return i == null ? 9999 : i;
 }
-// Orden dentro de una edición: cartas especiales/promocionales primero
-// (por identificador, con orden numérico natural: P-1 < P-2 < P-10) y
-// luego las numeradas por su número de carta
+// Orden dentro de una edición (o de un grupo de ediciones, ver colecciones
+// con varias ediciones): primero por orden de publicación de la edición
+// (no-op cuando todas las cartas son de la misma edición), luego especiales/
+// promocionales primero dentro de esa edición (por identificador, orden
+// numérico natural: P-1 < P-2 < P-10) y luego las numeradas por su número
 function compareEditionCards(a, b) {
+  const eo = editionOrd(a) - editionOrd(b);
+  if (eo !== 0) return eo;
   const sa = a.specialId ? 1 : 0, sb = b.specialId ? 1 : 0;
   if (sa !== sb) return sb - sa;
   if (sa) return a.specialId.localeCompare(b.specialId, "es", { numeric: true, sensitivity: "base" });
@@ -1287,39 +1291,66 @@ function bindDeckBarEvents() {
 }
 
 /* ===================== Colecciones (cuaderno de colección digital) =====================
-   Una "colección" es el álbum digital de UNA edición: al crearla se elige la
-   edición y la vista muestra todas sus cartas ordenadas por número (edid).
+   Una "colección" es el álbum digital de una o más ediciones (`col.editions`,
+   array de slugs — ver store.js): al crearla se eligen las ediciones y la
+   vista muestra todas sus cartas juntas, agrupadas por edición en su orden de
+   publicación y ordenadas por número (edid) dentro de cada una. Pensado para
+   agrupar, por ejemplo, todas las "Mundos Perdidos" de un mismo año en una
+   sola colección que se va completando con cada lanzamiento nuevo, en vez de
+   tener una colección suelta por edición.
    Las cantidades NO viven en la colección: se leen del inventario, por lo que
    marcar copias aquí o en el Catálogo es equivalente. El efecto visual de
    "carta bloqueada" (blanco y negro → color) lo resuelve CSS con la clase
    .owned que cardEl()/changeQty() mantienen al día (ver styles.css,
    sección Colecciones). */
 
-// Cartas de la edición de la colección, ordenadas por número de carta.
-// Se cachean por edición para no recorrer el catálogo completo (~20k cartas)
-// en cada clic de +/−; rebuildCards() limpia la caché cuando cambia el catálogo.
+// Cartas de las ediciones de la colección, ordenadas por edición (orden de
+// publicación) y luego por número de carta. Se cachean por colección (no por
+// edición: dos colecciones pueden compartir o combinar ediciones distinto)
+// para no recorrer el catálogo completo (~20k cartas) en cada clic de +/−;
+// rebuildCards() limpia la caché cuando cambia el catálogo.
 const editionCardsCache = new Map();
 function collectionCards(col) {
-  let arr = editionCardsCache.get(col.edition);
+  let arr = editionCardsCache.get(col.id);
   if (!arr) {
+    const eds = new Set(col.editions);
     arr = state.cards
-      .filter((c) => c.edition === col.edition)
-      .sort(compareEditionCards); // especiales primero, luego por número
-    editionCardsCache.set(col.edition, arr);
+      .filter((c) => eds.has(c.edition))
+      .sort(compareEditionCards); // por edición, especiales primero, luego por número
+    editionCardsCache.set(col.id, arr);
   }
   return arr;
 }
-// Progreso de la colección: únicas poseídas / total de la edición.
-// En ediciones personalizadas con "total esperado" definido, el denominador
-// usa ese total aunque aún no se hayan cargado todas las cartas.
+// Progreso de la colección: únicas poseídas / total combinado de sus ediciones.
+// En ediciones personalizadas con "total esperado" definido, ese total pesa
+// para ESA edición aunque aún no se hayan cargado todas sus cartas (útil para
+// ir completando una edición nueva a medida que el wiki la documenta).
 function collectionStats(col) {
   const cards = collectionCards(col);
   const owned = cards.filter((c) => store.getQty(c.id) > 0).length;
-  const ce = store.getCustomEdition(col.edition);
-  // El "total esperado" aplica al listado numerado; las especiales se suman aparte
   const specials = cards.filter((c) => c.specialId).length;
-  const total = specials + Math.max(cards.length - specials, Number(ce?.expectedTotal) || 0);
+  let numberedTotal = 0;
+  for (const slug of col.editions) {
+    const ce = store.getCustomEdition(slug);
+    const edNumbered = cards.filter((c) => c.edition === slug && !c.specialId).length;
+    numberedTotal += Math.max(edNumbered, Number(ce?.expectedTotal) || 0);
+  }
+  const total = specials + numberedTotal;
   return { total, owned, pct: total ? Math.round((owned / total) * 100) : 0 };
+}
+
+// Texto corto para mostrar una lista de nombres de edición (1-2 = unidos con
+// "+"; más = las primeras 2 y "y N más"). Se usa tanto para mostrar una
+// colección ya creada como para armarle un nombre automático al crearla.
+function joinEditionNames(names) {
+  if (names.length <= 2) return names.join(" + ");
+  return `${names.slice(0, 2).join(", ")} y ${names.length - 2} más`;
+}
+function collectionEditionNames(col) {
+  return col.editions.map((s) => state.editionName[s] || s);
+}
+function collectionEditionLabel(col) {
+  return joinEditionNames(collectionEditionNames(col));
 }
 
 // Panel lateral: lista de colecciones con su barra de progreso.
@@ -1345,7 +1376,7 @@ function renderCollectionsView() {
         <span class="d-name">${escapeHtml(col.name)}</span>
         <button class="qty-btn" data-del title="Eliminar colección">🗑</button>
       </div>
-      <div class="col-ed muted">${escapeHtml(state.editionName[col.edition] || col.edition)}</div>
+      <div class="col-ed muted" title="${escapeAttr(collectionEditionNames(col).join(", "))}">${escapeHtml(collectionEditionLabel(col))}</div>
       <span class="ep-bar"><span class="ep-fill" style="width:${s.pct}%"></span></span>
       <div class="col-nums muted">${s.owned}/${s.total} (${s.pct}%)</div>`;
     row.querySelector(".d-name").onclick = () => {
@@ -1369,14 +1400,14 @@ function renderCollectionDetail() {
   const wrap = $("#collection-detail");
   const col = store.getCollection(store.getSetting("activeCollectionId"));
   if (!col) {
-    wrap.innerHTML = `<p class="muted">Crea una colección con <b>+ Nueva colección</b>: eliges una edición y verás todas sus cartas ordenadas por número, marcando tu progreso.</p>`;
+    wrap.innerHTML = `<p class="muted">Crea una colección con <b>+ Nueva colección</b>: eliges una o más ediciones y verás todas sus cartas ordenadas por número, marcando tu progreso.</p>`;
     return;
   }
   const s = collectionStats(col);
   wrap.innerHTML = `
     <div class="col-head">
       <h2><input id="col-name-edit" value="${escapeAttr(col.name)}" /></h2>
-      <span class="tag">${escapeHtml(state.editionName[col.edition] || col.edition)}</span>
+      <span class="tag" title="${escapeAttr(collectionEditionNames(col).join(", "))}">${escapeHtml(collectionEditionLabel(col))}</span>
       <div class="spacer"></div>
       <button class="btn small" id="col-export-pdf" title="PDF con la grilla de cartas, tal como se ve acá — para llevar a una jornada de intercambio">📄 Exportar PDF</button>
       <label class="field inline"><span>Mostrar</span>
@@ -1452,11 +1483,20 @@ function renderCollectionGrid(col) {
     for (const c of list) g.appendChild(cardEl(c));
     wrap.appendChild(g);
   };
-  if (specials.length) {
-    addSection(`Cartas promocionales / especiales (${specials.length})`, specials);
+  if (specials.length) addSection(`Cartas promocionales / especiales (${specials.length})`, specials);
+  if (col.editions.length > 1) {
+    // Colección con varias ediciones agrupadas: una sub-grilla por edición,
+    // en su orden de publicación (cards ya viene ordenado así) — si no, con
+    // varios cientos de cartas de distintas ediciones mezcladas en una sola
+    // grilla sería imposible ubicarse.
+    for (const slug of col.editions) {
+      const edCards = normals.filter((c) => c.edition === slug);
+      addSection(`${state.editionName[slug] || slug} (${edCards.length})`, edCards);
+    }
+  } else if (specials.length) {
     addSection(`Listado de cartas de la edición (${normals.length})`, normals);
   } else {
-    addSection(null, normals); // sin especiales: una sola grilla, como siempre
+    addSection(null, normals); // sin especiales y una sola edición: una sola grilla, como siempre
   }
   scheduleNameCorrection(cards);
   $("#col-empty").classList.toggle("hidden", cards.length !== 0);
@@ -1478,27 +1518,68 @@ function updateCollectionProgress() {
   }
 }
 
-// Modal de creación: selector de edición agrupado por bloque + nombre opcional
+// Modal de creación: checklist de ediciones agrupadas por bloque (con
+// buscador para filtrar, hay 130+ ediciones) + nombre opcional. Se puede
+// elegir 1 o varias — pensado para agrupar, por ejemplo, todas las "Mundos
+// Perdidos" de un año en una sola colección que se completa con cada
+// lanzamiento nuevo, en vez de tener una colección suelta por edición.
+let colModalSelected = new Set();
 function openCollectionModal() {
-  fillEditionSelect($("#col-edition"), "", "— Elige una edición —");
+  colModalSelected = new Set();
+  $("#col-edition-search").value = "";
   $("#col-name").value = "";
+  renderCollectionEditionList("");
   $("#collection-modal").classList.remove("hidden");
+  $("#col-edition-search").focus();
 }
 function closeCollectionModal() { $("#collection-modal").classList.add("hidden"); }
+// Redibuja el checklist filtrado por texto; la selección vive en
+// colModalSelected (no en el DOM) para no perderla al filtrar y que
+// desaparezcan de la vista las que ya estaban marcadas.
+function renderCollectionEditionList(filterText) {
+  const box = $("#col-edition-list");
+  const q = normText((filterText || "").trim());
+  let html = "";
+  let any = false;
+  for (const [gname, items] of editionOptionGroups("")) {
+    const visible = q ? items.filter((it) => normText(it.label).includes(q)) : items;
+    if (!visible.length) continue;
+    any = true;
+    html += `<div class="col-edition-group-label">${escapeHtml(gname)}</div>`;
+    for (const it of visible) {
+      html += `<label class="col-edition-item">
+        <input type="checkbox" value="${escapeAttr(it.value)}" ${colModalSelected.has(it.value) ? "checked" : ""} />
+        <span>${escapeHtml(it.label)}</span>
+      </label>`;
+    }
+  }
+  box.innerHTML = any ? html : `<p class="col-edition-empty">Sin resultados${filterText ? ` para "${escapeHtml(filterText)}"` : ""}.</p>`;
+  box.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+    cb.onchange = () => {
+      if (cb.checked) colModalSelected.add(cb.value);
+      else colModalSelected.delete(cb.value);
+      $("#col-edition-count").textContent = colModalSelected.size;
+    };
+  });
+  $("#col-edition-count").textContent = colModalSelected.size;
+}
 function createCollectionFromModal() {
-  const ed = $("#col-edition").value;
-  if (!ed) { showToast("Elige una edición para la colección"); return; }
-  // Sin nombre explícito, la colección toma el nombre de la edición
-  const name = $("#col-name").value.trim() || (state.editionName[ed] || ed);
-  const col = store.createCollection(name, ed);
+  // Orden de publicación, no el orden en que se clickearon
+  const eds = [...colModalSelected].sort((a, b) => (state.editionOrder[a] ?? 9999) - (state.editionOrder[b] ?? 9999));
+  if (!eds.length) { showToast("Elige al menos una edición para la colección"); return; }
+  // Sin nombre explícito: 1 edición toma su nombre; varias, se listan (o "y N más")
+  const autoName = joinEditionNames(eds.map((s) => state.editionName[s] || s));
+  const name = $("#col-name").value.trim() || autoName;
+  const col = store.createCollection(name, eds);
   store.setSetting("activeCollectionId", col.id);
   closeCollectionModal();
   renderCollectionsView();
-  showToast(`Colección «${name}» creada ✓`);
+  showToast(`Colección «${name}» creada ✓ (${eds.length} edición${eds.length === 1 ? "" : "es"})`);
 }
 function bindCollectionEvents() {
   $("#new-collection").addEventListener("click", openCollectionModal);
   $("#col-create").addEventListener("click", createCollectionFromModal);
+  $("#col-edition-search").addEventListener("input", (e) => renderCollectionEditionList(e.target.value));
   $$("[data-close-col]").forEach((el) => el.addEventListener("click", closeCollectionModal));
   $("#collection-modal").addEventListener("click", (e) => {
     if (e.target.classList.contains("modal-backdrop")) closeCollectionModal();
@@ -1642,13 +1723,15 @@ function executeTrade(given, received) {
   store.addQty(given.id, -1);      // la copia entregada sale del inventario
   store.addTradeQty(given.id, -1); // y deja de estar ofrecida
   store.addQty(received.id, +1);   // la recibida entra al inventario
-  // Colección automática: la carta recibida debe quedar dentro de la
-  // colección de su edición; si no existe, se crea en este momento.
-  let col = store.getCollections().find((c) => c.edition === received.edition);
+  // Colección automática: la carta recibida debe quedar dentro de alguna
+  // colección que incluya su edición (una colección puede agrupar varias,
+  // ver arriba); si ninguna la incluye, se crea una nueva de esa sola
+  // edición en este momento.
+  let col = store.getCollections().find((c) => c.editions.includes(received.edition));
   let created = false;
   if (!col) {
     const name = state.editionName[received.edition] || received.editionName || received.edition || "Colección";
-    col = store.createCollection(name, received.edition);
+    col = store.createCollection(name, [received.edition]);
     created = true;
   }
   store.addTradeLogEntry({ given: given.id, received: received.id });

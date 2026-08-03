@@ -80,11 +80,21 @@ incluye lo mismo.
   "esto es 100% inventada por el usuario") borra la copia local — para una
   carta oficial eso simplemente la vuelve a mostrar tal cual está en el
   catálogo compartido, sin afectar tus cantidades.
-- **Colecciones** (`view-colecciones`): cada colección se crea eligiendo una **edición**;
-  muestra solo las cartas de esa edición **ordenadas por número** (`edid`). Las cartas con
-  cantidad 0 se ven en blanco y negro y oscurecidas (vía CSS
-  `.collection-grid .card:not(.owned)`); recuperan el color con transición al marcar la
-  primera copia. Barra de progreso `poseídas/total`.
+- **Colecciones** (`view-colecciones`): cada colección se crea eligiendo **una o más
+  ediciones** (`col.editions`, array de slugs — ver `js/store.js`), con un checklist con
+  buscador en el modal de creación (hay 130+ ediciones, un `<select>` simple no alcanza).
+  Pensado para agrupar, por ejemplo, todas las "Mundos Perdidos" de un mismo año en una
+  sola colección que se va completando con cada lanzamiento nuevo, en vez de tener una
+  colección suelta por edición. Muestra las cartas de todas sus ediciones juntas,
+  **agrupadas por edición en su orden de publicación** (`compareEditionCards` ordena
+  primero por `editionOrd`, no-op cuando es una sola edición) y por número dentro de cada
+  una; con más de una edición, cada una tiene su propia sub-sección con título en la
+  grilla (`renderCollectionGrid`). Las cartas con cantidad 0 se ven en blanco y negro y
+  oscurecidas (vía CSS `.collection-grid .card:not(.owned)`); recuperan el color con
+  transición al marcar la primera copia. Barra de progreso `poseídas/total` combinada de
+  todas las ediciones del grupo. Formato viejo (colecciones de una sola edición, campo
+  `edition` en vez de `editions`) se migra solo al cargar (`migrateCollection` en
+  `store.js`) — nunca hace falta tocar datos guardados a mano.
 - **Exportar PDF de una Colección** (botón "📄 Exportar PDF" en el detalle de
   una colección): genera un PDF con una **grilla de miniaturas**, no una
   tabla de texto — se ve igual que la vista en pantalla (`exportCollectionPDF`
@@ -335,6 +345,43 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 `data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-08-02 (7ª iteración) — Colecciones con varias ediciones agrupadas
+- El dueño del inventario notó que una colección solo aceptaba una edición,
+  y pidió poder agrupar varias — el caso real: TOR lanza ~6 ediciones
+  "Mundos Perdidos" por año, y quiere ir sumándolas a una misma colección a
+  medida que las va comprando, en vez de tener una colección suelta por
+  cada una.
+- Cambio de modelo: `col.editions` (array) reemplaza a `col.edition`
+  (string). Migración automática y transparente al cargar (`store.js`,
+  `migrateCollection`) — corre en `read(KEYS.collections)`,
+  `replaceCollections` (llega de la nube) y `applySnapshot` (restaurar
+  respaldo/pull de nube), así que una colección vieja de un dispositivo con
+  la versión anterior de la app también se migra sola al sincronizar.
+- Modal de creación: el `<select>` de una edición se reemplazó por un
+  checklist con buscador (`#col-edition-search` + `#col-edition-list`,
+  agrupado por bloque igual que antes) — con 130+ ediciones un select no
+  alcanza. La selección se guarda en una variable (`colModalSelected`), no
+  en el DOM, para no perderla al filtrar (los checkboxes marcados que el
+  filtro esconde igual cuentan).
+- `collectionCards`/`collectionStats` ahora recorren `col.editions`
+  (antes una sola). `compareEditionCards` gana un criterio de orden previo:
+  por `editionOrd` (orden de publicación) — no cambia nada cuando todas las
+  cartas son de la misma edición, así que las colecciones existentes de una
+  sola edición se ven exactamente igual que antes. La caché
+  `editionCardsCache` pasó de indexarse por edición a por `id` de colección
+  (dos colecciones pueden compartir o combinar ediciones distinto).
+- La grilla (`renderCollectionGrid`) agrega una sub-sección con título por
+  edición cuando hay más de una (`Mundos Perdidos - Aliento de Fuego (20)`,
+  etc.) — con cientos de cartas de varias ediciones mezcladas en una sola
+  grilla sería imposible ubicarse. El auto-nombre al crear sin escribir uno
+  usa hasta 2 nombres de edición unidos con "+", o "primeras 2 y N más".
+- El alta automática de colección al registrar un intercambio (`Cambios`)
+  ahora busca una colección que **incluya** la edición de la carta recibida
+  (`c.editions.includes(...)`) en vez de exigir coincidencia exacta de una
+  sola edición — así, si ya agrupaste varias "Mundos Perdidos" en una
+  colección, un intercambio de cualquiera de ellas cae ahí en vez de crear
+  una colección nueva suelta.
 
 ### 2026-08-02 (6ª iteración) — Corrección de numeración de leyendas_primera_era_2023
 - El dueño del inventario reportó que en su colección "Leyendas 2023" la

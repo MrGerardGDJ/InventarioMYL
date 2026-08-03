@@ -306,9 +306,13 @@ create policy "acceso_log" on inventario_myl_log
     <div class="modal-box">
       <button class="modal-close" data-close-col>×</button>
       <h2>Nueva colección</h2>
-      <p class="muted">Elige la edición que quieres coleccionar. Verás todas sus cartas ordenadas por número; las que aún no tienes aparecen en blanco y negro, como bloqueadas.</p>
-      <label class="field"><span>Edición *</span><select id="col-edition"><option value="">— Elige una edición —</option></select></label>
-      <label class="field"><span>Nombre (opcional)</span><input id="col-name" type="text" placeholder="Ej: Completar Hijos de Daana" /></label>
+      <p class="muted">Elige una o más ediciones para esta colección — por ejemplo, agrupa todas las "Mundos Perdidos" de un año en una sola, y la vas completando a medida que salen. Verás todas sus cartas ordenadas por edición y número; las que aún no tienes aparecen en blanco y negro, como bloqueadas.</p>
+      <label class="field"><span>Buscar edición</span><input id="col-edition-search" type="text" placeholder="Escribe para filtrar…" autocomplete="off" /></label>
+      <div class="field">
+        <span>Ediciones * (<span id="col-edition-count">0</span> elegidas)</span>
+        <div id="col-edition-list" class="col-edition-list"></div>
+      </div>
+      <label class="field"><span>Nombre (opcional)</span><input id="col-name" type="text" placeholder="Ej: Mundos Perdidos" /></label>
       <div class="sync-row">
         <button class="btn primary" id="col-create">Crear colección</button>
         <button class="btn" data-close-col>Cancelar</button>
