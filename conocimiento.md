@@ -28,7 +28,7 @@ abriendo `index.html` (o sirviéndolo con cualquier servidor estático / GitHub 
 | `data/custom-cards.json` | Cartas empaquetadas que TOR/api no tiene (p. ej. promos). |
 | `js/wiki-import.js` | Trae el listado de una edición directo desde myl.fandom.com (API de MediaWiki, con CORS) para el botón "Buscar y cargar cartas" del gestor de Ediciones. Ver más abajo. |
 | `.claude/skills/importar-edicion-myl-wiki/` | Skill de Claude Code: extrae una edición completa desde el wiki por línea de comandos (Python) cuando el botón del navegador no alcanza (ver más abajo). |
-| `scraper/` | Scraper Node (`scrape.js` + `editions.js`) que regenera `data/*.json`. Corre también por GitHub Actions (`.github/workflows/scrape-data.yml`). |
+| `scraper/` | Scraper Node (`scrape.js` + `editions.js`) que regenera `data/*.json`. Corre también por GitHub Actions (`.github/workflows/scrape-data.yml`). `corrections.js` guarda correcciones manuales conocidas de numeración/id que TOR trae mal (se aplican por `id`, nunca lo cambian). |
 | `docs/FUENTES-DATOS.md` | Investigación de fuentes de datos (api.myl.cl, mazos.cl, etc.). |
 
 ## Modelo de datos
@@ -335,6 +335,33 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 `data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-08-02 (6ª iteración) — Corrección de numeración de leyendas_primera_era_2023
+- El dueño del inventario reportó que en su colección "Leyendas 2023" la
+  primera carta se veía bien pero la segunda mostraba el número 3
+  directamente. Se verificó contra el wiki
+  (`Lista de cartas de Leyendas - Primera Era 3.0`, el mismo set que TOR
+  llama "2023"): TOR numera con un desfase de +1 respecto al código impreso
+  real en la carta (TOR #2 = código real "001", TOR #3 = código real "002",
+  etc.) — la carta #1 de TOR ("Monedas De Oro") es en realidad el código
+  "000" del set, una carta firma, mismo patrón que las cartas "00" de
+  Mundos Perdidos.
+- Además, TOR numera correlativamente 25 cartas más (302-326) que en
+  realidad son 3 categorías de coleccionista/promo separadas, cada una con
+  su propio código impreso (10 "LPE23-301..310", 12 "Coleccionista 01..12",
+  3 "Secreta Exclusiva 1..3") — no una continuación del set principal.
+- Corrección aplicada en `scraper/corrections.js`
+  (`LEYENDAS_2023_CORRECTIONS`, 326 entradas por `id` de carta) y
+  enganchada en `scrape.js` justo después de armar el catálogo: pisa
+  `edid`/`specialId` de salida pero **nunca el `id`** (que sigue siendo el
+  original de TOR), así que sobrevive a que el scraper se vuelva a correr
+  (todos los lunes) y no rompe cantidades/mazos ya guardados contra esos
+  ids. Se aplicó también a mano al `data/cards.json` ya commiteado para que
+  el fix esté activo de inmediato sin esperar al próximo lunes.
+- Resultado: 300 cartas numeradas 1-300 sin huecos ni duplicados, más 26
+  especiales (antes eran 301 "numeradas" con un hueco encubierto por el
+  desfase, más 25 numeradas de más que en realidad eran 3 categorías
+  distintas de coleccionista).
 
 ### 2026-08-02 (5ª iteración) — Editar cualquier carta (no solo las manuales) para marcarla Promo
 - El dueño del inventario pidió poder convertir a "Promo" cualquier carta,
