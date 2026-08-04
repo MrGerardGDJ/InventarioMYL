@@ -7758,7 +7758,7 @@
    "edition": "mundos_perdidos_leyendas_de_avalon",
    "editionName": "Mundos Perdidos - Leyendas de Avalon",
    "format": "PE",
-   "edid": "019",
+   "edid": "",
    "type": "Aliado",
    "race": "Caballero",
    "rarity": "Promocional",
@@ -7767,7 +7767,8 @@
    "ability": "Imbloqueable. Cuando entra en juego, mira la Mano de tu oponente. Luego, descarta una carta que no sea un Oro de Coste 3 o menos de la Mano de tu oponente.",
    "flavour": "Su historia se entrelaza con pruebas de honor y justicia, enfrentando desafíos que prueban su carácter y determinación.<br>Su legado, marcado por la búsqueda de redención y verdad, inspira a futuras generaciones de caballeros.",
    "image": "./data/custom-images/mylserena/mundos_perdidos_leyendas_de_avalon_19_brunor.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "MPA-19"
   },
   {
    "id": "mundos_perdidos_leyendas_de_avalon__custom__mpa_00_avalon",
@@ -8099,7 +8100,7 @@
    "edition": "mundos_perdidos_viaje_al_oeste",
    "editionName": "Mundos Perdidos - Viaje al Oeste",
    "format": "PE",
-   "edid": "019",
+   "edid": "",
    "type": "Tótem",
    "race": "—",
    "rarity": "Promocional",
@@ -8108,7 +8109,8 @@
    "ability": "Única. En tu Fase Final, puedes agrupar un Aliado o un Oro que controles.",
    "flavour": "Uno de los lugares más sagrados y prohibidos de oriente, hogar de los grandes emperadores Manchures.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/78/MPO-19-18.png/revision/latest?cb=20250904013433&path-prefix=es",
-   "custom": true
+   "custom": true,
+   "specialId": "MPO-19"
   },
   {
    "id": "mundos_perdidos_viaje_al_oeste__custom__mpo_00_xi_you_ji",
@@ -8440,7 +8442,7 @@
    "edition": "mundos_perdidos_senores_del_trueno",
    "editionName": "Mundos Perdidos - Señores del Trueno",
    "format": "PE",
-   "edid": "019",
+   "edid": "",
    "type": "Talismán",
    "race": "—",
    "rarity": "Promocional",
@@ -8449,7 +8451,8 @@
    "ability": "Cuando juegues esta carta, destiérrala. Anula una carta que haya sido jugada sin pagar su Coste.",
    "flavour": "Pikne, el dios de la fuerza y el rayo, protege los ríos de los invasores con toda la fuerza del relámpago.",
    "image": "",
-   "custom": true
+   "custom": true,
+   "specialId": "MPT-19"
   },
   {
    "id": "mundos_perdidos_senores_del_trueno__custom__mpt_00_truenos",
@@ -8798,7 +8801,7 @@
    "edition": "mundos_perdidos_nube_roja",
    "editionName": "Mundos Perdidos - Nube Roja",
    "format": "PE",
-   "edid": "020",
+   "edid": "",
    "type": "Aliado",
    "race": "Bestia",
    "rarity": "Promocional",
@@ -8807,7 +8810,8 @@
    "ability": "Puede atacar cuando entra en juego.<br>Cuando sea declarado atacante, puedes pagar 1 Oro para que un Aliado que controle tu oponente pierda 1 a la Fuerza hasta la Fase Final.",
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/41/MPRE-20-18.png/revision/latest?cb=20260213190620&path-prefix=es",
-   "custom": true
+   "custom": true,
+   "specialId": "MPRE-20"
   },
   {
    "id": "mundos_perdidos_tombstone__custom__1_doc_holliday",
@@ -9138,7 +9142,7 @@
    "edition": "mundos_perdidos_tombstone",
    "editionName": "Mundos Perdidos - Tombstone",
    "format": "PE",
-   "edid": "020",
+   "edid": "",
    "type": "Aliado",
    "race": "Cazador",
    "rarity": "Promocional",
@@ -9147,7 +9151,8 @@
    "ability": "Si controlas 1 o más Armas, puede atacar cuando entra en juego. En tu Fase Final, puedes subir este Aliado o un Arma que controles a la Mano de su dueño para desterrar la carta superior del Mazo Castillo oponente.",
    "flavour": "",
    "image": "",
-   "custom": true
+   "custom": true,
+   "specialId": "MPTO-20"
   },
   {
    "id": "mundos_perdidos_aliento_de_fuego__custom__1_dietrich_von_bern",
@@ -9478,7 +9483,7 @@
    "edition": "mundos_perdidos_aliento_de_fuego",
    "editionName": "Mundos Perdidos - Aliento de Fuego",
    "format": "PE",
-   "edid": "020",
+   "edid": "",
    "type": "Aliado",
    "race": "Faerie",
    "rarity": "Promocional",
@@ -9487,7 +9492,8 @@
    "ability": "Una vez por turno, puedes poner una carta de tu Mano en la parte inferior de tu Mazo Castillo. Luego, puedes robar 1 carta.",
    "flavour": "Eggerich, señor de astucias sombrías, torció pactos y encendió traiciones. Su nombre quedó unido al engaño, y aún entre guerreros duros fue recordado con desprecio y temor.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/08/MPDI-20-18.png/revision/latest?cb=20260731033638&path-prefix=es",
-   "custom": true
+   "custom": true,
+   "specialId": "MPDI-20"
   },
   {
    "id": "mundos_perdidos_locura_de_dragon__custom__1_fafner_el_avaro",
@@ -9818,7 +9824,7 @@
    "edition": "mundos_perdidos_locura_de_dragon",
    "editionName": "Mundos Perdidos - Locura de Dragón",
    "format": "PE",
-   "edid": "020",
+   "edid": "",
    "type": "Aliado",
    "race": "Dios",
    "rarity": "Promocional",
@@ -9827,7 +9833,8 @@
    "ability": "Si controlas menos Aliados que tu oponente, jugar este Aliado te cuesta 1 Oro menos. Cuando entre o salga del juego, puedes buscar un Aliado en un Mazo Castillo y ponerlo en el Cementerio de su dueño.",
    "flavour": "Doncella de guerra y fuego sagrado, fue juramento, orgullo y tempestad. En torno a su nombre ardieron reyes, héroes y amores condenados por destino cruel.",
    "image": "",
-   "custom": true
+   "custom": true,
+   "specialId": "MPSG-20"
   },
   {
    "id": "mundos_perdidos_horda_esteparia__custom__1_atila",
@@ -10158,7 +10165,7 @@
    "edition": "mundos_perdidos_horda_esteparia",
    "editionName": "Mundos Perdidos - Horda Esteparia",
    "format": "PE",
-   "edid": "020",
+   "edid": "",
    "type": "Aliado",
    "race": "—",
    "rarity": "Promocional",
@@ -10167,7 +10174,8 @@
    "ability": "",
    "flavour": "",
    "image": "./data/custom-images/mylserena/mundos_perdidos_horda_esteparia_20_xiongnu.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "MPAT-20"
   },
   {
    "id": "lootbox_pe_2024__custom__promo_conmemorativa_01_el_reto",
