@@ -365,6 +365,48 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-04 (2ª iteración) — 252 imágenes de Leyendas 4.0 desde el sitemap de mylserena.cl (páginas de producto individuales)
+- El dueño del inventario notó que mylserena.cl sí tenía la foto de cartas
+  que en el inventario seguían sin imagen (ej. Rheda,
+  https://mylserena.cl/rheda-lpe4-ur) — la categoría `leyendas-pe-40`
+  scrapeada en la iteración anterior solo listaba 64 productos "en
+  vitrina", pero la tienda tiene una página individual por carta aunque no
+  aparezca en esa grilla. Se encontraron **todas** navegando
+  `https://mylserena.cl/sitemap.xml` (permitido por `robots.txt`): 401 URLs
+  cuyo slug contiene `lpe4`.
+- **Señal de confianza mucho más fuerte que el nombre**: cada página de
+  producto trae en su `description` (JSON-LD) el número exacto de la carta
+  dentro de la edición — literalmente el mismo dato que el `edid`/
+  `specialId` de nuestro catálogo, sin ambigüedad posible aunque el nombre
+  se repita (LPE4 tiene ~24 nombres duplicados entre variantes de
+  rareza/reimpresión, ej. "Antú" existe como Legendaria y como Mega Real).
+  Tres formatos de `description` encontrados y sus tres reglas de
+  emparejamiento exactas (nunca por nombre):
+  - `"LPE4 33-320 - Dios - Imagen referencial"` → carta numerada normal,
+    empareja contra `edid = "033"`.
+  - `"SCLPE4 - 67/80 - Campeón - Imagen referencial"` → subset "Set
+    Clásico" (reimpresiones con numeración propia 1-80), empareja contra
+    `specialId = "SCLPE4-67"` (así ya estaban cargadas estas cartas en el
+    catálogo).
+  - `"LPE4 - 324 / 320 P - Oro - Imagen referencial"` → cartas promo que
+    numéricamente exceden las 320 base (321-326), empareja contra
+    `edid = "324"`.
+  - Los 401 productos parseados dieron **0 casos sin match** contra el
+    catálogo y **0 duplicados** apuntando a la misma carta — a diferencia
+    de las iteraciones anteriores (por nombre) no hubo un solo caso
+    ambiguo que descartar.
+- De los 401, 252 correspondían a cartas que **todavía no tenían imagen**
+  en `data/custom-cards.json` (las 149 restantes ya la tenían, de
+  iteraciones previas). Las fotos originales de esta tienda son JPEG (no
+  WebP como las descargadas antes vía su endpoint `/resize/`), así que se
+  guardaron con extensión `.jpg` en `data/custom-images/mylserena/` —
+  mismo criterio de copia propia que el resto del proyecto, ~215 KB
+  promedio por archivo.
+- **Cartas sin imagen en Leyendas - Primera Era 4.0: bajó de 265 a 13**
+  (edid 330-338 y 340-342, más "Calabaza del Inmortal" #352 — esas 13 no
+  tienen página de producto en la tienda, ni en la categoría ni en el
+  sitemap, así que no hay de dónde sacarlas por ahora).
+
 ### 2026-08-04 — CRPE2, Vigilantes de la Noche, Juego Organizado, orden Lootbox por rareza, búsqueda por identificador y más imágenes mylserena
 - **Dos ediciones nuevas que faltaban en la API de TOR** (confirmado: ausentes
   de `data/cards.json` tras un scrape completo), extraídas del wiki con
