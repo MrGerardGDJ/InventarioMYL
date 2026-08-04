@@ -365,6 +365,48 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-04 (3ª iteración) — Corrige numeración de las 8 ediciones "Mundos Perdidos" cargadas del wiki (carta Promocional final mal numerada)
+- El dueño del inventario notó, mientras editaba a mano su colección
+  "Mundos Perdidos", que la carta "19 de 18" (o "20 de 18") de varias
+  ediciones no calzaba como carta numerada normal y las pasó a Promo desde
+  el detalle de la carta — pero al hacerlo en su navegador (edición local,
+  no en el catálogo compartido) terminó con números desplazados en algunos
+  casos. Se investigó el wikitext original de las 8 ediciones que cargamos
+  nosotros mismos del wiki (`069a4af`, sesión anterior) y se confirmó que
+  **su intuición era correcta**: cada edición "Mundos Perdidos" trae
+  exactamente **una carta con `Frecuencia: Promocional`** (distinta de las
+  demás, que son "Real") que el extractor había dejado como carta numerada
+  normal en vez de tratarla como especial — igual que ya se hacía con la
+  carta "00" (tótem/firma) en las ediciones que la tienen.
+  - **Leyendas de Avalon, Señores del Trueno, Viaje al Oeste** (las 3 que
+    ya tenían carta "00"): la carta "19/18" (Brunor, Poder del Relámpago,
+    Ciudad Prohibida) pasó de numerada `edid: "019"` a especial
+    (`MPA-19`, `MPT-19`, `MPO-19`). Quedan con 18 numeradas (1-18) + 2
+    especiales (00 y 19), igual a como las ve el propio wiki.
+  - **Aliento de Fuego, Horda Esteparia, Locura de Dragón, Nube Roja,
+    Tombstone** (las 5 que no tienen carta "00", numeración corrida
+    1-20): la carta "20/18" (Eggerich, Xiongnu, Brunhild, Snallygaster,
+    Johnny Ringo) pasó de numerada a especial (`MPDI-20`, `MPAT-20`,
+    `MPSG-20`, `MPRE-20`, `MPTO-20`). Quedan con 19 numeradas (1-19) + 1
+    especial (20). El dueño solo pidió arreglar el patrón "00 o 19 de 18"
+    que había notado, pero se corrigió también en estas 5 por ser
+    exactamente el mismo problema (evidenciado por el campo `Frecuencia`
+    del wiki, no una suposición) y dejar toda la familia "Mundos Perdidos"
+    consistente.
+  - Corrección aplicada solo sobre `edid`/`specialId` (el `id` estable de
+    cada carta nunca se toca, mismo criterio que `corrections.js`), así
+    que el inventario/mazos/colecciones de nadie se desconecta.
+  - **No se tocaron** las otras 3 ediciones "Mundos Perdidos" (Ciudad de
+    los Césares, Horrores de Salem, La Saga de Volsung): esas vienen
+    directo de la API de TOR (`data/cards.json`), no las cargamos
+    nosotros del wiki, así que no hay corrección local que aplicarles —
+    la numeración que trae TOR se respeta tal cual.
+  - Nota para el dueño del inventario: las ediciones locales que hizo a
+    mano en su navegador (convertir a mano las cartas "00"/"19" a Promo)
+    ahora quedaron redundantes con esta corrección del catálogo — puede
+    usar "🗑 Eliminar / ↩ Revertir a la original" sobre esas cartas para
+    que vuelvan a tomar los datos ya corregidos del catálogo compartido.
+
 ### 2026-08-04 (2ª iteración) — 252 imágenes de Leyendas 4.0 desde el sitemap de mylserena.cl (páginas de producto individuales)
 - El dueño del inventario notó que mylserena.cl sí tenía la foto de cartas
   que en el inventario seguían sin imagen (ej. Rheda,
