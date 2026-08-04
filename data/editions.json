@@ -177,7 +177,19 @@
     "slug": "vigilantes_de_la_noche",
     "format": "PE",
     "formatName": "Primera Era",
-    "name": "Vigilantes De La Noche"
+    "name": "Vigilantes de la Noche"
+  },
+  {
+    "slug": "crpe2",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Colecciones Raciales Primera Era Segunda Parte"
+  },
+  {
+    "slug": "juego_organizado_pe",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Juego Organizado - Primera Era"
   },
   {
     "slug": "lootbox_pe_2024",

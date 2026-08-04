@@ -65,7 +65,7 @@ async function loadData() {
   // Asegura nombre legible de edición y precalcula texto de búsqueda (una vez)
   for (const c of state.baseCards) {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
-    c.searchText = normText(c.name + " " + c.ability);
+    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c));
   }
   // Migración auto-reconciliante (Capa B): remapea inventario/mazos de
   // legacyId → id estable usando el catálogo. Idempotente; se cura sola cuando
@@ -127,7 +127,7 @@ function rebuildCards() {
   const overrideIds = new Set(userCustom.map((c) => c.id));
   for (const c of userCustom) {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
-    c.searchText = normText(c.name + " " + c.ability);
+    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c));
   }
   state.cards = (state.baseCards || []).filter((c) => !overrideIds.has(c.id)).concat(userCustom);
   // Las ediciones personalizadas aportan su nombre legible al mapa global
@@ -138,6 +138,19 @@ function rebuildCards() {
 // Minúsculas sin diacríticos (á→a, ñ→n) para comparar/buscar sin importar tildes
 function normText(s) {
   return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+// Identificador de carta para el buscador: el código especial tal cual se ve
+// en su badge (ej. "LBPE25 - 01/21") Y esa misma cadena sin espacios/guiones/
+// barras (para que "LBPE25-01/21" o "lbpe25 01 21" tecleado también calce),
+// más el número de carta simple y con "#" para las numeradas.
+function cardIdentifierText(c) {
+  const parts = [];
+  if (c.specialId) {
+    parts.push(c.specialId, c.specialId.replace(/[^a-zA-Z0-9]+/g, ""));
+  }
+  const n = parseInt(c.edid, 10);
+  if (Number.isFinite(n)) parts.push(String(n), "#" + n);
+  return parts.join(" ");
 }
 
 /* --- Correcci\u00f3n perezosa de nombres (la API del listado los entrega sin
@@ -327,17 +340,49 @@ function editionOrd(c) {
   const i = state.editionOrder?.[c.edition];
   return i == null ? 9999 : i;
 }
+// Ediciones Lootbox: dentro de ellas el identificador (LBPE24-01, PREMIUM PE
+// 03, etc.) no refleja la rareza real de la carta. Ranking manual de más
+// rara a más común, según la wiki de MyL (página "Frecuencia de Cartas":
+// Secreta es "la carta más rara del juego") y los blogs de lanzamiento de
+// cada caja (contenido garantizado: 1 Conmemorativa, 1 Secreta Promo, 3
+// Premium, resto Arte Alternativo/Nuevas por caja, más una Ultra Secreta/
+// Edición Limitada festiva de bonus con ~10% de probabilidad).
+const LOOTBOX_EDITIONS = new Set(["lootbox_pe_2024", "lootbox_pe_2025"]);
+const LOOTBOX_RARITY_KEYWORDS = [
+  "EDICION LIMITADA", // bonus ultra secreta festiva, la más escasa
+  "SECRETA",          // dorada / exclusiva / promo / plateada
+  "CONMEMORATIVA",
+  "LEGENDARIA",
+  "PREMIUM",
+  "PROMOCIONAL",
+  "PROMO CXC",
+  "LBPE",             // cartas numeradas base (arte alternativo / nuevas)
+];
+function lootboxRarityRank(specialId) {
+  const s = normText(specialId).toUpperCase();
+  for (let i = 0; i < LOOTBOX_RARITY_KEYWORDS.length; i++) {
+    if (s.includes(LOOTBOX_RARITY_KEYWORDS[i])) return i;
+  }
+  return LOOTBOX_RARITY_KEYWORDS.length;
+}
 // Orden dentro de una edición (o de un grupo de ediciones, ver colecciones
 // con varias ediciones): primero por orden de publicación de la edición
 // (no-op cuando todas las cartas son de la misma edición), luego especiales/
-// promocionales primero dentro de esa edición (por identificador, orden
-// numérico natural: P-1 < P-2 < P-10) y luego las numeradas por su número
+// promocionales primero dentro de esa edición. Dentro de los especiales, las
+// ediciones Lootbox usan el ranking de rareza; el resto, orden alfanumérico
+// natural del identificador (P-1 < P-2 < P-10). Luego las numeradas por número.
 function compareEditionCards(a, b) {
   const eo = editionOrd(a) - editionOrd(b);
   if (eo !== 0) return eo;
   const sa = a.specialId ? 1 : 0, sb = b.specialId ? 1 : 0;
   if (sa !== sb) return sb - sa;
-  if (sa) return a.specialId.localeCompare(b.specialId, "es", { numeric: true, sensitivity: "base" });
+  if (sa) {
+    if (LOOTBOX_EDITIONS.has(a.edition) && LOOTBOX_EDITIONS.has(b.edition)) {
+      const ra = lootboxRarityRank(a.specialId), rb = lootboxRarityRank(b.specialId);
+      if (ra !== rb) return ra - rb;
+    }
+    return a.specialId.localeCompare(b.specialId, "es", { numeric: true, sensitivity: "base" });
+  }
   return cardNum(a) - cardNum(b) || a.name.localeCompare(b.name, "es");
 }
 
@@ -1483,17 +1528,21 @@ function renderCollectionGrid(col) {
     for (const c of list) g.appendChild(cardEl(c));
     wrap.appendChild(g);
   };
-  if (specials.length) addSection(`Cartas promocionales / especiales (${specials.length})`, specials);
   if (col.editions.length > 1) {
     // Colección con varias ediciones agrupadas: una sub-grilla por edición,
-    // en su orden de publicación (cards ya viene ordenado así) — si no, con
-    // varios cientos de cartas de distintas ediciones mezcladas en una sola
-    // grilla sería imposible ubicarse.
+    // en su orden de publicación (cards ya viene ordenado así) — tanto para
+    // especiales como para numeradas, si no, con varias ediciones cuyas
+    // cartas son 100% especiales (p. ej. Lootbox 2024 + 2025) quedarían todas
+    // mezcladas en una sola sección y no se distinguiría "el tipo de Lootbox".
     for (const slug of col.editions) {
-      const edCards = normals.filter((c) => c.edition === slug);
-      addSection(`${state.editionName[slug] || slug} (${edCards.length})`, edCards);
+      const edSpecials = specials.filter((c) => c.edition === slug);
+      const edNormals = normals.filter((c) => c.edition === slug);
+      const edName = state.editionName[slug] || slug;
+      addSection(`${edName} — promocionales / especiales (${edSpecials.length})`, edSpecials);
+      addSection(`${edName} (${edNormals.length})`, edNormals);
     }
   } else if (specials.length) {
+    addSection(`Cartas promocionales / especiales (${specials.length})`, specials);
     addSection(`Listado de cartas de la edición (${normals.length})`, normals);
   } else {
     addSection(null, normals); // sin especiales y una sola edición: una sola grilla, como siempre

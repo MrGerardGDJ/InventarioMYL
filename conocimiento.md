@@ -365,6 +365,79 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-04 — CRPE2, Vigilantes de la Noche, Juego Organizado, orden Lootbox por rareza, búsqueda por identificador y más imágenes mylserena
+- **Dos ediciones nuevas que faltaban en la API de TOR** (confirmado: ausentes
+  de `data/cards.json` tras un scrape completo), extraídas del wiki con
+  parsers dedicados (tablas no estándar, no las soporta el parser genérico
+  de `extract_myl_edition.py`):
+  - **CRPE2 — Colecciones Raciales Primera Era Segunda Parte** (`crpe2`, 84
+    cartas, numeradas 1-84, las 84 con imagen). Página wiki: "Lista de
+    cartas de Colecciones Raciales Primera Era 2" (tabla `Código, Kit,
+    Nombre, Tipo, Nota`; código con denominador separado por guion,
+    `CRPE2-N-84`, no lo cubre el regex compartido).
+  - **Vigilantes de la Noche** (`vigilantes_de_la_noche`, reutiliza una
+    entrada "fantasma" que ya existía en `editions.json` con 0 cartas — se
+    corrigió además su `name` a capitalización correcta). 23 cartas, las 23
+    con imagen: 22 numeradas + 1 especial `HPE-00`. Página wiki: "Lista de
+    cartas de Vigilantes de la Noche" (tabla de 7 columnas donde el nombre
+    está en `cells[2]`, no en `cells[1]` como de costumbre; código
+    `HPE - N/21`).
+- **Nueva edición coleccionable "Juego Organizado - Primera Era"**
+  (`juego_organizado_pe`, 121 cartas, 114 con imagen): el proyecto no tenía
+  ninguna información previa sobre estas cartas (ni en `cards.json` ni en
+  `custom-cards.json`), así que se buscó primero en las fuentes propias
+  (nada) y luego en el wiki, encontrando la sección `==Juego Organizado==`
+  de la página "Cartas Promo Primera Era Klu" (deliberadamente **no** se
+  incluyó la sección separada "Cartas Promo 20 Años" de la misma página,
+  que es otra categoría distinta). Todas las cartas son especiales
+  (`specialId` "JO-01".."JO-121", en el mismo orden que la tabla de la
+  wiki — no hay una numeración propia declarada en la fuente).
+- **Orden de la colección Lootbox por rareza real**: se investigó en la
+  wiki ("Frecuencia de Cartas": Secreta es textualmente "la carta más rara
+  del juego") y en blogs de lanzamiento de blog.myl.cl el contenido
+  garantizado de cada caja (1 Conmemorativa, 1 Secreta Promo, 3 Premium,
+  resto Arte Alternativo/Nuevas, más una Ultra Secreta/Edición Limitada
+  festiva de bonus con ~10% de probabilidad — la más escasa de todas). Con
+  eso se armó `lootboxRarityRank()` en `js/app.js`: ranking manual por
+  palabra clave del identificador (Edición Limitada > Secreta > Conmemorativa
+  > Legendaria > Premium > Promocional > Promo CXC > numeradas LBPE),
+  aplicado solo dentro de `lootbox_pe_2024`/`lootbox_pe_2025`
+  (`LOOTBOX_EDITIONS`) antes de caer al orden alfanumérico normal en
+  `compareEditionCards`.
+- **`renderCollectionGrid` ahora separa también las especiales por
+  edición** cuando la colección agrupa varias ediciones (antes solo
+  separaba las numeradas) — necesario para que una colección Lootbox
+  2024+2025 combinada muestre "separación entre tipos de Lootbox" en vez de
+  mezclar las especiales de ambas cajas en una sola sección.
+- **Buscador global por identificador de carta**: nueva `cardIdentifierText()`
+  en `js/app.js`, sumada al `searchText` de cada carta junto al nombre/
+  habilidad. Cubre el `specialId` tal cual se ve (ej. "LBPE25 - 01/21"), esa
+  misma cadena sin espacios/guiones/barras (para que "LBPE25-01/21" o
+  "lbpe25 01 21" tecleado también calce) y el número simple/con "#" para
+  las cartas numeradas.
+- **44 imágenes más reemplazadas por su versión de mejor calidad**: de las
+  117 cartas con foto de mesaredondatcg.cl (fotos de carta física, algunas
+  con dobleces/reflejos visibles — ver "Silencio" de LPE4 como ejemplo
+  claro), se cruzaron sus nombres contra el catálogo ya scrapeado de
+  mylserena.cl (`products_parsed.json`, 416 productos de las categorías
+  `leyendas_pe_40`/`mundos_perdidos_1/2/3`/`lootbox_pe_2024/2025`) buscando
+  la MISMA carta con una foto más nítida. Emparejamiento con el mismo
+  criterio de confianza ya usado para mylserena: match exacto de nombre
+  dentro de la subcategoría de la tienda que declara la edición exacta
+  (`leyendas_pe_40`, o el sufijo `MP3 - Tombstone`/`MP3 - Nube Roja` dentro
+  de `mundos_perdidos_3`), y para las subcategorías sin sufijo de edición
+  (`mundos_perdidos_1`/`2`, que mezclan 3 ediciones cada una sin
+  distinguirlas en la propia tienda) solo se aceptó cuando el nombre es
+  único en todo el catálogo dentro de la familia "Mundos Perdidos" — igual
+  que el método "único" ya usado en la iteración anterior. 44 de las 117
+  tuvieron coincidencia verificable (`leyendas_primera_era_4_0`,
+  `mundos_perdidos_tombstone`, `mundos_perdidos_nube_roja`,
+  `mundos_perdidos_senores_del_trueno`, `mundos_perdidos_viaje_al_oeste`,
+  `mundos_perdidos_leyendas_de_avalon`); se bajaron a resolución 800×1067 y
+  reemplazaron en `data/custom-images/mylserena/` (mismo criterio de copia
+  propia). Las 73 restantes se dejaron con su foto de mesaredondatcg.cl —
+  sin coincidencia verificable en mylserena, no hay con qué reemplazarlas.
+
 ### 2026-08-03 (3ª iteración) — 112 imágenes más desde mylserena.cl
 - El dueño del inventario encontró una segunda tienda
   (https://mylserena.cl/primera-era/singles-pe) con más cartas
