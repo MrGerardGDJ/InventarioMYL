@@ -1416,9 +1416,13 @@ function renderCollectionsView() {
     const row = document.createElement("div");
     row.className = "col-item" + (col.id === activeId ? " active" : "");
     row.dataset.colId = col.id;
+    row.draggable = true;
     row.innerHTML = `
       <div class="col-top">
+        <span class="col-drag-handle" title="Arrastra para reordenar">⠿</span>
         <span class="d-name">${escapeHtml(col.name)}</span>
+        <button class="qty-btn" data-move-up title="Subir">▲</button>
+        <button class="qty-btn" data-move-down title="Bajar">▼</button>
         <button class="qty-btn" data-del title="Eliminar colección">🗑</button>
       </div>
       <div class="col-ed muted" title="${escapeAttr(collectionEditionNames(col).join(", "))}">${escapeHtml(collectionEditionLabel(col))}</div>
@@ -1434,9 +1438,55 @@ function renderCollectionsView() {
       if (store.getSetting("activeCollectionId") === col.id) store.setSetting("activeCollectionId", null);
       renderCollectionsView();
     };
+    // Botones ▲▼ como alternativa accesible/táctil al arrastre (el drag &
+    // drop nativo de HTML5 no funciona con touch en muchos navegadores).
+    row.querySelector("[data-move-up]").onclick = () => moveCollection(col.id, -1);
+    row.querySelector("[data-move-down]").onclick = () => moveCollection(col.id, +1);
+    // Arrastrar y soltar para reordenar libremente el panel lateral.
+    row.addEventListener("dragstart", (e) => {
+      state.draggedCollectionId = col.id;
+      row.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+    });
+    row.addEventListener("dragend", () => row.classList.remove("dragging"));
+    row.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      if (state.draggedCollectionId && state.draggedCollectionId !== col.id) row.classList.add("drag-over");
+    });
+    row.addEventListener("dragleave", () => row.classList.remove("drag-over"));
+    row.addEventListener("drop", (e) => {
+      e.preventDefault();
+      row.classList.remove("drag-over");
+      const draggedId = state.draggedCollectionId;
+      state.draggedCollectionId = null;
+      if (!draggedId || draggedId === col.id) return;
+      reorderCollectionsByDrop(draggedId, col.id);
+    });
     list.appendChild(row);
   }
   renderCollectionDetail();
+}
+// Mueve una colección un puesto arriba/abajo (delta -1/+1) en el panel lateral.
+function moveCollection(id, delta) {
+  const ids = store.getCollections().map((c) => c.id);
+  const i = ids.indexOf(id);
+  const j = i + delta;
+  if (i < 0 || j < 0 || j >= ids.length) return;
+  [ids[i], ids[j]] = [ids[j], ids[i]];
+  store.reorderCollections(ids);
+  renderCollectionsView();
+}
+// Reordena tras soltar `draggedId` sobre la fila de `targetId`.
+function reorderCollectionsByDrop(draggedId, targetId) {
+  const ids = store.getCollections().map((c) => c.id);
+  const from = ids.indexOf(draggedId);
+  const to = ids.indexOf(targetId);
+  if (from === -1 || to === -1) return;
+  ids.splice(from, 1);
+  ids.splice(to, 0, draggedId);
+  store.reorderCollections(ids);
+  renderCollectionsView();
 }
 
 // Detalle de la colección activa: nombre editable, barra de progreso grande,
@@ -1454,6 +1504,7 @@ function renderCollectionDetail() {
       <h2><input id="col-name-edit" value="${escapeAttr(col.name)}" /></h2>
       <span class="tag" title="${escapeAttr(collectionEditionNames(col).join(", "))}">${escapeHtml(collectionEditionLabel(col))}</span>
       <div class="spacer"></div>
+      <button class="btn small" id="col-edit-editions" title="Agregar o quitar ediciones de esta colección">✏️ Editar ediciones</button>
       <button class="btn small" id="col-export-pdf" title="PDF con la grilla de cartas, tal como se ve acá — para llevar a una jornada de intercambio">📄 Exportar PDF</button>
       <label class="field inline"><span>Mostrar</span>
         <select id="col-filter">
@@ -1478,6 +1529,7 @@ function renderCollectionDetail() {
   filterSel.value = state.colFilter || "all";
   filterSel.onchange = (e) => { state.colFilter = e.target.value; renderCollectionGrid(col); };
   $("#col-export-pdf").onclick = () => exportCollectionAsPDF(col);
+  $("#col-edit-editions").onclick = () => openCollectionModal(col);
   renderCollectionGrid(col);
 }
 
@@ -1567,16 +1619,27 @@ function updateCollectionProgress() {
   }
 }
 
-// Modal de creación: checklist de ediciones agrupadas por bloque (con
+// Modal de creación/edición: checklist de ediciones agrupadas por bloque (con
 // buscador para filtrar, hay 130+ ediciones) + nombre opcional. Se puede
 // elegir 1 o varias — pensado para agrupar, por ejemplo, todas las "Mundos
 // Perdidos" de un año en una sola colección que se completa con cada
 // lanzamiento nuevo, en vez de tener una colección suelta por edición.
+// Mismo modal sirve para "Editar ediciones" de una colección ya creada
+// (agregar/quitar sin perder nombre ni posición en la lista): se le pasa la
+// colección y colModalEditingId guarda su id mientras el modal está abierto.
 let colModalSelected = new Set();
-function openCollectionModal() {
-  colModalSelected = new Set();
+let colModalEditingId = null;
+function openCollectionModal(existingCol) {
+  colModalEditingId = existingCol ? existingCol.id : null;
+  colModalSelected = new Set(existingCol ? existingCol.editions : []);
   $("#col-edition-search").value = "";
   $("#col-name").value = "";
+  $("#col-name-field").classList.toggle("hidden", !!existingCol);
+  $("#col-modal-title").textContent = existingCol ? "Editar ediciones" : "Nueva colección";
+  $("#col-modal-hint").textContent = existingCol
+    ? `Marca o desmarca ediciones de «${existingCol.name}». El nombre y la posición de la colección no cambian.`
+    : `Elige una o más ediciones para esta colección — por ejemplo, agrupa todas las "Mundos Perdidos" de un año en una sola, y la vas completando a medida que salen. Verás todas sus cartas ordenadas por edición y número; las que aún no tienes aparecen en blanco y negro, como bloqueadas.`;
+  $("#col-create").textContent = existingCol ? "Guardar cambios" : "Crear colección";
   renderCollectionEditionList("");
   $("#collection-modal").classList.remove("hidden");
   $("#col-edition-search").focus();
@@ -1616,6 +1679,13 @@ function createCollectionFromModal() {
   // Orden de publicación, no el orden en que se clickearon
   const eds = [...colModalSelected].sort((a, b) => (state.editionOrder[a] ?? 9999) - (state.editionOrder[b] ?? 9999));
   if (!eds.length) { showToast("Elige al menos una edición para la colección"); return; }
+  if (colModalEditingId) {
+    store.setCollectionEditions(colModalEditingId, eds);
+    closeCollectionModal();
+    renderCollectionsView();
+    showToast(`Ediciones actualizadas ✓ (${eds.length} edición${eds.length === 1 ? "" : "es"})`);
+    return;
+  }
   // Sin nombre explícito: 1 edición toma su nombre; varias, se listan (o "y N más")
   const autoName = joinEditionNames(eds.map((s) => state.editionName[s] || s));
   const name = $("#col-name").value.trim() || autoName;
@@ -1626,7 +1696,7 @@ function createCollectionFromModal() {
   showToast(`Colección «${name}» creada ✓ (${eds.length} edición${eds.length === 1 ? "" : "es"})`);
 }
 function bindCollectionEvents() {
-  $("#new-collection").addEventListener("click", openCollectionModal);
+  $("#new-collection").addEventListener("click", () => openCollectionModal());
   $("#col-create").addEventListener("click", createCollectionFromModal);
   $("#col-edition-search").addEventListener("input", (e) => renderCollectionEditionList(e.target.value));
   $$("[data-close-col]").forEach((el) => el.addEventListener("click", closeCollectionModal));

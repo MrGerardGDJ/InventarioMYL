@@ -245,7 +245,12 @@ main { padding: 0; }
   background: var(--bg-3); padding: 10px 11px; font-size: 13px;
 }
 .col-item.active { border-color: var(--accent); }
-.col-item .col-top { display: flex; align-items: center; gap: 8px; }
+.col-item.dragging { opacity: 0.4; }
+.col-item.drag-over { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; }
+.col-item .col-top { display: flex; align-items: center; gap: 6px; }
+.col-item .col-drag-handle { cursor: grab; color: var(--muted); font-size: 14px; line-height: 1; }
+.col-item .col-top [data-move-up],
+.col-item .col-top [data-move-down] { width: 20px; height: 20px; font-size: 11px; }
 .col-item .d-name { font-weight: 600; cursor: pointer; flex: 1; }
 .col-item .col-ed {
   font-size: 11px; margin: 2px 0 6px;
