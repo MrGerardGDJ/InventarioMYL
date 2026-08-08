@@ -28,6 +28,7 @@ abriendo `index.html` (o sirviéndolo con cualquier servidor estático / GitHub 
 | `data/custom-cards.json` | Cartas empaquetadas que TOR/api no tiene (p. ej. promos). |
 | `js/wiki-import.js` | Trae el listado de una edición directo desde myl.fandom.com (API de MediaWiki, con CORS) para el botón "Buscar y cargar cartas" del gestor de Ediciones. Ver más abajo. |
 | `.claude/skills/importar-edicion-myl-wiki/` | Skill de Claude Code: extrae una edición completa desde el wiki por línea de comandos (Python) cuando el botón del navegador no alcanza (ver más abajo). |
+| `.claude/skills/registrar-nueva-edicion/` | Skill de Claude Code: orquesta el flujo END-TO-END para agregar una edición nueva al catálogo compartido (API → wiki → imágenes de tiendas por código exacto → registro en `data/editions.json`/`data/custom-cards.json` → validación → documentación). Encadena la skill de arriba para el paso del wiki; trae su propio script para recorrer el sitemap de mylserena.cl (`scripts/match_mylserena_sitemap.py`). |
 | `scraper/` | Scraper Node (`scrape.js` + `editions.js`) que regenera `data/*.json`. Corre también por GitHub Actions (`.github/workflows/scrape-data.yml`). `corrections.js` guarda correcciones manuales conocidas de numeración/id que TOR trae mal (se aplican por `id`, nunca lo cambian). |
 | `docs/FUENTES-DATOS.md` | Investigación de fuentes de datos (api.myl.cl, mazos.cl, etc.). |
 
@@ -376,6 +377,40 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 `data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-08-08 (2ª iteración) — Nueva skill "registrar-nueva-edicion"
+- Este flujo (¿ya está en la API de TOR? → si no, extraerla del wiki → si
+  faltan imágenes, cruzar tiendas por código exacto de carta → registrar en
+  `data/editions.json`/`data/custom-cards.json` → validar → documentar →
+  shippear) se hizo a mano, paso a paso, más de una decena de veces esta
+  sesión (CRPE2, Vigilantes de la Noche, Juego Organizado, Lootbox PE
+  2024/2025, 8 ediciones "Mundos Perdidos", Leyendas - Primera Era 4.0…) —
+  se escribió como skill (`.claude/skills/registrar-nueva-edicion/
+  SKILL.md`) para no tener que reconstruir el criterio cada vez. Encadena
+  (no duplica) la skill `importar-edicion-myl-wiki` ya existente para el
+  paso del wiki, y referencia `docs/FUENTES-DATOS.md`/`conocimiento.md` en
+  vez de repetir su contenido.
+- **Nuevo script reusable** `scripts/match_mylserena_sitemap.py`: la
+  técnica que más cobertura dio en la práctica (recorrer el sitemap de
+  mylserena.cl en vez de solo la categoría de la tienda, cruzando por el
+  número exacto de carta que trae el `description` JSON-LD de cada página
+  de producto — 252 de 265 imágenes faltantes de Leyendas 4.0 en el caso
+  real que la originó) hasta ahora solo existía como script suelto en el
+  scratchpad de la sesión. Al escribirla como script reusable del repo se
+  encontró y corrigió un bug real que el script suelto original no tenía
+  cubierto por casualidad: filtrar los slugs del sitemap metiendo el texto
+  de búsqueda directo dentro de una regex que exige un carácter antes
+  (`[a-z0-9][a-z0-9-]*<filtro>`) falla en silencio cuando el filtro
+  coincide con el **inicio** del slug (ej. filtrar "rheda-lpe4" contra el
+  slug "rheda-lpe4-ur" nunca matcheaba, porque la "r" inicial quedaba
+  consumida por el carácter obligatorio antes del filtro) — se corrigió
+  extrayendo todos los slugs primero y filtrando después en Python, no
+  dentro de la regex. También se corrigió el regex de extracción del
+  código de carta (`[A-Z]+` no capturaba el dígito de "LPE4", solo "LPE" —
+  se cambió a `[A-Z0-9]+`). Verificado contra el sitio real: 401 páginas de
+  producto de Leyendas 4.0 encontradas, 401/401 con código extraído
+  correctamente (0 errores), incluyendo las variantes numerada normal,
+  "Set Clásico" (prefijo propio) y promocional (numeración > 320).
 
 ### 2026-08-08 — Reordenar colecciones (drag & drop) y editar ediciones de una colección ya creada
 - **Reordenar el panel lateral de Colecciones**: cada tarjeta ahora es
