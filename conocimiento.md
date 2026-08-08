@@ -95,6 +95,18 @@ incluye lo mismo.
   todas las ediciones del grupo. Formato viejo (colecciones de una sola edición, campo
   `edition` en vez de `editions`) se migra solo al cargar (`migrateCollection` en
   `store.js`) — nunca hace falta tocar datos guardados a mano.
+  - **Reordenar el panel lateral**: cada tarjeta de colección se puede arrastrar
+    (drag & drop nativo, `draggable` + `dragstart/dragover/drop`) para reordenarla
+    libremente, y también trae botones ▲▼ como alternativa (arrastrar con mouse no
+    funciona igual en touch). El orden es simplemente el orden del array
+    `collections` en `store.js` — `store.reorderCollections(orderedIds)` lo
+    reescribe completo.
+  - **Editar ediciones de una colección ya creada** (botón "✏️ Editar ediciones"
+    en el detalle): reabre el mismo modal de creación en "modo edición"
+    (`openCollectionModal(col)`), precarga el checklist con sus ediciones actuales
+    y al guardar llama a `store.setCollectionEditions(id, eds)` — agrega o quita
+    ediciones sin perder el nombre ni la posición en la lista. El campo Nombre se
+    oculta en este modo (se edita aparte, con el input del encabezado del detalle).
 - **Exportar PDF de una Colección** (botón "📄 Exportar PDF" en el detalle de
   una colección): genera un PDF con una **grilla de miniaturas**, no una
   tabla de texto — se ve igual que la vista en pantalla (`exportCollectionPDF`
@@ -364,6 +376,34 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 `data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-08-08 — Reordenar colecciones (drag & drop) y editar ediciones de una colección ya creada
+- **Reordenar el panel lateral de Colecciones**: cada tarjeta ahora es
+  `draggable` — se puede arrastrar y soltar sobre otra para reordenar
+  libremente (`reorderCollectionsByDrop` en `js/app.js`, persiste con
+  `store.reorderCollections`). Como el drag & drop nativo de HTML5 no
+  funciona bien con touch en varios navegadores móviles, se agregaron
+  también botones ▲▼ en cada tarjeta como alternativa accesible
+  (`moveCollection`). El "orden" de una colección es simplemente su
+  posición en el array `collections` de `store.js`; no se agregó ningún
+  campo `order` nuevo.
+- **Botón "✏️ Editar ediciones"** en el detalle de una colección: ahora que
+  una colección puede agrupar varias ediciones, hacía falta poder agregar o
+  quitar ediciones después de creada sin tener que borrar la colección y
+  rehacerla (perdiendo el nombre y la posición). Reutiliza el mismo modal
+  de "Nueva colección" en un "modo edición" — `openCollectionModal(col)`
+  precarga el checklist con las ediciones actuales de `col`, cambia el
+  título/botón y oculta el campo Nombre (ese se sigue editando aparte, con
+  el input del encabezado). Al guardar llama a
+  `store.setCollectionEditions(id, eds)`, que reemplaza `col.editions`
+  conservando nombre y posición.
+- Al agregar el parámetro a `openCollectionModal`, se encontró y corrigió
+  de paso un bug latente: el botón "+ Nueva colección" pasaba directo la
+  función como handler de `click` (`addEventListener("click",
+  openCollectionModal)`), así que el `MouseEvent` del clic se habría colado
+  como si fuera "la colección a editar" en cuanto la función aceptara un
+  argumento — se cambió a `() => openCollectionModal()` para cortar esa
+  filtración.
 
 ### 2026-08-04 (3ª iteración) — Corrige numeración de las 8 ediciones "Mundos Perdidos" cargadas del wiki (carta Promocional final mal numerada)
 - El dueño del inventario notó, mientras editaba a mano su colección

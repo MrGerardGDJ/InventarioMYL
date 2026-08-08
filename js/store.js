@@ -188,8 +188,28 @@ export function renameCollection(id, name) {
   const c = getCollection(id);
   if (c) { c.name = name; c.updatedAt = Date.now(); write(KEYS.collections, collections); notify(); }
 }
+// Reemplaza las ediciones agrupadas de una colección ya creada (agregar o
+// quitar ediciones sin tener que recrearla, lo que perdería su nombre y
+// posición en la lista). Ignora vacío: una colección siempre necesita al
+// menos una edición.
+export function setCollectionEditions(id, editions) {
+  const c = getCollection(id);
+  const eds = Array.isArray(editions) ? editions.filter(Boolean) : [];
+  if (c && eds.length) { c.editions = eds; c.updatedAt = Date.now(); write(KEYS.collections, collections); notify(); }
+}
 export function deleteCollection(id) {
   collections = collections.filter((c) => c.id !== id);
+  write(KEYS.collections, collections);
+  notify();
+}
+// Reordena la lista de colecciones (arrastrar y soltar en el panel lateral).
+// `orderedIds` trae el orden deseado; cualquier id que falte (no debería
+// pasar) se agrega al final para no perder colecciones.
+export function reorderCollections(orderedIds) {
+  const byId = new Map(collections.map((c) => [c.id, c]));
+  const reordered = orderedIds.map((id) => byId.get(id)).filter(Boolean);
+  for (const c of collections) if (!orderedIds.includes(c.id)) reordered.push(c);
+  collections = reordered;
   write(KEYS.collections, collections);
   notify();
 }
