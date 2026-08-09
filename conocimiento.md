@@ -378,6 +378,36 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (20ª iteración) — Bug real encontrado por el dueño: 3 cartas de Leyendas 4.0 tenían la imagen de OTRA carta con el mismo nombre
+- El dueño reportó que "Fruto Sagrado" #169, "Dhampir" #171 y "Grimorio
+  Sacro" #181 de Leyendas 4.0 tenían la imagen equivocada, y mandó los
+  links de mylserena.cl con la imagen real de cada una.
+- **Causa confirmada visualmente**: Leyendas 4.0 tiene varias cartas
+  con el MISMO nombre en dos posiciones distintas (reimpresión
+  Promocional más adelante en el mismo set — ej. "Fruto Sagrado" existe
+  como #169 Real Y como #322 Promocional). Las 3 cartas reportadas
+  tenían puesta la imagen de su contraparte #322/#323/#008 en vez de la
+  propia — quedó la prueba abriendo el archivo: la imagen de la carta
+  "169" decía literalmente "LPE4 - 322/320 P" impreso en la esquina.
+  Es un resabio de un cruce automático de imágenes de una sesión
+  anterior (probablemente matching por nombre sin verificar el número
+  impreso en la carta).
+- Se corrigieron esas 3 **y de paso las 13 cartas de Leyendas 4.0 que
+  seguían sin imagen** (edid 330-352, el "Kit Pagano"/"Kit Vinland" y
+  el aniversario 25 — el dueño avisó "de la rosa de los vientos en
+  adelante también tiene imágenes"). Las 16 se resolvieron con el mismo
+  método ya probado (sitemap de mylserena, cruce por código exacto
+  `LPE4 NNN` impreso en cada producto, verificado uno por uno contra el
+  `edid` antes de aceptar — nunca por nombre solo, justo la lección de
+  este mismo bug). Se reusaron los datos ya crawleados de la iteración
+  del módulo de precios (15ª) en vez de recorrer el sitemap de nuevo.
+- Se borraron los 3 archivos `.webp` viejos con la imagen incorrecta
+  (huérfanos, ninguna carta los necesita — sus contrapartes #322/#323/#8
+  ya tenían su propia imagen correcta del wiki, sin relación con este
+  cruce).
+- Validado: 0 cartas sin imagen en Leyendas 4.0, las 16 cargan
+  correctamente en Playwright.
+
 ### 2026-08-09 (19ª iteración) — Confirmado: las 6 imágenes de Mundos Perdidos seguían fallando en el PDF por overrides personales, no por el catálogo
 - Después de la iteración 18ª (completadas las 6 imágenes en el
   catálogo compartido), el dueño volvió a generar el PDF y las mismas
