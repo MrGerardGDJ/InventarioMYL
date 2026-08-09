@@ -447,7 +447,7 @@ main { padding: 0; }
 .edition-progress { display: flex; flex-direction: column; gap: 8px; }
 .ep-row { display: grid; grid-template-columns: 220px 1fr 90px; gap: 10px; align-items: center; font-size: 13px; }
 .ep-bar { background: var(--bg-3); border-radius: 6px; height: 14px; overflow: hidden; }
-.ep-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+.ep-fill { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
 
 /* ===== Toast ===== */
 .toast {
