@@ -43,15 +43,21 @@ const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
 /* ===================== Carga de datos ===================== */
 async function loadData() {
-  // "no-cache" (revalida con el servidor vía ETag/Last-Modified, no ignora
-  // el caché a lo bruto) — el catálogo se corrige seguido y sin esto un
-  // navegador puede quedarse mostrando una versión vieja de estos JSON
-  // hasta que algo más fuerce un refresco, generando confusión sobre si
-  // una corrección "realmente" se aplicó.
+  // GitHub Pages sirve estos archivos a través de un CDN (Fastly): el
+  // header `cache: "no-cache"` solo le pide al NAVEGADOR que revalide en
+  // vez de usar su copia local, pero esa revalidación puede seguir
+  // recibiendo una respuesta vieja del propio CDN si su caché de borde
+  // todavía no venció — no llega a origin a buscar la versión nueva.
+  // Un parámetro de cache-busting en la URL fuerza una clave de caché
+  // distinta en cada carga, así que ni el navegador ni el CDN pueden
+  // devolver una copia vieja bajo ningún concepto. Reportado en la
+  // práctica (09-08-2026): dos correcciones de datos ya subidas y
+  // verificadas en el repo seguían sin verse en el sitio publicado.
+  const v = Date.now();
   const [cardsRes, edRes, customRes] = await Promise.all([
-    fetch("./data/cards.json", { cache: "no-cache" }).then((r) => r.json()).catch(() => ({ cards: [] })),
-    fetch("./data/editions.json", { cache: "no-cache" }).then((r) => r.json()).catch(() => []),
-    fetch("./data/custom-cards.json", { cache: "no-cache" }).then((r) => (r.ok ? r.json() : { cards: [] })).catch(() => ({ cards: [] })),
+    fetch(`./data/cards.json?v=${v}`).then((r) => r.json()).catch(() => ({ cards: [] })),
+    fetch(`./data/editions.json?v=${v}`).then((r) => r.json()).catch(() => []),
+    fetch(`./data/custom-cards.json?v=${v}`).then((r) => (r.ok ? r.json() : { cards: [] })).catch(() => ({ cards: [] })),
   ]);
 
   const scraped = (cardsRes.cards || cardsRes || []).map(normalizeCard);

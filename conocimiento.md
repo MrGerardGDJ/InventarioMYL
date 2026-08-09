@@ -378,6 +378,32 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (8ª iteración) — Cache-busting real para data/*.json (GitHub Pages sirve por CDN)
+- Después de la corrección anterior, el dueño del inventario seguía viendo
+  huecos imposibles con los datos ya verificados en el repo (Toolkit 2024:
+  salta de la #30 a la #33 saltándose 31/32/34/35; Toolkit 2025: solo 4
+  cartas numeradas en vez de 32) — se re-verificó `data/cards.json` y
+  `data/custom-cards.json` directo en el repo y **están completos y
+  correctos** (40/40 y 34/34, sin huecos). El problema no era de datos:
+  era que el sitio publicado seguía sirviendo una copia vieja.
+- **Por qué el fix de la iteración anterior (`cache: "no-cache"`) no
+  alcanzó**: ese header le pide al NAVEGADOR que revalide en vez de usar
+  su copia local, pero GitHub Pages sirve estos archivos detrás de un CDN
+  (Fastly) — esa revalidación puede seguir recibiendo una respuesta vieja
+  directo del borde del CDN si su propio caché todavía no venció, sin
+  siquiera llegar a comprobar contra el origen.
+- Corregido con cache-busting real: los tres `fetch()` de
+  `data/*.json` en `loadData()` ahora llevan un parámetro `?v=<timestamp>`
+  distinto en cada carga de la página. Al ser una URL distinta en cada
+  visita, ni el navegador ni el CDN tienen una entrada de caché que
+  devolver — fuerza a ambos a ir siempre hasta el origen por la versión
+  real y más reciente.
+- **Importante para el dueño del inventario**: este fix vive en `js/app.js`,
+  que también pasa por el mismo CDN — hace falta **una recarga fuerte**
+  (Ctrl+Shift+R o vaciar caché del sitio) para bajar esta versión nueva del
+  script una vez. Después de esa única recarga, la app va a pedir los datos
+  frescos en cada carga de ahí en adelante, sin que vuelva a hacer falta.
+
 ### 2026-08-09 (7ª iteración) — Bug real: agregar una edición a una colección ya vista no se reflejaba sin recargar
 - El dueño del inventario reportó dos síntomas relacionados: (1) al
   agregar una edición a una colección con "✏️ Editar ediciones", el
