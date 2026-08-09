@@ -21,7 +21,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { allEditions, slugToName, FORMATS } from "./editions.js";
-import { LEYENDAS_2023_CORRECTIONS } from "./corrections.js";
+import { LEYENDAS_2023_CORRECTIONS, TOOLKIT_PE_2024_CORRECTIONS } from "./corrections.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(__dirname, "..", "data", "cards.json");
@@ -164,17 +164,38 @@ for (const slug of editionsToFetch) {
 }
 
 /* ---------- 3.1) correcciones manuales conocidas (ver corrections.js) ---------- */
-// Pisa SOLO edid/specialId por id — nunca el id mismo, para no romper el
-// inventario/mazos ya guardados contra el id "de fábrica" de estas cartas.
+// Pisa SOLO campos de salida (edid/specialId/edition/editionName) por id —
+// nunca el id mismo, para no romper el inventario/mazos ya guardados contra
+// el id "de fábrica" de estas cartas. `drop: true` saca la carta del todo
+// (usado para descartar duplicados exactos que TOR lista dos veces bajo dos
+// ediciones distintas, ver TOOLKIT_PE_2024_CORRECTIONS) — a diferencia de
+// edid/specialId, remover una carta sí es seguro de "deshacer" simplemente
+// quitando la entrada del correction table más adelante, porque nunca tocó
+// el id de ninguna otra carta.
+const ALL_CORRECTIONS = [LEYENDAS_2023_CORRECTIONS, TOOLKIT_PE_2024_CORRECTIONS];
 let corrected = 0;
+let dropped = 0;
+// ids descartados a propósito (duplicados) — el merge no-destructivo del
+// paso 3.9 tiene que saber de esta lista, si no confunde "lo saqué yo" con
+// "la API falló esta corrida" y lo vuelve a traer del cards.json anterior.
+const droppedIds = new Set();
+const keep = [];
 for (const c of all) {
-  const fix = LEYENDAS_2023_CORRECTIONS[c.id];
-  if (!fix) continue;
-  c.edid = fix.edid;
-  c.specialId = fix.specialId;
+  let fix;
+  for (const table of ALL_CORRECTIONS) { if (table[c.id]) { fix = table[c.id]; break; } }
+  if (!fix) { keep.push(c); continue; }
+  if (fix.drop) { dropped++; droppedIds.add(c.id); continue; }
+  if (fix.edid !== undefined) c.edid = fix.edid;
+  if (fix.specialId !== undefined) c.specialId = fix.specialId;
+  if (fix.edition !== undefined) c.edition = fix.edition;
+  if (fix.editionName !== undefined) c.editionName = fix.editionName;
   corrected++;
+  keep.push(c);
 }
-if (corrected) console.log(`Corregidas ${corrected} cartas (numeración leyendas_primera_era_2023)`);
+all.length = 0;
+all.push(...keep);
+if (corrected) console.log(`Corregidas ${corrected} cartas (numeración/edición conocida)`);
+if (dropped) console.log(`Descartadas ${dropped} cartas duplicadas (ver corrections.js)`);
 
 /* ---------- 3.5) enriquecer nombres con acentos/ñ desde el perfil ---------- */
 // El listado de la API entrega los nombres SIN diacríticos; el perfil sí los trae.
@@ -240,7 +261,7 @@ try {
   const have = new Set(all.map((c) => c.id));
   for (const pc of prev.cards || []) {
     const u = uidOf(pc);
-    if (!u || have.has(u)) continue;
+    if (!u || have.has(u) || droppedIds.has(u)) continue;
     // Normaliza la carta previa al esquema con id estable (por si es formato viejo)
     all.push({ ...pc, id: u, legacyId: pc.legacyId || pc.id, slug: pc.slug || "", carried: true });
     have.add(u);

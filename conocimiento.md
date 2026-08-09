@@ -29,7 +29,7 @@ abriendo `index.html` (o sirviéndolo con cualquier servidor estático / GitHub 
 | `js/wiki-import.js` | Trae el listado de una edición directo desde myl.fandom.com (API de MediaWiki, con CORS) para el botón "Buscar y cargar cartas" del gestor de Ediciones. Ver más abajo. |
 | `.claude/skills/importar-edicion-myl-wiki/` | Skill de Claude Code: extrae una edición completa desde el wiki por línea de comandos (Python) cuando el botón del navegador no alcanza (ver más abajo). |
 | `.claude/skills/registrar-nueva-edicion/` | Skill de Claude Code: orquesta el flujo END-TO-END para agregar una edición nueva al catálogo compartido (API → wiki → imágenes de tiendas por código exacto → registro en `data/editions.json`/`data/custom-cards.json` → validación → documentación). Encadena la skill de arriba para el paso del wiki; trae su propio script para recorrer el sitemap de mylserena.cl (`scripts/match_mylserena_sitemap.py`). |
-| `scraper/` | Scraper Node (`scrape.js` + `editions.js`) que regenera `data/*.json`. Corre también por GitHub Actions (`.github/workflows/scrape-data.yml`). `corrections.js` guarda correcciones manuales conocidas de numeración/id que TOR trae mal (se aplican por `id`, nunca lo cambian). |
+| `scraper/` | Scraper Node (`scrape.js` + `editions.js`) que regenera `data/*.json`. Corre también por GitHub Actions (`.github/workflows/scrape-data.yml`). `corrections.js` guarda correcciones manuales conocidas de numeración/id/edición que TOR trae mal (se aplican por `id`, nunca lo cambian; también soporta `drop: true` para descartar duplicados exactos que TOR lista dos veces bajo dos ediciones distintas). |
 | `docs/FUENTES-DATOS.md` | Investigación de fuentes de datos (api.myl.cl, mazos.cl, etc.). |
 
 ## Modelo de datos
@@ -377,6 +377,67 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 `data/custom-cards.json` (buscar por `id` o `name`).
 
 ## Registro de cambios
+
+### 2026-08-09 (2ª iteración) — Unifica Toolkit Primera Era 2024 (TOR la traía partida en 2 ediciones, con duplicados)
+- El dueño del inventario reportó que "Toolkit Primera Era 2024" aparecía
+  partida en dos ediciones (`toolkit_puertas_del_valhalla`,
+  `toolkit_justa`, 18 cartas c/u, ambas de la API de TOR) que en realidad
+  son un solo producto — tenía que corregir la edición a mano en su
+  colección cada vez, y la partición generó cartas duplicadas.
+- Confirmado contra la página del wiki "Lista de cartas de Toolkit Primera
+  Era 2024" (código `TKPE24`, 40 cartas): la tabla principal (28) trae una
+  columna "Kit" que dice a cuál de los dos kits pertenece cada carta
+  (Justa = TKPE24-01..14, Puertas del Valhalla = TKPE24-15..28) — coincide
+  1 a 1 **en orden y en nombre** con las posiciones 001-014 de cada
+  edición de TOR, así que la correspondencia está verificada, no es una
+  suposición. Las posiciones 015-018 de ambas ediciones de TOR resultaron
+  ser las 5 cartas "Oro foil" compartidas del producto (no exclusivas de
+  ningún kit): TOR las volcó de forma inconsistente — 3 duplicadas en
+  ambas ediciones (Corona Triunfal, Trarilonco, Campana Dedahmmazedi) y 2
+  solo en una de las dos (Rosa De Muerte solo en Puertas, Corona Ducal
+  solo en Justa) — verificado por nombre exacto contra la sección
+  "===Oros foil===" del wiki. TOR tampoco tenía las 7 cartas restantes del
+  producto (2 "Buy a Box" + 5 "Promocionales", TKPE24-29/30 y 36-40).
+- **Se generalizó el mecanismo de `scraper/corrections.js`**: antes solo
+  soportaba pisar `edid`/`specialId` por `id` (usado para
+  `LEYENDAS_2023_CORRECTIONS`); ahora también soporta `edition`/
+  `editionName` (para reasignar una carta a otro slug de edición sin
+  tocar su `id`) y `drop: true` (para descartar una carta por completo —
+  usado en las 3 copias duplicadas). Nueva tabla
+  `TOOLKIT_PE_2024_CORRECTIONS` con las 36 cartas de TOR: 33 se
+  reasignan al slug unificado `toolkit_primera_era_2024` con su
+  `specialId` real (`TKPE24-NN`), 3 se descartan (duplicados exactos).
+  `scrape.js` aplica ambas tablas en el mismo paso.
+- **Bug real encontrado al verificar el fix contra una corrida completa
+  del scraper**: el paso 3.9 ("merge no destructivo con el catálogo
+  previo", pensado para no perder cartas si una edición falla
+  transitoriamente en la API) volvía a traer las 3 cartas recién
+  descartadas desde el `data/cards.json` anterior — su `id` ya no estaba
+  en la corrida nueva (porque las descarté a propósito), y ese paso no
+  distingue "la descarté yo" de "la API falló esta vez". Se corrigió
+  pasándole al paso 3.9 el set de ids descartados a propósito
+  (`droppedIds`) para que los ignore en vez de revivirlos.
+- Las 7 cartas que TOR nunca tuvo (`toolkit_primera_era_2024__custom__*`)
+  se cargaron en `data/custom-cards.json` desde el wiki, mismo criterio
+  que cualquier carta ausente de la API — 7/7 con imagen, confianza
+  "específica".
+- `data/editions.json`: se quitaron las entradas `toolkit_puertas_del_valhalla`
+  y `toolkit_justa` (después de la corrección quedan con 0 cartas — dejarlas
+  habría mostrado dos ediciones fantasma vacías en el selector) y se agregó
+  `toolkit_primera_era_2024`.
+- Validado con una corrida completa real del scraper (no un mock): 33
+  cartas de TOR quedan correctamente unificadas y sin duplicados, 0
+  cartas remanentes en las dos ediciones viejas, y el resultado
+  **sobrevive una segunda corrida** (confirma que el fix del paso 3.9 fue
+  necesario, no cosmético). Smoke test con Playwright: 40/40 cartas en
+  la colección, 40 badges de identificador únicos, 0 imágenes rotas, 0
+  `pageerror`.
+- **Nota para el dueño del inventario**: si ya habías agregado "Chien" o
+  "Tótem del Pájaro de Trueno" a mano en tu navegador (los "dos Promo que
+  ya están apartadas" que mencionaste), puede que ahora te aparezcan
+  duplicados con la versión nueva del catálogo compartido — usa
+  "🗑 Eliminar/↩ Revertir a la original" sobre tu copia manual para que
+  desaparezca y quede solo la del catálogo.
 
 ### 2026-08-09 — Toolkit Primera Era 2025 (primer uso real de la skill "registrar-nueva-edicion")
 - Primera vez que se corre el flujo completo de la nueva skill de punta a
