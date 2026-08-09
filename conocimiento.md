@@ -378,6 +378,45 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (5ª iteración) — Toolkit 2024/2025: las cartas numeradas dejan de tratarse como especiales
+- El dueño del inventario aclaró el criterio real después de dos rondas de
+  arreglos que no bastaron: el hecho de que una carta tenga `Frecuencia:
+  Promocional` en el wiki **no la convierte en carta especial** dentro del
+  modelo de esta app — sigue siendo una carta numerada más, la rareza es
+  solo metadata (mismo criterio que ya se usaba en Leyendas - Primera Era
+  4.0, donde las cartas 321-326 son "Promocional" pero llevan `edid`
+  normal, no `specialId`). El `specialId` es solo para cartas que **no
+  tienen un número real** en su código (la "00" tótem, un subconjunto con
+  prefijo propio tipo `SCLPE4-NN`, o —como acá— un código literal sin
+  dígito como "EDICIÓN LIMITADA"). Al cargar Toolkit 2024/2025 se aplicó
+  mal ese criterio: se le puso `specialId` a las 40/34 cartas completas
+  para preservar el código impreso `TKPE2X-NN`, cuando en realidad esas
+  cartas SÍ tienen un número real y debían ir con `edid` normal — el
+  código se preserva igual, solo que como número en vez de como texto.
+  Efecto visible que esto causaba: absolutamente todas las cartas quedaban
+  bajo el título literal "Cartas promocionales / especiales" de la grilla
+  de Colección (el título viene de agrupar por `specialId` truthy, sin
+  mirar la rareza real) — el dueño lo describió como "se siguen viendo
+  mal" en dos reportes seguidos porque el síntoma no era duplicados ni
+  huecos (ya arreglados), era esto.
+  - **Toolkit Primera Era 2024**: las 40 cartas pasan de `specialId
+    TKPE24-NN` a `edid` "001".."040" — **ninguna** queda como especial,
+    tal como pidió el dueño ("no son promo... solo haz que el Toolkit sea
+    de 40 cartas"). Se actualizó `TOOLKIT_PE_2024_CORRECTIONS` (33 cartas
+    de TOR) y las 7 cartas custom del wiki.
+  - **Toolkit Primera Era 2025**: las 32 cartas numeradas (Kit Valentía y
+    Desolación + Kit Honor y Ferocidad + los 4 Oro foil) pasan a `edid`
+    "001".."032". Las **2** cartas "Buy a Box" (Templo de Tenochtitlán,
+    Torre del Olvido) se dejan como especiales (`TKPE25-EL`/`-EL-b`) — el
+    dueño confirmó que esas SÍ son promocionales de verdad, y además su
+    código en el wiki (`EDICIÓN LIMITADA`, sin número) no tiene un
+    número real que ponerles como `edid`.
+- Validado con una corrida real del scraper (para el caso de 2024, que
+  toca `data/cards.json`) y con Playwright contra ambas colecciones
+  renderizadas: Toolkit 2024 ahora es una sola grilla `#1`..`#40` sin
+  ninguna sección de especiales; Toolkit 2025 muestra 2 especiales +
+  `#1`..`#32` numeradas, 0 `pageerror`.
+
 ### 2026-08-09 (4ª iteración) — Dos bugs reales en Toolkit 2024/2025 encontrados al auditar a fondo tras el reporte "se siguen viendo mal"
 - El dueño del inventario reportó que, después de unificarlas, ambas
   ediciones Toolkit "se siguen viendo mal" en su colección. Como los

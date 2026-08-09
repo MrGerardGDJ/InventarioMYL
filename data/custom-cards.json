@@ -17331,7 +17331,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "001",
    "type": "Talismán",
    "race": "—",
    "rarity": "Real",
@@ -17341,7 +17341,7 @@
    "flavour": "El rapto de la diosa puso en jaque la juventud y la renovación de los dioses nórdicos.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/0d/TKPE25-01-28.png/revision/latest?cb=20250925202415&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-01"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_02_la_saga_de_volsung",
@@ -17349,7 +17349,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "002",
    "type": "Oro",
    "race": "—",
    "rarity": "Real",
@@ -17359,7 +17359,7 @@
    "flavour": "Narra el épico linaje de Völsung, desde el heroico Sigmund hasta el valiente Sigurd. Historias de amor, traición, y búsqueda de gloria entre dioses y dragones.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/41/TKPE25-02-28.png/revision/latest?cb=20250925202415&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-02"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_03_gram",
@@ -17367,7 +17367,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "003",
    "type": "Arma",
    "race": "—",
    "rarity": "Real",
@@ -17377,7 +17377,7 @@
    "flavour": "Espada de poder inigualable, forjada por enanos, regalo de Odín. Destinada a Sigmund y Sigurd, corta todo a su paso, símbolo de valentía, destino entrelazado con el linaje Völsung.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/25/TKPE25-03-28.png/revision/latest?cb=20250925202416&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-03"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_04_ocelote_del_templo",
@@ -17385,7 +17385,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "004",
    "type": "Oro",
    "race": "—",
    "rarity": "Real",
@@ -17395,7 +17395,7 @@
    "flavour": "En los templos podías encontrar a este magnífico ser, un poderoso felino que representa la energía eterna de la vida.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/26/TKPE25-04-28.png/revision/latest?cb=20250925202416&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-04"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_05_forma_voladora",
@@ -17403,7 +17403,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "005",
    "type": "Talismán",
    "race": "—",
    "rarity": "Real",
@@ -17413,7 +17413,7 @@
    "flavour": "La voladora danza entre los bosques oscuros de Chiloé, donde los árboles parecen sus cómplices silenciosos.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/29/TKPE25-05-28.png/revision/latest?cb=20250925202416&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-05"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_06_ciudad_de_los_cesares",
@@ -17421,7 +17421,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "006",
    "type": "Tótem",
    "race": "—",
    "rarity": "Real",
@@ -17431,7 +17431,7 @@
    "flavour": "Yace oculta en la Patagonia. Rodeada de leyendas, promete eternidad a quien la encuentre. Su búsqueda, un viaje a lo profundo del alma y los confines del mundo.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/57/TKPE25-06-28.png/revision/latest?cb=20250925202416&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-06"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_07_totem_de_perro",
@@ -17439,7 +17439,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "007",
    "type": "Tótem",
    "race": "—",
    "rarity": "Cortesano",
@@ -17449,7 +17449,7 @@
    "flavour": "Fiel señal, fiel guía, en el viaje nocturno por el río que lleva a la tierra de los muertos.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/46/TKPE25-07-28.png/revision/latest?cb=20250925202416&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-07"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_08_vanaheim",
@@ -17457,7 +17457,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "008",
    "type": "Tótem",
    "race": "—",
    "rarity": "Cortesano",
@@ -17467,7 +17467,7 @@
    "flavour": "A nueve mundos llegué..., nueve mundos del árbol. Al oeste está la comarca de los dioses Vanir, amos de la magia, la fertilidad, la suerte y  la abundancia. ¿Cuáles son los favores que tú vienes a pedir? Cuando sus puertas se abran entra con decisión.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/1f/TKPE25-08-28.png/revision/latest?cb=20250925202416&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-08"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_09_desolacion_de_kanillu",
@@ -17475,7 +17475,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "009",
    "type": "Talismán",
    "race": "—",
    "rarity": "Real",
@@ -17485,7 +17485,7 @@
    "flavour": "Su insaciable apetito devastó hogares, y tiñó el paisaje con una tristeza que ni siquiera el padre sol pudo curar.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/22/TKPE25-09-28.png/revision/latest?cb=20250925202418&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-09"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_10_laque",
@@ -17493,7 +17493,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "010",
    "type": "Arma",
    "race": "—",
    "rarity": "Real",
@@ -17503,7 +17503,7 @@
    "flavour": "La boleadora ancestral, gira en las manos del guerrero. Con un lanzamiento certero, domina los vientos y ata a sus enemigos al suelo.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/35/TKPE25-10-28.png/revision/latest?cb=20250925202417&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-10"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_11_comerciantes_del_rio",
@@ -17511,7 +17511,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "011",
    "type": "Oro",
    "race": "—",
    "rarity": "Real",
@@ -17521,7 +17521,7 @@
    "flavour": "Descienden en sus canoas, transportando riquezas y misterios. Bajo el manto de la noche, negocian  tanto con humanos como con dioses y espíritus antiguos.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/3c/TKPE25-11-28.png/revision/latest?cb=20250925202417&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-11"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_12_vientos_del_ragnarok",
@@ -17529,7 +17529,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "012",
    "type": "Talismán",
    "race": "—",
    "rarity": "Real",
@@ -17539,7 +17539,7 @@
    "flavour": "Bajo cielos de tormenta, soplan vientos del fin; espadas resuenan, la tierra tiembla y se quiebra; dioses y monstruos libran su última batalla final; fuego y hielo consumen el mundo sin piedad.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ec/TKPE25-12-28.png/revision/latest?cb=20250925202418&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-12"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_13_aetgir",
@@ -17547,7 +17547,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "013",
    "type": "Arma",
    "race": "—",
    "rarity": "Real",
@@ -17557,7 +17557,7 @@
    "flavour": "La lanza atraviesa corazas, escala muros y aborda naves enemigas; su filo canta leyendas, más que un arma es un instrumento de crear leyendas.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/11/TKPE25-13-28.png/revision/latest?cb=20250925202418&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-13"
+   "specialId": ""
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_14_torc_ardiente",
@@ -17565,7 +17565,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "014",
    "type": "Oro",
    "race": "—",
    "rarity": "Real",
@@ -17575,7 +17575,7 @@
    "flavour": "Desde mares bravos, los vikingos llegaron; en tierras británicas, su valor demostraron. Entre tesoros conquistados, un torc reluciente; símbolo celta de poder, en oro candente.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/56/TKPE25-14-28.png/revision/latest?cb=20250925202418&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-14"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_15_justa",
@@ -17583,7 +17583,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "015",
    "type": "Talismán",
    "race": "—",
    "rarity": "Real",
@@ -17593,7 +17593,7 @@
    "flavour": "Las justas eran un elemento central de la cultura de la caballería, que promovía la virtud, el honor y el código de conducta caballeresca.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/ca/TKPE25-15-28.png/revision/latest?cb=20250925202419&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-15"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_16_botin_templario",
@@ -17601,7 +17601,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "016",
    "type": "Oro",
    "race": "—",
    "rarity": "Real",
@@ -17611,7 +17611,7 @@
    "flavour": "La orden nació como un sueño y se transformó en la pesadilla de los infieles. Los misterios que rodean a los caballeros son tan grandes como lo fue su fortuna.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f5/TKPE25-16-28.png/revision/latest?cb=20250925202419&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-16"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_17_escudo_real",
@@ -17619,7 +17619,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "017",
    "type": "Arma",
    "race": "—",
    "rarity": "Real",
@@ -17629,7 +17629,7 @@
    "flavour": "Ni la flecha certera ni la ira de la espada podrán alcanzar el corazón del guerrero.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/5f/TKPE25-17-28.png/revision/latest?cb=20250925202419&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-17"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_18_claviceps_purpurea",
@@ -17637,7 +17637,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "018",
    "type": "Oro",
    "race": "—",
    "rarity": "Real",
@@ -17647,7 +17647,7 @@
    "flavour": "Sus esporas destilan poderes ocultos. En el reino de la alquimia, sus secreciones se mezclan en brebajes mágicos, desatando visiones y conjuros que trascienden la realidad conocida.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/76/TKPE25-18-28.png/revision/latest?cb=20250925202410&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-18"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_19_colina_del_ahorcado",
@@ -17655,7 +17655,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "019",
    "type": "Tótem",
    "race": "—",
    "rarity": "Real",
@@ -17665,7 +17665,7 @@
    "flavour": "Testigo de la desolación, ondean los cuerpos de los caídos. La brisa susurra sus lamentos, mientras la tierra bebe su sangre. Un lugar maldito, donde la justicia y la crueldad se entrelazan.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/7d/TKPE25-19-28.png/revision/latest?cb=20250925202411&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-19"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_20_tormenta_de_sangre",
@@ -17673,7 +17673,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "020",
    "type": "Talismán",
    "race": "—",
    "rarity": "Real",
@@ -17683,7 +17683,7 @@
    "flavour": "En el horizonte, la oscuridad se cierne como un manto siniestro, mientras el viento aúlla con ferocidad. Las nubes, pesadas y cargadas de secretos, se alinean en formaciones ominosas.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c0/TKPE25-20-28.png/revision/latest?cb=20250925202412&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-20"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_21_escudo_hiperboreo",
@@ -17691,7 +17691,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "021",
    "type": "Arma",
    "race": "—",
    "rarity": "Cortesano",
@@ -17701,7 +17701,7 @@
    "flavour": "Defensa y defensor feroz a la vez. Protege a quien lo usa con su aliento de fuego.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b3/TKPE25-21-28.png/revision/latest?cb=20250925202412&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-21"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_22_baal",
@@ -17709,7 +17709,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "022",
    "type": "Talismán",
    "race": "—",
    "rarity": "Vasallo",
@@ -17719,7 +17719,7 @@
    "flavour": "Las tormentas viven en sus manos. Es la personificación de las fuerzas de la naturaleza.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d0/TKPE25-22-28.png/revision/latest?cb=20250925202411&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-22"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_23_cuerno_de_elfo",
@@ -17727,7 +17727,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "023",
    "type": "Oro",
    "race": "—",
    "rarity": "Real",
@@ -17737,7 +17737,7 @@
    "flavour": "Sus notas guían a guerreros y naciones; eco de esperanza, poder de generaciones. En manos de líderes, el cuerno despierta y unifica almas, la victoria es cierta.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/ab/TKPE25-23-28.png/revision/latest?cb=20250925202412&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-23"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_24_zweihander",
@@ -17745,7 +17745,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "024",
    "type": "Arma",
    "race": "—",
    "rarity": "Real",
@@ -17755,7 +17755,7 @@
    "flavour": "Una hoja gigantesca, una espada de dos manos que batalla tras batalla rompe filas enemigas, abriendo paso a la carga del emperador.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/27/TKPE25-24-28.png/revision/latest?cb=20250925202412&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-24"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_25_torre_de_cristal",
@@ -17763,7 +17763,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "025",
    "type": "Tótem",
    "race": "—",
    "rarity": "Real",
@@ -17773,7 +17773,7 @@
    "flavour": "Desde el corazón del éter invoco tu figura; Torre de Cristal, alza tu estructura. Brilla con luz que disipa oscuridad; protege este lugar por la eternidad.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/cd/TKPE25-25-28.png/revision/latest?cb=20250925202413&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-25"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_26_cabala",
@@ -17781,7 +17781,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "026",
    "type": "Talismán",
    "race": "—",
    "rarity": "Real",
@@ -17791,7 +17791,7 @@
    "flavour": "En sagradas letras se esconden misterios profundos. El alma busca respuestas ocultas. En símbolos, números y palabras, el universo se revela.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/16/TKPE25-26-28.png/revision/latest?cb=20250925202413&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-26"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_27_diario_del_cazador",
@@ -17799,7 +17799,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "027",
    "type": "Oro",
    "race": "—",
    "rarity": "Real",
@@ -17809,7 +17809,7 @@
    "flavour": "Entre sombras y bestias, mi senda trazada; el filo en mis manos, la luna es mi aliada. En cada huella, la caza comienza; los monstruos caen, mi destino avanza.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/de/TKPE25-27-28.png/revision/latest?cb=20250925202413&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-27"
+   "specialId": ""
   },
   {
    "id": "toolkit_honor_y_ferocidad__custom__tkpe25_28_torre_de_la_perdicion",
@@ -17817,7 +17817,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "028",
    "type": "Tótem",
    "race": "—",
    "rarity": "Real",
@@ -17827,7 +17827,7 @@
    "flavour": "Se alza en medio de un páramo desolado. Nadie que entra vuelve a ser visto. Dentro, los susurros de almas atrapadas claman por escapar, pero nunca pueden.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/83/TKPE25-28-28.png/revision/latest?cb=20250925202413&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-28"
+   "specialId": ""
   },
   {
    "id": "toolkit_primera_era_2025__custom__tkpe25_29_tesoro_del_dragon",
@@ -17835,7 +17835,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "029",
    "type": "Oro",
    "race": "—",
    "rarity": "Sin Frecuencia",
@@ -17845,7 +17845,7 @@
    "flavour": "Montañas de Oro, plata y piedras preciosas son custodiadas por un codicioso dragón. ¿Estarás dispuesto a perturbar su sueño por una parte de su tesoro?",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/37/TKPE25-29-28.png/revision/latest?cb=20250925202413&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-29"
+   "specialId": ""
   },
   {
    "id": "toolkit_primera_era_2025__custom__tkpe25_30_muneco_fetiche",
@@ -17853,7 +17853,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "030",
    "type": "Oro",
    "race": "—",
    "rarity": "Sin Frecuencia",
@@ -17863,7 +17863,7 @@
    "flavour": "Tallado en sombras y oscuros deseos, portador de poder ancestral. Cada hilo y clavo encierra un hechizo, un vínculo con espíritus ocultos.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b8/TKPE25-30-28.png/revision/latest?cb=20250925202413&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-30"
+   "specialId": ""
   },
   {
    "id": "toolkit_primera_era_2025__custom__tkpe25_31_solarsteinn",
@@ -17871,7 +17871,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "031",
    "type": "Oro",
    "race": "—",
    "rarity": "Sin Frecuencia",
@@ -17881,7 +17881,7 @@
    "flavour": "Gema sagrada que captura la luz del sol, guía de navegantes en mares brumosos. En su corazón arde el brillo eterno del astro mayor.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/88/TKPE25-31-28.png/revision/latest?cb=20250925202415&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-31"
+   "specialId": ""
   },
   {
    "id": "toolkit_primera_era_2025__custom__tkpe25_32_quetzal",
@@ -17889,7 +17889,7 @@
    "edition": "toolkit_primera_era_2025",
    "editionName": "Toolkit Primera Era 2025",
    "format": "PE",
-   "edid": "",
+   "edid": "032",
    "type": "Oro",
    "race": "—",
    "rarity": "Sin Frecuencia",
@@ -17899,7 +17899,7 @@
    "flavour": "Emblema de libertad y belleza celestial. Su plumaje, un resplandor de esmeraldas y rubíes, danza en los cielos como símbolo divino.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/1f/TKPE25-32-28.png/revision/latest?cb=20250925202415&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE25-32"
+   "specialId": ""
   },
   {
    "id": "toolkit_primera_era_2025__custom__edicion_limitada_tkpe25_templo_de_tenochtitlan",
@@ -17943,7 +17943,7 @@
    "edition": "toolkit_primera_era_2024",
    "editionName": "Toolkit Primera Era 2024",
    "format": "PE",
-   "edid": "",
+   "edid": "029",
    "type": "Tótem",
    "race": "—",
    "rarity": "Promocional",
@@ -17953,7 +17953,7 @@
    "flavour": "El cielo en su movimiento creativo está lleno de fuerza. Así el hombre superior se fortalece con su luz.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8e/TKPE24-29-28.png/revision/latest?cb=20250919170657&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE24-29"
+   "specialId": ""
   },
   {
    "id": "toolkit_primera_era_2024__custom__tkpe24_30_totem_del_pajaro_de_trueno",
@@ -17961,7 +17961,7 @@
    "edition": "toolkit_primera_era_2024",
    "editionName": "Toolkit Primera Era 2024",
    "format": "PE",
-   "edid": "",
+   "edid": "030",
    "type": "Tótem",
    "race": "—",
    "rarity": "Promocional",
@@ -17971,7 +17971,7 @@
    "flavour": "Yo no tengo porque detenerme ante el peso del mundo, yo floto entre universos y soy uno con la voz universal.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/11/TKPE24-30-28.png/revision/latest?cb=20250919170732&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE24-30"
+   "specialId": ""
   },
   {
    "id": "toolkit_primera_era_2024__custom__tkpe24_36_kelpie",
@@ -17979,7 +17979,7 @@
    "edition": "toolkit_primera_era_2024",
    "editionName": "Toolkit Primera Era 2024",
    "format": "PE",
-   "edid": "",
+   "edid": "036",
    "type": "Talismán",
    "race": "—",
    "rarity": "Promocional",
@@ -17989,7 +17989,7 @@
    "flavour": "Un bello disfraz sirve para ocultar intenciones malignas. El enemigo de los humanos sella un pacto con las fuerzas de la oscuridad.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/2a/TKPE24-36-28.png/revision/latest?cb=20250923234349&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE24-36"
+   "specialId": ""
   },
   {
    "id": "toolkit_primera_era_2024__custom__tkpe24_37_quemar_al_monstruo",
@@ -17997,7 +17997,7 @@
    "edition": "toolkit_primera_era_2024",
    "editionName": "Toolkit Primera Era 2024",
    "format": "PE",
-   "edid": "",
+   "edid": "037",
    "type": "Talismán",
    "race": "—",
    "rarity": "Promocional",
@@ -18007,7 +18007,7 @@
    "flavour": "La turba siguió al monstruo hasta acorralarlo, esperan que el fuego sea suficiente para limpiar aquella terrible mácula sobre sus vidas.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/59/TKPE24-37-28.png/revision/latest?cb=20250919171427&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE24-37"
+   "specialId": ""
   },
   {
    "id": "toolkit_primera_era_2024__custom__tkpe24_38_pachamama",
@@ -18015,7 +18015,7 @@
    "edition": "toolkit_primera_era_2024",
    "editionName": "Toolkit Primera Era 2024",
    "format": "PE",
-   "edid": "",
+   "edid": "038",
    "type": "Talismán",
    "race": "—",
    "rarity": "Promocional",
@@ -18025,7 +18025,7 @@
    "flavour": "Madre nuestra, eres tiempo que cura los dolores, tiempo que distribuye las estaciones, tierra fecunda. Todos venimos de ti y aceptamos tu ley.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/95/TKPE24-38-28.png/revision/latest?cb=20250919171647&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE24-38"
+   "specialId": ""
   },
   {
    "id": "toolkit_primera_era_2024__custom__tkpe24_39_torre_oscura",
@@ -18033,7 +18033,7 @@
    "edition": "toolkit_primera_era_2024",
    "editionName": "Toolkit Primera Era 2024",
    "format": "PE",
-   "edid": "",
+   "edid": "039",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -18043,7 +18043,7 @@
    "flavour": "La prueba para los caballeros, un lugar donde la oscuridad manda, pero que un buen caballero logrará derrotar.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9a/TKPE24-39-28.png/revision/latest?cb=20250919172635&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE24-39"
+   "specialId": ""
   },
   {
    "id": "toolkit_primera_era_2024__custom__tkpe24_40_mascara_de_tiamath",
@@ -18051,7 +18051,7 @@
    "edition": "toolkit_primera_era_2024",
    "editionName": "Toolkit Primera Era 2024",
    "format": "PE",
-   "edid": "",
+   "edid": "040",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -18061,7 +18061,7 @@
    "flavour": "Tiamath vive en sus sacerdotisas, las que viven al margen de los reinos. Medio vivas, medio entregadas al reino de la muerte.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/26/TKPE24-40-28.png/revision/latest?cb=20250919172853&path-prefix=es",
    "custom": true,
-   "specialId": "TKPE24-40"
+   "specialId": ""
   }
  ]
 }
