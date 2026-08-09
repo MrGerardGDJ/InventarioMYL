@@ -227,24 +227,41 @@ function cardNumOf(c) {
   return Number.isFinite(n) ? n : null;
 }
 
-function loadImageEl(url) {
+function loadImageOnce(url, timeoutMs) {
   return new Promise((resolve) => {
-    if (!url) { resolve(null); return; }
     const img = new Image();
     img.crossOrigin = "anonymous";
-    const timer = setTimeout(() => resolve(null), 12000);
+    const timer = setTimeout(() => resolve(null), timeoutMs);
     img.onload = () => { clearTimeout(timer); resolve(img); };
-    img.onerror = () => { clearTimeout(timer); resolve(null); }; // sin imagen: se dibuja un marcador, nunca se aborta
-    // Esta MISMA url ya se pidió antes SIN crossOrigin (el <img> normal de la
-    // grilla, en cualquier vista de la app) — el navegador puede reusar esa
-    // respuesta cacheada "no-CORS" en vez de volver a pedirla validada, y el
-    // canvas queda "tainted" aunque el servidor sí mande
-    // Access-Control-Allow-Origin (pasa incluso con imágenes propias del
-    // mismo origen). Se agrega un parámetro único para forzar una petición
-    // nueva que sí pase por la validación CORS.
-    const sep = url.includes("?") ? "&" : "?";
-    img.src = url + sep + "_pdfcors=1";
+    img.onerror = () => { clearTimeout(timer); resolve(null); };
+    // Las imágenes externas (api.myl.cl, CDN del wiki) ya se pidieron antes
+    // SIN crossOrigin (el <img> normal de la grilla, en cualquier vista de la
+    // app) — el navegador puede reusar esa respuesta cacheada "no-CORS" en
+    // vez de volver a pedirla validada, y el canvas queda "tainted" aunque el
+    // servidor sí mande Access-Control-Allow-Origin. Se agrega un parámetro
+    // único para forzar una petición nueva que sí pase por la validación
+    // CORS. Las imágenes propias (mismo origen que la app) no lo necesitan —
+    // un origen igual nunca deja el canvas "tainted" sin importar la caché,
+    // así que se evita el cache-busting ahí para no perder el beneficio de
+    // la caché del navegador en colecciones grandes (cientos de imágenes).
+    const isExternal = /^https?:\/\//i.test(url);
+    if (isExternal) {
+      const sep = url.includes("?") ? "&" : "?";
+      img.src = url + sep + "_pdfcors=1";
+    } else {
+      img.src = url;
+    }
   });
+}
+
+// Reintenta una vez: en colecciones grandes (cientos de imágenes en
+// paralelo, ver CONCURRENCY más abajo) alguna puede tardar más que el
+// timeout por congestión de red pasajera, no porque esté realmente rota —
+// sin este reintento esa carta puntual quedaba con marcador "sin imagen"
+// de forma intermitente y no reproducible.
+async function loadImageEl(url) {
+  if (!url) return null;
+  return (await loadImageOnce(url, 12000)) || (await loadImageOnce(url, 12000));
 }
 
 // Dibuja la miniatura de una carta en un canvas fuera de pantalla y
