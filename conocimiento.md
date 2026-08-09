@@ -378,6 +378,43 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (4ª iteración) — Dos bugs reales en Toolkit 2024/2025 encontrados al auditar a fondo tras el reporte "se siguen viendo mal"
+- El dueño del inventario reportó que, después de unificarlas, ambas
+  ediciones Toolkit "se siguen viendo mal" en su colección. Como los
+  cambios que él hace en su navegador no se pueden inspeccionar desde acá,
+  se re-auditó todo el catálogo compartido de las dos ediciones desde cero
+  (duplicados, huecos de numeración, orden de renderizado real vía
+  Playwright) en vez de asumir que ya estaba bien. Aparecieron dos bugs
+  reales, uno por edición:
+  - **Toolkit Primera Era 2024**: las 33 cartas reasignadas por
+    `TOOLKIT_PE_2024_CORRECTIONS` quedaron con **`edid` Y `specialId` seteados
+    a la vez** (ej. `edid: "001"` y `specialId: "TKPE24-15"` en la misma
+    carta) — el esquema del proyecto exige uno u otro, nunca ambos. Causa:
+    las entradas de la tabla de corrección no traían el campo `edid`, y el
+    loop de aplicación en `scrape.js` solo pisa un campo si viene presente
+    en la corrección (`if (fix.edid !== undefined)`) — al no estar, el
+    `edid` original de TOR nunca se limpiaba. Se corrigió agregando
+    `edid: ""` explícito a las 33 entradas de `TOOLKIT_PE_2024_CORRECTIONS`
+    y se re-corrió el scraper para confirmarlo contra datos reales (antes:
+    33/33 cartas con el bug; después: 0/33).
+  - **Toolkit Primera Era 2025**: sin bug de datos (esas cartas siempre
+    fueron 100% custom con `edid` vacío desde que se cargaron), pero sí un
+    problema de **orden visible**: las 2 cartas "Buy a Box" usan el código
+    `EDICIÓN LIMITADA` tal cual lo trae el wiki para esta edición (a
+    diferencia de 2024, donde esas mismas 2 cartas sí tienen número propio
+    `TKPE24-29/30`), así que su `specialId` literal
+    (`"EDICIÓN LIMITADA TKPE25"`) empezaba con "E", que alfabéticamente
+    ordena ANTES que "TKPE25-01" — las 2 cartas bonus aparecían primero en
+    la colección, antes de la carta #1, en vez de al final como cabría
+    esperar (y como sí se ve en 2024, donde por coincidencia sus
+    equivalentes tienen número real). Se renombró su `specialId` a
+    `TKPE25-EL`/`TKPE25-EL-b` (mismo prefijo que el resto de la edición,
+    "EL" ordena después de los dos dígitos numéricos) para que ordenen al
+    final — se tocó solo el `specialId`, nunca el `id`.
+- Verificado con Playwright contra ambas colecciones: 0 `pageerror`, sin
+  duplicados de identificador, orden `TKPE24-01..40` y `TKPE25-01..32` +
+  `TKPE25-EL`/`-EL-b` al final, tal como se ve en pantalla.
+
 ### 2026-08-09 (3ª iteración) — Unifica también Toolkit Primera Era 2025 (mismo problema, esta vez en datos propios)
 - El dueño del inventario notó que la misma partición innecesaria de la
   iteración anterior (Toolkit 2024) también la habíamos cometido nosotros
