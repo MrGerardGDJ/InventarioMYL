@@ -450,3 +450,86 @@ export const TOOLKIT_PE_2024_CORRECTIONS = {
   "129-016": { drop: true }, // Trarilonco (== 128-017)
   "129-017": { drop: true }, // Campana Dedahmmazedi (== 128-018)
 };
+
+// TOR numera de forma corrida 3 ediciones "Mundos Perdidos" que SÍ vienen de
+// su propia API (a diferencia de las demás "Mundos Perdidos", que son 100%
+// custom porque TOR nunca las tuvo): Ciudad de los Césares (131-xxx), Horrores
+// de Salem (130-xxx) y La Saga de Volsung (132-xxx). Mismo bug que ya se había
+// corregido en las demás "Mundos Perdidos" (ver conocimiento.md, 2026-08-04) —
+// pero como estas 3 vienen de TOR y no de custom-cards.json, el fix de esa vez
+// nunca las tocó: el wiki numera cada producto "00" (el Tótem/Oro firma, sin
+// número real) seguido de "01".. "19" (18 cartas core + 1 extra), pero TOR le
+// asigna edid corrido 1..20 empezando por la "00" — deja CADA carta normal
+// corrida en +1 respecto a su número real impreso. Reportado por el dueño del
+// inventario (09-08-2026): "hay cartas con el número 2 cuando son la carta
+// número 1". Verificado carta por carta contra:
+//   https://myl.fandom.com/es/wiki/Lista_de_cartas_de_Mundos_Perdidos_-_Ciudad_de_los_C%C3%A9sares
+//   https://myl.fandom.com/es/wiki/Lista_de_cartas_de_Mundos_Perdidos_-_Horrores_de_Salem
+//   https://myl.fandom.com/es/wiki/Lista_de_cartas_de_Mundos_Perdidos_-_La_Saga_de_Volsung
+// Mismo criterio que LEYENDAS_2023_CORRECTIONS arriba: la carta "00" pasa a
+// especial (specialId "<prefijo>-00"), el resto se corre -1.
+export const MUNDOS_PERDIDOS_TOR_CORRECTIONS = {
+  // Ciudad de los Césares (131-xxx)
+  "131-001": { edid: "", specialId: "MPC-00" },
+  "131-002": { edid: "001", specialId: "" },
+  "131-003": { edid: "002", specialId: "" },
+  "131-004": { edid: "003", specialId: "" },
+  "131-005": { edid: "004", specialId: "" },
+  "131-006": { edid: "005", specialId: "" },
+  "131-007": { edid: "006", specialId: "" },
+  "131-008": { edid: "007", specialId: "" },
+  "131-009": { edid: "008", specialId: "" },
+  "131-010": { edid: "009", specialId: "" },
+  "131-011": { edid: "010", specialId: "" },
+  "131-012": { edid: "011", specialId: "" },
+  "131-013": { edid: "012", specialId: "" },
+  "131-014": { edid: "013", specialId: "" },
+  "131-015": { edid: "014", specialId: "" },
+  "131-016": { edid: "015", specialId: "" },
+  "131-017": { edid: "016", specialId: "" },
+  "131-018": { edid: "017", specialId: "" },
+  "131-019": { edid: "018", specialId: "" },
+  "131-020": { edid: "019", specialId: "" },
+  // Horrores de Salem (130-xxx)
+  "130-001": { edid: "", specialId: "MPS-00" },
+  "130-002": { edid: "001", specialId: "" },
+  "130-003": { edid: "002", specialId: "" },
+  "130-004": { edid: "003", specialId: "" },
+  "130-005": { edid: "004", specialId: "" },
+  "130-006": { edid: "005", specialId: "" },
+  "130-007": { edid: "006", specialId: "" },
+  "130-008": { edid: "007", specialId: "" },
+  "130-009": { edid: "008", specialId: "" },
+  "130-010": { edid: "009", specialId: "" },
+  "130-011": { edid: "010", specialId: "" },
+  "130-012": { edid: "011", specialId: "" },
+  "130-013": { edid: "012", specialId: "" },
+  "130-014": { edid: "013", specialId: "" },
+  "130-015": { edid: "014", specialId: "" },
+  "130-016": { edid: "015", specialId: "" },
+  "130-017": { edid: "016", specialId: "" },
+  "130-018": { edid: "017", specialId: "" },
+  "130-019": { edid: "018", specialId: "" },
+  "130-020": { edid: "019", specialId: "" },
+  // La Saga de Volsung (132-xxx)
+  "132-001": { edid: "", specialId: "MPV-00" },
+  "132-002": { edid: "001", specialId: "" },
+  "132-003": { edid: "002", specialId: "" },
+  "132-004": { edid: "003", specialId: "" },
+  "132-005": { edid: "004", specialId: "" },
+  "132-006": { edid: "005", specialId: "" },
+  "132-007": { edid: "006", specialId: "" },
+  "132-008": { edid: "007", specialId: "" },
+  "132-009": { edid: "008", specialId: "" },
+  "132-010": { edid: "009", specialId: "" },
+  "132-011": { edid: "010", specialId: "" },
+  "132-012": { edid: "011", specialId: "" },
+  "132-013": { edid: "012", specialId: "" },
+  "132-014": { edid: "013", specialId: "" },
+  "132-015": { edid: "014", specialId: "" },
+  "132-016": { edid: "015", specialId: "" },
+  "132-017": { edid: "016", specialId: "" },
+  "132-018": { edid: "017", specialId: "" },
+  "132-019": { edid: "018", specialId: "" },
+  "132-020": { edid: "019", specialId: "" },
+};
