@@ -378,6 +378,40 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (12ª iteración) — Continúa la cadena "20 Años" al bloque Primer Bloque (9 cartas, edición nueva separada por bloque)
+- Tras cargar las 7 cartas "20 Años" de Primera Era (iteración anterior),
+  el dueño pidió completar el resto de la serie, aclarando que **no hay
+  que mezclar bloques distintos en la misma edición** — cada bloque
+  (Primer Bloque, Segundo Bloque, etc.) debe tener su propia edición
+  "Cartas Promo 20 Años - <Bloque>", ya que no comparten una raíz común.
+- Se siguió la cadena `anterior`/`siguiente` del wiki desde "Espada Real
+  (20 Años)" (última carta de Primera Era) hacia adelante: 9 cartas más,
+  todas del bloque **Primer Bloque** (origen Espada Sagrada ×4, Cruzadas
+  ×1, Tierras Altas ×2, y "Promo Primer Bloque" genérico ×1 para
+  Helénica) — Fe sin Límite, Capa de Invisibilidad, Hacha de Batalla,
+  Códex Arturicus, Cruz Templaria, Helénica, Ogham, Gaitas, Carmix.
+  Confirmado con `edición=` propio de cada página + su categoría de wiki
+  (`Categoría:Cartas Promo Primer Bloque` en el caso de Helénica) — nunca
+  por suposición.
+- **La cadena se corta después de "Carmix"**: su campo `siguiente` apunta
+  a "Takelot (20 Años)", pero esa página **no existe** en el wiki
+  (confirmado con `action=query&titles=File:...` y búsqueda de título) —
+  es un hueco real de documentación del wiki, no se inventó nada para
+  rellenarlo. Si el wiki la crea más adelante, ahí se retoma la cadena
+  (probablemente sigue en Primer Bloque un poco más antes de saltar a
+  Segundo Bloque).
+- Nueva edición `promo_20_anos_pb` ("Cartas Promo 20 Años - Primer
+  Bloque"), numeración propia `20A-PB-01`..`09` (mismo criterio que
+  `20A-01..07` de Primera Era: el código real del wiki no sirve para
+  diferenciar cartas, casi todas dicen "EDICIÓN LIMITADA 20 AÑOS" sin
+  número). **8/9 con imagen**; "Cruz Templaria (20 Años)" se dejó sin
+  imagen a propósito — el archivo `Cruz Templaria 20 Años.png` no existe
+  en el wiki (`imageinfo` devuelve `"missing": ""`), hueco real, no un
+  bug del script.
+- Validado con Playwright: colección con `promo_20_anos_pb` → 9/9
+  cartas, orden correcto, 0 `pageerror`, "Cruz Templaria" cae en
+  placeholder de "sin imagen" (esperado) en vez de imagen rota.
+
 ### 2026-08-09 (11ª iteración) — Completa cartas promocionales faltantes: Juego Organizado (4 nuevas) + set Cartas Promo 20 Años (7 cartas, edición nueva)
 - El dueño del inventario reportó tener una carta física "Espada Real" con
   el logo "20 Años" que no aparecía en el catálogo, y pidió revisar
