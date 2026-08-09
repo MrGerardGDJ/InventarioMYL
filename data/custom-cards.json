@@ -16079,7 +16079,7 @@
    "strength": null,
    "ability": "Un vampiro oponente no hace daño al atacar en este turno.",
    "flavour": "Fascinado por su belleza, seducido por sus miradas, no alcanzó a gritar por ayuda. Lo último que vio fueron sus agudos colmillos. Pobres incautos.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/juego_organizado_pe_052_mordida.jpg",
    "custom": true,
    "specialId": "JO-52"
   },
