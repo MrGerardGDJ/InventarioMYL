@@ -378,6 +378,42 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (13ª iteración) — Descubre que la tabla curada "Klu" de 20 Años (Primera Era) estaba incompleta; agrega Tótem de Guerra y Golpe Vampiro
+- El dueño reportó tener físicamente un "Tótem de Guerra" con el logo
+  "20 Años" que no estaba en las 7 cartas cargadas en la iteración
+  10ª/11ª. Al re-seguir la cadena real `anterior`/`siguiente` del wiki
+  desde "Flechero (20 Años)" (en vez de confiar en la tabla resumen de
+  la página "Cartas Promo Primera Era Klu"), se descubrió que esa tabla
+  **no era exhaustiva**: entre "Tesoro de Guayacán" y "Guardián" la
+  cadena real pasa por "Tótem de Guerra" y "Golpe Vampiro", ninguna de
+  las dos listada en la tabla curada.
+- **Ninguna de las dos tiene página propia `(20 Años)` en el wiki
+  todavía** (confirmado, no existen) — pero sí hay evidencia sólida de
+  que son reales: (1) el dueño confirma tener la física, y (2) las
+  páginas base sin promo ("Tótem de Guerra" y "Golpe Vampiro", ambas del
+  set Misión Santiago) se encadenan entre sí en el MISMO orden
+  (Tótem de Guerra → Golpe Vampiro → Guardián) que la cadena "20 Años"
+  ya confirmada (Guardián declara "anterior = Golpe Vampiro (20 Años)").
+  Como el texto de reglas no cambia entre el original y su reimpresión
+  "20 Años" (solo cambia el arte/logo, confirmado en la intro de la
+  página Klu), se cargaron tipo/coste/habilidad/rareza desde la página
+  base de Misión Santiago — dato real, no inventado. La imagen se dejó
+  vacía en ambas (no hay scan confirmado de la versión 20 Años
+  específica, mismo criterio que Cruz Templaria).
+- Agregadas como `20A-08` (Tótem de Guerra) y `20A-09` (Golpe Vampiro)
+  en `promo_20_anos_pe` — se numeran al final de la secuencia ya
+  existente en vez de insertarse en su posición cronológica real, para
+  no reasignar los ids `20A-01`..`07` ya shippeados (contrato de
+  estabilidad de `id`).
+- **Aviso para el dueño**: dado que la tabla curada del wiki demostró
+  tener huecos, es probable que existan más cartas "20 Años" (en
+  cualquier bloque) que tampoco aparezcan en ninguna tabla resumen —
+  solo se encuentran re-siguiendo la cadena real página por página. Si
+  el dueño identifica más cartas físicas "20 Años" que no aparezcan en
+  el catálogo, avisar para repetir este mismo proceso.
+- Validado con Playwright: colección con `promo_20_anos_pe` → 9/9
+  cartas, orden y nombres correctos, 0 `pageerror`.
+
 ### 2026-08-09 (12ª iteración) — Continúa la cadena "20 Años" al bloque Primer Bloque (9 cartas, edición nueva separada por bloque)
 - Tras cargar las 7 cartas "20 Años" de Primera Era (iteración anterior),
   el dueño pidió completar el resto de la serie, aclarando que **no hay

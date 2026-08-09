@@ -19088,6 +19088,42 @@
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/75/Carmix_20_A%C3%B1os.png/revision/latest?cb=20210814052301&path-prefix=es",
    "custom": true,
    "specialId": "20A-PB-09"
+  },
+  {
+   "id": "promo_20_anos_pe__custom__8_totem_de_guerra",
+   "name": "Tótem de Guerra",
+   "edition": "promo_20_anos_pe",
+   "editionName": "Cartas Promo 20 Años",
+   "format": "PE",
+   "edid": "",
+   "type": "Tótem",
+   "race": "—",
+   "rarity": "Promocional",
+   "cost": 3,
+   "strength": null,
+   "ability": "Mientras este Tótem esté en juego, los Oros no pueden ser destruidos.",
+   "flavour": "",
+   "image": "",
+   "custom": true,
+   "specialId": "20A-08"
+  },
+  {
+   "id": "promo_20_anos_pe__custom__9_golpe_vampiro",
+   "name": "Golpe Vampiro",
+   "edition": "promo_20_anos_pe",
+   "editionName": "Cartas Promo 20 Años",
+   "format": "PE",
+   "edid": "",
+   "type": "Arma",
+   "race": "—",
+   "rarity": "Promocional",
+   "cost": 3,
+   "strength": null,
+   "ability": "El portador gana +2 a la fuerza. Si la utilizas en torneos oficiales ganas +5 a la fuerza.",
+   "flavour": "",
+   "image": "",
+   "custom": true,
+   "specialId": "20A-09"
   }
  ]
 }
