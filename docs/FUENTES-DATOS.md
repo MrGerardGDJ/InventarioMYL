@@ -152,6 +152,29 @@ un archivo** comunitario.
 Cuando encuentres una candidata, corre por ella la **lista de la sección 4** y, si
 pasa, me pasas la URL de su API y la integro.
 
+### 6b) Tiendas usadas solo para completar imágenes (no catálogo)
+
+No son fuente de catálogo (no tienen API ni cobertura completa), pero sirven
+para rellenar imágenes faltantes de cartas ya registradas cruzando por
+código/SKU exacto — nunca por nombre solo (ver skill `registrar-nueva-edicion`,
+Paso 3, para la técnica de cruce completa). Imágenes de estas tiendas se
+auto-hospedan en `data/custom-images/<tienda>/`, nunca se hotlinkean.
+
+- **mylserena.cl** (Jumpseller) — la de mejor cobertura probada. Cada producto
+  trae el código exacto de la carta en el `description` del JSON-LD. Script
+  dedicado: `.claude/skills/registrar-nueva-edicion/scripts/match_mylserena_sitemap.py`
+  (recorre el sitemap completo, no solo la categoría, que suele estar incompleta).
+- **mesaredondatcg.cl** (WooCommerce) — SKU exacto en el bloque
+  `gtm4wp_productdata` de cada página de producto. Su categoría
+  `/categoria-producto/carta/` sí suele estar completa (a diferencia de
+  mylserena), alcanza con recorrer la paginación.
+- **cuevadelasleyendas.cl** (Jumpseller) — mismo patrón que mylserena
+  (`"image": "..."` directo en el JSON-LD de la página de producto, sin
+  necesitar el código en el `description`). Usada 2026-08-09 para conseguir
+  una foto real de "Tótem de Guerra (Edición Limitada 20 Años)" que no
+  tenía scan disponible en el wiki — la URL del producto la trae el usuario,
+  no hace falta recorrer su sitemap para esto.
+
 ---
 
 ### Mientras tanto

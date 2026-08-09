@@ -19103,7 +19103,7 @@
    "strength": null,
    "ability": "Mientras este Tótem esté en juego, los Oros no pueden ser destruidos.",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/cuevadelasleyendas/promo_20_anos_pe_08_totem_de_guerra.jpg",
    "custom": true,
    "specialId": "20A-08"
   },
