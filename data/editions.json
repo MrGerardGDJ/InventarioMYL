@@ -426,6 +426,12 @@
     "name": "Dante PB"
   },
   {
+    "slug": "promo_20_anos_pb",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Cartas Promo 20 Años - Primer Bloque"
+  },
+  {
     "slug": "guerrero_jaguar",
     "format": "SB",
     "formatName": "Segundo Bloque",
