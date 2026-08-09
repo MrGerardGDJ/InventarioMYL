@@ -207,13 +207,19 @@
     "slug": "toolkit_honor_y_ferocidad",
     "format": "PE",
     "formatName": "Primera Era",
-    "name": "Toolkit Honor Y Ferocidad"
+    "name": "Toolkit Honor y Ferocidad"
   },
   {
     "slug": "toolkit_valentia_y_desolacion",
     "format": "PE",
     "formatName": "Primera Era",
-    "name": "Toolkit Valentia Y Desolacion"
+    "name": "Toolkit Valentía y Desolación"
+  },
+  {
+    "slug": "toolkit_primera_era_2025",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Toolkit Primera Era 2025"
   },
   {
     "slug": "xinnian_año_serpiente_2025",

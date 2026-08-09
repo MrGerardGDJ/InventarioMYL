@@ -378,6 +378,65 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 — Toolkit Primera Era 2025 (primer uso real de la skill "registrar-nueva-edicion")
+- Primera vez que se corre el flujo completo de la nueva skill de punta a
+  punta, con un caso real: `/registrar-nueva-edicion Toolkit Primera Era
+  2025`.
+  - **Paso 1 (API)**: `curl` a `/cards/edition/todas` no encontró ningún
+    slug con "toolkit" que corresponda — TOR no la tiene.
+  - **Paso 2 (wiki)**: la página "Lista de cartas de Toolkit Primera Era
+    2025" (código `TKPE25`) existe y trae **34 cartas** en 3 sub-tablas:
+    la principal (28, con una columna "Kit" que declara a cuál de dos
+    "kits" temáticos pertenece cada una — "Toolkit Valentía y Desolación"
+    ×14, "Toolkit Honor y Ferocidad" ×14), "Oros foil" (4, sin Kit) y
+    "Buy a Box" (2, código "EDICIÓN LIMITADA" sin número, ambas con
+    `Frecuencia: Promocional`). El extractor genérico no soporta esta
+    tabla (columna "Kit" adicional + 3 sub-tablas), así que se escribió un
+    driver a medida reusando las funciones compartidas de
+    `extract_myl_edition.py` — mismo patrón que CRPE2/Vigilantes/Juego
+    Organizado. **34/34 con imagen, las 34 con confianza "específica"**
+    (todas tenían página propia `(TKPE25)` o `edición=` declarado) — cero
+    casos ambiguos.
+  - **Decisión de estructura** (la única parte no puramente mecánica de
+    este caso): el catálogo YA tenía dos ediciones "fantasma" con 0 cartas
+    — `toolkit_valentia_y_desolacion` y `toolkit_honor_y_ferocidad` —
+    creadas de antemano previendo exactamente esta carga. Se usaron esas
+    dos para las 28 cartas de la tabla principal (14 cada una, según la
+    columna "Kit"), y se creó una tercera edición nueva,
+    `toolkit_primera_era_2025`, para las 6 cartas que no pertenecen a
+    ningún Kit específico (los 4 Oro foil + las 2 Buy a Box). Se
+    aprovechó para corregir la capitalización/tildes de los nombres de
+    las dos ediciones fantasma (`Toolkit Honor Y Ferocidad` →
+    `Toolkit Honor y Ferocidad`, `Toolkit Valentia Y Desolacion` →
+    `Toolkit Valentía y Desolación`).
+  - **Numeración**: las 34 cartas comparten un único código impreso
+    corrido `TKPE25 01/28` … `32/28` (el denominador "28" se mantiene fijo
+    incluso para las cartas 29-32, igual que el patrón de overflow
+    promocional ya visto en LPE4 `LPE4 - 324/320`) repartido entre 3
+    ediciones distintas — renumerar cada edición desde 1 habría
+    desconectado el número mostrado del código real impreso en la carta
+    física/escaneada (el mismo tipo de bug de numeración ya corregido dos
+    veces esta sesión). Se optó por preservar el código completo como
+    `specialId` (`TKPE25-01` … `TKPE25-32`, sin `edid`) en las tres
+    ediciones — ninguna carta de Toolkit PE 2025 es "numerada" en el
+    sentido de la app, las 34 son especiales, igual que ya pasa con
+    Lootbox y Juego Organizado. Las 2 cartas "Buy a Box" sin número propio
+    usan `EDICIÓN LIMITADA TKPE25`/`EDICIÓN LIMITADA TKPE25-b`, mismo
+    patrón de sufijo de letra ya usado en Lootbox PE 2025.
+  - **Paso 3 (imágenes de tiendas)**: no hizo falta — las 34 imágenes ya
+    vinieron resueltas del wiki con confianza "específica" en el Paso 2.
+    Como son URLs de `static.wikia.nocookie.net` (CDN del wiki, con CORS
+    abierto, no una tienda comercial) se dejaron **hotlinkeadas
+    directamente**, igual que las demás ~519 cartas del proyecto que ya
+    vienen del wiki — la regla de "nunca hotlink" es específica de las
+    tiendas comerciales (mesaredondatcg.cl, mylserena.cl), no del wiki.
+  - **Paso 5 (validación)**: `node --check` a los `.js` sin tocar (no hizo
+    falta modificar código, solo datos), JSON válidos, smoke test con
+    Playwright: las 3 ediciones aparecen en el selector, una colección que
+    agrupa las 3 muestra 34/34 cartas en 3 secciones separadas con el
+    identificador correcto en cada insignia, 0 imágenes rotas
+    (`naturalWidth 0`), 0 `pageerror`.
+
 ### 2026-08-08 (2ª iteración) — Nueva skill "registrar-nueva-edicion"
 - Este flujo (¿ya está en la API de TOR? → si no, extraerla del wiki → si
   faltan imágenes, cruzar tiendas por código exacto de carta → registrar en
