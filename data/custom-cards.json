@@ -2892,7 +2892,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Algunos signos divinos están esparcidos entre los hombres, como huellas de un camino que puede salvar o matar.",
-   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_169_fruto_sagrado.webp",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_169_fruto_sagrado.jpg",
    "custom": true
   },
   {
@@ -2926,7 +2926,7 @@
    "strength": 3,
    "ability": "Cuando entra en juego, muestra la primera carta del Mazo Castillo de un oponente, luego ese jugador bota tantas cartas como coste tenga esa carta.<br>Cuando salga del juego, muestra la primera carta del Mazo Castillo de un oponente, luego ese jugador bota tantas cartas como coste tenga esa carta.",
    "flavour": "Hijo de un demonio de la noche y una campesina, ahora su meta es destruir a los monstruos que infestan las tierras más tristes de la Tierra.",
-   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_171_dhampir.webp",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_171_dhampir.jpg",
    "custom": true
   },
   {
@@ -3096,7 +3096,7 @@
    "strength": null,
    "ability": "Cuando entra en juego, cada jugador elige entre descartar una carta de su Mano o botar 3 cartas de su Mazo Castillo.",
    "flavour": "Guía celestial para invocar protección y sabiduría. Sus páginas, cargadas de poder espiritual, revelan rituales que conectan lo humano con lo divino.",
-   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_181_grimorio_sacro.webp",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_181_grimorio_sacro.jpg",
    "custom": true
   },
   {
@@ -5629,7 +5629,7 @@
    "strength": null,
    "ability": "",
    "flavour": "El horizonte estalla en todas las direcciones, pero, al igual que un tornado, no olvida su centro.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_330_rosa_de_los_vientos.jpg",
    "custom": true
   },
   {
@@ -5646,7 +5646,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_331_alabarda_de_la_sangre.jpg",
    "custom": true
   },
   {
@@ -5663,7 +5663,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_332_amuleto_pagano.jpg",
    "custom": true
   },
   {
@@ -5680,7 +5680,7 @@
    "strength": null,
    "ability": "Destruye un aliado en juego y no puedes ser atacado el próximo turno.",
    "flavour": "¿Pagarán justos por pecadores?. ¡Disparad, es una orden! ¡Que dios sabrá distinguir a los suyos!",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_333_justos_por_pecadores.jpg",
    "custom": true
   },
   {
@@ -5697,7 +5697,7 @@
    "strength": null,
    "ability": "Paga un Oro y anula la habilidad de todas las Armas en juego (una vez por turno).",
    "flavour": "Cuando llegue el final de las cosas, entre los últimos jirones del saber antiguo, escucharás los cánticos de la resurrección.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_334_totem_ultimo.jpg",
    "custom": true
   },
   {
@@ -5714,7 +5714,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_335_arco_naskapi.jpg",
    "custom": true
   },
   {
@@ -5731,7 +5731,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_336_pintura_naskapi.jpg",
    "custom": true
   },
   {
@@ -5748,7 +5748,7 @@
    "strength": null,
    "ability": "Destruye todos tus Aliados en juego y pon gratis un Aliado en juego desde tu mano.",
    "flavour": "Tendremos que perecer. Señores Águilas y Jaguares, aunque fuerais de jade o de oro, también iremos a su casa, al lugar de los descarnados.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_337_ah_puch.jpg",
    "custom": true
   },
   {
@@ -5765,7 +5765,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Las diferentes ramas de las tribus se iban reuniendo y éste fue el lugar de su ciudad... Allí hicieron sus casas y construyeron el templo. Mientras otras ciudades-estado declinan, Uxmal se alza.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_338_uxmal.jpg",
    "custom": true
   },
   {
@@ -5799,7 +5799,7 @@
    "strength": null,
    "ability": "",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_340_karve.jpg",
    "custom": true
   },
   {
@@ -5816,7 +5816,7 @@
    "strength": null,
    "ability": "Cuando un aliado sea destruido juega inmediatamente este Talismán para que dicho aliado siga en juego. Luego podrás robar una carta de tu castillo.",
    "flavour": "Qué podría darte... ¿el valor de osar en lo imposible? Hecho singular es este amor de un ser que no es de esta tierra y un mortal.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_341_amor_de_valkyria.jpg",
    "custom": true
   },
   {
@@ -5833,7 +5833,7 @@
    "strength": null,
    "ability": "Agrega +1 a la fuerza de su portador. Si su portador ataca tú tienes la primera acción en combate.",
    "flavour": "Desde el principio de los tiempos los pedazos de cuero que los hombres arrancan de las puntas de los talones de sus zapatos ayudan a conformar el invencible calzado de Vidar, hijo de Odín.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_342_zapatos_de_hierro.jpg",
    "custom": true
   },
   {
@@ -6003,7 +6003,7 @@
    "strength": null,
    "ability": "",
    "flavour": "Al contemplarla se ve la relación en el mundo de lo superior e inferior y los cambios que regulan la existencia cósmica.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_352_calabaza_del_inmortal.jpg",
    "custom": true
   },
   {
