@@ -378,6 +378,41 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (18ª iteración) — El "PDF sin imágenes" en Mundos Perdidos NO era el bug del canvas: eran 6 cartas sin imagen real en el catálogo
+- El dueño mandó capturas del PDF de "Mundos Perdidos" (220 cartas, 6
+  páginas): varias cartas seguían sin imagen (Xí Yóu Jí, Zhu Baie,
+  Monte del Buitre, Poder del Relámpago, Johnny Ringo — todas con
+  marcador oscuro en vez de foto) y pidió que el PDF "se quede pensando
+  todo lo que sea necesario" con tal de traer las imágenes.
+- **Investigado antes de tocar el exportador de nuevo**: se revisó el
+  campo `image` de esas cartas en `data/custom-cards.json` directo —
+  **estaba vacío (`""`)**, no roto ni con URL mala. No era un problema
+  de timeout/CORS del PDF (las dos iteraciones anteriores) — esas
+  cartas nunca tuvieron imagen cargada en el catálogo, así que salen en
+  blanco en CUALQUIER vista de la app, no solo en el PDF. Se encontraron
+  6 en total: Zhu Baie, Monte del Buitre y Xí Yóu Jí (Viaje al Oeste),
+  Poder del Relámpago (Señores del Trueno), Johnny Ringo (Tombstone) y
+  Brunhild (Locura de Dragón, no salió en las capturas pero tenía el
+  mismo hueco).
+- Las 6 SÍ tienen imagen específica en el wiki (páginas sin
+  desambiguador porque son impresión única) — resueltas y cargadas:
+  `MPO-03-18`, `MPO-14-18`, `MPO-00-18`, `MPT-19-18`, `MPTO-20-18`,
+  `MPSG-20-18`, todas confirmadas por el campo `edición=` propio de
+  cada página coincidiendo con el catálogo. Reemplazo quirúrgico del
+  campo `image` acotado al bloque de cada carta (nunca un reemplazo
+  global de `"image": ""`, que pisaría la de otra carta con el mismo
+  hueco).
+- **Aparte, se atendió el pedido explícito** de priorizar completitud
+  sobre velocidad en el exportador: `loadImageEl` en `js/exporters.js`
+  pasó de 1 reintento (2 intentos × 12s) a **5 intentos con timeout
+  creciente** (8s/12s/16s/20s/24s, ~80s de margen total por carta en el
+  peor caso), y `CONCURRENCY` bajó de 6 a 4 para generar menos
+  congestión propia. Esto ayuda con timeouts genuinos, pero no
+  reemplaza revisar primero si la imagen existe en el catálogo — son
+  dos causas distintas del mismo síntoma visual.
+- Validado: JSON íntegro, las 6 ediciones de Mundos Perdidos quedan con
+  0 cartas sin imagen.
+
 ### 2026-08-09 (17ª iteración) — Mismo bug de numeración "Mundos Perdidos" (2026-08-04) seguía sin corregir en 3 ediciones que vienen de TOR
 - El dueño reportó que en su colección de Mundos Perdidos todavía había
   cartas con el número 2 cuando eran la carta número 1, y pidió correr

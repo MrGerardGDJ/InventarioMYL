@@ -254,14 +254,20 @@ function loadImageOnce(url, timeoutMs) {
   });
 }
 
-// Reintenta una vez: en colecciones grandes (cientos de imágenes en
-// paralelo, ver CONCURRENCY más abajo) alguna puede tardar más que el
-// timeout por congestión de red pasajera, no porque esté realmente rota —
-// sin este reintento esa carta puntual quedaba con marcador "sin imagen"
-// de forma intermitente y no reproducible.
+// Varios reintentos con timeout creciente: en colecciones grandes (cientos
+// de imágenes en paralelo, ver CONCURRENCY más abajo) alguna puede tardar
+// más que un timeout corto por congestión de red pasajera, no porque esté
+// realmente rota — el dueño del inventario prefiere que el PDF tarde lo que
+// haga falta antes que dejar cartas sin imagen. 5 intentos, 8s/12s/16s/20s/24s
+// (~80s de margen total en el peor caso, solo para la carta que lo necesite).
+const LOAD_IMAGE_TIMEOUTS = [8000, 12000, 16000, 20000, 24000];
 async function loadImageEl(url) {
   if (!url) return null;
-  return (await loadImageOnce(url, 12000)) || (await loadImageOnce(url, 12000));
+  for (const timeoutMs of LOAD_IMAGE_TIMEOUTS) {
+    const img = await loadImageOnce(url, timeoutMs);
+    if (img) return img;
+  }
+  return null;
 }
 
 // Dibuja la miniatura de una carta en un canvas fuera de pantalla y
@@ -349,7 +355,7 @@ export async function exportCollectionPDF(collection, cards, getQty, displayName
   const SCALE = 3, cardW = 68 * SCALE, cardH = Math.round(cardW * CARD_ASPECT);
   const thumbs = new Array(cards.length);
   let doneCount = 0;
-  const CONCURRENCY = 6;
+  const CONCURRENCY = 4; // menos que antes: menos peticiones a la vez → menos timeouts por congestión propia
   let next = 0;
   async function worker() {
     while (next < cards.length) {
