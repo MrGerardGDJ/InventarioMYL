@@ -166,11 +166,19 @@ function loadImageEl(url) {
   return new Promise((resolve) => {
     if (!url) { resolve(null); return; }
     const img = new Image();
-    img.crossOrigin = "anonymous"; // ambos orígenes usados (api.myl.cl y el CDN del wiki) envían CORS
+    img.crossOrigin = "anonymous";
     const timer = setTimeout(() => resolve(null), 12000);
     img.onload = () => { clearTimeout(timer); resolve(img); };
     img.onerror = () => { clearTimeout(timer); resolve(null); }; // sin imagen: se dibuja un marcador, nunca se aborta
-    img.src = url;
+    // Esta MISMA url ya se pidió antes SIN crossOrigin (el <img> normal de la
+    // grilla, en cualquier vista de la app) — el navegador puede reusar esa
+    // respuesta cacheada "no-CORS" en vez de volver a pedirla validada, y el
+    // canvas queda "tainted" aunque el servidor sí mande
+    // Access-Control-Allow-Origin (pasa incluso con imágenes propias del
+    // mismo origen). Se agrega un parámetro único para forzar una petición
+    // nueva que sí pase por la validación CORS.
+    const sep = url.includes("?") ? "&" : "?";
+    img.src = url + sep + "_pdfcors=1";
   });
 }
 
@@ -183,21 +191,29 @@ function renderCardThumb(img, owned, w, h, label) {
   const c = document.createElement("canvas");
   c.width = w; c.height = h;
   const ctx = c.getContext("2d");
+  let drewImage = false;
   if (img && img.naturalWidth) {
     // cubre el marco manteniendo proporción (equivalente a object-fit: cover)
     const s = Math.max(w / img.naturalWidth, h / img.naturalHeight);
     const dw = img.naturalWidth * s, dh = img.naturalHeight * s;
     ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
-    if (!owned) {
-      const data = ctx.getImageData(0, 0, w, h);
-      const px = data.data;
-      for (let i = 0; i < px.length; i += 4) {
-        const gray = (0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2]) * 0.5;
-        px[i] = px[i + 1] = px[i + 2] = gray;
+    drewImage = true;
+    // getImageData/toDataURL tiran SecurityError si el canvas quedó "tainted"
+    // (puede pasar aunque el servidor mande CORS, ver nota en loadImageEl) —
+    // sin esto, UNA sola carta con ese problema aborta el PDF entero.
+    try {
+      if (!owned) {
+        const data = ctx.getImageData(0, 0, w, h);
+        const px = data.data;
+        for (let i = 0; i < px.length; i += 4) {
+          const gray = (0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2]) * 0.5;
+          px[i] = px[i + 1] = px[i + 2] = gray;
+        }
+        ctx.putImageData(data, 0, 0);
       }
-      ctx.putImageData(data, 0, 0);
-    }
-  } else {
+    } catch { /* canvas tainted: se deja la imagen a color, mejor que nada */ }
+  }
+  if (!drewImage) {
     // Sin imagen: marcador oscuro con el nombre, como .placeholder en la app
     ctx.fillStyle = owned ? "#1f2330" : "#14161e";
     ctx.fillRect(0, 0, w, h);
@@ -213,7 +229,13 @@ function renderCardThumb(img, owned, w, h, label) {
     }
     if (line) ctx.fillText(line, w / 2, ly);
   }
-  return c.toDataURL("image/jpeg", 0.85);
+  try {
+    return c.toDataURL("image/jpeg", 0.85);
+  } catch {
+    // canvas tainted pese al cache-busting de loadImageEl (caso raro): se
+    // dibuja el marcador en vez de perder toda la exportación por una carta.
+    return renderCardThumb(null, owned, w, h, label);
+  }
 }
 
 function truncateText(doc, text, maxWidth) {

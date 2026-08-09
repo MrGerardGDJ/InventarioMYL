@@ -378,6 +378,37 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (14ª iteración) — Bug real: el PDF de Colección no incluía imágenes (canvas "tainted" por reuso de caché sin CORS)
+- El dueño reportó que al exportar el PDF de una colección, las cartas
+  salían sin imagen (marcador oscuro) pese a que en pantalla sí se ven.
+- **Causa real**: cada carta ya se muestra en algún momento como `<img>`
+  normal en la grilla de la app (Catálogo/Colecciones), sin
+  `crossOrigin` — eso deja en la caché HTTP del navegador una respuesta
+  "no validada por CORS" para esa misma URL. Cuando el exportador de PDF
+  pide la MISMA url con `crossOrigin="anonymous"` (necesario para poder
+  leer los píxeles del canvas y aplicar el efecto blanco y negro a las
+  que faltan), el navegador puede reusar esa entrada de caché en vez de
+  volver a pedirla — el `<canvas>` queda "tainted" aunque el servidor sí
+  mande `Access-Control-Allow-Origin` (confirmado que `api.myl.cl` y el
+  CDN del wiki lo mandan, así que no era un problema de esas fuentes
+  específicamente). `ctx.getImageData()`/`canvas.toDataURL()` tiran
+  `SecurityError` en un canvas así — sin try/catch, **una sola** carta
+  con este problema abortaba `Promise.all` y con eso toda la
+  exportación quedaba sin imágenes.
+- Corregido en `js/exporters.js`: (1) `loadImageEl` agrega un parámetro
+  `?_pdfcors=1` a la URL antes de pedirla, forzando una petición nueva
+  que si pase por validación CORS real en vez de reusar la caché
+  "opaca"; (2) `renderCardThumb` ahora envuelve el
+  `getImageData`/`toDataURL` en try/catch — si de todos modos queda
+  tainted (caso raro), esa carta puntual cae a su marcador en vez de
+  tirar abajo el PDF completo.
+- No se pudo reproducir el "tainted canvas" en este entorno de
+  desarrollo (el navegador headless de las pruebas no tiene salida a
+  redes externas, solo a `localhost`), así que el fix se validó por
+  código + por el mecanismo documentado del navegador, no con una
+  reproducción end-to-end — pedirle al dueño que confirme tras el
+  próximo deploy.
+
 ### 2026-08-09 (13ª iteración) — Descubre que la tabla curada "Klu" de 20 Años (Primera Era) estaba incompleta; agrega Tótem de Guerra y Golpe Vampiro
 - El dueño reportó tener físicamente un "Tótem de Guerra" con el logo
   "20 Años" que no estaba en las 7 cartas cargadas en la iteración
