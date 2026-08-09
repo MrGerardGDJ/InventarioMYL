@@ -378,6 +378,40 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (17ª iteración) — Mismo bug de numeración "Mundos Perdidos" (2026-08-04) seguía sin corregir en 3 ediciones que vienen de TOR
+- El dueño reportó que en su colección de Mundos Perdidos todavía había
+  cartas con el número 2 cuando eran la carta número 1, y pidió correr
+  la numeración (sin tocar las promo).
+- **Causa**: el fix del 2026-08-04 corrigió las ediciones "Mundos
+  Perdidos" que son 100% custom (`data/custom-cards.json`), pero
+  **Ciudad de los Césares, Horrores de Salem y La Saga de Volsung** son
+  las 3 únicas de esa familia que TOR sí tiene en su propia API
+  (`131-xxx`, `130-xxx`, `132-xxx`) — el fix de esa vez nunca las tocó
+  porque vive en `custom-cards.json`, no en `scraper/corrections.js`.
+  TOR numera corrido 1..20 empezando por la carta "00" del wiki (el
+  Tótem/Oro firma del producto, sin número real impreso), así que cada
+  carta normal queda con +1 respecto a su número real. Verificado carta
+  por carta contra las 3 páginas de listado del wiki (`MPC/MPS/MPV
+  00/18` en adelante).
+- Nueva tabla `MUNDOS_PERDIDOS_TOR_CORRECTIONS` en
+  `scraper/corrections.js` (60 entradas, mismo criterio que
+  `LEYENDAS_2023_CORRECTIONS`: la carta "00" pasa a especial
+  `<prefijo>-00`, el resto se corre -1) + wireada en
+  `scraper/scrape.js` → `ALL_CORRECTIONS`. Corrida completa del
+  scraper: "Corregidas 419 cartas" (359 de antes + 60 nuevas).
+- Validado: `131-001`/`130-001`/`132-001` ahora son especiales
+  (`MPC-00`/`MPS-00`/`MPV-00`), el resto corrido -1 sin huecos (001-019
+  en cada una). Playwright con las 3 ediciones en una colección → 60/60
+  cartas, especiales primero, numeración correcta, 0 `pageerror`.
+- **Nota para el dueño**: si alguna de estas cartas específicas la
+  habías editado manualmente en algún momento, esa edición personal
+  sigue viva en tu navegador y va a tapar este arreglo del catálogo —
+  mismo mecanismo que pasó con TKPE24/25 (ver iteraciones 9-13). Si
+  después de este deploy alguna sigue mal, revisa el botón de esa carta
+  ("↩ Revertir a la original" vs "✏️ Editar") o usa `fix-toolkit.html`
+  como referencia de cómo se resolvió antes (aunque esa herramienta es
+  específica de Toolkit, no de Mundos Perdidos).
+
 ### 2026-08-09 (16ª iteración) — El fix del PDF sin imágenes era incompleto: faltaba un reintento por timeout en colecciones grandes
 - El dueño mandó captura del PDF de "Leyendas 4.0" (432 cartas): la
   mayoría de las cartas cargó bien, pero alguna suelta (ej. "Kordrag")

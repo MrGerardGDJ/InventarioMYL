@@ -21,7 +21,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { allEditions, slugToName, FORMATS } from "./editions.js";
-import { LEYENDAS_2023_CORRECTIONS, TOOLKIT_PE_2024_CORRECTIONS } from "./corrections.js";
+import { LEYENDAS_2023_CORRECTIONS, TOOLKIT_PE_2024_CORRECTIONS, MUNDOS_PERDIDOS_TOR_CORRECTIONS } from "./corrections.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(__dirname, "..", "data", "cards.json");
@@ -172,7 +172,7 @@ for (const slug of editionsToFetch) {
 // edid/specialId, remover una carta sí es seguro de "deshacer" simplemente
 // quitando la entrada del correction table más adelante, porque nunca tocó
 // el id de ninguna otra carta.
-const ALL_CORRECTIONS = [LEYENDAS_2023_CORRECTIONS, TOOLKIT_PE_2024_CORRECTIONS];
+const ALL_CORRECTIONS = [LEYENDAS_2023_CORRECTIONS, TOOLKIT_PE_2024_CORRECTIONS, MUNDOS_PERDIDOS_TOR_CORRECTIONS];
 let corrected = 0;
 let dropped = 0;
 // ids descartados a propósito (duplicados) — el merge no-destructivo del
