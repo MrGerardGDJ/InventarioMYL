@@ -378,6 +378,29 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (3ª iteración) — Unifica también Toolkit Primera Era 2025 (mismo problema, esta vez en datos propios)
+- El dueño del inventario notó que la misma partición innecesaria de la
+  iteración anterior (Toolkit 2024) también la habíamos cometido nosotros
+  mismos con **Toolkit Primera Era 2025**: al cargarla (09-08-2026, sesión
+  anterior) se repartieron sus 34 cartas en `toolkit_valentia_y_desolacion`
+  (14), `toolkit_honor_y_ferocidad` (14) y `toolkit_primera_era_2025` (6,
+  las que no pertenecen a ningún kit) — usando las dos ediciones "fantasma"
+  que ya existían en `editions.json` en vez de una sola. El dueño aclaró
+  el criterio correcto: toda la serie (menos las Promo) usa el mismo
+  código impreso `TKPE25`, así que es **una sola edición**, igual que
+  Toolkit 2024.
+- A diferencia de la iteración anterior, acá NO hizo falta tocar
+  `scraper/corrections.js` — las 34 cartas de Toolkit 2025 son 100%
+  `custom` (TOR nunca tuvo esta edición), así que alcanzó con reasignar
+  `edition`/`editionName` de las 28 cartas de `toolkit_valentia_y_desolacion`/
+  `toolkit_honor_y_ferocidad` directo en `data/custom-cards.json` (mismo
+  `id`, se preserva el `specialId` `TKPE25-NN` que ya tenían) y quitar esas
+  dos entradas fantasma de `data/editions.json` — la edición
+  `toolkit_primera_era_2025` ya existía con las otras 6 cartas.
+- Validado con Playwright: la edición unificada aparece con 34 cartas, 34
+  identificadores únicos (sin duplicados), las dos ediciones viejas ya no
+  aparecen en el selector, 0 `pageerror`.
+
 ### 2026-08-09 (2ª iteración) — Unifica Toolkit Primera Era 2024 (TOR la traía partida en 2 ediciones, con duplicados)
 - El dueño del inventario reportó que "Toolkit Primera Era 2024" aparecía
   partida en dos ediciones (`toolkit_puertas_del_valhalla`,
