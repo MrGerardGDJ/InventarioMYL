@@ -378,6 +378,40 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (11ª iteración) — Completa cartas promocionales faltantes: Juego Organizado (4 nuevas) + set Cartas Promo 20 Años (7 cartas, edición nueva)
+- El dueño del inventario reportó tener una carta física "Espada Real" con
+  el logo "20 Años" que no aparecía en el catálogo, y pidió revisar
+  https://myl.fandom.com/es/wiki/Cartas_Promo_Primera_Era_Klu completo.
+  Esa página trae dos tablas: "Juego Organizado" (cartas de torneo,
+  ~125 filas) y "Cartas Promo 20 Años" (7 cartas). Se confirmó con el
+  dueño el alcance completo antes de cargar (la tabla J.O. es grande y
+  varias filas recientes no tienen imagen documentada).
+- **Juego Organizado** (`juego_organizado_pe`) ya estaba cargada de una
+  sesión anterior con 121/125 cartas (numeración propia `JO-01`.."JO-121",
+  no el código real de torneo del wiki que no es útil como identificador
+  estable). Se agregaron las 4 filas nuevas que el wiki sumó después
+  (`JO-122` Erchitu, `JO-123` Mullo, `JO-124` Torreón Negro, `JO-125`
+  Calmet — todas "Adelanto Producto PE", sin edición de origen asignada
+  porque el propio wiki tampoco la tiene todavía), las 4 con imagen
+  propia encontrada.
+- **Cartas Promo 20 Años** (`promo_20_anos_pe`, edición nueva): 7 cartas
+  full-art/con logo "20 Años" de reimpresiones de cartas de La Ira del
+  Nahual, Misión Santiago, Ragnarok y La Cofradía, repartidas 2021 por
+  compras/colección completa en CasaMyL — numeración propia `20A-01`
+  a `20A-07` (el código real del wiki es genérico, "EDICIÓN LIMITADA
+  20 AÑOS", no sirve para diferenciar cartas). Las 7 con imagen de su
+  página específica. **Nota importante encontrada y descartada a
+  propósito**: la página de "Espada Real (20 Años)" enlaza a
+  "siguiente" a "Fe sin Límite (20 Años)" (del set Espada Sagrada,
+  bloque Primer Bloque) — hay una serie "20 Años" bastante más grande
+  que abarca todo el juego, no solo Primera Era. Se dejó fuera de esta
+  carga porque el usuario pidió específicamente lo que trae la página
+  "Cartas Promo Primera Era Klu", y esa cadena sale de ese alcance — si
+  se pide completar el resto del set "20 Años" (otros bloques) es
+  trabajo aparte.
+- Validado con Playwright: colección con ambas ediciones →
+  132/132 cartas (125 + 7), 0 imágenes rotas, 0 `pageerror`.
+
 ### 2026-08-09 (10ª iteración) — Nueva edición: Toolkit Primera Era 2026 (37 cartas, agregada al catálogo compartido)
 - El dueño del inventario pidió agregar la edición que trae las cartas
   código "TKPE26". Paso 1 (`curl` a `/cards/edition/todas` filtrando
