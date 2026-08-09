@@ -19,7 +19,7 @@
      · Navegación / eventos ..... tabs, listeners y arranque (init)
    ========================================================================== */
 import * as store from "./store.js";
-import { exportExcel, exportPDF, exportDeckExcel, exportDeckImage, exportCollectionPDF, deckSummary } from "./exporters.js";
+import { exportExcel, exportPricesExcel, exportPDF, exportDeckExcel, exportDeckImage, exportCollectionPDF, deckSummary } from "./exporters.js";
 import { renderCharts } from "./charts.js";
 import * as cloud from "./cloud.js";
 import { typeIcon, raceIcon, NO_STRENGTH_TYPES } from "./icons.js";
@@ -2175,6 +2175,14 @@ function exportCollection(format) {
     const fn = format === "xlsx" ? exportExcel : exportPDF;
     fn(cards, store.getQty, scopeLabel())
       .then(() => showToast(format === "xlsx" ? "Excel descargado ✓" : "PDF descargado ✓"))
+      .catch((e) => showToast("Error al exportar: " + e.message, 4000));
+    return;
+  }
+  if (format === "prices-xlsx") {
+    const cards = state.filtered.length ? state.filtered : state.cards;
+    showToast("Generando Excel de precios…", 5000);
+    exportPricesExcel(cards, store.getQty, scopeLabel())
+      .then(({ withPrice, total }) => showToast(`Excel descargado ✓ (${withPrice} de ${total} cartas con precio encontrado)`, 5000))
       .catch((e) => showToast("Error al exportar: " + e.message, 4000));
     return;
   }
