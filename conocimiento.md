@@ -378,6 +378,64 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (15ª iteración) — Módulo de precios referenciales: crawl de 2 tiendas + botón "Excel de precios"
+- El dueño pidió poder estimar el valor de mercado de sus cartas
+  (poseídas y faltantes) y descargar un listado con nombre, código,
+  edición y precio referencial.
+- **Recolección**: se armaron dos crawlers (`scripts` en el scratchpad
+  de la sesión, no en el repo — son de un solo uso, no forman parte del
+  flujo normal de la app): `mylserena.cl` (sitemap completo, ~9.567
+  páginas de producto, 2.463 con código+precio) y `mesaredondatcg.cl`
+  (categoría paginada, ~2.025 páginas, 2.007 con SKU+precio — esta
+  tienda devuelve 403 sin un User-Agent/Accept de navegador completo,
+  no es bloqueo del proxy).
+- **Cruce contra el catálogo, sin adivinar**: cada tienda usa un
+  prefijo de código propio (`TKPE24`, `LPE4`, `MPO`, etc., ~49-60
+  distintos por tienda) que no coincide 1:1 con nuestros slugs de
+  edición. En vez de mapear a mano/a ojo, se verificó cada prefijo
+  automáticamente: para varias filas de code+número de esa tienda, se
+  cruza el NOMBRE de la carta (que ambas tiendas sí entregan limpio,
+  vía `<title>` en mylserena o el campo `name` del JSON-LD en
+  mesaredonda) contra el nombre real de nuestro catálogo en esa misma
+  posición numerada — solo se acepta un prefijo si el mismo edition
+  gana consistentemente en varias muestras. De ~49-60 prefijos por
+  tienda, quedaron **25 mapeos verificados con evidencia real**
+  (TKPE24/25/26, LPE4, LPE23, ONY, EXPE, CRPE2, varias "Mundos
+  Perdidos", LPB4, DRA, PBX, etc.) — los que no alcanzaron confianza
+  alta se dejaron fuera en vez de forzarlos.
+- **`data/prices.json`** (nuevo, generado una vez a partir del crawl —
+  no se regenera automáticamente todavía, sería trabajo aparte
+  automatizarlo vía GitHub Actions si se quiere mantener al día): mapa
+  `id de carta → {mylserena, mesaredonda}` con el precio más barato
+  encontrado en cada tienda para esa carta (puede haber varias filas
+  por rareza/reimpresión en la tienda; se usa la más barata). **1.610
+  cartas con al menos un precio**, 260 con precio de ambas tiendas.
+- **Decisión de diseño sobre discrepancias de precio** (a pedido
+  explícito, se descartó usar la moda): con solo 1-2 tiendas la moda no
+  tiene sentido estadístico (necesitas bastantes muestras repetidas
+  para que "el valor más frecuente" signifique algo). Se muestran
+  **ambas columnas de precio por separado** en vez de fabricar un único
+  "valor de mercado" — más honesto que promediar 2 puntos de datos.
+- **Nuevo botón "💰 Precios (.xlsx)"** en el menú Exportar del Catálogo
+  (respeta los filtros activos, igual que los demás exports de esa
+  lista): `exportPricesExcel()` en `js/exporters.js`, hoja "Precios"
+  con Nombre/Código/Edición/Formato/Tengo/Precio mylserena/Precio
+  mesaredonda, más una hoja "Info" con la fecha de generación y una
+  nota explícita de que la cobertura es parcial. El "Código" mostrado
+  es el identificador interno de la app (`#NNN` o el `specialId`), no
+  el código impreso real de la tienda — no se intentó reconstruir ese
+  formato por carta.
+- Documentadas ambas tiendas como fuente de precios (no de catálogo) en
+  `docs/FUENTES-DATOS.md` sección 6b, junto a la nota de que sirven
+  también para imágenes.
+- Validado: el merge cartas↔precios se probó con Playwright contra los
+  archivos reales servidos localmente (1.610 cartas cruzadas
+  correctamente, nombres y ediciones coinciden) — la escritura del
+  .xlsx en sí no se pudo probar end-to-end en este entorno (el CDN de
+  la librería XLSX no es alcanzable desde el navegador headless de
+  pruebas), pero reusa exactamente el mismo patrón que `exportExcel()`
+  (ya en producción desde antes).
+
 ### 2026-08-09 (14ª iteración) — Bug real: el PDF de Colección no incluía imágenes (canvas "tainted" por reuso de caché sin CORS)
 - El dueño reportó que al exportar el PDF de una colección, las cartas
   salían sin imagen (marcador oscuro) pese a que en pantalla sí se ven.

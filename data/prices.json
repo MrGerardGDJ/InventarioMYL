@@ -1,0 +1,5102 @@
+{
+ "meta": {
+  "generatedAt": "2026-08-09T18:43:43Z",
+  "sources": {
+   "mylserena": "mylserena.cl",
+   "mesaredonda": "mesaredondatcg.cl"
+  },
+  "note": "Precios referenciales de venta de cartas sueltas (CLP), cruzados por código exacto contra el catálogo. Cobertura parcial: solo ediciones donde se pudo verificar el prefijo de código de cada tienda contra nuestro catálogo con evidencia real (no todas las ediciones tienen precio todavía)."
+ },
+ "prices": {
+  "crpe2__custom__39_47_ronin": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_67_47_ronin": {
+   "mylserena": 50.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__15_47_ronin": {
+   "mylserena": 1000.0
+  },
+  "160-140": {
+   "mylserena": 1000.0
+  },
+  "160-143": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_tombstone__custom__17_abominacion": {
+   "mylserena": 1000.0,
+   "mesaredonda": 2100.0
+  },
+  "leyendas_primera_era_4_0__custom__170_abramelin_el_mago": {
+   "mylserena": 200.0,
+   "mesaredonda": 560.0
+  },
+  "leyendas_primera_era_4_0__custom__127_acihuatl": {
+   "mylserena": 300.0,
+   "mesaredonda": 750.0
+  },
+  "128-010": {
+   "mylserena": 2000.0
+  },
+  "112-113": {
+   "mylserena": 300.0,
+   "mesaredonda": 180.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_50_aegir": {
+   "mylserena": 100.0,
+   "mesaredonda": 380.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_13_aetgir": {
+   "mylserena": 1000.0
+  },
+  "71-005": {
+   "mylserena": 10000.0
+  },
+  "leyendas_primera_era_4_0__custom__98_agravain": {
+   "mylserena": 500.0,
+   "mesaredonda": 1400.0
+  },
+  "leyendas_primera_era_4_0__custom__337_ah_puch": {
+   "mylserena": 2000.0
+  },
+  "160-055": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_nube_roja__custom__6_ahayuta": {
+   "mylserena": 1000.0,
+   "mesaredonda": 1790.0
+  },
+  "112-143": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__331_alabarda_de_la_sangre": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__136_alcis": {
+   "mylserena": 800.0
+  },
+  "160-035": {
+   "mylserena": 1000.0
+  },
+  "160-016": {
+   "mylserena": 7000.0
+  },
+  "160-007": {
+   "mylserena": 4000.0
+  },
+  "112-030": {
+   "mylserena": 1000.0,
+   "mesaredonda": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__166_aliento_ardiente": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_6_aliento_congelante": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_tombstone__custom__11_aliento_de_consuncion": {
+   "mylserena": 500.0,
+   "mesaredonda": 1190.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__10_aliento_de_fuego": {
+   "mylserena": 500.0
+  },
+  "160-024": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__3_alphart": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__235_altar_de_la_bestia": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__279_altar_de_hadas": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__328_altar_sacro": {
+   "mylserena": 500.0,
+   "mesaredonda": 600.0
+  },
+  "leyendas_primera_era_4_0__custom__190_alto_cesar": {
+   "mylserena": 300.0,
+   "mesaredonda": 380.0
+  },
+  "112-133": {
+   "mylserena": 200.0
+  },
+  "leyendas_primera_era_4_0__custom__147_amanozako": {
+   "mylserena": 200.0,
+   "mesaredonda": 700.0
+  },
+  "74-052": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_71_amateratsu": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__17_amateratsu": {
+   "mylserena": 1000.0,
+   "mesaredonda": 300.0
+  },
+  "112-168": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "leyendas_primera_era_4_0__custom__101_amazonas": {
+   "mylserena": 500.0,
+   "mesaredonda": 750.0
+  },
+  "leyendas_primera_era_4_0__custom__341_amor_de_valkyria": {
+   "mylserena": 1000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_11_amor_de_valkyria": {
+   "mylserena": 800.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_32_amuleto_de_caribu": {
+   "mylserena": 7000.0
+  },
+  "leyendas_primera_era_4_0__custom__332_amuleto_pagano": {
+   "mylserena": 4000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_19_amuleto_pagano": {
+   "mylserena": 3000.0
+  },
+  "113-004": {
+   "mylserena": 2000.0
+  },
+  "160-132": {
+   "mylserena": 1000.0
+  },
+  "160-049": {
+   "mylserena": 500.0
+  },
+  "160-004": {
+   "mylserena": 4000.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__11_aniquilar": {
+   "mylserena": 800.0,
+   "mesaredonda": 180.0
+  },
+  "160-075": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_10_cancerbero": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_56_nanna": {
+   "mylserena": 100.0,
+   "mesaredonda": 1050.0
+  },
+  "leyendas_primera_era_4_0__custom__238_apu_illa": {
+   "mylserena": 80.0
+  },
+  "112-048": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__194_arana_troll": {
+   "mylserena": 300.0,
+   "mesaredonda": 380.0
+  },
+  "leyendas_primera_era_4_0__custom__293_arcabuz": {
+   "mylserena": 200.0
+  },
+  "112-007": {
+   "mylserena": 8000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_31_arco_delaware": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__12_arco_huno": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__335_arco_naskapi": {
+   "mylserena": 1000.0
+  },
+  "112-147": {
+   "mylserena": 300.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_25_arco_naskapi": {
+   "mylserena": 800.0
+  },
+  "128-006": {
+   "mylserena": 3000.0
+  },
+  "74-080": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__92_armadura_de_valkyria": {
+   "mylserena": 3000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_10_armadura_de_valkyria": {
+   "mylserena": 2000.0
+  },
+  "129-005": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__281_armstrong": {
+   "mylserena": 50.0
+  },
+  "74-031": {
+   "mylserena": 800.0
+  },
+  "160-032": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__161_artegall": {
+   "mylserena": 200.0,
+   "mesaredonda": 500.0
+  },
+  "160-139": {
+   "mylserena": 1000.0
+  },
+  "112-316": {
+   "mylserena": 2000.0
+  },
+  "74-073": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__7_askafroa": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__349_astucia_de_loki": {
+   "mylserena": 300.0,
+   "mesaredonda": 430.0
+  },
+  "leyendas_primera_era_4_0__custom__252_astucia_de_loki": {
+   "mylserena": 50.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__12_ataque_dragon": {
+   "mylserena": 4000.0
+  },
+  "160-112": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_nube_roja__custom__10_ataque_relampago": {
+   "mylserena": 3000.0,
+   "mesaredonda": 1400.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_63_ataud_de_marfil": {
+   "mylserena": 200.0
+  },
+  "mundos_perdidos_tombstone__custom__19_atento_ringo": {
+   "mylserena": 800.0,
+   "mesaredonda": 2980.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__1_atila": {
+   "mylserena": 2000.0
+  },
+  "112-124": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__184_atotolin": {
+   "mylserena": 200.0,
+   "mesaredonda": 380.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__mpa_00_avalon": {
+   "mylserena": 1000.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__106_avalon": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "160-100": {
+   "mylserena": 800.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_22_baal": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__278_baal": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__14_baculo_del_trueno": {
+   "mylserena": 300.0,
+   "mesaredonda": 300.0
+  },
+  "112-039": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__82_bafometh": {
+   "mylserena": 4000.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__3_bahkauv": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__8_baigujing": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "leyendas_primera_era_4_0__custom__215_baishe_t_x_n": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__116_baculo": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__16_baku": {
+   "mylserena": 2000.0
+  },
+  "74-028": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__9_baldraz": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_29_ballesta": {
+   "mylserena": 50.0
+  },
+  "128-009": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__13_balmung": {
+   "mylserena": 1000.0
+  },
+  "112-056": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_37_tezcaltlipoca": {
+   "mylserena": 100.0,
+   "mesaredonda": 2800.0
+  },
+  "mundos_perdidos_tombstone__custom__3_bat_masterson": {
+   "mylserena": 1000.0,
+   "mesaredonda": 1790.0
+  },
+  "112-127": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__8_begtse": {
+   "mylserena": 3000.0
+  },
+  "145-023": {
+   "mylserena": 5000.0
+  },
+  "145-009": {
+   "mylserena": 300.0,
+   "mesaredonda": 300.0
+  },
+  "145-008": {
+   "mylserena": 5000.0
+  },
+  "113-010": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__17_benten": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__163_beowulf": {
+   "mylserena": 200.0
+  },
+  "crpe2__custom__24_bestias_furiosas": {
+   "mylserena": 5000.0
+  },
+  "112-004": {
+   "mylserena": 15000.0
+  },
+  "112-155": {
+   "mylserena": 1000.0,
+   "mesaredonda": 180.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__2_bleda": {
+   "mylserena": 2000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_15_bogtroll": {
+   "mylserena": 4000.0
+  },
+  "160-089": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__1_boores": {
+   "mylserena": 1000.0
+  },
+  "112-034": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__168_botin_templario": {
+   "mylserena": 2000.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_16_botin_templario": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__282_brazo_fuerte": {
+   "mylserena": 100.0
+  },
+  "vigilantes_de_la_noche__custom__13_brehus": {
+   "mylserena": 500.0
+  },
+  "112-089": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_49_draugar": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__329_bruja_carabusse": {
+   "mylserena": 800.0,
+   "mesaredonda": 1000.0
+  },
+  "crpe2__custom__53_bruja_de_la_montana": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__196_bruja_lobo": {
+   "mylserena": 300.0,
+   "mesaredonda": 380.0
+  },
+  "112-077": {
+   "mylserena": 300.0
+  },
+  "74-086": {
+   "mylserena": 500.0
+  },
+  "74-044": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__188_brujo_de_salamanca": {
+   "mylserena": 200.0,
+   "mesaredonda": 380.0
+  },
+  "leyendas_primera_era_4_0__custom__197_brunnmigi": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__105_brunor": {
+   "mylserena": 500.0,
+   "mesaredonda": 500.0
+  },
+  "74-062": {
+   "mylserena": 800.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__19_brunor": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__149_buda_tathagata": {
+   "mylserena": 200.0,
+   "mesaredonda": 500.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__6_buda_tathagata": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__225_bufalo_blanco": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__175_bultungin": {
+   "mylserena": 300.0
+  },
+  "74-024": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_25_vampiro_del_desierto": {
+   "mylserena": 100.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_26_cabala": {
+   "mylserena": 3000.0
+  },
+  "crpe2__custom__35_caballero_aguila": {
+   "mylserena": 2000.0
+  },
+  "74-013": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__270_caballero_blanco": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_01_caballero_negro": {
+   "mylserena": 100.0
+  },
+  "113-002": {
+   "mylserena": 1000.0
+  },
+  "113-001": {
+   "mylserena": 1000.0
+  },
+  "74-006": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__3_caballo_de_viento": {
+   "mylserena": 3500.0
+  },
+  "crpe2__custom__21_caballo_marino": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__100_caballo_pesadilla": {
+   "mylserena": 500.0,
+   "mesaredonda": 380.0
+  },
+  "112-074": {
+   "mylserena": 200.0,
+   "mesaredonda": 500.0
+  },
+  "160-148": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__315_cai_shen": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__352_calabaza_del_inmortal": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__156_calabaza_del_inmortal": {
+   "mylserena": 2000.0
+  },
+  "crpe2__custom__14_camahueto": {
+   "mylserena": 300.0
+  },
+  "128-018": {
+   "mylserena": 3000.0
+  },
+  "crpe2__custom__48_campeones_de_oriente": {
+   "mylserena": 8000.0
+  },
+  "mundos_perdidos_tombstone__custom__16_campesina": {
+   "mylserena": 1000.0,
+   "mesaredonda": 2380.0
+  },
+  "112-060": {
+   "mylserena": 300.0
+  },
+  "71-004": {
+   "mylserena": 7000.0
+  },
+  "160-098": {
+   "mylserena": 1000.0
+  },
+  "112-069": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "112-002": {
+   "mylserena": 18000.0
+  },
+  "leyendas_primera_era_4_0__custom__177_carmilla": {
+   "mylserena": 500.0,
+   "mesaredonda": 500.0
+  },
+  "160-062": {
+   "mylserena": 200.0
+  },
+  "leyendas_primera_era_4_0__custom__226_carnwennan": {
+   "mylserena": 100.0
+  },
+  "160-116": {
+   "mylserena": 800.0
+  },
+  "112-323": {
+   "mylserena": 2000.0
+  },
+  "74-117": {
+   "mylserena": 1000.0
+  },
+  "160-070": {
+   "mylserena": 200.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__14_caverna_del_dragon": {
+   "mylserena": 2000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_30_caza_del_caribu": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__143_caverna_de_loki": {
+   "mylserena": 500.0
+  },
+  "crpe2__custom__12_cazadores_implacables": {
+   "mylserena": 5000.0
+  },
+  "mundos_perdidos_nube_roja__custom__12_cazar_bisontes": {
+   "mylserena": 500.0,
+   "mesaredonda": 890.0
+  },
+  "leyendas_primera_era_4_0__custom__113_cazar_vampiro": {
+   "mylserena": 2000.0
+  },
+  "vigilantes_de_la_noche__custom__6_cerdo_calavera": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__173_cerdo_calavera": {
+   "mylserena": 200.0,
+   "mesaredonda": 380.0
+  },
+  "leyendas_primera_era_4_0__custom__158_cernunno": {
+   "mylserena": 500.0
+  },
+  "crpe2__custom__33_chasqui": {
+   "mylserena": 300.0
+  },
+  "160-054": {
+   "mylserena": 500.0
+  },
+  "74-106": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__316_changquan": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__319_chien": {
+   "mylserena": 50.0
+  },
+  "toolkit_primera_era_2024__custom__tkpe24_29_chien": {
+   "mylserena": 1000.0
+  },
+  "74-051": {
+   "mylserena": 500.0
+  },
+  "74-107": {
+   "mylserena": 800.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_4_chon_chon": {
+   "mylserena": 3500.0
+  },
+  "112-013": {
+   "mylserena": 1000.0,
+   "mesaredonda": 300.0
+  },
+  "crpe2__custom__55_cienpies": {
+   "mylserena": 500.0
+  },
+  "crpe2__custom__22_cipactli": {
+   "mylserena": 2000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_2_circulo_de_piedra": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_30_totem_de_magma": {
+   "mylserena": 300.0,
+   "mesaredonda": 3000.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__19_ciudad_prohibida": {
+   "mylserena": 4000.0
+  },
+  "160-156": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__128_cihuate_teotl": {
+   "mylserena": 200.0,
+   "mesaredonda": 380.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_06_ciudad_de_los_cesares": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__13_clarent": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_52_ragnar_lodbrog": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_09_hadas": {
+   "mylserena": 200.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_18_claviceps_purpurea": {
+   "mylserena": 3000.0
+  },
+  "mundos_perdidos_nube_roja__custom__7_cochise": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__142_codex_runicus": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__350_codex_runicus": {
+   "mylserena": 3000.0,
+   "mesaredonda": 1700.0
+  },
+  "leyendas_primera_era_4_0__custom__114_colgante_impio": {
+   "mylserena": 1000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_35_colgante_impio": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_24_kain": {
+   "mylserena": 100.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_19_colina_del_ahorcado": {
+   "mylserena": 1000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_18_colina_del_ahorcado": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__111_colmillo_sangriento": {
+   "mylserena": 500.0,
+   "mesaredonda": 1500.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_29_columnas_de_thulan": {
+   "mylserena": 2000.0
+  },
+  "160-127": {
+   "mylserena": 1000.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_11_comerciantes_del_rio": {
+   "mylserena": 5000.0
+  },
+  "112-165": {
+   "mylserena": 1000.0
+  },
+  "160-095": {
+   "mylserena": 3000.0
+  },
+  "160-026": {
+   "mylserena": 4000.0
+  },
+  "145-022": {
+   "mylserena": 0.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_17_van_helsing": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__7_constantine_iii": {
+   "mylserena": 800.0
+  },
+  "112-038": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__346_corazon_de_leon": {
+   "mylserena": 800.0,
+   "mesaredonda": 600.0
+  },
+  "leyendas_primera_era_4_0__custom__227_corazon_de_leon": {
+   "mylserena": 100.0
+  },
+  "129-018": {
+   "mylserena": 3000.0
+  },
+  "128-015": {
+   "mylserena": 3000.0
+  },
+  "74-036": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__285_corot": {
+   "mylserena": 100.0
+  },
+  "160-097": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__182_cortadora": {
+   "mylserena": 500.0,
+   "mesaredonda": 380.0
+  },
+  "mundos_perdidos_tombstone__custom__4_coyote_rojo": {
+   "mylserena": 1000.0,
+   "mesaredonda": 1700.0
+  },
+  "112-150": {
+   "mylserena": 800.0
+  },
+  "112-139": {
+   "mylserena": 1000.0
+  },
+  "112-317": {
+   "mylserena": 2000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_8_craneo_de_dragon": {
+   "mylserena": 7000.0
+  },
+  "74-090": {
+   "mylserena": 1000.0
+  },
+  "crpe2__custom__60_criaturas_siniestras": {
+   "mylserena": 8000.0
+  },
+  "145-013": {
+   "mylserena": 2000.0
+  },
+  "160-009": {
+   "mylserena": 7000.0
+  },
+  "crpe2__custom__13_cuchivilu": {
+   "mylserena": 300.0
+  },
+  "112-027": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_34_cuchivilu": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__240_cuauhtemoc": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_59_cuernos_de_adumla": {
+   "mylserena": 50.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_23_cuerno_de_elfo": {
+   "mylserena": 3000.0
+  },
+  "mundos_perdidos_nube_roja__custom__4_cuerno_rojo": {
+   "mylserena": 500.0,
+   "mesaredonda": 600.0
+  },
+  "crpe2__custom__19_cuero": {
+   "mylserena": 500.0
+  },
+  "160-028": {
+   "mylserena": 4000.0
+  },
+  "112-149": {
+   "mylserena": 200.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__303_cueva_de_quicavi": {
+   "mylserena": 50.0
+  },
+  "112-087": {
+   "mylserena": 500.0
+  },
+  "71-001": {
+   "mylserena": 2000.0
+  },
+  "112-140": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__291_custodio": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__221_dagon": {
+   "mylserena": 50.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_21_dagas_krish": {
+   "mylserena": 4000.0
+  },
+  "74-068": {
+   "mylserena": 2000.0
+  },
+  "crpe2__custom__61_daikoku": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_73_daikoku": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__211_dalai_lama": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "112-109": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "145-004": {
+   "mylserena": 1000.0,
+   "mesaredonda": 500.0
+  },
+  "160-111": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__280_daphne_y_gregor": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__1_darmer": {
+   "mylserena": 2000.0
+  },
+  "74-067": {
+   "mylserena": 1000.0
+  },
+  "145-015": {
+   "mylserena": 500.0,
+   "mesaredonda": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__124_defensor_iroques": {
+   "mylserena": 300.0,
+   "mesaredonda": 530.0
+  },
+  "crpe2__custom__72_deidades_celestiales": {
+   "mylserena": 4000.0
+  },
+  "112-158": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__10_demonios_arana": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__157_demonios_arana": {
+   "mylserena": 300.0,
+   "mesaredonda": 700.0
+  },
+  "145-014": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__11_descanso_del_rey": {
+   "mylserena": 1000.0,
+   "mesaredonda": 180.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_09_desolacion_de_kanillu": {
+   "mylserena": 500.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_26_desolacion_de_kanillu": {
+   "mylserena": 500.0
+  },
+  "160-040": {
+   "mylserena": 1000.0
+  },
+  "crpe2__custom__11_dhampir": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_08_melusina": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__171_dhampir": {
+   "mylserena": 500.0,
+   "mesaredonda": 500.0
+  },
+  "160-006": {
+   "mylserena": 4000.0
+  },
+  "74-100": {
+   "mylserena": 5000.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_27_diario_del_cazador": {
+   "mylserena": 3000.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__1_dietrich_von_bern": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__14_dinas_emrys": {
+   "mylserena": 800.0
+  },
+  "74-039": {
+   "mylserena": 1000.0
+  },
+  "160-082": {
+   "mylserena": 1000.0
+  },
+  "160-042": {
+   "mylserena": 500.0
+  },
+  "112-032": {
+   "mylserena": 2000.0
+  },
+  "160-121": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_tombstone__custom__1_doc_holliday": {
+   "mylserena": 2000.0,
+   "mesaredonda": 2890.0
+  },
+  "160-084": {
+   "mylserena": 1000.0
+  },
+  "160-144": {
+   "mylserena": 1000.0
+  },
+  "160-008": {
+   "mylserena": 2500.0
+  },
+  "160-061": {
+   "mylserena": 500.0
+  },
+  "112-035": {
+   "mylserena": 2000.0
+  },
+  "160-014": {
+   "mylserena": 8000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_23_enjambre": {
+   "mylserena": 200.0,
+   "mesaredonda": 2800.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__6_dragon_blanco": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_44_machitun": {
+   "mylserena": 100.0
+  },
+  "160-015": {
+   "mylserena": 30000.0
+  },
+  "71-003": {
+   "mylserena": 3000.0
+  },
+  "112-059": {
+   "mylserena": 2000.0
+  },
+  "112-138": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_04_dragon_de_magma": {
+   "mylserena": 200.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_42_ira_del_nahual": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_06_dragon_medieval": {
+   "mylserena": 100.0
+  },
+  "74-014": {
+   "mylserena": 2000.0
+  },
+  "74-015": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__109_dragon_rojo": {
+   "mylserena": 300.0
+  },
+  "145-002": {
+   "mylserena": 500.0
+  },
+  "vigilantes_de_la_noche__custom__2_dragon_rojo": {
+   "mylserena": 500.0
+  },
+  "112-052": {
+   "mylserena": 2000.0
+  },
+  "145-007": {
+   "mylserena": 2000.0
+  },
+  "112-011": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__11_duelo_salvaje": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_14_vampiro_oriental": {
+   "mylserena": 100.0
+  },
+  "160-094": {
+   "mylserena": 1000.0
+  },
+  "160-088": {
+   "mylserena": 1000.0
+  },
+  "71-002": {
+   "mylserena": 10000.0
+  },
+  "leyendas_primera_era_4_0__custom__234_dvaraka": {
+   "mylserena": 50.0
+  },
+  "112-018": {
+   "mylserena": 5000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_27_dycom_el_recaudador": {
+   "mylserena": 200.0,
+   "mesaredonda": 1580.0
+  },
+  "crpe2__custom__62_ebisu": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__13_eckesachs": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_72_ebisu": {
+   "mylserena": 100.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_20_eclipse_de_dragon": {
+   "mylserena": 500.0
+  },
+  "74-112": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__20_eggerich": {
+   "mylserena": 10000.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__17_egil_skalla_grimsson": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_53_einheryar": {
+   "mylserena": 100.0
+  },
+  "112-091": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "112-154": {
+   "mylserena": 300.0,
+   "mesaredonda": 180.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__6_ekajati": {
+   "mylserena": 1000.0
+  },
+  "crpe2__custom__20_el_alicanto": {
+   "mylserena": 800.0
+  },
+  "160-118": {
+   "mylserena": 1000.0
+  },
+  "128-007": {
+   "mylserena": 3000.0
+  },
+  "74-060": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__324_el_dorado": {
+   "mylserena": 10000.0
+  },
+  "160-147": {
+   "mylserena": 1000.0
+  },
+  "74-045": {
+   "mylserena": 3000.0
+  },
+  "160-158": {
+   "mylserena": 800.0
+  },
+  "160-001": {
+   "mylserena": 2500.0
+  },
+  "160-160": {
+   "mylserena": 800.0
+  },
+  "160-110": {
+   "mylserena": 800.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__10_elixir_de_dragon": {
+   "mylserena": 2500.0
+  },
+  "74-025": {
+   "mylserena": 2000.0
+  },
+  "crpe2__custom__5_emboscada": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__18_emperador_de_jade": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__146_emisario_budista": {
+   "mylserena": 800.0,
+   "mesaredonda": 1500.0
+  },
+  "160-076": {
+   "mylserena": 800.0
+  },
+  "160-037": {
+   "mylserena": 3000.0
+  },
+  "112-016": {
+   "mylserena": 5000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_61_fuente_de_mimir": {
+   "mylserena": 100.0
+  },
+  "vigilantes_de_la_noche__custom__5_errante": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_tombstone__custom__12_esclavos_de_sangre": {
+   "mylserena": 1000.0,
+   "mesaredonda": 1050.0
+  },
+  "mundos_perdidos_nube_roja__custom__13_escudo_de_guerra": {
+   "mylserena": 2000.0,
+   "mesaredonda": 3610.0
+  },
+  "leyendas_primera_era_4_0__custom__233_escudo_hiperboreo": {
+   "mylserena": 100.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_21_escudo_hiperboreo": {
+   "mylserena": 500.0
+  },
+  "112-033": {
+   "mylserena": 4000.0,
+   "mesaredonda": 500.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_13_escudo": {
+   "mylserena": 1500.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_17_escudo_real": {
+   "mylserena": 800.0
+  },
+  "160-155": {
+   "mylserena": 1000.0
+  },
+  "74-116": {
+   "mylserena": 1000.0
+  },
+  "160-073": {
+   "mylserena": 200.0
+  },
+  "113-011": {
+   "mylserena": 4000.0
+  },
+  "74-009": {
+   "mylserena": 4000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_1_espada_de_cristal": {
+   "mylserena": 1000.0
+  },
+  "128-002": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "160-114": {
+   "mylserena": 1000.0
+  },
+  "vigilantes_de_la_noche__custom__hpe_00_espada_del_caos": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_20_titan_licantropo": {
+   "mylserena": 50.0
+  },
+  "74-097": {
+   "mylserena": 500.0
+  },
+  "112-063": {
+   "mylserena": 300.0
+  },
+  "112-097": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "mundos_perdidos_nube_roja__custom__5_espiritu_gaan": {
+   "mylserena": 500.0,
+   "mesaredonda": 700.0
+  },
+  "160-172": {
+   "mylserena": 20000.0
+  },
+  "160-012": {
+   "mylserena": 5000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_28_evocacion": {
+   "mylserena": 100.0
+  },
+  "112-119": {
+   "mylserena": 500.0
+  },
+  "crpe2__custom__7_exorcista": {
+   "mylserena": 1000.0
+  },
+  "vigilantes_de_la_noche__custom__21_exorcismo_taoista": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__19_expulsion": {
+   "mylserena": 3000.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__1_fafner_el_avaro": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__195_fafnir": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__104_falso_grial": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_36_runa_urutrungu": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__2_fasolt": {
+   "mylserena": 3000.0
+  },
+  "145-003": {
+   "mylserena": 1000.0
+  },
+  "112-171": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_78_feng_shui": {
+   "mylserena": 100.0
+  },
+  "74-063": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__305_fenoeiself": {
+   "mylserena": 50.0
+  },
+  "112-071": {
+   "mylserena": 200.0
+  },
+  "leyendas_primera_era_4_0__custom__228_fenrir": {
+   "mylserena": 50.0
+  },
+  "71-010": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__9_festin_huno": {
+   "mylserena": 3000.0
+  },
+  "74-084": {
+   "mylserena": 500.0
+  },
+  "vigilantes_de_la_noche__custom__8_fiebre_canibal": {
+   "mylserena": 1000.0
+  },
+  "112-123": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__110_fionn": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_45_flechero": {
+   "mylserena": 200.0,
+   "mesaredonda": 1050.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_19_niamh": {
+   "mylserena": 100.0,
+   "mesaredonda": 2890.0
+  },
+  "vigilantes_de_la_noche__custom__4_flores_de_sangre": {
+   "mylserena": 2000.0
+  },
+  "112-042": {
+   "mylserena": 1000.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__131_forma_de_jaguar": {
+   "mylserena": 200.0,
+   "mesaredonda": 500.0
+  },
+  "160-071": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__125_forma_de_oso": {
+   "mylserena": 300.0
+  },
+  "128-012": {
+   "mylserena": 3000.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_05_forma_voladora": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__307_forseti": {
+   "mylserena": 50.0
+  },
+  "160-036": {
+   "mylserena": 1000.0
+  },
+  "160-017": {
+   "mylserena": 5000.0
+  },
+  "112-031": {
+   "mylserena": 800.0,
+   "mesaredonda": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__167_fresno_yggdrasil": {
+   "mylserena": 200.0,
+   "mesaredonda": 380.0
+  },
+  "leyendas_primera_era_4_0__custom__306_freya": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__283_fribert": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__322_fruto_sagrado": {
+   "mylserena": 10000.0
+  },
+  "112-122": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__169_fruto_sagrado": {
+   "mylserena": 1000.0
+  },
+  "112-054": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_39_huracan": {
+   "mylserena": 100.0,
+   "mesaredonda": 2500.0
+  },
+  "leyendas_primera_era_4_0__custom__153_fu": {
+   "mylserena": 1000.0
+  },
+  "112-164": {
+   "mylserena": 1000.0
+  },
+  "crpe2__custom__66_fukurukujo": {
+   "mylserena": 800.0
+  },
+  "74-105": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__209_futakuchi_onna": {
+   "mylserena": 300.0
+  },
+  "vigilantes_de_la_noche__custom__17_fuzanglong": {
+   "mylserena": 800.0
+  },
+  "160-083": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__3_gaheris": {
+   "mylserena": 800.0
+  },
+  "112-005": {
+   "mylserena": 15000.0
+  },
+  "112-096": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_58_galdar": {
+   "mylserena": 100.0
+  },
+  "112-050": {
+   "mylserena": 1000.0,
+   "mesaredonda": 300.0
+  },
+  "74-058": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__255_gambantein": {
+   "mylserena": 50.0
+  },
+  "112-090": {
+   "mylserena": 200.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__2_gareth": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_16_merlin": {
+   "mylserena": 200.0
+  },
+  "160-031": {
+   "mylserena": 1000.0
+  },
+  "160-072": {
+   "mylserena": 200.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_14_genesis_troll": {
+   "mylserena": 4000.0
+  },
+  "112-070": {
+   "mylserena": 1000.0
+  },
+  "160-129": {
+   "mylserena": 1000.0
+  },
+  "crpe2__custom__50_geon_si": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_69_geon_si": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_nube_roja__custom__8_geronimo": {
+   "mylserena": 500.0,
+   "mesaredonda": 890.0
+  },
+  "leyendas_primera_era_4_0__custom__268_gilgamesh": {
+   "mylserena": 100.0
+  },
+  "160-123": {
+   "mylserena": 1000.0
+  },
+  "74-019": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__275_gnomo": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__222_gnomos_burlones": {
+   "mylserena": 100.0
+  },
+  "74-020": {
+   "mylserena": 500.0
+  },
+  "160-091": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_tombstone__custom__18_golem_sombrio": {
+   "mylserena": 300.0,
+   "mesaredonda": 890.0
+  },
+  "leyendas_primera_era_4_0__custom__205_gram": {
+   "mylserena": 800.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_03_gram": {
+   "mylserena": 1500.0
+  },
+  "leyendas_primera_era_4_0__custom__119_gran_coyote": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "160-157": {
+   "mylserena": 1000.0
+  },
+  "crpe2__custom__16_grifo": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__323_grimorio_sacro": {
+   "mylserena": 5000.0
+  },
+  "leyendas_primera_era_4_0__custom__181_grimorio_sacro": {
+   "mylserena": 800.0
+  },
+  "74-017": {
+   "mylserena": 2000.0
+  },
+  "145-020": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "112-118": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "112-107": {
+   "mylserena": 300.0,
+   "mesaredonda": 180.0
+  },
+  "112-104": {
+   "mylserena": 300.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_74_guan_ti": {
+   "mylserena": 100.0
+  },
+  "crpe2__custom__38_guan_yu": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_65_guan_yu": {
+   "mylserena": 100.0,
+   "mesaredonda": 6000.0
+  },
+  "112-099": {
+   "mylserena": 300.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__5_guanyin": {
+   "mylserena": 800.0,
+   "mesaredonda": 180.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_55_hodur": {
+   "mylserena": 200.0
+  },
+  "74-089": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__286_guardia_del_escudo": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__189_guardian_del_sol": {
+   "mylserena": 200.0,
+   "mesaredonda": 380.0
+  },
+  "crpe2__custom__36_guerreros_indomables": {
+   "mylserena": 5000.0
+  },
+  "160-153": {
+   "mylserena": 1000.0
+  },
+  "160-046": {
+   "mylserena": 1000.0
+  },
+  "74-076": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__273_hada_viviana": {
+   "mylserena": 50.0
+  },
+  "crpe2__custom__64_hachiman": {
+   "mylserena": 500.0
+  },
+  "74-018": {
+   "mylserena": 1000.0
+  },
+  "112-010": {
+   "mylserena": 1000.0
+  },
+  "112-015": {
+   "mylserena": 1000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_3_hades": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_15_hades": {
+   "mylserena": 100.0
+  },
+  "112-062": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "112-315": {
+   "mylserena": 4000.0
+  },
+  "74-047": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__84_h_ain": {
+   "mylserena": 3000.0
+  },
+  "112-061": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_13_haiwatha": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_64_halatafl": {
+   "mylserena": 200.0
+  },
+  "112-006": {
+   "mylserena": 15000.0
+  },
+  "112-045": {
+   "mylserena": 3000.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__151_hamsa": {
+   "mylserena": 800.0
+  },
+  "71-012": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_60_sacrificio_de_odin": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__8_hariasa": {
+   "mylserena": 3000.0
+  },
+  "112-103": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "crpe2__custom__37_hattori_hanzo": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_66_hattori_hanzo": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__155_he_xian_gu": {
+   "mylserena": 200.0,
+   "mesaredonda": 380.0
+  },
+  "112-012": {
+   "mylserena": 2000.0
+  },
+  "112-088": {
+   "mylserena": 1000.0
+  },
+  "112-098": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_62_hidromiel": {
+   "mylserena": 200.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__2_hildebrand": {
+   "mylserena": 3000.0
+  },
+  "160-122": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__254_hofud": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_51_rugnir": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_nube_roja__custom__17_hombre_de_piedra": {
+   "mylserena": 2000.0,
+   "mesaredonda": 2550.0
+  },
+  "112-017": {
+   "mylserena": 2000.0
+  },
+  "160-060": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_22_guevadan": {
+   "mylserena": 100.0
+  },
+  "160-023": {
+   "mylserena": 1000.0
+  },
+  "crpe2__custom__63_hoori": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__321_horoscopo_chino": {
+   "mylserena": 10000.0
+  },
+  "112-014": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_11_horus": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__304_hraesvelg": {
+   "mylserena": 50.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__15_hua_mu_lan": {
+   "mylserena": 2000.0
+  },
+  "crpe2__custom__40_huang_zhong": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__208_huanglong": {
+   "mylserena": 500.0
+  },
+  "crpe2__custom__59_huanglong": {
+   "mylserena": 800.0
+  },
+  "129-006": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__16_huanglong": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__193_huaraka": {
+   "mylserena": 200.0,
+   "mesaredonda": 500.0
+  },
+  "74-048": {
+   "mylserena": 500.0
+  },
+  "112-086": {
+   "mylserena": 300.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_12_hutzilopochtli": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__220_humbaba": {
+   "mylserena": 100.0
+  },
+  "160-053": {
+   "mylserena": 500.0
+  },
+  "112-079": {
+   "mylserena": 500.0
+  },
+  "160-067": {
+   "mylserena": 500.0
+  },
+  "112-163": {
+   "mylserena": 1000.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__217_hwandudaedo": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__206_hwarang": {
+   "mylserena": 300.0,
+   "mesaredonda": 1050.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__17_hydra": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__272_hydra": {
+   "mylserena": 100.0
+  },
+  "74-016": {
+   "mylserena": 800.0
+  },
+  "112-115": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "74-005": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__123_iktomi": {
+   "mylserena": 300.0
+  },
+  "crpe2__custom__28_huracan": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__13_iluminar": {
+   "mylserena": 300.0,
+   "mesaredonda": 180.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__9_indra_parjanya": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "112-083": {
+   "mylserena": 300.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_47_totem_de_jaguar": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__301_insignia_de_toqui": {
+   "mylserena": 100.0
+  },
+  "113-005": {
+   "mylserena": 2000.0
+  },
+  "160-150": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__218_isthar": {
+   "mylserena": 50.0
+  },
+  "onyria__custom__ismael": {
+   "mylserena": 1000.0
+  },
+  "112-131": {
+   "mylserena": 300.0
+  },
+  "160-092": {
+   "mylserena": 1000.0
+  },
+  "74-056": {
+   "mylserena": 500.0
+  },
+  "112-142": {
+   "mylserena": 500.0
+  },
+  "74-066": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__201_ivar_ragnarsson": {
+   "mylserena": 500.0,
+   "mesaredonda": 500.0
+  },
+  "112-043": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__183_ixpuxtequi": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "vigilantes_de_la_noche__custom__9_ixpuxtequi": {
+   "mylserena": 1000.0
+  },
+  "112-105": {
+   "mylserena": 300.0,
+   "mesaredonda": 300.0
+  },
+  "crpe2__custom__68_izanami": {
+   "mylserena": 300.0
+  },
+  "160-020": {
+   "mylserena": 3000.0
+  },
+  "160-065": {
+   "mylserena": 200.0
+  },
+  "mundos_perdidos_tombstone__custom__7_jacques_st_germain": {
+   "mylserena": 4000.0,
+   "mesaredonda": 4250.0
+  },
+  "160-064": {
+   "mylserena": 500.0
+  },
+  "160-138": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__241_janaqueo": {
+   "mylserena": 80.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__14_jardin_de_las_rosas": {
+   "mylserena": 500.0
+  },
+  "160-152": {
+   "mylserena": 1000.0
+  },
+  "160-059": {
+   "mylserena": 500.0
+  },
+  "112-075": {
+   "mylserena": 300.0
+  },
+  "160-099": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__5_jormunrek": {
+   "mylserena": 1000.0
+  },
+  "vigilantes_de_la_noche__custom__19_jorogumo": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__15_joya_de_baldung": {
+   "mylserena": 7000.0
+  },
+  "128-005": {
+   "mylserena": 1000.0
+  },
+  "112-320": {
+   "mylserena": 4000.0
+  },
+  "74-029": {
+   "mylserena": 3000.0
+  },
+  "74-038": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__290_judy": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__179_juicios_de_salem": {
+   "mylserena": 300.0,
+   "mesaredonda": 1050.0
+  },
+  "71-006": {
+   "mylserena": 1000.0
+  },
+  "128-004": {
+   "mylserena": 1000.0,
+   "mesaredonda": 300.0
+  },
+  "74-074": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__11_juramento": {
+   "mylserena": 2500.0
+  },
+  "129-010": {
+   "mylserena": 1000.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_15_justa": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__333_justos_por_pecadores": {
+   "mylserena": 2000.0
+  },
+  "112-144": {
+   "mylserena": 200.0
+  },
+  "leyendas_primera_era_4_0__custom__348_k_ak_na": {
+   "mylserena": 1000.0,
+   "mesaredonda": 700.0
+  },
+  "leyendas_primera_era_4_0__custom__129_k_ak_na": {
+   "mylserena": 500.0,
+   "mesaredonda": 380.0
+  },
+  "112-114": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "112-106": {
+   "mylserena": 200.0,
+   "mesaredonda": 180.0
+  },
+  "112-130": {
+   "mylserena": 300.0
+  },
+  "74-054": {
+   "mylserena": 500.0
+  },
+  "74-115": {
+   "mylserena": 3000.0
+  },
+  "112-055": {
+   "mylserena": 2000.0,
+   "mesaredonda": 1300.0
+  },
+  "74-118": {
+   "mylserena": 500.0
+  },
+  "74-041": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__259_kappa": {
+   "mylserena": 50.0
+  },
+  "74-088": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__299_karib": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__340_karve": {
+   "mylserena": 5000.0
+  },
+  "mundos_perdidos_nube_roja__custom__18_kasewats": {
+   "mylserena": 1000.0,
+   "mesaredonda": 1190.0
+  },
+  "112-175": {
+   "mylserena": 500.0
+  },
+  "toolkit_primera_era_2024__custom__tkpe24_36_kelpie": {
+   "mylserena": 0.0
+  },
+  "crpe2__custom__9_kemsa": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__264_kendo": {
+   "mylserena": 100.0
+  },
+  "160-130": {
+   "mylserena": 1000.0
+  },
+  "112-176": {
+   "mylserena": 800.0
+  },
+  "112-021": {
+   "mylserena": 1000.0,
+   "mesaredonda": 180.0
+  },
+  "crpe2__custom__27_killa": {
+   "mylserena": 300.0
+  },
+  "crpe2__custom__54_kitsune": {
+   "mylserena": 300.0
+  },
+  "112-116": {
+   "mylserena": 300.0,
+   "mesaredonda": 180.0
+  },
+  "128-003": {
+   "mylserena": 1000.0,
+   "mesaredonda": 180.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_77_kitsune_tsuki": {
+   "mylserena": 100.0
+  },
+  "112-095": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__325_knarr": {
+   "mylserena": 10000.0
+  },
+  "crpe2__custom__58_kiyohime": {
+   "mylserena": 500.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_34_knarr": {
+   "mylserena": 1000.0
+  },
+  "113-006": {
+   "mylserena": 1000.0
+  },
+  "74-082": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_05_knochen": {
+   "mylserena": 200.0
+  },
+  "crpe2__custom__52_konaki_jiji": {
+   "mylserena": 1000.0
+  },
+  "112-053": {
+   "mylserena": 2000.0
+  },
+  "crpe2__custom__69_kojin": {
+   "mylserena": 500.0
+  },
+  "113-003": {
+   "mylserena": 1000.0
+  },
+  "74-081": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_02_kordrag": {
+   "mylserena": 200.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__17_kornos": {
+   "mylserena": 3000.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__6_kriemhild": {
+   "mylserena": 3000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_17_kris_de_plata": {
+   "mylserena": 800.0
+  },
+  "crpe2__custom__8_krana": {
+   "mylserena": 800.0
+  },
+  "vigilantes_de_la_noche__custom__20_kuei_shen": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_76_kuei_xing": {
+   "mylserena": 50.0
+  },
+  "74-055": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__297_kukulcan": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__260_kunoichi": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__351_kunoichi": {
+   "mylserena": 300.0,
+   "mesaredonda": 600.0
+  },
+  "leyendas_primera_era_4_0__custom__186_kuyen": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "74-046": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__265_kyudo": {
+   "mylserena": 50.0
+  },
+  "74-026": {
+   "mylserena": 2000.0
+  },
+  "112-117": {
+   "mylserena": 300.0,
+   "mesaredonda": 300.0
+  },
+  "74-094": {
+   "mylserena": 300.0
+  },
+  "160-159": {
+   "mylserena": 800.0
+  },
+  "160-120": {
+   "mylserena": 1000.0
+  },
+  "160-080": {
+   "mylserena": 1000.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_02_la_saga_de_volsung": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__144_la_saga_de_volsung": {
+   "mylserena": 500.0
+  },
+  "71-007": {
+   "mylserena": 1000.0
+  },
+  "74-022": {
+   "mylserena": 1000.0
+  },
+  "160-142": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__343_lampara_magica": {
+   "mylserena": 2000.0,
+   "mesaredonda": 700.0
+  },
+  "leyendas_primera_era_4_0__custom__103_lampara_magica": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_41_lautaro": {
+   "mylserena": 100.0
+  },
+  "74-002": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__138_langskib": {
+   "mylserena": 1000.0
+  },
+  "74-075": {
+   "mylserena": 1000.0
+  },
+  "160-113": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__213_l_oh_qianfuzhe": {
+   "mylserena": 200.0,
+   "mesaredonda": 380.0
+  },
+  "112-100": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_10_laque": {
+   "mylserena": 2000.0
+  },
+  "160-039": {
+   "mylserena": 4000.0
+  },
+  "160-078": {
+   "mylserena": 1000.0
+  },
+  "vigilantes_de_la_noche__custom__7_las_lilim": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__117_las_lilim": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_43_pachamama": {
+   "mylserena": 100.0
+  },
+  "crpe2__custom__31_lautaro": {
+   "mylserena": 500.0
+  },
+  "112-022": {
+   "mylserena": 2000.0,
+   "mesaredonda": 300.0
+  },
+  "113-008": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__12_lenguaje_aviar": {
+   "mylserena": 2000.0
+  },
+  "160-117": {
+   "mylserena": 1000.0
+  },
+  "74-065": {
+   "mylserena": 1000.0
+  },
+  "160-107": {
+   "mylserena": 800.0
+  },
+  "145-006": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__320_oro_conmemorativo": {
+   "mylserena": 100.0
+  },
+  "crpe2__custom__44_li_sou": {
+   "mylserena": 800.0
+  },
+  "112-321": {
+   "mylserena": 4000.0
+  },
+  "74-092": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__231_licantropia": {
+   "mylserena": 100.0
+  },
+  "74-034": {
+   "mylserena": 3000.0
+  },
+  "crpe2__custom__41_lin_kuei": {
+   "mylserena": 500.0
+  },
+  "crpe2__custom__4_linna": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__6_lindwurm": {
+   "mylserena": 3000.0
+  },
+  "112-102": {
+   "mylserena": 200.0,
+   "mesaredonda": 180.0
+  },
+  "leyendas_primera_era_4_0__custom__102_llamada_feerica": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__230_llamado_de_la_jauria": {
+   "mylserena": 100.0
+  },
+  "160-103": {
+   "mylserena": 800.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__19_locura_de_fafner": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__203_loke": {
+   "mylserena": 500.0,
+   "mesaredonda": 500.0
+  },
+  "112-047": {
+   "mylserena": 1000.0
+  },
+  "74-091": {
+   "mylserena": 300.0
+  },
+  "160-033": {
+   "mylserena": 1000.0
+  },
+  "160-056": {
+   "mylserena": 500.0
+  },
+  "160-125": {
+   "mylserena": 1000.0
+  },
+  "112-128": {
+   "mylserena": 500.0
+  },
+  "74-119": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__326_los_cinco_anillos": {
+   "mylserena": 10000.0
+  },
+  "160-151": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_48_puchao": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_26_stribog": {
+   "mylserena": 200.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_38_nanahuatzin": {
+   "mylserena": 100.0,
+   "mesaredonda": 1840.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_75_shen_yi": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_80_teatro_kabuki": {
+   "mylserena": 200.0
+  },
+  "leyendas_primera_era_4_0__custom__83_forma_voladora": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__81_sarcofago_profano": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__88_rapto_de_idunn": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__89_asaltar_santuario": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__87_el_dorado": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__91_knarr": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__94_duelo_en_el_tejado": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__93_nukewaza": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__95_shuai_jiao": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__97_sakura": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__96_los_cinco_anillos": {
+   "mylserena": 4000.0
+  },
+  "160-068": {
+   "mylserena": 500.0
+  },
+  "160-105": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__313_l_jiaod_o": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__232_luna_llena": {
+   "mylserena": 50.0
+  },
+  "112-111": {
+   "mylserena": 300.0,
+   "mesaredonda": 180.0
+  },
+  "160-019": {
+   "mylserena": 1000.0
+  },
+  "74-035": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__284_lupo": {
+   "mylserena": 100.0
+  },
+  "160-093": {
+   "mylserena": 1000.0
+  },
+  "74-023": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__176_lycaon": {
+   "mylserena": 800.0
+  },
+  "112-153": {
+   "mylserena": 300.0,
+   "mesaredonda": 300.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_28_macahuitl": {
+   "mylserena": 2000.0
+  },
+  "129-002": {
+   "mylserena": 1000.0
+  },
+  "112-085": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "74-007": {
+   "mylserena": 4000.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__5_madre_wyrm": {
+   "mylserena": 4000.0
+  },
+  "112-049": {
+   "mylserena": 2000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_9_maelstrom": {
+   "mylserena": 800.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__9_maestria_wudang": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__90_maelstrom": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__141_magni": {
+   "mylserena": 800.0,
+   "mesaredonda": 700.0
+  },
+  "112-179": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_18_zara": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__9_maledisant": {
+   "mylserena": 1000.0,
+   "mesaredonda": 300.0
+  },
+  "112-137": {
+   "mylserena": 1000.0
+  },
+  "160-050": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__327_mandoble_purificador": {
+   "mylserena": 2000.0,
+   "mesaredonda": 1000.0
+  },
+  "112-318": {
+   "mylserena": 5000.0
+  },
+  "leyendas_primera_era_4_0__custom__266_marca_del_tigre": {
+   "mylserena": 100.0
+  },
+  "74-113": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__219_marduk": {
+   "mylserena": 100.0
+  },
+  "145-019": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__118_mary_bradbury": {
+   "mylserena": 300.0,
+   "mesaredonda": 380.0
+  },
+  "leyendas_primera_era_4_0__custom__115_mascara_de_jade": {
+   "mylserena": 500.0
+  },
+  "toolkit_primera_era_2024__custom__tkpe24_40_mascara_de_tiamath": {
+   "mylserena": 0.0
+  },
+  "74-010": {
+   "mylserena": 5000.0
+  },
+  "112-166": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__224_matador_de_dragones": {
+   "mylserena": 100.0
+  },
+  "112-019": {
+   "mylserena": 4000.0
+  },
+  "crpe2__custom__30_maui": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__148_mazu": {
+   "mylserena": 200.0,
+   "mesaredonda": 700.0
+  },
+  "74-069": {
+   "mylserena": 2000.0
+  },
+  "145-005": {
+   "mylserena": 1000.0,
+   "mesaredonda": 300.0
+  },
+  "160-104": {
+   "mylserena": 800.0
+  },
+  "mundos_perdidos_tombstone__custom__8_mercy_brown": {
+   "mylserena": 5000.0,
+   "mesaredonda": 4250.0
+  },
+  "112-120": {
+   "mylserena": 500.0
+  },
+  "112-066": {
+   "mylserena": 500.0
+  },
+  "112-161": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "leyendas_primera_era_4_0__custom__187_metztli": {
+   "mylserena": 200.0
+  },
+  "160-146": {
+   "mylserena": 1000.0
+  },
+  "crpe2__custom__34_michimalonco": {
+   "mylserena": 2000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_12_midgard": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__295_millalobo": {
+   "mylserena": 50.0
+  },
+  "74-064": {
+   "mylserena": 500.0
+  },
+  "160-102": {
+   "mylserena": 1000.0
+  },
+  "129-007": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__152_miyamoto_musashi": {
+   "mylserena": 300.0,
+   "mesaredonda": 1050.0
+  },
+  "160-018": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__204_modra": {
+   "mylserena": 200.0,
+   "mesaredonda": 380.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_35_sisiutl": {
+   "mylserena": 100.0
+  },
+  "vigilantes_de_la_noche__custom__16_modranicht": {
+   "mylserena": 2000.0
+  },
+  "vigilantes_de_la_noche__custom__15_modra": {
+   "mylserena": 500.0
+  },
+  "113-012": {
+   "mylserena": 3000.0
+  },
+  "74-099": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__14_monedas_romanas": {
+   "mylserena": 5000.0
+  },
+  "crpe2__custom__6_monje_de_kri_ling": {
+   "mylserena": 500.0
+  },
+  "112-125": {
+   "mylserena": 200.0
+  },
+  "leyendas_primera_era_4_0__custom__99_monstruo_del_lago": {
+   "mylserena": 500.0,
+   "mesaredonda": 2000.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__14_monte_del_buitre": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_70_oni": {
+   "mylserena": 300.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_7_montura_de_dragon": {
+   "mylserena": 3000.0
+  },
+  "112-135": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__292_mordida": {
+   "mylserena": 50.0
+  },
+  "112-180": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "113-009": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_07_morgana": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__108_morgause": {
+   "mylserena": 200.0,
+   "mesaredonda": 380.0
+  },
+  "leyendas_primera_era_4_0__custom__310_morir_en_batalla": {
+   "mylserena": 100.0
+  },
+  "112-036": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__178_moroi": {
+   "mylserena": 300.0,
+   "mesaredonda": 530.0
+  },
+  "leyendas_primera_era_4_0__custom__180_mosquete_puritano": {
+   "mylserena": 1000.0
+  },
+  "160-041": {
+   "mylserena": 500.0
+  },
+  "160-051": {
+   "mylserena": 800.0
+  },
+  "toolkit_primera_era_2025__custom__tkpe25_30_muneco_fetiche": {
+   "mylserena": 4000.0
+  },
+  "160-096": {
+   "mylserena": 1000.0
+  },
+  "160-145": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__8_morgause": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "mundos_perdidos_nube_roja__custom__2_muut": {
+   "mylserena": 4000.0,
+   "mesaredonda": 4000.0
+  },
+  "160-124": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__112_nachzehrer": {
+   "mylserena": 500.0
+  },
+  "112-078": {
+   "mylserena": 300.0
+  },
+  "112-094": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__318_nanigata": {
+   "mylserena": 50.0
+  },
+  "112-067": {
+   "mylserena": 300.0
+  },
+  "160-029": {
+   "mylserena": 1000.0
+  },
+  "112-044": {
+   "mylserena": 3000.0
+  },
+  "160-044": {
+   "mylserena": 500.0
+  },
+  "crpe2__custom__43_nemuri_kyoshiro": {
+   "mylserena": 800.0
+  },
+  "145-010": {
+   "mylserena": 4000.0
+  },
+  "112-037": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__174_neuri": {
+   "mylserena": 300.0
+  },
+  "crpe2__custom__47_ng_mui": {
+   "mylserena": 1000.0
+  },
+  "112-041": {
+   "mylserena": 3000.0
+  },
+  "crpe2__custom__1_niamh": {
+   "mylserena": 1000.0
+  },
+  "112-162": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__253_nidos_de_pesadilla": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__10_nieblas_profundas": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__18_ninfas": {
+   "mylserena": 500.0
+  },
+  "74-083": {
+   "mylserena": 500.0
+  },
+  "crpe2__custom__65_ninigi_no_mikoto": {
+   "mylserena": 300.0
+  },
+  "crpe2__custom__57_ninyo": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__212_niu_k_nzhe_c_od": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__258_niu_mowang": {
+   "mylserena": 100.0
+  },
+  "crpe2__custom__46_nobunaga": {
+   "mylserena": 1000.0
+  },
+  "160-052": {
+   "mylserena": 200.0
+  },
+  "160-047": {
+   "mylserena": 1000.0
+  },
+  "160-066": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_nube_roja__custom__9_nube_roja": {
+   "mylserena": 500.0,
+   "mesaredonda": 1700.0
+  },
+  "74-114": {
+   "mylserena": 4000.0
+  },
+  "112-319": {
+   "mylserena": 5000.0
+  },
+  "160-034": {
+   "mylserena": 1000.0
+  },
+  "160-131": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__18_nyord": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__344_oannes": {
+   "mylserena": 500.0,
+   "mesaredonda": 600.0
+  },
+  "leyendas_primera_era_4_0__custom__274_oannes": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__159_oberon": {
+   "mylserena": 300.0
+  },
+  "74-050": {
+   "mylserena": 4000.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_04_ocelote_del_templo": {
+   "mylserena": 4000.0
+  },
+  "leyendas_primera_era_4_0__custom__86_ocelote_del_templo": {
+   "mylserena": 4000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_33_odin": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__16_odiseo": {
+   "mylserena": 4000.0
+  },
+  "vigilantes_de_la_noche__custom__14_ogier_el_danes": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__262_oho_yama": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_32_totem_lunar": {
+   "mylserena": 300.0,
+   "mesaredonda": 1580.0
+  },
+  "mundos_perdidos_tombstone__custom__15_ojo_del_padre": {
+   "mylserena": 3000.0
+  },
+  "112-169": {
+   "mylserena": 800.0,
+   "mesaredonda": 180.0
+  },
+  "112-167": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "crpe2__custom__49_oni": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__132_oro_de_los_cesares": {
+   "mylserena": 1000.0,
+   "mesaredonda": 1050.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__15_oro_del_rin": {
+   "mylserena": 7000.0
+  },
+  "160-135": {
+   "mylserena": 1000.0
+  },
+  "160-045": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__13_ovoo": {
+   "mylserena": 2500.0
+  },
+  "toolkit_primera_era_2024__custom__tkpe24_38_pachamama": {
+   "mylserena": 0.0
+  },
+  "112-146": {
+   "mylserena": 300.0
+  },
+  "160-003": {
+   "mylserena": 6000.0
+  },
+  "112-058": {
+   "mylserena": 800.0,
+   "mesaredonda": 1300.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_57_thor": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__5_pajaro_trueno": {
+   "mylserena": 1000.0
+  },
+  "145-001": {
+   "mylserena": 1000.0
+  },
+  "145-021": {
+   "mylserena": 1000.0,
+   "mesaredonda": 500.0
+  },
+  "145-016": {
+   "mylserena": 500.0
+  },
+  "160-074": {
+   "mylserena": 800.0
+  },
+  "mundos_perdidos_tombstone__custom__13_peacemaker": {
+   "mylserena": 4000.0,
+   "mesaredonda": 3610.0
+  },
+  "160-154": {
+   "mylserena": 2000.0
+  },
+  "160-115": {
+   "mylserena": 800.0
+  },
+  "160-171": {
+   "mylserena": 15000.0
+  },
+  "160-011": {
+   "mylserena": 4000.0
+  },
+  "crpe2__custom__17_pegaso": {
+   "mylserena": 500.0
+  },
+  "74-059": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__242_peri_pillan": {
+   "mylserena": 50.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__16_persival": {
+   "mylserena": 1000.0
+  },
+  "74-001": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__2_perun": {
+   "mylserena": 500.0
+  },
+  "160-005": {
+   "mylserena": 4000.0
+  },
+  "mundos_perdidos_nube_roja__custom__1_piasa": {
+   "mylserena": 2000.0,
+   "mesaredonda": 2980.0
+  },
+  "crpe2__custom__23_pihuchen": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__336_pintura_naskapi": {
+   "mylserena": 3000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_36_pintura_naskapi": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_nube_roja__custom__15_pipa_ceremonial": {
+   "mylserena": 7000.0,
+   "mesaredonda": 4340.0
+  },
+  "74-079": {
+   "mylserena": 3000.0
+  },
+  "160-030": {
+   "mylserena": 1000.0
+  },
+  "160-174": {
+   "mylserena": 13000.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__19_poder_del_relampago": {
+   "mylserena": 1000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_5_portal_celestial": {
+   "mylserena": 3000.0
+  },
+  "129-003": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_79_yasakani": {
+   "mylserena": 200.0
+  },
+  "leyendas_primera_era_4_0__custom__277_poseidon": {
+   "mylserena": 50.0
+  },
+  "160-085": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_nube_roja__custom__19_pozo_de_muerte": {
+   "mylserena": 3000.0,
+   "mesaredonda": 2800.0
+  },
+  "112-126": {
+   "mylserena": 1000.0
+  },
+  "160-106": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_tombstone__custom__9_principe_laibon": {
+   "mylserena": 500.0,
+   "mesaredonda": 1190.0
+  },
+  "160-101": {
+   "mylserena": 800.0
+  },
+  "128-013": {
+   "mylserena": 2000.0
+  },
+  "74-049": {
+   "mylserena": 4000.0
+  },
+  "160-161": {
+   "mylserena": 7000.0
+  },
+  "160-162": {
+   "mylserena": 12000.0
+  },
+  "160-164": {
+   "mylserena": 12000.0
+  },
+  "160-167": {
+   "mylserena": 15000.0
+  },
+  "160-168": {
+   "mylserena": 7000.0
+  },
+  "160-165": {
+   "mylserena": 12000.0
+  },
+  "160-169": {
+   "mylserena": 20000.0
+  },
+  "160-166": {
+   "mylserena": 12000.0
+  },
+  "160-163": {
+   "mylserena": 15000.0
+  },
+  "160-081": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__11_punto_letal": {
+   "mylserena": 2000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_22_purificar_sombras": {
+   "mylserena": 3000.0
+  },
+  "74-085": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__214_q_nglong_ch_shu": {
+   "mylserena": 200.0
+  },
+  "160-058": {
+   "mylserena": 200.0
+  },
+  "toolkit_primera_era_2024__custom__tkpe24_37_quemar_al_monstruo": {
+   "mylserena": 0.0
+  },
+  "74-027": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__165_quetzalcoatl": {
+   "mylserena": 300.0,
+   "mesaredonda": 380.0
+  },
+  "toolkit_primera_era_2025__custom__tkpe25_32_quetzal": {
+   "mylserena": 4000.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__10_quemar_las_estepas": {
+   "mylserena": 3000.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__10_quimera_del_rayo": {
+   "mylserena": 2000.0,
+   "mesaredonda": 300.0
+  },
+  "71-011": {
+   "mylserena": 1000.0
+  },
+  "112-093": {
+   "mylserena": 300.0
+  },
+  "74-104": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__4_raijin": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "74-070": {
+   "mylserena": 3000.0
+  },
+  "160-141": {
+   "mylserena": 2000.0
+  },
+  "112-072": {
+   "mylserena": 500.0
+  },
+  "129-013": {
+   "mylserena": 3000.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_01_rapto_de_idunn": {
+   "mylserena": 3000.0
+  },
+  "mundos_perdidos_nube_roja__custom__11_rastrear": {
+   "mylserena": 800.0,
+   "mesaredonda": 1450.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__12_rayo_de_indra": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "129-004": {
+   "mylserena": 3000.0
+  },
+  "74-040": {
+   "mylserena": 4000.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__16_ratatosk": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__294_raza_nocturna": {
+   "mylserena": 200.0
+  },
+  "71-008": {
+   "mylserena": 5000.0
+  },
+  "160-010": {
+   "mylserena": 3000.0
+  },
+  "160-170": {
+   "mylserena": 13000.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__12_regresar_la_espada": {
+   "mylserena": 800.0
+  },
+  "112-178": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_03_reina_guinivere": {
+   "mylserena": 200.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_24_reliquia_del_leon": {
+   "mylserena": 8000.0
+  },
+  "74-011": {
+   "mylserena": 800.0
+  },
+  "112-177": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__8_rey_laurin": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_33_trauko": {
+   "mylserena": 100.0
+  },
+  "112-084": {
+   "mylserena": 200.0,
+   "mesaredonda": 300.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__4_ro_langs": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__243_robar_el_fuego": {
+   "mylserena": 100.0
+  },
+  "74-021": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__135_rognvald_ragnarsson": {
+   "mylserena": 500.0,
+   "mesaredonda": 500.0
+  },
+  "160-126": {
+   "mylserena": 1000.0
+  },
+  "112-156": {
+   "mylserena": 200.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__140_rollo": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__330_rosa_de_los_vientos": {
+   "mylserena": 2000.0
+  },
+  "128-016": {
+   "mylserena": 4000.0
+  },
+  "74-032": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_46_totem_del_aguila": {
+   "mylserena": 100.0
+  },
+  "112-141": {
+   "mylserena": 500.0
+  },
+  "112-160": {
+   "mylserena": 200.0,
+   "mesaredonda": 180.0
+  },
+  "113-007": {
+   "mylserena": 500.0
+  },
+  "112-068": {
+   "mylserena": 300.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__13_ruyi_jingu_bang": {
+   "mylserena": 1000.0
+  },
+  "112-082": {
+   "mylserena": 300.0,
+   "mesaredonda": 180.0
+  },
+  "112-173": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "128-001": {
+   "mylserena": 4000.0
+  },
+  "74-120": {
+   "mylserena": 4000.0
+  },
+  "crpe2__custom__15_salamandra": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__120_salem": {
+   "mylserena": 500.0,
+   "mesaredonda": 1400.0
+  },
+  "145-011": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__172_samuel_parris": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "vigilantes_de_la_noche__custom__1_san_jordi": {
+   "mylserena": 2000.0
+  },
+  "160-057": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__145_sangre_de_dragon": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__267_santuario_de_kashima": {
+   "mylserena": 100.0
+  },
+  "112-314": {
+   "mylserena": 5000.0
+  },
+  "74-030": {
+   "mylserena": 4000.0
+  },
+  "crpe2__custom__67_sarutahiko": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__122_sasquatch": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_nube_roja__custom__3_sasnalkahi": {
+   "mylserena": 800.0,
+   "mesaredonda": 1400.0
+  },
+  "74-033": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__18_sedna": {
+   "mylserena": 1000.0
+  },
+  "160-109": {
+   "mylserena": 1000.0
+  },
+  "160-048": {
+   "mylserena": 500.0
+  },
+  "112-151": {
+   "mylserena": 2000.0
+  },
+  "74-053": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__236_serpiente_emplumada": {
+   "mylserena": 50.0
+  },
+  "160-087": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__276_seth": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__2_sha_wujing": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__6_shango": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "112-108": {
+   "mylserena": 200.0,
+   "mesaredonda": 180.0
+  },
+  "74-003": {
+   "mylserena": 1000.0
+  },
+  "74-101": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__210_shenshu_y_yulu": {
+   "mylserena": 300.0
+  },
+  "160-002": {
+   "mylserena": 5000.0
+  },
+  "crpe2__custom__45_shinobi": {
+   "mylserena": 1000.0
+  },
+  "crpe2__custom__42_shiro_amakusa": {
+   "mylserena": 500.0
+  },
+  "crpe2__custom__70_shinigami": {
+   "mylserena": 1000.0
+  },
+  "112-322": {
+   "mylserena": 5000.0
+  },
+  "74-111": {
+   "mylserena": 4000.0
+  },
+  "112-023": {
+   "mylserena": 3000.0
+  },
+  "crpe2__custom__26_shuar": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_40_shuar": {
+   "mylserena": 200.0,
+   "mesaredonda": 2800.0
+  },
+  "160-021": {
+   "mylserena": 2500.0
+  },
+  "mundos_perdidos_locura_de_dragon__custom__4_siegfried": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__9_sigenot": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__199_signy": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__162_sigurd": {
+   "mylserena": 200.0,
+   "mesaredonda": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_21_hombre_lobo": {
+   "mylserena": 200.0,
+   "mesaredonda": 1580.0
+  },
+  "leyendas_primera_era_4_0__custom__198_sigurd_ring": {
+   "mylserena": 300.0,
+   "mesaredonda": 530.0
+  },
+  "74-012": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__269_sir_gwain": {
+   "mylserena": 50.0
+  },
+  "112-026": {
+   "mylserena": 4000.0
+  },
+  "74-087": {
+   "mylserena": 1000.0
+  },
+  "74-061": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_31_totem_del_bosque": {
+   "mylserena": 100.0
+  },
+  "74-071": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__308_skadi": {
+   "mylserena": 100.0
+  },
+  "160-090": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__134_skeljungur": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_nube_roja__custom__16_sko_yo": {
+   "mylserena": 300.0,
+   "mesaredonda": 1490.0
+  },
+  "vigilantes_de_la_noche__custom__3_sluagh": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_nube_roja__custom__20_snallygaster": {
+   "mylserena": 10000.0
+  },
+  "112-157": {
+   "mylserena": 300.0,
+   "mesaredonda": 300.0
+  },
+  "toolkit_primera_era_2025__custom__tkpe25_31_solarsteinn": {
+   "mylserena": 2000.0
+  },
+  "crpe2__custom__10_solomon": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_tombstone__custom__10_sombra_del_loa": {
+   "mylserena": 500.0,
+   "mesaredonda": 1190.0
+  },
+  "160-022": {
+   "mylserena": 3000.0
+  },
+  "74-093": {
+   "mylserena": 2000.0
+  },
+  "112-008": {
+   "mylserena": 10000.0
+  },
+  "leyendas_primera_era_4_0__custom__85_sotz_na": {
+   "mylserena": 4000.0
+  },
+  "112-073": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "leyendas_primera_era_4_0__custom__345_strix": {
+   "mylserena": 1000.0,
+   "mesaredonda": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__288_strix": {
+   "mylserena": 100.0
+  },
+  "vigilantes_de_la_noche__custom__12_sombra_hambrienta": {
+   "mylserena": 2000.0
+  },
+  "crpe2__custom__71_suijin": {
+   "mylserena": 300.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__7_sun_wukong": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__311_suplicio_de_loki": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__154_susano_wa": {
+   "mylserena": 800.0
+  },
+  "145-018": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__15_tambor_daiko": {
+   "mylserena": 3000.0,
+   "mesaredonda": 1950.0
+  },
+  "112-112": {
+   "mylserena": 300.0,
+   "mesaredonda": 180.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__1_tang_sanzang": {
+   "mylserena": 1000.0,
+   "mesaredonda": 300.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__7_tangri": {
+   "mylserena": 2000.0
+  },
+  "112-170": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "crpe2__custom__56_tanuki": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_68_tanuki": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__3_taranis": {
+   "mylserena": 300.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__192_taranis": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__7_tarhunna": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "129-011": {
+   "mylserena": 800.0
+  },
+  "112-172": {
+   "mylserena": 800.0
+  },
+  "crpe2__custom__51_tchi_yeu": {
+   "mylserena": 500.0
+  },
+  "112-009": {
+   "mylserena": 13000.0
+  },
+  "112-101": {
+   "mylserena": 200.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__317_tecnica_de_la_media_luna": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__245_tecpatl": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__248_teepee": {
+   "mylserena": 200.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__8_tempestas": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "128-008": {
+   "mylserena": 1000.0
+  },
+  "74-077": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__16_templo_del_trueno": {
+   "mylserena": 1000.0,
+   "mesaredonda": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__271_tentenvilu_coicoivilu": {
+   "mylserena": 50.0
+  },
+  "129-012": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__300_tepoztopilli": {
+   "mylserena": 50.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_16_tesoro_de_troll": {
+   "mylserena": 7000.0
+  },
+  "toolkit_primera_era_2025__custom__tkpe25_29_tesoro_del_dragon": {
+   "mylserena": 4000.0
+  },
+  "112-024": {
+   "mylserena": 3000.0
+  },
+  "112-174": {
+   "mylserena": 200.0,
+   "mesaredonda": 180.0
+  },
+  "112-029": {
+   "mylserena": 3000.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__18_thor": {
+   "mylserena": 1000.0,
+   "mesaredonda": 300.0
+  },
+  "74-004": {
+   "mylserena": 1000.0
+  },
+  "145-017": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__160_titania": {
+   "mylserena": 300.0,
+   "mesaredonda": 500.0
+  },
+  "crpe2__custom__29_tlaca_tecolotl": {
+   "mylserena": 1000.0
+  },
+  "74-057": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__296_tlaloc": {
+   "mylserena": 100.0
+  },
+  "112-080": {
+   "mylserena": 200.0
+  },
+  "crpe2__custom__32_tlazolteotl": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__191_toki_butahue": {
+   "mylserena": 300.0,
+   "mesaredonda": 380.0
+  },
+  "mundos_perdidos_tombstone__custom__14_tombstone": {
+   "mylserena": 500.0,
+   "mesaredonda": 890.0
+  },
+  "leyendas_primera_era_4_0__custom__126_tomahawk": {
+   "mylserena": 300.0,
+   "mesaredonda": 700.0
+  },
+  "112-145": {
+   "mylserena": 500.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_14_torc_ardiente": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__121_tormenta_de_sangre": {
+   "mylserena": 300.0
+  },
+  "128-011": {
+   "mylserena": 500.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_20_tormenta_de_sangre": {
+   "mylserena": 500.0
+  },
+  "160-128": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__12_tornado_de_rosas": {
+   "mylserena": 3000.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_25_torre_de_cristal": {
+   "mylserena": 500.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_23_torre_del_leon": {
+   "mylserena": 4500.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_28_torre_de_la_perdicion": {
+   "mylserena": 4000.0
+  },
+  "129-009": {
+   "mylserena": 500.0
+  },
+  "74-008": {
+   "mylserena": 4000.0
+  },
+  "toolkit_primera_era_2024__custom__tkpe24_39_torre_oscura": {
+   "mylserena": 0.0
+  },
+  "mundos_perdidos_nube_roja__custom__14_totem_de_ave": {
+   "mylserena": 1000.0,
+   "mesaredonda": 1790.0
+  },
+  "112-148": {
+   "mylserena": 500.0
+  },
+  "74-096": {
+   "mylserena": 300.0
+  },
+  "112-028": {
+   "mylserena": 1000.0,
+   "mesaredonda": 500.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_07_totem_de_perro": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__247_totem_de_perro": {
+   "mylserena": 50.0
+  },
+  "129-008": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__302_totem_de_uktena": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__246_totem_de_serpiente": {
+   "mylserena": 100.0
+  },
+  "74-095": {
+   "mylserena": 500.0
+  },
+  "toolkit_primera_era_2024__custom__tkpe24_30_totem_del_pajaro_de_trueno": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__334_totem_ultimo": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__133_totem_del_pajaro_de_trueno": {
+   "mylserena": 200.0,
+   "mesaredonda": 500.0
+  },
+  "112-110": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__223_traicionar": {
+   "mylserena": 100.0
+  },
+  "128-014": {
+   "mylserena": 2000.0
+  },
+  "160-013": {
+   "mylserena": 4000.0
+  },
+  "128-017": {
+   "mylserena": 3000.0
+  },
+  "crpe2__custom__18_trauko": {
+   "mylserena": 500.0
+  },
+  "112-025": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__137_tributo_a_los_alcis": {
+   "mylserena": 500.0,
+   "mesaredonda": 500.0
+  },
+  "112-152": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__sc_54_trivaldi": {
+   "mylserena": 100.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__mpt_00_truenos": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "crpe2__custom__25_tsachila": {
+   "mylserena": 300.0
+  },
+  "71-009": {
+   "mylserena": 3000.0
+  },
+  "74-042": {
+   "mylserena": 1000.0
+  },
+  "112-132": {
+   "mylserena": 1000.0,
+   "mesaredonda": 500.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__4_tuolong": {
+   "mylserena": 800.0,
+   "mesaredonda": 180.0
+  },
+  "160-134": {
+   "mylserena": 1000.0
+  },
+  "74-072": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__309_tyr": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__239_tzitzimime": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__130_tzolkin": {
+   "mylserena": 800.0
+  },
+  "leyendas_primera_era_4_0__custom__251_ubbe_ragnarsson": {
+   "mylserena": 50.0
+  },
+  "160-077": {
+   "mylserena": 500.0
+  },
+  "160-038": {
+   "mylserena": 3000.0
+  },
+  "toolkit_primera_era_2026__custom__tkpe26_27_uxmal": {
+   "mylserena": 2000.0
+  },
+  "leyendas_primera_era_4_0__custom__338_uxmal": {
+   "mylserena": 2000.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__5_vairocana": {
+   "mylserena": 2000.0
+  },
+  "112-159": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__312_vaksala": {
+   "mylserena": 50.0
+  },
+  "112-129": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__229_vampiro": {
+   "mylserena": 50.0
+  },
+  "129-001": {
+   "mylserena": 800.0,
+   "mesaredonda": 300.0
+  },
+  "112-136": {
+   "mylserena": 1000.0
+  },
+  "112-121": {
+   "mylserena": 500.0
+  },
+  "112-065": {
+   "mylserena": 300.0
+  },
+  "crpe2__custom__3_van_helsing": {
+   "mylserena": 300.0
+  },
+  "160-025": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__256_vanaheim": {
+   "mylserena": 50.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_08_vanaheim": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__249_vavtrudnir": {
+   "mylserena": 100.0
+  },
+  "160-137": {
+   "mylserena": 1000.0
+  },
+  "160-119": {
+   "mylserena": 1000.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__19_venganza": {
+   "mylserena": 1000.0
+  },
+  "160-069": {
+   "mylserena": 200.0
+  },
+  "160-108": {
+   "mylserena": 800.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__11_viento_de_fuego": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "toolkit_valentia_y_desolacion__custom__tkpe25_12_vientos_del_ragnarok": {
+   "mylserena": 2000.0
+  },
+  "112-134": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__139_vikingo": {
+   "mylserena": 500.0,
+   "mesaredonda": 1500.0
+  },
+  "leyendas_primera_era_4_0__custom__339_vinland": {
+   "mylserena": 800.0,
+   "mesaredonda": 700.0
+  },
+  "leyendas_primera_era_4_0__custom__347_wiraqocha": {
+   "mylserena": 500.0,
+   "mesaredonda": 700.0
+  },
+  "leyendas_primera_era_4_0__custom__237_wiraqocha": {
+   "mylserena": 50.0
+  },
+  "145-012": {
+   "mylserena": 3000.0
+  },
+  "74-037": {
+   "mylserena": 3000.0
+  },
+  "leyendas_primera_era_4_0__custom__289_virna": {
+   "mylserena": 100.0
+  },
+  "160-079": {
+   "mylserena": 1000.0
+  },
+  "160-173": {
+   "mylserena": 13000.0
+  },
+  "112-092": {
+   "mylserena": 300.0,
+   "mesaredonda": 300.0
+  },
+  "160-027": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__200_volsung": {
+   "mylserena": 800.0,
+   "mesaredonda": 560.0
+  },
+  "leyendas_primera_era_4_0__custom__287_von_krieg": {
+   "mylserena": 50.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__18_wang_mu_niang_niang": {
+   "mylserena": 3000.0
+  },
+  "74-043": {
+   "mylserena": 2000.0
+  },
+  "160-043": {
+   "mylserena": 1000.0
+  },
+  "112-040": {
+   "mylserena": 3000.0
+  },
+  "mundos_perdidos_tombstone__custom__6_wechuge": {
+   "mylserena": 1000.0,
+   "mesaredonda": 1190.0
+  },
+  "160-063": {
+   "mylserena": 500.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__7_wieland": {
+   "mylserena": 2000.0
+  },
+  "112-046": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__202_wotan": {
+   "mylserena": 200.0,
+   "mesaredonda": 500.0
+  },
+  "mundos_perdidos_aliento_de_fuego__custom__4_wurm_de_pantano": {
+   "mylserena": 3000.0
+  },
+  "mundos_perdidos_tombstone__custom__2_wyatt_earp": {
+   "mylserena": 4000.0,
+   "mesaredonda": 3400.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__4_wyvern_negro": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "leyendas_primera_era_4_0__custom__107_wyvern_negro": {
+   "mylserena": 200.0,
+   "mesaredonda": 380.0
+  },
+  "112-057": {
+   "mylserena": 2000.0,
+   "mesaredonda": 500.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__mpo_00_xi_you_ji": {
+   "mylserena": 5000.0
+  },
+  "mundos_perdidos_horda_esteparia__custom__20_xiongnu": {
+   "mylserena": 15000.0
+  },
+  "112-081": {
+   "mylserena": 500.0,
+   "mesaredonda": 300.0
+  },
+  "vigilantes_de_la_noche__custom__10_xolotl_huetzi": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__185_xolotl_huetzi": {
+   "mylserena": 200.0,
+   "mesaredonda": 380.0
+  },
+  "leyendas_primera_era_4_0__custom__164_y_ddraig_goch": {
+   "mylserena": 300.0,
+   "mesaredonda": 380.0
+  },
+  "mundos_perdidos_leyendas_de_avalon__custom__5_y_ddraig_goch": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "74-109": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__261_yama_bushi": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__244_yanomami": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__298_yaskomo": {
+   "mylserena": 50.0
+  },
+  "112-076": {
+   "mylserena": 800.0
+  },
+  "mundos_perdidos_tombstone__custom__5_yee_naaldlooshii": {
+   "mylserena": 1000.0,
+   "mesaredonda": 1790.0
+  },
+  "74-098": {
+   "mylserena": 300.0
+  },
+  "leyendas_primera_era_4_0__custom__216_y_m_ti_o_ji_n": {
+   "mylserena": 200.0
+  },
+  "112-051": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__207_yoritomo": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__250_yormungand": {
+   "mylserena": 50.0
+  },
+  "74-078": {
+   "mylserena": 1000.0
+  },
+  "74-108": {
+   "mylserena": 2000.0
+  },
+  "74-102": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__257_yotunheim": {
+   "mylserena": 100.0
+  },
+  "leyendas_primera_era_4_0__custom__263_yu_huang": {
+   "mylserena": 80.0
+  },
+  "vigilantes_de_la_noche__custom__11_yum_kaax": {
+   "mylserena": 500.0
+  },
+  "leyendas_primera_era_4_0__custom__314_yurei": {
+   "mylserena": 50.0
+  },
+  "leyendas_primera_era_4_0__custom__342_zapatos_de_hierro": {
+   "mylserena": 3500.0
+  },
+  "112-003": {
+   "mylserena": 18000.0
+  },
+  "crpe2__custom__2_zara": {
+   "mylserena": 500.0
+  },
+  "112-064": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "74-110": {
+   "mylserena": 1000.0
+  },
+  "leyendas_primera_era_4_0__custom__150_zazen": {
+   "mylserena": 100.0,
+   "mesaredonda": 380.0
+  },
+  "mundos_perdidos_senores_del_trueno__custom__17_zeus": {
+   "mylserena": 500.0,
+   "mesaredonda": 180.0
+  },
+  "vigilantes_de_la_noche__custom__18_zhang_sanfeng": {
+   "mylserena": 2000.0
+  },
+  "129-014": {
+   "mylserena": 5000.0
+  },
+  "mundos_perdidos_viaje_al_oeste__custom__3_zhu_baie": {
+   "mylserena": 2000.0
+  },
+  "160-133": {
+   "mylserena": 1000.0
+  },
+  "toolkit_honor_y_ferocidad__custom__tkpe25_24_zweihander": {
+   "mylserena": 2000.0
+  },
+  "167-054": {
+   "mesaredonda": 7500.0
+  },
+  "167-265": {
+   "mesaredonda": 300.0
+  },
+  "167-037": {
+   "mesaredonda": 3000.0
+  },
+  "167-064": {
+   "mesaredonda": 7500.0
+  },
+  "167-203": {
+   "mesaredonda": 500.0
+  },
+  "167-246": {
+   "mesaredonda": 100.0
+  },
+  "167-176": {
+   "mesaredonda": 400.0
+  },
+  "167-099": {
+   "mesaredonda": 2600.0
+  },
+  "167-115": {
+   "mesaredonda": 1800.0
+  },
+  "167-186": {
+   "mesaredonda": 300.0
+  },
+  "92-040": {
+   "mesaredonda": 500.0
+  },
+  "167-021": {
+   "mesaredonda": 4500.0
+  },
+  "167-117": {
+   "mesaredonda": 400.0
+  },
+  "167-305": {
+   "mesaredonda": 100.0
+  },
+  "167-175": {
+   "mesaredonda": 700.0
+  },
+  "167-283": {
+   "mesaredonda": 400.0
+  },
+  "92-024": {
+   "mesaredonda": 300.0
+  },
+  "167-198": {
+   "mesaredonda": 300.0
+  },
+  "167-003": {
+   "mesaredonda": 51000.0
+  },
+  "167-188": {
+   "mesaredonda": 300.0
+  },
+  "167-057": {
+   "mesaredonda": 4900.0
+  },
+  "111-019": {
+   "mesaredonda": 500.0
+  },
+  "167-056": {
+   "mesaredonda": 1000.0
+  },
+  "167-032": {
+   "mesaredonda": 1700.0
+  },
+  "167-074": {
+   "mesaredonda": 2000.0
+  },
+  "92-038": {
+   "mesaredonda": 500.0
+  },
+  "167-089": {
+   "mesaredonda": 1300.0
+  },
+  "167-161": {
+   "mesaredonda": 800.0
+  },
+  "92-027": {
+   "mesaredonda": 500.0
+  },
+  "92-008": {
+   "mesaredonda": 500.0
+  },
+  "167-319": {
+   "mesaredonda": 100.0
+  },
+  "167-332": {
+   "mesaredonda": 600.0
+  },
+  "167-101": {
+   "mesaredonda": 800.0
+  },
+  "167-259": {
+   "mesaredonda": 100.0
+  },
+  "167-035": {
+   "mesaredonda": 800.0
+  },
+  "167-285": {
+   "mesaredonda": 100.0
+  },
+  "167-269": {
+   "mesaredonda": 300.0
+  },
+  "167-140": {
+   "mesaredonda": 500.0
+  },
+  "167-077": {
+   "mesaredonda": 800.0
+  },
+  "167-123": {
+   "mesaredonda": 5000.0
+  },
+  "92-026": {
+   "mesaredonda": 300.0
+  },
+  "92-053": {
+   "mesaredonda": 500.0
+  },
+  "167-010": {
+   "mesaredonda": 15000.0
+  },
+  "92-062": {
+   "mesaredonda": 1000.0
+  },
+  "167-263": {
+   "mesaredonda": 300.0
+  },
+  "167-170": {
+   "mesaredonda": 300.0
+  },
+  "167-100": {
+   "mesaredonda": 2000.0
+  },
+  "167-127": {
+   "mesaredonda": 1500.0
+  },
+  "167-142": {
+   "mesaredonda": 1000.0
+  },
+  "167-103": {
+   "mesaredonda": 900.0
+  },
+  "167-147": {
+   "mesaredonda": 1000.0
+  },
+  "167-307": {
+   "mesaredonda": 100.0
+  },
+  "167-173": {
+   "mesaredonda": 600.0
+  },
+  "167-111": {
+   "mesaredonda": 5000.0
+  },
+  "167-070": {
+   "mesaredonda": 2000.0
+  },
+  "167-331": {
+   "mesaredonda": 2000.0
+  },
+  "167-150": {
+   "mesaredonda": 600.0
+  },
+  "167-055": {
+   "mesaredonda": 2000.0
+  },
+  "167-126": {
+   "mesaredonda": 1300.0
+  },
+  "167-069": {
+   "mesaredonda": 900.0
+  },
+  "167-040": {
+   "mesaredonda": 9000.0
+  },
+  "167-109": {
+   "mesaredonda": 700.0
+  },
+  "167-009": {
+   "mesaredonda": 15000.0
+  },
+  "167-301": {
+   "mesaredonda": 100.0
+  },
+  "167-181": {
+   "mesaredonda": 500.0
+  },
+  "167-194": {
+   "mesaredonda": 1600.0
+  },
+  "167-083": {
+   "mesaredonda": 2000.0
+  },
+  "167-228": {
+   "mesaredonda": 300.0
+  },
+  "167-129": {
+   "mesaredonda": 1700.0
+  },
+  "167-092": {
+   "mesaredonda": 3000.0
+  },
+  "167-125": {
+   "mesaredonda": 4200.0
+  },
+  "167-135": {
+   "mesaredonda": 500.0
+  },
+  "167-306": {
+   "mesaredonda": 100.0
+  },
+  "111-011": {
+   "mesaredonda": 300.0
+  },
+  "167-296": {
+   "mesaredonda": 500.0
+  },
+  "167-179": {
+   "mesaredonda": 300.0
+  },
+  "167-108": {
+   "mesaredonda": 500.0
+  },
+  "167-287": {
+   "mesaredonda": 100.0
+  },
+  "167-209": {
+   "mesaredonda": 300.0
+  },
+  "167-052": {
+   "mesaredonda": 9000.0
+  },
+  "92-065": {
+   "mesaredonda": 500.0
+  },
+  "92-041": {
+   "mesaredonda": 500.0
+  },
+  "167-184": {
+   "mesaredonda": 300.0
+  },
+  "167-223": {
+   "mesaredonda": 500.0
+  },
+  "167-096": {
+   "mesaredonda": 2000.0
+  },
+  "167-172": {
+   "mesaredonda": 300.0
+  },
+  "167-180": {
+   "mesaredonda": 1000.0
+  },
+  "167-214": {
+   "mesaredonda": 200.0
+  },
+  "167-250": {
+   "mesaredonda": 100.0
+  },
+  "167-338": {
+   "mesaredonda": 2700.0
+  },
+  "167-304": {
+   "mesaredonda": 100.0
+  },
+  "167-078": {
+   "mesaredonda": 4000.0
+  },
+  "167-104": {
+   "mesaredonda": 2000.0
+  },
+  "167-095": {
+   "mesaredonda": 4500.0
+  },
+  "167-107": {
+   "mesaredonda": 3000.0
+  },
+  "167-029": {
+   "mesaredonda": 700.0
+  },
+  "167-253": {
+   "mesaredonda": 100.0
+  },
+  "167-264": {
+   "mesaredonda": 100.0
+  },
+  "167-082": {
+   "mesaredonda": 500.0
+  },
+  "92-009": {
+   "mesaredonda": 500.0
+  },
+  "167-162": {
+   "mesaredonda": 1500.0
+  },
+  "167-202": {
+   "mesaredonda": 400.0
+  },
+  "167-091": {
+   "mesaredonda": 4200.0
+  },
+  "167-090": {
+   "mesaredonda": 300.0
+  },
+  "167-042": {
+   "mesaredonda": 16500.0
+  },
+  "167-216": {
+   "mesaredonda": 100.0
+  },
+  "167-215": {
+   "mesaredonda": 100.0
+  },
+  "167-329": {
+   "mesaredonda": 1700.0
+  },
+  "167-342": {
+   "mesaredonda": 800.0
+  },
+  "167-274": {
+   "mesaredonda": 300.0
+  },
+  "167-328": {
+   "mesaredonda": 1700.0
+  },
+  "167-208": {
+   "mesaredonda": 400.0
+  },
+  "111-001": {
+   "mesaredonda": 500.0
+  },
+  "167-330": {
+   "mesaredonda": 1700.0
+  },
+  "92-011": {
+   "mesaredonda": 300.0
+  },
+  "92-017": {
+   "mesaredonda": 300.0
+  },
+  "167-072": {
+   "mesaredonda": 2600.0
+  },
+  "92-002": {
+   "mesaredonda": 500.0
+  },
+  "167-134": {
+   "mesaredonda": 300.0
+  },
+  "167-073": {
+   "mesaredonda": 2700.0
+  },
+  "167-240": {
+   "mesaredonda": 100.0
+  },
+  "167-174": {
+   "mesaredonda": 300.0
+  },
+  "167-239": {
+   "mesaredonda": 100.0
+  },
+  "167-066": {
+   "mesaredonda": 700.0
+  },
+  "111-014": {
+   "mesaredonda": 300.0
+  },
+  "167-281": {
+   "mesaredonda": 100.0
+  },
+  "167-234": {
+   "mesaredonda": 100.0
+  },
+  "92-016": {
+   "mesaredonda": 300.0
+  },
+  "92-037": {
+   "mesaredonda": 500.0
+  },
+  "167-106": {
+   "mesaredonda": 600.0
+  },
+  "167-227": {
+   "mesaredonda": 500.0
+  },
+  "167-153": {
+   "mesaredonda": 800.0
+  },
+  "167-219": {
+   "mesaredonda": 300.0
+  },
+  "92-036": {
+   "mesaredonda": 500.0
+  },
+  "167-201": {
+   "mesaredonda": 400.0
+  },
+  "167-231": {
+   "mesaredonda": 100.0
+  },
+  "92-028": {
+   "mesaredonda": 300.0
+  },
+  "167-087": {
+   "mesaredonda": 2000.0
+  },
+  "167-093": {
+   "mesaredonda": 1800.0
+  },
+  "167-286": {
+   "mesaredonda": 100.0
+  },
+  "167-110": {
+   "mesaredonda": 1300.0
+  },
+  "167-080": {
+   "mesaredonda": 700.0
+  },
+  "167-079": {
+   "mesaredonda": 2600.0
+  },
+  "167-094": {
+   "mesaredonda": 700.0
+  },
+  "111-010": {
+   "mesaredonda": 300.0
+  },
+  "167-157": {
+   "mesaredonda": 2000.0
+  },
+  "167-143": {
+   "mesaredonda": 800.0
+  },
+  "167-261": {
+   "mesaredonda": 100.0
+  },
+  "167-141": {
+   "mesaredonda": 600.0
+  },
+  "167-251": {
+   "mesaredonda": 100.0
+  },
+  "167-168": {
+   "mesaredonda": 500.0
+  },
+  "167-053": {
+   "mesaredonda": 16200.0
+  },
+  "167-159": {
+   "mesaredonda": 2000.0
+  },
+  "167-336": {
+   "mesaredonda": 2000.0
+  },
+  "167-051": {
+   "mesaredonda": 1000.0
+  },
+  "167-026": {
+   "mesaredonda": 1700.0
+  },
+  "167-024": {
+   "mesaredonda": 3400.0
+  },
+  "167-102": {
+   "mesaredonda": 5200.0
+  },
+  "167-036": {
+   "mesaredonda": 5000.0
+  },
+  "167-050": {
+   "mesaredonda": 1400.0
+  },
+  "167-061": {
+   "mesaredonda": 1400.0
+  },
+  "167-189": {
+   "mesaredonda": 400.0
+  },
+  "167-280": {
+   "mesaredonda": 100.0
+  },
+  "111-009": {
+   "mesaredonda": 300.0
+  },
+  "111-007": {
+   "mesaredonda": 3000.0
+  },
+  "167-284": {
+   "mesaredonda": 100.0
+  },
+  "167-152": {
+   "mesaredonda": 600.0
+  },
+  "167-229": {
+   "mesaredonda": 300.0
+  },
+  "167-124": {
+   "mesaredonda": 600.0
+  },
+  "167-337": {
+   "mesaredonda": 1300.0
+  },
+  "167-218": {
+   "mesaredonda": 100.0
+  },
+  "167-222": {
+   "mesaredonda": 500.0
+  },
+  "167-017": {
+   "mesaredonda": 2800.0
+  },
+  "167-278": {
+   "mesaredonda": 300.0
+  },
+  "167-252": {
+   "mesaredonda": 100.0
+  },
+  "167-191": {
+   "mesaredonda": 400.0
+  },
+  "167-276": {
+   "mesaredonda": 100.0
+  },
+  "167-145": {
+   "mesaredonda": 600.0
+  },
+  "167-348": {
+   "mesaredonda": 600.0
+  },
+  "167-311": {
+   "mesaredonda": 100.0
+  },
+  "167-105": {
+   "mesaredonda": 5000.0
+  },
+  "167-241": {
+   "mesaredonda": 100.0
+  },
+  "92-072": {
+   "mesaredonda": 300.0
+  },
+  "167-034": {
+   "mesaredonda": 4200.0
+  },
+  "167-309": {
+   "mesaredonda": 100.0
+  },
+  "167-122": {
+   "mesaredonda": 600.0
+  },
+  "167-318": {
+   "mesaredonda": 100.0
+  },
+  "167-232": {
+   "mesaredonda": 100.0
+  },
+  "167-345": {
+   "mesaredonda": 1300.0
+  },
+  "167-282": {
+   "mesaredonda": 100.0
+  },
+  "167-224": {
+   "mesaredonda": 300.0
+  },
+  "167-158": {
+   "mesaredonda": 600.0
+  },
+  "167-257": {
+   "mesaredonda": 100.0
+  },
+  "167-197": {
+   "mesaredonda": 300.0
+  },
+  "92-015": {
+   "mesaredonda": 500.0
+  },
+  "167-292": {
+   "mesaredonda": 100.0
+  },
+  "167-279": {
+   "mesaredonda": 500.0
+  },
+  "167-300": {
+   "mesaredonda": 100.0
+  },
+  "167-171": {
+   "mesaredonda": 600.0
+  },
+  "167-310": {
+   "mesaredonda": 100.0
+  },
+  "167-185": {
+   "mesaredonda": 500.0
+  },
+  "167-088": {
+   "mesaredonda": 2100.0
+  },
+  "167-317": {
+   "mesaredonda": 100.0
+  },
+  "167-058": {
+   "mesaredonda": 7000.0
+  },
+  "167-270": {
+   "mesaredonda": 200.0
+  },
+  "111-005": {
+   "mesaredonda": 500.0
+  },
+  "167-207": {
+   "mesaredonda": 400.0
+  },
+  "167-006": {
+   "mesaredonda": 25500.0
+  },
+  "167-043": {
+   "mesaredonda": 1800.0
+  },
+  "167-098": {
+   "mesaredonda": 1000.0
+  },
+  "92-020": {
+   "mesaredonda": 300.0
+  },
+  "167-138": {
+   "mesaredonda": 400.0
+  },
+  "167-266": {
+   "mesaredonda": 300.0
+  },
+  "167-183": {
+   "mesaredonda": 300.0
+  },
+  "92-023": {
+   "mesaredonda": 300.0
+  },
+  "167-030": {
+   "mesaredonda": 800.0
+  },
+  "167-144": {
+   "mesaredonda": 800.0
+  },
+  "167-347": {
+   "mesaredonda": 600.0
+  },
+  "167-308": {
+   "mesaredonda": 300.0
+  },
+  "167-295": {
+   "mesaredonda": 500.0
+  },
+  "92-032": {
+   "mesaredonda": 500.0
+  },
+  "167-220": {
+   "mesaredonda": 100.0
+  },
+  "167-149": {
+   "mesaredonda": 400.0
+  },
+  "167-164": {
+   "mesaredonda": 1500.0
+  },
+  "167-182": {
+   "mesaredonda": 300.0
+  },
+  "167-014": {
+   "mesaredonda": 15000.0
+  },
+  "167-128": {
+   "mesaredonda": 1300.0
+  },
+  "167-242": {
+   "mesaredonda": 100.0
+  },
+  "167-260": {
+   "mesaredonda": 100.0
+  },
+  "167-205": {
+   "mesaredonda": 300.0
+  },
+  "111-008": {
+   "mesaredonda": 300.0
+  },
+  "167-193": {
+   "mesaredonda": 300.0
+  },
+  "167-238": {
+   "mesaredonda": 100.0
+  },
+  "92-039": {
+   "mesaredonda": 300.0
+  },
+  "167-195": {
+   "mesaredonda": 2000.0
+  },
+  "167-190": {
+   "mesaredonda": 1000.0
+  },
+  "111-018": {
+   "mesaredonda": 500.0
+  },
+  "167-163": {
+   "mesaredonda": 500.0
+  },
+  "111-020": {
+   "mesaredonda": 300.0
+  },
+  "167-313": {
+   "mesaredonda": 100.0
+  },
+  "167-116": {
+   "mesaredonda": 2000.0
+  },
+  "167-133": {
+   "mesaredonda": 1300.0
+  },
+  "167-178": {
+   "mesaredonda": 400.0
+  },
+  "167-081": {
+   "mesaredonda": 3200.0
+  },
+  "167-146": {
+   "mesaredonda": 900.0
+  },
+  "167-047": {
+   "mesaredonda": 8500.0
+  },
+  "167-023": {
+   "mesaredonda": 4000.0
+  },
+  "167-297": {
+   "mesaredonda": 100.0
+  },
+  "167-165": {
+   "mesaredonda": 1000.0
+  },
+  "92-030": {
+   "mesaredonda": 500.0
+  },
+  "111-003": {
+   "mesaredonda": 300.0
+  },
+  "167-019": {
+   "mesaredonda": 3400.0
+  },
+  "167-075": {
+   "mesaredonda": 600.0
+  },
+  "167-187": {
+   "mesaredonda": 500.0
+  },
+  "167-247": {
+   "mesaredonda": 100.0
+  },
+  "167-049": {
+   "mesaredonda": 2000.0
+  },
+  "167-046": {
+   "mesaredonda": 11200.0
+  },
+  "167-200": {
+   "mesaredonda": 300.0
+  },
+  "167-060": {
+   "mesaredonda": 4900.0
+  },
+  "167-258": {
+   "mesaredonda": 100.0
+  },
+  "92-063": {
+   "mesaredonda": 300.0
+  },
+  "167-196": {
+   "mesaredonda": 300.0
+  },
+  "92-061": {
+   "mesaredonda": 500.0
+  },
+  "167-059": {
+   "mesaredonda": 4000.0
+  },
+  "111-013": {
+   "mesaredonda": 300.0
+  },
+  "167-293": {
+   "mesaredonda": 100.0
+  },
+  "167-177": {
+   "mesaredonda": 300.0
+  },
+  "167-294": {
+   "mesaredonda": 100.0
+  },
+  "167-267": {
+   "mesaredonda": 300.0
+  },
+  "167-039": {
+   "mesaredonda": 2600.0
+  },
+  "167-137": {
+   "mesaredonda": 500.0
+  },
+  "167-085": {
+   "mesaredonda": 2100.0
+  },
+  "167-217": {
+   "mesaredonda": 100.0
+  },
+  "167-291": {
+   "mesaredonda": 100.0
+  },
+  "167-256": {
+   "mesaredonda": 300.0
+  },
+  "167-320": {
+   "mesaredonda": 100.0
+  },
+  "167-038": {
+   "mesaredonda": 2600.0
+  },
+  "167-236": {
+   "mesaredonda": 100.0
+  },
+  "167-303": {
+   "mesaredonda": 100.0
+  },
+  "167-290": {
+   "mesaredonda": 500.0
+  },
+  "167-315": {
+   "mesaredonda": 100.0
+  },
+  "167-299": {
+   "mesaredonda": 500.0
+  },
+  "167-154": {
+   "mesaredonda": 300.0
+  },
+  "167-298": {
+   "mesaredonda": 100.0
+  },
+  "92-077": {
+   "mesaredonda": 500.0
+  },
+  "167-312": {
+   "mesaredonda": 100.0
+  },
+  "167-151": {
+   "mesaredonda": 400.0
+  },
+  "167-225": {
+   "mesaredonda": 100.0
+  },
+  "111-017": {
+   "mesaredonda": 300.0
+  },
+  "167-156": {
+   "mesaredonda": 300.0
+  },
+  "167-192": {
+   "mesaredonda": 400.0
+  },
+  "167-112": {
+   "mesaredonda": 500.0
+  },
+  "167-221": {
+   "mesaredonda": 100.0
+  },
+  "167-262": {
+   "mesaredonda": 100.0
+  },
+  "167-121": {
+   "mesaredonda": 800.0
+  },
+  "167-268": {
+   "mesaredonda": 200.0
+  },
+  "167-062": {
+   "mesaredonda": 1400.0
+  },
+  "167-076": {
+   "mesaredonda": 900.0
+  },
+  "167-339": {
+   "mesaredonda": 1300.0
+  },
+  "167-086": {
+   "mesaredonda": 1000.0
+  },
+  "167-245": {
+   "mesaredonda": 100.0
+  },
+  "167-206": {
+   "mesaredonda": 400.0
+  },
+  "167-071": {
+   "mesaredonda": 2500.0
+  },
+  "167-084": {
+   "mesaredonda": 3600.0
+  },
+  "167-340": {
+   "mesaredonda": 600.0
+  },
+  "167-011": {
+   "mesaredonda": 20000.0
+  },
+  "167-113": {
+   "mesaredonda": 1000.0
+  },
+  "167-288": {
+   "mesaredonda": 500.0
+  },
+  "167-210": {
+   "mesaredonda": 400.0
+  },
+  "167-033": {
+   "mesaredonda": 1700.0
+  },
+  "167-118": {
+   "mesaredonda": 2000.0
+  },
+  "167-114": {
+   "mesaredonda": 600.0
+  },
+  "167-335": {
+   "mesaredonda": 3000.0
+  },
+  "167-346": {
+   "mesaredonda": 600.0
+  },
+  "167-167": {
+   "mesaredonda": 1500.0
+  },
+  "167-120": {
+   "mesaredonda": 2000.0
+  },
+  "167-249": {
+   "mesaredonda": 300.0
+  },
+  "167-244": {
+   "mesaredonda": 500.0
+  },
+  "167-041": {
+   "mesaredonda": 2000.0
+  },
+  "167-015": {
+   "mesaredonda": 2700.0
+  },
+  "167-211": {
+   "mesaredonda": 500.0
+  },
+  "167-132": {
+   "mesaredonda": 900.0
+  },
+  "167-271": {
+   "mesaredonda": 500.0
+  },
+  "167-273": {
+   "mesaredonda": 100.0
+  },
+  "167-272": {
+   "mesaredonda": 100.0
+  },
+  "92-013": {
+   "mesaredonda": 300.0
+  },
+  "167-130": {
+   "mesaredonda": 900.0
+  },
+  "167-018": {
+   "mesaredonda": 1400.0
+  },
+  "167-212": {
+   "mesaredonda": 100.0
+  },
+  "167-226": {
+   "mesaredonda": 100.0
+  },
+  "167-213": {
+   "mesaredonda": 200.0
+  },
+  "111-016": {
+   "mesaredonda": 300.0
+  },
+  "167-027": {
+   "mesaredonda": 4000.0
+  },
+  "167-343": {
+   "mesaredonda": 600.0
+  },
+  "167-277": {
+   "mesaredonda": 100.0
+  },
+  "167-230": {
+   "mesaredonda": 100.0
+  },
+  "167-199": {
+   "mesaredonda": 400.0
+  },
+  "167-237": {
+   "mesaredonda": 100.0
+  },
+  "167-148": {
+   "mesaredonda": 1000.0
+  },
+  "167-020": {
+   "mesaredonda": 2600.0
+  },
+  "167-314": {
+   "mesaredonda": 100.0
+  },
+  "167-155": {
+   "mesaredonda": 1300.0
+  },
+  "167-048": {
+   "mesaredonda": 1700.0
+  },
+  "167-233": {
+   "mesaredonda": 500.0
+  },
+  "167-136": {
+   "mesaredonda": 1000.0
+  },
+  "167-063": {
+   "mesaredonda": 1700.0
+  },
+  "167-235": {
+   "mesaredonda": 100.0
+  },
+  "167-139": {
+   "mesaredonda": 300.0
+  },
+  "167-289": {
+   "mesaredonda": 300.0
+  },
+  "167-344": {
+   "mesaredonda": 600.0
+  },
+  "167-349": {
+   "mesaredonda": 600.0
+  },
+  "167-254": {
+   "mesaredonda": 300.0
+  },
+  "167-166": {
+   "mesaredonda": 300.0
+  },
+  "92-025": {
+   "mesaredonda": 2000.0
+  },
+  "167-204": {
+   "mesaredonda": 300.0
+  },
+  "167-097": {
+   "mesaredonda": 1300.0
+  },
+  "167-243": {
+   "mesaredonda": 100.0
+  },
+  "167-255": {
+   "mesaredonda": 100.0
+  },
+  "112-020": {
+   "mesaredonda": 300.0
+  },
+  "167-316": {
+   "mesaredonda": 100.0
+  },
+  "167-248": {
+   "mesaredonda": 100.0
+  },
+  "167-169": {
+   "mesaredonda": 500.0
+  },
+  "167-065": {
+   "mesaredonda": 1400.0
+  },
+  "167-302": {
+   "mesaredonda": 100.0
+  },
+  "92-078": {
+   "mesaredonda": 500.0
+  },
+  "167-333": {
+   "mesaredonda": 2600.0
+  },
+  "92-057": {
+   "mesaredonda": 300.0
+  },
+  "167-016": {
+   "mesaredonda": 2600.0
+  },
+  "167-119": {
+   "mesaredonda": 7200.0
+  },
+  "167-275": {
+   "mesaredonda": 100.0
+  },
+  "167-131": {
+   "mesaredonda": 900.0
+  },
+  "111-015": {
+   "mesaredonda": 500.0
+  },
+  "167-160": {
+   "mesaredonda": 300.0
+  }
+ }
+}
