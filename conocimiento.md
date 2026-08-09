@@ -378,6 +378,35 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (19ª iteración) — Confirmado: las 6 imágenes de Mundos Perdidos seguían fallando en el PDF por overrides personales, no por el catálogo
+- Después de la iteración 18ª (completadas las 6 imágenes en el
+  catálogo compartido), el dueño volvió a generar el PDF y las mismas
+  6 cartas (Xí Yóu Jí, Zhu Baie, Monte del Buitre, Poder del Relámpago)
+  seguían sin imagen — verifiqué con `curl` que las URLs en
+  `data/custom-cards.json` publicado eran correctas y accesibles, así
+  que en un primer momento se atribuyó a una ventana de propagación de
+  GitHub Pages (el PDF se generó ~2.5 min después del commit). El dueño
+  probó de nuevo pasado ese margen y **seguía fallando** — descartada
+  la teoría de propagación.
+- **Causa real, confirmada por el dueño**: mismo mecanismo que la saga
+  de TKPE24/25 al inicio de la sesión (iteración 9ª) — el dueño tenía
+  **overrides personales** (`userCustom`) en esas cartas específicas
+  (probablemente de cuando las agregó/editó él mismo mientras no tenían
+  imagen), y esos overrides tapan cualquier corrección del catálogo
+  compartido sin importar cuántas veces se arregle del lado del
+  servidor. Confirmado revisando el botón de detalle de la carta
+  ("↩ Revertir a la original" en vez de "✏️ Editar"). Al revertirlas
+  desde la app, el PDF generó las imágenes correctamente.
+- **Lección para futuras veces**: cuando una corrección de catálogo
+  "no toma" para un usuario en particular, y las herramientas de
+  verificación server-side (curl, JSON del repo) confirman que el dato
+  está bien, la causa casi siempre es un override personal del usuario,
+  no un bug de código — preguntar primero por el botón "Editar" vs
+  "Revertir a la original" de la carta puntual antes de seguir
+  ajustando el exportador u otro código. Esta sesión ya lo confirmó
+  cuatro veces distintas (TKPE24, TKPE25, y ahora estas 6 de Mundos
+  Perdidos) — es el sospechoso #1, no el último recurso.
+
 ### 2026-08-09 (18ª iteración) — El "PDF sin imágenes" en Mundos Perdidos NO era el bug del canvas: eran 6 cartas sin imagen real en el catálogo
 - El dueño mandó capturas del PDF de "Mundos Perdidos" (220 cartas, 6
   páginas): varias cartas seguían sin imagen (Xí Yóu Jí, Zhu Baie,
