@@ -16673,7 +16673,7 @@
    "strength": null,
    "ability": "Si está en tu Reserva de Oros, puedes desterrar este Oro para que un Aliado oponente en la Línea de Ataque vuelva a la Línea de Defensa.",
    "flavour": "Símbolo de sabiduría y crecimiento. Representa renovación, adaptabilidad y longevidad.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/juego_organizado_pe_085_mu_she.jpg",
    "custom": true,
    "specialId": "JO-85"
   },
@@ -17267,7 +17267,7 @@
    "strength": 5,
    "ability": "Cuando entra en juego, puedes robar 1 carta.<br>En tu Fase de Vigilia, una vez por turno, puedes elegir un Aliado que controles. Si ese Aliado hace daño de combate al Mazo Castillo oponente este turno, destierra hasta 3 cartas de un Cementerio.",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/juego_organizado_pe_118_zduhac.png",
    "custom": true,
    "specialId": "JO-118"
   },
@@ -17285,7 +17285,7 @@
    "strength": 3,
    "ability": "Cuando entre o salga del juego, puedes poner un Arma o un Aliado que no sea Terence el Escudero de tu Cementerio en tu Mano.",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/juego_organizado_pe_119_terence_el_escudero.png",
    "custom": true,
    "specialId": "JO-119"
   },
@@ -17303,7 +17303,7 @@
    "strength": null,
    "ability": "El portador gana 1 a la Fuerza. En tu Fase de Vigilia, una vez por tumo, puedes desterrar una carta de tu Cementerio para que un Aliado que controles pueda atacar cuando entra en juego o que gane 2 a la Fuerza hasta la Fase Final.",
    "flavour": "",
-   "image": "",
+   "image": "./data/custom-images/mylserena/juego_organizado_pe_120_flamberge_suiza.png",
    "custom": true,
    "specialId": "JO-120"
   },
