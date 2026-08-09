@@ -1704,6 +1704,14 @@ function createCollectionFromModal() {
   if (!eds.length) { showToast("Elige al menos una edición para la colección"); return; }
   if (colModalEditingId) {
     store.setCollectionEditions(colModalEditingId, eds);
+    // collectionCards() cachea por col.id (para no recorrer el catálogo
+    // completo en cada +/-, ver más abajo) — esa caché nunca se invalidaba
+    // al cambiar las ediciones de una colección ya existente, solo al
+    // cambiar el catálogo (rebuildCards()), así que el cambio quedaba
+    // invisible hasta recargar la página. Bug real reportado por el dueño
+    // del inventario (09-08-2026): "debo recargar la página para que los
+    // cambios se reflejen".
+    editionCardsCache.delete(colModalEditingId);
     closeCollectionModal();
     renderCollectionsView();
     showToast(`Ediciones actualizadas ✓ (${eds.length} edición${eds.length === 1 ? "" : "es"})`);
