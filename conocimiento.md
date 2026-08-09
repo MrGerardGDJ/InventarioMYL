@@ -378,6 +378,80 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (10ª iteración) — Nueva edición: Toolkit Primera Era 2026 (37 cartas, agregada al catálogo compartido)
+- El dueño del inventario pidió agregar la edición que trae las cartas
+  código "TKPE26". Paso 1 (`curl` a `/cards/edition/todas` filtrando
+  `ed_slug`): TOR/api.myl.cl **no la tiene**. Paso 2 (wiki): existe
+  "Lista de cartas de Toolkit Primera Era 2026", una sola tabla
+  Código/Kit/Nombre/Tipo/Nota (mismo formato que TKPE24/25, sin
+  sub-tablas separadas esta vez) — se reusó `extract_myl_edition.py` como
+  librería compartida (fetch_wikitext, fetch_contents, resolve_image_urls,
+  resolve_card_content, build_row) con un driver a medida para esa forma
+  de tabla, igual que se hizo con TKPE24/25.
+- **37 cartas, todas con imagen y confianza "específica"** (0 sin
+  resolver): 32 numeradas (códigos `TKPE26 01/32`…`32/32`, dos kits
+  temáticos "Toolkit Ancestral"/"Toolkit Espíritu" de 16 c/u — la columna
+  "Kit" es solo metadata de empaque, igual que en TKPE24/25 no se usa
+  para separar en ediciones distintas), 4 cartas "Buy a Box" con código
+  que SÍ trae número real (`TKPE26 33/32`…`36/32`, incluso pasándose del
+  "/32" declarado) — mismo patrón que TKPE24 (`TKPE24 - 29/28`…`40/28`),
+  así que van con `edid` 033-036 igual que esas, no `specialId`. La carta
+  final, "Dragón Esmeralda", trae un código totalmente aparte
+  (`PROMO CXC PE 02`, serie "Promo Cartón x Cartón" que no es exclusiva
+  de este producto — el mismo patrón ya existía como `PROMO CXC PE 01`
+  ("Ñuke Napu") dentro de Lootbox Primera Era 2024) — se cargó como
+  `specialId` con ese código tal cual, mismo criterio que esa carta.
+- Registrada en `data/editions.json` (slug `toolkit_primera_era_2026`,
+  bloque PE, después de "Leyendas - Primera Era 4.0" — la más reciente
+  del bloque hasta ahora) y `data/custom-cards.json` (37 cartas,
+  `id` con patrón `toolkit_primera_era_2026__custom__tkpe26_<N>_<nombre>`
+  para las numeradas y `..._promo_cxc_pe_02_dragon_esmeralda` para la
+  especial). Imágenes hotlinkeadas directo a `static.wikia.nocookie.net`
+  (igual que TKPE24/25 — no son de una tienda comercial, no aplica la
+  regla de auto-hospedaje).
+- Validado con Playwright: servidor estático local, colección de una sola
+  edición (`toolkit_primera_era_2026`) → 37/37 cartas, 0 imágenes rotas,
+  0 `pageerror`, orden correcto (la especial primero, luego #1-36).
+
+### 2026-08-09 (9ª iteración) — Causa real de "sigue viendo huecos pese a que los datos ya están bien": overrides personales olvidados, no caché
+- Después del cache-busting de la iteración anterior, el dueño del
+  inventario seguía viendo el mismo hueco en TKPE24 (30 salta a 33) pese a
+  cerrar el navegador completo y probar en incógnito (ahí sí se veía
+  bien). Terminó recordando él mismo que había **editado manualmente**
+  las cartas #31-35 de TKPE24 en algún momento anterior con "✏️ Editar".
+- **Causa real, no relacionada con caché**: `rebuildCards()` arma
+  `state.cards` reemplazando por `id` cualquier carta del catálogo
+  compartido por la versión personal (`userCustom`) del usuario, si
+  existe una con el mismo `id` — así sobrevive el inventario a
+  correcciones del catálogo, pero también significa que una edición
+  manual vieja (hecha cuando esa carta todavía tenía otro `edid`/edición
+  asignados, antes de esta ronda de correcciones) queda **congelada para
+  siempre**, sin importar cuántas veces se corrija el catálogo compartido
+  ni cuánto se limpie el caché del navegador — son mecanismos totalmente
+  distintos (uno vive en HTTP/CDN, el otro en `localStorage`/Supabase).
+- El dueño preguntó por qué esto no explicaba también TKPE25 (solo 4 de
+  32 numeradas visibles) ya que "no edité ninguna" — se le pidió abrir el
+  detalle de la carta #1 de TKPE25 ("Rapto de Idunn") y confirmó que
+  también decía "↩ Revertir a la original": **mismo mecanismo, solo que
+  no lo recordaba** (probablemente de cuando cargó esas cartas él mismo
+  antes de que quedaran en el catálogo compartido).
+- Se construyó `fix-toolkit.html` (página temporal en la raíz del repo,
+  se puede borrar una vez resuelto): cruza `myl.customcards.v1` del
+  navegador contra los `id` reales de TKPE24/TKPE25 en el catálogo
+  (`data/cards.json` + `data/custom-cards.json`) y quita de un solo golpe
+  los que coincidan — conserva intacto el inventario (queda indexado por
+  el mismo `id`) y cualquier otra carta personal no relacionada.
+- **Bug real encontrado en la propia herramienta, corregido en la misma
+  iteración**: la primera versión solo cruzaba contra
+  `data/custom-cards.json`, así que detectaba bien los overrides de
+  TKPE25 (100% catálogo manual) pero **no los de TKPE24 #31-35**, porque
+  esas 5 cartas vienen del catálogo scrapeado (`data/cards.json`, ids
+  estilo `128-015`, corregidas vía `scraper/corrections.js` sin cambiar
+  su `id`) — el dueño reportó "solo falta rectificar las TKPE24" y se
+  corrigió la herramienta para cruzar contra ambos archivos. Verificado
+  con Playwright simulando exactamente ese `id` (`128-015` con datos
+  viejos) antes y después del fix.
+
 ### 2026-08-09 (8ª iteración) — Cache-busting real para data/*.json (GitHub Pages sirve por CDN)
 - Después de la corrección anterior, el dueño del inventario seguía viendo
   huecos imposibles con los datos ya verificados en el repo (Toolkit 2024:
