@@ -33,12 +33,15 @@ async function run() {
   const actions = document.getElementById("actions");
   try {
     const v = Date.now();
-    const catalogRes = await fetch(`./data/custom-cards.json?v=${v}`).then(r => r.json());
-    const catalog = catalogRes.cards || [];
+    const [scrapedRes, customRes] = await Promise.all([
+      fetch(`./data/cards.json?v=${v}`).then(r => r.json()),
+      fetch(`./data/custom-cards.json?v=${v}`).then(r => r.json()),
+    ]);
+    const scraped = scrapedRes.cards || scrapedRes || [];
+    const custom = customRes.cards || [];
+    const isToolkit = c => c.edition === "toolkit_primera_era_2024" || c.edition === "toolkit_primera_era_2025";
     const catalogIds = new Set(
-      catalog
-        .filter(c => c.edition === "toolkit_primera_era_2024" || c.edition === "toolkit_primera_era_2025")
-        .map(c => c.id)
+      [...scraped, ...custom].filter(isToolkit).map(c => c.id)
     );
 
     const mine = read(CUSTOM_KEY, []);
