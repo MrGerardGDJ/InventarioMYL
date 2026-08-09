@@ -7836,7 +7836,7 @@
    "strength": 3,
    "ability": "Cada vez que haga daño al Mazo Castillo oponente, puedes desterrar una carta del Cementerio oponente.",
    "flavour": "Famoso por su humor y apetitos terrenales, se une a Tang Sanzang como protector en su búsqueda de sutras budistas.",
-   "image": "",
+   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/e3/MPO-03-18.png/revision/latest?cb=20250904013430&path-prefix=es",
    "custom": true
   },
   {
@@ -8023,7 +8023,7 @@
    "strength": null,
    "ability": "Una vez por turno, puedes desterrar 2 cartas de tu Cementerio para subir 1 Aliado de tu Cementerio a tu Mano.",
    "flavour": "Es el escenario final del \"Sutra del Loto\", un lugar sagrado donde el Buda revela enseñanzas profundas. Simboliza la iluminación y la universalidad de sus enseñanzas.",
-   "image": "",
+   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f5/MPO-14-18.png/revision/latest?cb=20250904013433&path-prefix=es",
    "custom": true
   },
   {
@@ -8126,7 +8126,7 @@
    "strength": null,
    "ability": "Puedes destruir este Oro para que un Aliado oponente pierda sus bonificadores de Fuerza hasta la Fase Final. Ese Aliado no puede recibir bonificadores de Fuerza hasta la Fase Final.",
    "flavour": "Relata las peripecias de Tang Sanzang y sus tres protectores, incluido el carismático Sun Wukong, en su peregrinaje a la India.",
-   "image": "",
+   "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/0e/MPO-00-18.png/revision/latest?cb=20250904013428&path-prefix=es",
    "custom": true,
    "specialId": "MPO-00"
   },
@@ -8450,7 +8450,7 @@
    "strength": null,
    "ability": "Cuando juegues esta carta, destiérrala. Anula una carta que haya sido jugada sin pagar su Coste.",
    "flavour": "Pikne, el dios de la fuerza y el rayo, protege los ríos de los invasores con toda la fuerza del relámpago.",
-   "image": "",
+   "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/2c/MPT-19-18.png/revision/latest?cb=20250901161141&path-prefix=es",
    "custom": true,
    "specialId": "MPT-19"
   },
@@ -9150,7 +9150,7 @@
    "strength": 3,
    "ability": "Si controlas 1 o más Armas, puede atacar cuando entra en juego. En tu Fase Final, puedes subir este Aliado o un Arma que controles a la Mano de su dueño para desterrar la carta superior del Mazo Castillo oponente.",
    "flavour": "",
-   "image": "",
+   "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/1e/MPTO-20-18.png/revision/latest?cb=20260212154443&path-prefix=es",
    "custom": true,
    "specialId": "MPTO-20"
   },
@@ -9832,7 +9832,7 @@
    "strength": 3,
    "ability": "Si controlas menos Aliados que tu oponente, jugar este Aliado te cuesta 1 Oro menos. Cuando entre o salga del juego, puedes buscar un Aliado en un Mazo Castillo y ponerlo en el Cementerio de su dueño.",
    "flavour": "Doncella de guerra y fuego sagrado, fue juramento, orgullo y tempestad. En torno a su nombre ardieron reyes, héroes y amores condenados por destino cruel.",
-   "image": "",
+   "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/31/MPSG-20-18.png/revision/latest?cb=20260731043146&path-prefix=es",
    "custom": true,
    "specialId": "MPSG-20"
   },
