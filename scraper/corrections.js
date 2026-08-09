@@ -370,3 +370,76 @@ export const LEYENDAS_2023_CORRECTIONS = {
   "112-237": { edid: "236", specialId: "" },
   "112-300": { edid: "299", specialId: "" },
 };
+
+// TOR trae "Toolkit Primera Era 2024" partido en dos ediciones separadas
+// (`toolkit_puertas_del_valhalla` id 128, `toolkit_justa` id 129, 18 cartas
+// c/u) que en realidad son un solo producto — el propio wiki lo confirma:
+// una única página "Lista de cartas de Toolkit Primera Era 2024" con un
+// código corrido TKPE24-01..40, donde la tabla principal (28 cartas) trae
+// una columna "Kit" que dice a cuál de los dos kits pertenece cada una
+// (Justa = 01-14, Puertas del Valhalla = 15-28) — coincide 1 a 1 en orden Y
+// nombre con las posiciones 001-014 de cada edición de TOR, así que la
+// correspondencia está verificada, no es una suposición.
+// Las posiciones 015-018 de ambas ediciones son en realidad las 5 cartas
+// "Oro foil" compartidas del producto (TKPE24-31..35, no exclusivas de
+// ningún kit) que TOR volcó de forma inconsistente: 3 quedaron duplicadas
+// en las dos ediciones (Corona Triunfal, Trarilonco, Campana Dedahmmazedi)
+// y las otras 2 solo en una de las dos (Rosa De Muerte solo en Puertas,
+// Corona Ducal solo en Justa) — verificado por nombre exacto contra las 5
+// filas de la sección "===Oros foil===" del wiki. Reportado por el dueño
+// del inventario (09-08-2026): "se crearon duplicadas" y "me toma mucho
+// tiempo corregir la edición en la colección" — pidió unificar.
+// TOR tampoco tiene las 7 cartas restantes del producto (2 "Buy a Box" +
+// 5 "Promocionales", TKPE24-29/30 y 36-40) — esas se cargaron directo en
+// data/custom-cards.json bajo el mismo slug nuevo `toolkit_primera_era_2024`
+// (mismo criterio que cualquier carta que TOR no tenga).
+//
+// clave: id estable de la carta → { edition, editionName, specialId } para
+// reasignarla al slug unificado, o { drop: true } para las 3 copias
+// duplicadas (se deja la de `toolkit_puertas_del_valhalla` como canónica
+// arbitrariamente, ninguna de las dos es "más correcta" que la otra — son
+// el mismo Oro, TOR simplemente la listó dos veces).
+export const TOOLKIT_PE_2024_CORRECTIONS = {
+  // toolkit_justa (129) → TKPE24-01..14
+  "129-001": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-01" },
+  "129-002": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-02" },
+  "129-003": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-03" },
+  "129-004": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-04" },
+  "129-005": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-05" },
+  "129-006": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-06" },
+  "129-007": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-07" },
+  "129-008": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-08" },
+  "129-009": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-09" },
+  "129-010": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-10" },
+  "129-011": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-11" },
+  "129-012": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-12" },
+  "129-013": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-13" },
+  "129-014": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-14" },
+  // toolkit_puertas_del_valhalla (128) → TKPE24-15..28
+  "128-001": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-15" },
+  "128-002": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-16" },
+  "128-003": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-17" },
+  "128-004": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-18" },
+  "128-005": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-19" },
+  "128-006": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-20" },
+  "128-007": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-21" },
+  "128-008": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-22" },
+  "128-009": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-23" },
+  "128-010": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-24" },
+  "128-011": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-25" },
+  "128-012": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-26" },
+  "128-013": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-27" },
+  "128-014": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-28" },
+  // "Oro foil" compartidas (TKPE24-31..35) — 4 quedan en la copia de Puertas
+  // del Valhalla (incluye la única copia de "Rosa De Muerte"); la 5ª
+  // ("Corona Ducal") solo la tenía Justa.
+  "128-015": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-31" }, // Corona Triunfal
+  "128-016": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-32" }, // Rosa De Muerte
+  "128-017": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-33" }, // Trarilonco
+  "128-018": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-35" }, // Campana Dedahmmazedi
+  "129-018": { edition: "toolkit_primera_era_2024", editionName: "Toolkit Primera Era 2024", specialId: "TKPE24-34" }, // Corona Ducal
+  // duplicados exactos de las 3 de arriba, se descartan
+  "129-015": { drop: true }, // Corona Triunfal (== 128-015)
+  "129-016": { drop: true }, // Trarilonco (== 128-017)
+  "129-017": { drop: true }, // Campana Dedahmmazedi (== 128-018)
+};
