@@ -216,6 +216,12 @@
     "name": "Leyendas - Primera Era 4.0"
   },
   {
+    "slug": "toolkit_primera_era_2026",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Toolkit Primera Era 2026"
+  },
+  {
     "slug": "espada_sagrada",
     "format": "PB",
     "formatName": "Primer Bloque",
