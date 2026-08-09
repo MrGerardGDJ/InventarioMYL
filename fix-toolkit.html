@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Reparar Toolkits — Inventario MyL</title>
+<title>Reparar cartas editadas manualmente — Inventario MyL</title>
 <style>
   body { font-family: system-ui, sans-serif; background: #16181d; color: #e8e8ea; padding: 16px; line-height: 1.5; max-width: 640px; margin: 0 auto; }
   h1 { font-size: 18px; }
@@ -12,14 +12,15 @@
   .box { background: #22252c; border: 1px solid #333; border-radius: 8px; padding: 12px; margin: 12px 0; }
   code { background: #000; padding: 2px 6px; border-radius: 4px; font-size: 13px; word-break: break-all; }
   ul { margin: 4px 0; padding-left: 20px; }
+  h3 { margin: 14px 0 4px; font-size: 14px; color: #c9a13b; }
   button { font-size: 15px; padding: 10px 16px; border-radius: 8px; border: none; background: #4caf50; color: #fff; cursor: pointer; }
   button:disabled { background: #444; cursor: default; }
   button.danger { background: #f44336; }
 </style>
 </head>
 <body>
-<h1>Reparar cartas Toolkit editadas manualmente</h1>
-<p>Esta página revisa tus cartas personalizadas guardadas en este navegador y busca las que quedaron "congeladas" en una versión antigua del Toolkit Primera Era 2024/2025 (de antes de que se corrigiera el catálogo). Al quitarlas, la app vuelve a mostrar la versión correcta y actualizada de esas cartas — tu cantidad en inventario NO se pierde, porque se guarda con el mismo identificador de carta.</p>
+<h1>Reparar cartas editadas manualmente</h1>
+<p>Esta página revisa TODAS tus cartas personalizadas guardadas en este navegador (de cualquier edición) y busca las que coinciden con una carta que ya existe en el catálogo compartido — eso significa que tu versión personal está "congelada" en un estado viejo y tapa cualquier corrección que se haga en el catálogo, sin importar cuántas veces se arregle del lado del servidor. Al quitarlas, la app vuelve a mostrar la versión correcta y actualizada. Tu cantidad en inventario NO se pierde, porque se guarda con el mismo identificador de carta, no con la carta en sí.</p>
 <div id="out" class="box">Cargando…</div>
 <div id="actions"></div>
 
@@ -39,29 +40,38 @@ async function run() {
     ]);
     const scraped = scrapedRes.cards || scrapedRes || [];
     const custom = customRes.cards || [];
-    const isToolkit = c => c.edition === "toolkit_primera_era_2024" || c.edition === "toolkit_primera_era_2025";
-    const catalogIds = new Set(
-      [...scraped, ...custom].filter(isToolkit).map(c => c.id)
-    );
+    const catalog = [...scraped, ...custom];
+    const catalogById = new Map(catalog.map(c => [c.id, c]));
 
     const mine = read(CUSTOM_KEY, []);
-    const affected = mine.filter(c => catalogIds.has(c.id));
+    const affected = mine.filter(c => catalogById.has(c.id));
 
     if (!affected.length) {
-      out.innerHTML = `<p class="ok">No se encontró ninguna carta personalizada de estos Toolkits en este navegador ✓</p><p>Si el problema persiste, puede que tus cartas estén en otro dispositivo o no sea este el origen.</p>`;
+      out.innerHTML = `<p class="ok">No se encontró ninguna carta personalizada tuya que coincida con el catálogo compartido en este navegador ✓</p><p>Si el problema persiste, puede que tus cartas estén en otro dispositivo o no sea este el origen.</p>`;
       return;
     }
 
-    const rows = affected.map(c => `<li><b>${c.name || c.id}</b> <code>${c.id}</code></li>`).join("");
-    out.innerHTML = `<p class="bad">Se encontraron ${affected.length} carta(s) personalizada(s) que están bloqueando la actualización:</p><ul>${rows}</ul>`;
+    // agrupadas por edición del catálogo (más fácil de revisar que una lista plana)
+    const byEdition = new Map();
+    for (const c of affected) {
+      const catalogCard = catalogById.get(c.id);
+      const ed = catalogCard.editionName || catalogCard.edition || "—";
+      if (!byEdition.has(ed)) byEdition.set(ed, []);
+      byEdition.get(ed).push(c);
+    }
+    const groups = [...byEdition.entries()].sort((a, b) => b[1].length - a[1].length)
+      .map(([ed, cards]) => `<h3>${ed} (${cards.length})</h3><ul>${cards.map(c => `<li><b>${c.name || c.id}</b> <code>${c.id}</code></li>`).join("")}</ul>`)
+      .join("");
+    out.innerHTML = `<p class="bad">Se encontraron ${affected.length} carta(s) personalizada(s) que están bloqueando la actualización, en ${byEdition.size} edición(es):</p>${groups}`;
 
     const btn = document.createElement("button");
     btn.textContent = `Quitar estas ${affected.length} cartas y usar la versión del catálogo`;
     btn.onclick = () => {
-      const cleaned = mine.filter(c => !catalogIds.has(c.id));
+      const affectedIds = new Set(affected.map(c => c.id));
+      const cleaned = mine.filter(c => !affectedIds.has(c.id));
       localStorage.setItem(CUSTOM_KEY, JSON.stringify(cleaned));
       actions.innerHTML = `<p class="ok">Listo ✓ Se quitaron ${affected.length} carta(s).</p>
-        <p>Ahora abre la app normal, revisa que el Toolkit se vea completo, y si usas sincronización en la nube entra a <b>Ajustes → Sincronización</b> y toca <b>"Guardar en la nube"</b> para que el cambio se suba también a tus otros dispositivos.</p>
+        <p>Ahora abre la app normal y revisa que las cartas se vean completas. Si usas sincronización en la nube entra a <b>Ajustes → Sincronización</b> y toca <b>"Guardar en la nube"</b> para que el cambio se suba también a tus otros dispositivos.</p>
         <p><a href="./index.html" style="color:#4caf50">Ir a la app →</a></p>`;
       btn.disabled = true;
     };
