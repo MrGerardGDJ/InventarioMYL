@@ -43,10 +43,15 @@ const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
 /* ===================== Carga de datos ===================== */
 async function loadData() {
+  // "no-cache" (revalida con el servidor vía ETag/Last-Modified, no ignora
+  // el caché a lo bruto) — el catálogo se corrige seguido y sin esto un
+  // navegador puede quedarse mostrando una versión vieja de estos JSON
+  // hasta que algo más fuerce un refresco, generando confusión sobre si
+  // una corrección "realmente" se aplicó.
   const [cardsRes, edRes, customRes] = await Promise.all([
-    fetch("./data/cards.json").then((r) => r.json()).catch(() => ({ cards: [] })),
-    fetch("./data/editions.json").then((r) => r.json()).catch(() => []),
-    fetch("./data/custom-cards.json").then((r) => (r.ok ? r.json() : { cards: [] })).catch(() => ({ cards: [] })),
+    fetch("./data/cards.json", { cache: "no-cache" }).then((r) => r.json()).catch(() => ({ cards: [] })),
+    fetch("./data/editions.json", { cache: "no-cache" }).then((r) => r.json()).catch(() => []),
+    fetch("./data/custom-cards.json", { cache: "no-cache" }).then((r) => (r.ok ? r.json() : { cards: [] })).catch(() => ({ cards: [] })),
   ]);
 
   const scraped = (cardsRes.cards || cardsRes || []).map(normalizeCard);
@@ -1631,7 +1636,21 @@ let colModalSelected = new Set();
 let colModalEditingId = null;
 function openCollectionModal(existingCol) {
   colModalEditingId = existingCol ? existingCol.id : null;
-  colModalSelected = new Set(existingCol ? existingCol.editions : []);
+  // Al editar, se descartan ediciones que la colección todavía trae en su
+  // array `editions` pero que ya no existen en el catálogo (renombradas,
+  // fusionadas o eliminadas) — si no, el checklist nunca les muestra una
+  // casilla para desmarcarlas (editionOptionGroups() no las lista) y
+  // quedan "pegadas" para siempre por más que el usuario guarde cambios:
+  // colModalSelected las traía precargadas desde existingCol.editions sin
+  // que hubiera forma de tocarlas en la UI. Bug real reportado por el
+  // dueño del inventario (09-08-2026): "el editor tampoco está editando".
+  let dropped = 0;
+  const validEditions = (existingCol ? existingCol.editions : []).filter((slug) => {
+    const ok = state.editionName[slug] !== undefined;
+    if (!ok) dropped++;
+    return ok;
+  });
+  colModalSelected = new Set(validEditions);
   $("#col-edition-search").value = "";
   $("#col-name").value = "";
   $("#col-name-field").classList.toggle("hidden", !!existingCol);
@@ -1643,6 +1662,10 @@ function openCollectionModal(existingCol) {
   renderCollectionEditionList("");
   $("#collection-modal").classList.remove("hidden");
   $("#col-edition-search").focus();
+  if (dropped) {
+    const singular = dropped === 1;
+    showToast(`${dropped} ${singular ? "edición" : "ediciones"} de esta colección ya ${singular ? "no existe" : "no existen"} en el catálogo — se quitaron al abrir este editor. Guarda para confirmar.`, 5000);
+  }
 }
 function closeCollectionModal() { $("#collection-modal").classList.add("hidden"); }
 // Redibuja el checklist filtrado por texto; la selección vive en
