@@ -378,6 +378,38 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (6ª iteración) — Bug real: "Editar ediciones" no podía quitar una edición ya retirada del catálogo
+- El dueño del inventario reportó que, al intentar sacar las ediciones
+  Toolkit viejas de su colección "Toolkits" con "✏️ Editar ediciones", el
+  cambio no se guardaba — las ediciones fantasma seguían apareciendo
+  después de guardar. Reproducido: **bug real**, no percepción — cuando
+  una edición que una colección tenía listada deja de existir en el
+  catálogo (fusionada o renombrada, como pasó con
+  `toolkit_puertas_del_valhalla`/`toolkit_justa`/
+  `toolkit_valentia_y_desolacion`/`toolkit_honor_y_ferocidad` en las
+  iteraciones anteriores), el checklist del editor (`editionOptionGroups()`)
+  nunca le muestra una casilla — no existe en `data/editions.json` ni tiene
+  cartas — así que el usuario no tiene forma de desmarcarla. Pero
+  `openCollectionModal()` precargaba `colModalSelected` directo desde
+  `existingCol.editions` sin filtrar, así que esa edición fantasma quedaba
+  seleccionada para siempre sin que nada en la UI pudiera tocarla — cada
+  "Guardar cambios" la volvía a guardar intacta.
+- Corregido en `js/app.js`: al abrir el editor, se filtran del selector
+  inicial las ediciones que ya no existen (`state.editionName[slug] ===
+  undefined`) y se avisa con un toast cuántas se quitaron — el usuario solo
+  tiene que abrir "Editar ediciones" y guardar (sin tocar nada más) para
+  limpiar una colección con ediciones fantasma.
+- De paso: se agregó `{ cache: "no-cache" }` a los tres `fetch()` de
+  `data/*.json` en `loadData()` — sin esto, un navegador puede seguir
+  sirviendo una copia cacheada vieja del catálogo después de una
+  corrección, generando la misma sensación de "no se guardó nada" aunque
+  el dato en el repo ya esté bien.
+- Validado con Playwright reproduciendo el escenario exacto reportado
+  (colección con 8 ediciones, 4 de ellas ya retiradas del catálogo): el
+  editor detecta y quita las 4 automáticamente, deja la colección con las
+  4 válidas, y la grilla muestra las secciones correctas después de
+  recargar. 0 `pageerror`.
+
 ### 2026-08-09 (5ª iteración) — Toolkit 2024/2025: las cartas numeradas dejan de tratarse como especiales
 - El dueño del inventario aclaró el criterio real después de dos rondas de
   arreglos que no bastaron: el hecho de que una carta tenga `Frecuencia:
