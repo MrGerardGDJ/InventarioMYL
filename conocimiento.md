@@ -378,6 +378,35 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (16ª iteración) — El fix del PDF sin imágenes era incompleto: faltaba un reintento por timeout en colecciones grandes
+- El dueño mandó captura del PDF de "Leyendas 4.0" (432 cartas): la
+  mayoría de las cartas cargó bien, pero alguna suelta (ej. "Kordrag")
+  salió sin imagen — y esa carta usa una imagen **propia** (mismo
+  origen que la app, `data/custom-images/...`), no una externa. Eso
+  descarta el "canvas tainted" de la iteración anterior como causa de
+  ESTE caso puntual (un origen igual nunca deja el canvas tainted, sin
+  importar la caché) — es un problema distinto que coincidía en el
+  síntoma (carta sin imagen) pero no en la causa.
+- **Causa real de este caso**: con cientos de imágenes pidiéndose en
+  paralelo (`CONCURRENCY = 6` en `exportCollectionPDF`), alguna puede
+  tardar más que el timeout de 12s por congestión de red pasajera, no
+  porque la imagen esté rota — se confirmó que el archivo en el sitio
+  publicado es idéntico byte a byte al del repo y responde 200 sin
+  problema por separado.
+- Corregido en `js/exporters.js`: `loadImageEl` ahora reintenta una vez
+  (dos intentos de 12s cada uno) antes de rendirse y dejar el marcador
+  "sin imagen". De paso, el cache-busting `?_pdfcors=1` de la iteración
+  anterior (necesario solo para el problema de canvas tainted con
+  imágenes externas) se acotó a URLs externas (`http(s)://`) — las
+  imágenes propias no lo necesitan y así no pierden el beneficio de la
+  caché del navegador en colecciones grandes, que es justo el escenario
+  donde más ayuda a evitar los timeouts.
+- Mismo aviso que la iteración anterior: no se pudo reproducir un
+  timeout real en este entorno de desarrollo (sin salida a redes
+  externas desde el navegador de pruebas) — el fix se valida por
+  código, pedirle al dueño que confirme con una colección grande tras
+  el próximo deploy.
+
 ### 2026-08-09 (15ª iteración) — Módulo de precios referenciales: crawl de 2 tiendas + botón "Excel de precios"
 - El dueño pidió poder estimar el valor de mercado de sus cartas
   (poseídas y faltantes) y descargar un listado con nombre, código,
