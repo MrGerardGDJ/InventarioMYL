@@ -378,6 +378,35 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (7ª iteración) — Bug real: agregar una edición a una colección ya vista no se reflejaba sin recargar
+- El dueño del inventario reportó dos síntomas relacionados: (1) al
+  agregar una edición a una colección con "✏️ Editar ediciones", el
+  cambio se guardaba pero la grilla no lo mostraba hasta recargar la
+  página, y (2) al agregar Toolkit Primera Era 2024 a una colección le
+  aparecieron 29 cartas en vez de 40. Se verificó primero que el catálogo
+  compartido tenga las 40 cartas completas (sí, edid 1-40 sin huecos) —
+  el "29" no era un problema de datos, era el síntoma del mismo bug que
+  el punto (1).
+- **Causa real**: `collectionCards()` cachea el resultado por `col.id`
+  (`editionCardsCache`, para no recorrer el catálogo completo en cada
+  clic de +/−) — esa caché solo se invalida en `rebuildCards()`, que
+  corre cuando cambia el CATÁLOGO (una carta nueva, una edición), no
+  cuando cambia el array `editions` de una colección YA vista. Al guardar
+  el editor de ediciones sobre una colección con la grilla ya cacheada,
+  la vista seguía mostrando la lista de cartas vieja hasta que algo más
+  (como una recarga completa, que reinicia el módulo JS entero) forzara
+  a recalcularla — la carta "29" era un número de la colección a medio
+  camino de una corrida anterior, no un límite real de la edición.
+- Corregido en `js/app.js`: `createCollectionFromModal()` invalida
+  explícitamente `editionCardsCache` para la colección editada
+  (`editionCardsCache.delete(colModalEditingId)`) justo después de
+  guardar los cambios de edición.
+- Validado con Playwright reproduciendo el escenario exacto: colección
+  con Toolkit Walkirias ya vista (13 cartas cacheadas), se agrega Toolkit
+  Primera Era 2024 sin recargar la página — antes del fix la grilla se
+  quedaba en 13; después del fix pasa a 53 (13+40) al instante, sin
+  necesidad de recargar. 0 `pageerror`.
+
 ### 2026-08-09 (6ª iteración) — Bug real: "Editar ediciones" no podía quitar una edición ya retirada del catálogo
 - El dueño del inventario reportó que, al intentar sacar las ediciones
   Toolkit viejas de su colección "Toolkits" con "✏️ Editar ediciones", el
