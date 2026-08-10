@@ -1785,6 +1785,7 @@ function renderTradeList() {
   $("#trade-summary").textContent = entries.length
     ? `${entries.length} carta${entries.length === 1 ? "" : "s"} distinta${entries.length === 1 ? "" : "s"} · ${copies} copia${copies === 1 ? "" : "s"} ofrecida${copies === 1 ? "" : "s"}`
     : "Aún no marcas cartas para cambio o venta.";
+  renderTradeValue(entries);
   wrap.className = "cards-grid trade-grid";
   if (!entries.length) {
     wrap.innerHTML = `<p class="muted">Busca arriba una carta que tengas repetida y ofrécela; también puedes hacerlo desde el detalle de cualquier carta.</p>`;
@@ -1804,6 +1805,37 @@ function renderTradeList() {
     note.textContent = `${orphanIds.length} carta(s) ofrecida(s) ya no están en el catálogo (id: ${orphanIds.join(", ")}).`;
     wrap.appendChild(note);
   }
+}
+
+// Suma el valor potencial de venta de todas las copias ofrecidas (cantidad ×
+// precio referencial de cada carta, prefiriendo mylserena si hay ambos).
+// Cobertura parcial de data/prices.json: las copias sin precio no se
+// inventan, se cuentan aparte y se avisan en una nota.
+function renderTradeValue(entries) {
+  const el = $("#trade-value");
+  if (!el) return;
+  if (!entries.length) { el.innerHTML = ""; return; }
+  let total = 0;
+  let pricedCopies = 0;
+  let unpricedCopies = 0;
+  for (const [id, qty] of entries) {
+    const price = cardPriceInfo(id);
+    const unit = price ? price.mylserena ?? price.mesaredonda : null;
+    if (unit != null) {
+      total += unit * qty;
+      pricedCopies += qty;
+    } else {
+      unpricedCopies += qty;
+    }
+  }
+  if (!pricedCopies) {
+    el.innerHTML = `Valor potencial de venta: <span class="muted">sin precios de referencia para estas cartas</span>`;
+    return;
+  }
+  const note = unpricedCopies
+    ? `<span class="tv-note">${pricedCopies} copia${pricedCopies === 1 ? "" : "s"} con precio · ${unpricedCopies} sin precio de referencia (no incluida${unpricedCopies === 1 ? "" : "s"} en el total)</span>`
+    : `<span class="tv-note">${pricedCopies} copia${pricedCopies === 1 ? "" : "s"} con precio de referencia</span>`;
+  el.innerHTML = `Valor potencial de venta: ${fmtCLP(total)}${note}`;
 }
 
 // Tarjeta individual de la grilla de cambio/venta — mismo estilo visual que
