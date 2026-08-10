@@ -378,6 +378,43 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-10 (23ª iteración) — Titán Licántropo y Hombre Lobo (Leyendas 4.0, Set Clásico): imágenes cruzadas ENTRE ELLAS, mismo bug de siempre
+- El dueño reportó que Titán Licántropo (SCLPE4-20) y Hombre Lobo
+  (SCLPE4-21) tenían mal las imágenes, con dos URLs de referencia de
+  mylserena.cl (`titan-licantropo-lpe4-scl`, `hombre-lobo-lpe4-scl`).
+- Se abrió cada imagen ya guardada para comparar el código impreso
+  contra el `specialId` del catálogo (misma técnica de siempre):
+  - `sc_20_titan_licantropo.jpg` mostraba en realidad **"GUEVADAN"**,
+    código impreso "SCLPE4 - 22/80".
+  - `sc_21_hombre_lobo.jpg` mostraba en realidad **"TITÁN LICÁNTROPO"**,
+    código impreso "SCLPE4 - 20/80".
+  - Es decir, las imágenes de Titán Licántropo y Hombre Lobo estaban
+    cruzadas ENTRE SÍ (no con Guevadan): el archivo con nombre de
+    Hombre Lobo tenía la imagen real de Titán Licántropo.
+  - Guevadan (SCLPE4-22) ya tenía su propia imagen correcta y separada
+    (`sc_22_guevadan.webp`, código impreso "SCLPE4 - 22/80" confirmado),
+    así que no hacía falta rescatar nada de ahí — el archivo viejo de
+    `sc_20_titan_licantropo.jpg` (con la imagen de Guevadan) era un
+    duplicado sobrante, se sobrescribió sin pérdida.
+  - Se descargaron las imágenes de las dos URLs de referencia
+    entregadas y se verificaron visualmente: la página
+    `titan-licantropo-lpe4-scl` trae la foto con código impreso
+    "SCLPE4 - 20/80" (Titán Licántropo, coincide con la que ya estaba
+    mal ubicada en el archivo de Hombre Lobo — misma imagen); la página
+    `hombre-lobo-lpe4-scl` trae la foto con código impreso
+    "SCLPE4 - 21/80" (Hombre Lobo). Nota: el campo `"description"` de
+    mylserena venía desfasado en ambas páginas (decía 21/80 y 22/80
+    respectivamente) — no coincide con el código realmente impreso en
+    la foto, así que se confió en el código impreso, no en el texto de
+    la ficha de la tienda.
+- **Fix**: se sobrescribió `sc_20_titan_licantropo.jpg` con la imagen
+  correcta de Titán Licántropo y `sc_21_hombre_lobo.jpg` con la imagen
+  correcta de Hombre Lobo (mismos nombres de archivo, `data/custom-cards.json`
+  no necesitó cambios porque las rutas ya apuntaban a esos nombres).
+- Validado sirviendo el repo por HTTP local y confirmando `200 OK` +
+  `Content-Type` de imagen en ambas rutas; sin cambios de código no
+  hacía falta prueba con Playwright.
+
 ### 2026-08-09 (22ª iteración) — Rediseño de la vista Cambios → "Cambio y Ventas": grilla con precio referencial + botón Vender nuevo
 - El dueño pidió rediseñar el módulo de Cambios: mostrar las cartas
   ofrecidas como tarjetas con imagen (no la lista de texto que había),
