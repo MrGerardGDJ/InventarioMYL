@@ -8,6 +8,7 @@ const KEYS = {
   collections: "myl.collections.v1",
   trade: "myl.trade.v1",
   tradeLog: "myl.tradelog.v1",
+  saleLog: "myl.salelog.v1",
   editions: "myl.editions.v1",
   settings: "myl.settings.v1",
   meta: "myl.meta.v1",
@@ -155,6 +156,23 @@ export function addTradeLogEntry(entry) {
 }
 export function replaceTradeLog(arr, origin = "local") {
   if (Array.isArray(arr)) { tradeLog = arr; write(KEYS.tradeLog, tradeLog); notify(origin); }
+}
+
+/* ===== Historial de ventas =====
+   saleLog: [{ cardId, qty, price (CLP total de esa venta, o null si no se
+   ingresó), date }], del más reciente al más antiguo. La venta en sí solo
+   descuenta inventory/trade (mismas funciones de arriba) — esto es
+   puramente el registro. */
+let saleLog = read(KEYS.saleLog, []);
+
+export function getSaleLog() { return saleLog.slice(); }
+export function addSaleLogEntry(entry) {
+  saleLog.unshift({ cardId: entry.cardId, qty: entry.qty || 1, price: entry.price ?? null, date: entry.date || Date.now() });
+  write(KEYS.saleLog, saleLog);
+  notify();
+}
+export function replaceSaleLog(arr, origin = "local") {
+  if (Array.isArray(arr)) { saleLog = arr; write(KEYS.saleLog, saleLog); notify(origin); }
 }
 
 /* ===== Colecciones (una o más ediciones que se quieren completar) =====
@@ -329,6 +347,7 @@ export function getSnapshot() {
     collections: JSON.parse(JSON.stringify(collections)),
     trade: getTradeList(),
     tradeLog: tradeLog.slice(),
+    saleLog: saleLog.slice(),
     editions: getCustomEditions(),
     customCards: getCustomCards(),
     updatedAt: getUpdatedAt(),
@@ -345,6 +364,7 @@ export function applySnapshot(snap) {
   }
   if (snap.trade && typeof snap.trade === "object") { trade = { ...snap.trade }; write(KEYS.trade, trade); }
   if (Array.isArray(snap.tradeLog)) { tradeLog = snap.tradeLog; write(KEYS.tradeLog, tradeLog); }
+  if (Array.isArray(snap.saleLog)) { saleLog = snap.saleLog; write(KEYS.saleLog, saleLog); }
   if (Array.isArray(snap.editions)) { customEditions = snap.editions; write(KEYS.editions, customEditions); }
   if (Array.isArray(snap.customCards)) { customCards = snap.customCards; write(KEYS.custom, customCards); }
   if (snap.updatedAt) setUpdatedAt(snap.updatedAt);

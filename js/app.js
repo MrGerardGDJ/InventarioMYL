@@ -36,6 +36,7 @@ const state = {
   pageSize: 60,     // cartas por página en la grilla del Catálogo
   view: "coleccion",
   colFilter: "all", // filtro de la vista Colecciones: all | missing | owned
+  prices: {},       // data/prices.json → { cardId: { mylserena, mesaredonda } }, cobertura parcial
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -54,11 +55,13 @@ async function loadData() {
   // práctica (09-08-2026): dos correcciones de datos ya subidas y
   // verificadas en el repo seguían sin verse en el sitio publicado.
   const v = Date.now();
-  const [cardsRes, edRes, customRes] = await Promise.all([
+  const [cardsRes, edRes, customRes, pricesRes] = await Promise.all([
     fetch(`./data/cards.json?v=${v}`).then((r) => r.json()).catch(() => ({ cards: [] })),
     fetch(`./data/editions.json?v=${v}`).then((r) => r.json()).catch(() => []),
     fetch(`./data/custom-cards.json?v=${v}`).then((r) => (r.ok ? r.json() : { cards: [] })).catch(() => ({ cards: [] })),
+    fetch(`./data/prices.json?v=${v}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
   ]);
+  state.prices = pricesRes?.prices || {};
 
   const scraped = (cardsRes.cards || cardsRes || []).map(normalizeCard);
   const bundledCustom = (customRes.cards || []).map(normalizeCard);
@@ -1763,42 +1766,97 @@ function cardById(id) {
 function renderTradeView() {
   renderTradeList();
   renderTradeLog();
+  renderSaleLog();
 }
 
-// Lista de cartas ofrecidas, con ajuste de copias y botón para intercambiar
+// Formatea un precio en pesos chilenos ($1.234)
+function fmtCLP(n) { return "$" + Math.round(n).toLocaleString("es-CL"); }
+// Precio referencial de una carta (data/prices.json) — cobertura parcial,
+// ver docs/FUENTES-DATOS.md sección 6b. null si no se encontró ninguna tienda.
+function cardPriceInfo(cardId) { return state.prices[cardId] || null; }
+
+// Grilla de cartas ofrecidas para cambio/venta: imagen, cuántas hay
+// disponibles, precio referencial (si se encontró en alguna tienda) y los
+// botones Intercambiar/Vender.
 function renderTradeList() {
   const wrap = $("#trade-list");
   const entries = Object.entries(store.getTradeList());
   const copies = entries.reduce((a, [, n]) => a + n, 0);
   $("#trade-summary").textContent = entries.length
     ? `${entries.length} carta${entries.length === 1 ? "" : "s"} distinta${entries.length === 1 ? "" : "s"} · ${copies} copia${copies === 1 ? "" : "s"} ofrecida${copies === 1 ? "" : "s"}`
-    : "Aún no marcas cartas para cambio.";
+    : "Aún no marcas cartas para cambio o venta.";
+  wrap.className = "cards-grid trade-grid";
   if (!entries.length) {
     wrap.innerHTML = `<p class="muted">Busca arriba una carta que tengas repetida y ofrécela; también puedes hacerlo desde el detalle de cualquier carta.</p>`;
     return;
   }
-  wrap.innerHTML = entries.map(([id, n]) => {
+  wrap.innerHTML = "";
+  const orphanIds = [];
+  for (const [id] of entries) {
     const c = cardById(id);
-    const name = c ? escapeHtml(displayName(c)) : `<span class="mono">${escapeHtml(id)}</span>`;
-    const meta = c
-      ? `${escapeHtml(c.editionName || "")}${Number.isFinite(cardNum(c)) ? " · #" + cardNum(c) : ""} · tienes ${store.getQty(id)}`
-      : "fuera de catálogo";
-    return `<div class="trade-row" data-id="${escapeAttr(id)}">
-      <div class="tr-info"><span class="tr-name">${name}</span><span class="tr-meta">${meta}</span></div>
-      <div class="tr-qty"><button class="qty-btn" data-tr="minus">−</button><span>${n}</span><button class="qty-btn" data-tr="plus">+</button></div>
-      <button class="btn small" data-exchange ${c ? "" : "disabled"}>Intercambiar</button>
+    if (!c) { orphanIds.push(id); continue; } // ya no está en el catálogo: no se puede mostrar como tarjeta
+    wrap.appendChild(tradeCardEl(c));
+  }
+  if (orphanIds.length) {
+    const note = document.createElement("p");
+    note.className = "muted";
+    note.style.gridColumn = "1 / -1";
+    note.textContent = `${orphanIds.length} carta(s) ofrecida(s) ya no están en el catálogo (id: ${orphanIds.join(", ")}).`;
+    wrap.appendChild(note);
+  }
+}
+
+// Tarjeta individual de la grilla de cambio/venta — mismo estilo visual que
+// el Catálogo/Colecciones (.card), pero con la cantidad ofrecida, el precio
+// referencial y los botones Intercambiar/Vender en vez del selector de mazo.
+function tradeCardEl(card) {
+  const offered = store.getTradeQty(card.id);
+  const owned = store.getQty(card.id);
+  const el = document.createElement("div");
+  el.className = "card owned";
+  el.dataset.id = card.id;
+
+  const dName = displayName(card);
+  const num = cardNum(card);
+  const img = card.image
+    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
+    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div>${card.editionName || ""}</div>`;
+
+  const price = cardPriceInfo(card.id);
+  const priceParts = price ? [price.mylserena, price.mesaredonda].filter((v) => v != null) : [];
+  const priceHtml = priceParts.length
+    ? `<div class="trade-price">${priceParts.map(fmtCLP).join(" / ")}</div>`
+    : `<div class="trade-price muted">Sin precio de referencia</div>`;
+
+  el.innerHTML = `
+    <div class="card-img" data-act="detail">
+      ${card.cost != null ? `<span class="badge-cost">${card.cost}</span>` : ""}
+      ${card.strength != null ? `<span class="badge-str">${card.strength}</span>` : ""}
+      ${card.specialId ? `<span class="badge-num special">${escapeHtml(card.specialId)}</span>` : Number.isFinite(num) ? `<span class="badge-num">#${num}</span>` : ""}
+      ${img}
+    </div>
+    <div class="card-body">
+      <div class="card-name">${escapeHtml(dName)}</div>
+      <div class="card-meta">${escapeHtml(card.editionName || "")}</div>
+      <div class="qty-row">
+        <button class="qty-btn" data-tr="minus">−</button>
+        <span class="qty-num" data-role="tqty">${offered}</span>
+        <button class="qty-btn" data-tr="plus" ${offered >= owned ? "disabled" : ""}>+</button>
+        <span class="muted trade-qty-label">para cambio/venta</span>
+      </div>
+      ${priceHtml}
+      <div class="trade-actions">
+        <button class="btn small" data-exchange>Intercambiar</button>
+        <button class="btn small" data-sell>Vender</button>
+      </div>
     </div>`;
-  }).join("");
-  wrap.querySelectorAll(".trade-row").forEach((row) => {
-    const id = row.dataset.id;
-    row.querySelectorAll("[data-tr]").forEach((b) => {
-      b.onclick = () => { store.addTradeQty(id, b.dataset.tr === "plus" ? 1 : -1); renderTradeList(); };
-    });
-    row.querySelector("[data-exchange]").onclick = () => {
-      const c = cardById(id);
-      if (c) openTradeModal(c);
-    };
-  });
+
+  el.querySelector('[data-tr="minus"]').onclick = () => { store.addTradeQty(card.id, -1); renderTradeList(); };
+  el.querySelector('[data-tr="plus"]').onclick = () => { store.addTradeQty(card.id, 1); renderTradeList(); };
+  el.querySelector("[data-exchange]").onclick = () => openTradeModal(card);
+  el.querySelector("[data-sell]").onclick = () => openSellModal(card);
+  el.querySelector('[data-act="detail"]').onclick = () => openModal(card);
+  return el;
 }
 
 function renderTradeLog() {
@@ -1811,6 +1869,21 @@ function renderTradeLog() {
       <span class="muted">${new Date(e.date).toLocaleString("es-CL")}</span>
       <span>Entregada: <b>${escapeHtml(g ? displayName(g) : e.given)}</b></span>
       <span>Recibida: <b>${escapeHtml(r ? displayName(r) : e.received)}</b></span>
+    </div>`;
+  }).join("");
+}
+
+function renderSaleLog() {
+  const wrap = $("#sale-log");
+  if (!wrap) return;
+  const log = store.getSaleLog();
+  if (!log.length) { wrap.innerHTML = `<p class="muted">Todavía no registras ventas.</p>`; return; }
+  wrap.innerHTML = log.map((e) => {
+    const c = cardById(e.cardId);
+    return `<div class="tlog-row">
+      <span class="muted">${new Date(e.date).toLocaleString("es-CL")}</span>
+      <span>Vendida: <b>${escapeHtml(c ? displayName(c) : e.cardId)}</b> ×${e.qty}</span>
+      <span>${e.price != null ? fmtCLP(e.price) : "sin precio registrado"}</span>
     </div>`;
   }).join("");
 }
@@ -1898,6 +1971,49 @@ function executeTrade(given, received) {
     `sumada a la colección «${col.name}»${created ? " (creada automáticamente)" : ""}.`, 5500);
 }
 
+/* --- Modal para registrar una venta --- */
+let sellCard = null; // carta que se está vendiendo en el modal en curso
+
+function openSellModal(card) {
+  sellCard = card;
+  const offered = store.getTradeQty(card.id);
+  $("#sm-card").textContent = `«${displayName(card)}» (${card.editionName || "—"})`;
+  const qtyInput = $("#sm-qty");
+  qtyInput.value = 1;
+  qtyInput.min = 1;
+  qtyInput.max = offered;
+  const price = cardPriceInfo(card.id);
+  const suggested = price ? (price.mylserena ?? price.mesaredonda) : null;
+  $("#sm-price").value = suggested != null ? suggested : "";
+  $("#sell-modal").classList.remove("hidden");
+  qtyInput.focus();
+}
+function closeSellModal() {
+  $("#sell-modal").classList.add("hidden");
+  sellCard = null;
+}
+// Ejecuta la venta: descuenta inventario y copias ofrecidas, deja registro
+// en el historial de ventas (con precio si se ingresó uno).
+function executeSale() {
+  if (!sellCard) return;
+  const offered = store.getTradeQty(sellCard.id);
+  if (offered < 1) { showToast("Esta carta ya no está ofrecida para cambio/venta", 3000); return; }
+  let qty = parseInt($("#sm-qty").value, 10);
+  if (!Number.isFinite(qty) || qty < 1) qty = 1;
+  qty = Math.min(qty, offered);
+  const priceRaw = $("#sm-price").value.trim();
+  const price = priceRaw ? Number(priceRaw) : null;
+  const priceTxt = price != null && Number.isFinite(price) ? ` por ${fmtCLP(price)}` : "";
+  const name = displayName(sellCard); // capturado antes de closeSellModal() (pone sellCard en null)
+  if (!confirm(`¿Registrar venta de ${qty} copia${qty === 1 ? "" : "s"} de «${name}»${priceTxt}?`)) return;
+  store.addQty(sellCard.id, -qty);
+  store.addTradeQty(sellCard.id, -qty);
+  store.addSaleLogEntry({ cardId: sellCard.id, qty, price: Number.isFinite(price) ? price : null });
+  closeSellModal();
+  renderTradeView();
+  showToast(`Venta registrada: ${qty} copia${qty === 1 ? "" : "s"} de «${name}»${priceTxt}.`, 4500);
+}
+
 function bindTradeEvents() {
   $("#trade-search").addEventListener("input", debounce(renderTradeSearchResults, 180));
   $("#tm-search").addEventListener("input", debounce(renderTradeModalResults, 180));
@@ -1905,6 +2021,11 @@ function bindTradeEvents() {
   $("#trade-modal").addEventListener("click", (e) => {
     if (e.target.classList.contains("modal-backdrop")) closeTradeModal();
   });
+  $$("[data-close-sell]").forEach((el) => el.addEventListener("click", closeSellModal));
+  $("#sell-modal").addEventListener("click", (e) => {
+    if (e.target.classList.contains("modal-backdrop")) closeSellModal();
+  });
+  $("#sm-confirm").addEventListener("click", executeSale);
 }
 
 /* ===================== Mazos ===================== */

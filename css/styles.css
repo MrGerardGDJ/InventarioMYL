@@ -93,7 +93,7 @@ main { padding: 0; }
 .filters-head h2 { font-size: 15px; }
 .field { display: block; margin-bottom: 12px; font-size: 13px; }
 .field > span { display: block; color: var(--muted); margin-bottom: 4px; }
-.field select, .field input[type="range"] {
+.field select, .field input[type="range"], .field input[type="number"], .field input[type="text"] {
   width: 100%;
   padding: 7px 8px;
   border-radius: 8px;
@@ -101,6 +101,7 @@ main { padding: 0; }
   background: var(--bg-3);
   color: var(--text);
   font-size: 13px;
+  box-sizing: border-box;
 }
 .field input[type="range"] { padding: 0; }
 .filters hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
@@ -269,20 +270,17 @@ main { padding: 0; }
 .col-progress-big { display: flex; align-items: center; gap: 12px; margin: 14px 0 18px; }
 .col-progress-big .ep-bar { flex: 1; height: 16px; }
 
-/* ===== Cambios (inventario de intercambio) =====
-   Lista de cartas ofrecidas, buscadores (reutilizan .deck-add-search/.dsr)
-   e historial de intercambios registrados. */
+/* ===== Cambio y Ventas =====
+   Grilla de cartas ofrecidas (reusa .cards-grid/.card del Catálogo, ver
+   tradeCardEl en app.js), buscador (reutiliza .deck-add-search/.dsr) e
+   historiales de intercambios/ventas registrados. */
 .trade-h3 { margin: 22px 0 8px; font-size: 15px; }
-.trade-list { display: flex; flex-direction: column; gap: 8px; }
-.trade-row {
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
-  background: var(--bg-2); font-size: 13px;
-}
-.trade-row .tr-info { flex: 1; min-width: 180px; }
-.trade-row .tr-name { font-weight: 600; }
-.trade-row .tr-meta { display: block; font-size: 11px; color: var(--muted); margin-top: 1px; }
-.trade-row .tr-qty { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.trade-grid { min-height: 40px; }
+.trade-price { font-size: 13px; font-weight: 700; color: var(--accent-2); margin-top: 4px; }
+.trade-price.muted { font-weight: 400; }
+.trade-qty-label { font-size: 10.5px; margin-left: 2px; }
+.trade-actions { display: flex; gap: 6px; margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; }
+.trade-actions .btn { flex: 1; padding: 6px 4px; font-size: 12px; }
 .trade-log .tlog-row {
   display: grid; grid-template-columns: 150px 1fr 1fr; gap: 10px;
   padding: 7px 10px; border-bottom: 1px solid var(--border); font-size: 13px;
