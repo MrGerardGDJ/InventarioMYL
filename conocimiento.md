@@ -378,6 +378,61 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (21ª iteración) — Huanglong tenía todos sus datos de OTRA carta (misma raíz que el bug de imágenes); + fix estructural: ~9.346 cartas con Fuerza "0" espuria en Talismán/Arma/Tótem/Oro
+- El dueño reportó que Huanglong (LPE4-208, Leyendas 4.0) tenía
+  Fuerza 7 / Coste 4 cuando la carta física real es Fuerza 3 / Coste 3,
+  y pidió revisar en general costos/fuerzas de todo el catálogo — de
+  paso señaló que Talismán/Arma/Tótem/Oro no deberían tener NINGÚN
+  valor de Fuerza (esas cartas no tienen ese stat en el juego), no un
+  "0".
+- **Huanglong resultó ser el mismo bug de raíz que las imágenes
+  cruzadas de la iteración 20ª, pero en TODOS los campos, no solo la
+  imagen**: no existe página `Huanglong (LPE4)` en el wiki, y la página
+  base `Huanglong` (sin desambiguador) declara explícitamente
+  `edición=[[Dinastía del Dragón]]` — una edición completamente
+  distinta. En algún proceso anterior (probablemente una carga manual
+  vieja, antes de que existiera la regla de "solo página específica" de
+  este proyecto) se tomaron cost/strength/ability/flavour/raza de esa
+  página base sin verificar que la edición coincidiera. Se encontró la
+  fuente correcta (`Huanglong (MPO)`, de Mundos Perdidos - Viaje al
+  Oeste — LPE4 la reimprime tal cual con nuevo arte) y coincide casi
+  palabra por palabra con lo que muestra la foto real de la carta que
+  ya teníamos cargada: Coste 3, Fuerza 3, Raza **Criaturas** (no
+  Dragón), habilidad y textura completamente distintas a lo que había.
+- **Revisión estructural pedida por el dueño** (Talismán/Arma/Tótem/Oro
+  con Fuerza espuria): se encontraron **9.346 cartas** en total con
+  `strength` puesto en un tipo que no debería tenerlo — 9.345 en
+  `data/cards.json` (TOR manda `damage: 0` en vez de omitir el campo
+  para esos tipos) y 1 en `data/custom-cards.json` (Balmung, Arma,
+  Fuerza 2 — dato suelto, no relacionado al bug de TOR). De esas,
+  9.334 eran exactamente "0" (el caso sistemático) y 12 tenían otros
+  valores pequeños no-cero (posibles errores puntuales, no
+  investigados uno por uno — quedan para otra pasada si el dueño los
+  reporta). **Ojo con "Monumento"**: ese tipo SÍ trae un número real en
+  ese campo (verificado contra su propio texto de habilidad, que
+  referencia mecánicas de "Progreso") — no se tocó, sería un error
+  distinto tratarlo igual que Talismán/Arma/Tótem/Oro.
+- Corregido en dos capas: (1) `scraper/scrape.js` ahora fuerza
+  `strength: null` para Talismán/Arma/Tótem/Oro en cada corrida futura
+  (la causa de fondo, para que no vuelva a aparecer cuando TOR agregue
+  cartas nuevas); (2) parche directo y mecánico sobre `data/cards.json`
+  y el único caso de `custom-cards.json` para no tener que esperar una
+  corrida completa del scraper (~15-20 min) para ver el resultado ya —
+  es exactamente la misma transformación que aplicaría el scraper, solo
+  que aplicada directo.
+- Validado: 0 cartas con Fuerza espuria en esos 4 tipos en todo el
+  catálogo (21.519 cartas revisadas), Huanglong con los datos
+  correctos.
+- **Nota para el dueño sobre el alcance**: no se hizo (ni es viable a
+  mano) una revisión visual carta por carta de las 21.519 cartas contra
+  su imagen real — eso solo se puede hacer cuando alguien reporta un
+  caso puntual como este, comparando contra la foto de la carta física
+  o la página específica del wiki. Lo que sí se hizo fue la parte
+  **verificable mecánicamente sin ambigüedad** (la regla de "estos 4
+  tipos no tienen Fuerza"), que cubre el patrón más común de error. Si
+  encuentras otra carta con datos mal (como Huanglong), repórtala igual
+  que esta vez — es el método que realmente funciona.
+
 ### 2026-08-09 (20ª iteración) — Bug real encontrado por el dueño: 3 cartas de Leyendas 4.0 tenían la imagen de OTRA carta con el mismo nombre
 - El dueño reportó que "Fruto Sagrado" #169, "Dhampir" #171 y "Grimorio
   Sacro" #181 de Leyendas 4.0 tenían la imagen equivocada, y mandó los

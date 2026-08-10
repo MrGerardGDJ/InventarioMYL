@@ -134,6 +134,18 @@ for (const slug of editionsToFetch) {
     if (seenCards.has(key)) continue;
     seenCards.add(key);
     const edid = edidRaw.padStart(3, "0");
+    const type = types.get(String(c.type)) || "—";
+    // Talismán/Arma/Tótem/Oro no tienen Fuerza en el juego — TOR igual manda
+    // "damage: 0" para esas cartas en vez de omitir el campo, y num(0) es un
+    // 0 válido (no null), así que sin este filtro queda un "0" falso en vez
+    // de vacío. Reportado por el dueño del inventario (09-08-2026) al notar
+    // que Huanglong (Aliado) tenía Fuerza/Coste mal — al revisar el resto se
+    // encontraron ~9.345 cartas de estos 4 tipos con Fuerza "0" espuria.
+    // OJO: "Monumento" también trae un número en este campo, pero ahí SÍ es
+    // un dato real (verificado contra varias cartas: coincide con su propio
+    // texto de habilidad "Progreso"), así que ese tipo no se toca acá.
+    const NO_STRENGTH_TYPES = new Set(["Talismán", "Arma", "Tótem", "Oro"]);
+    const hasStrength = !NO_STRENGTH_TYPES.has(type);
     all.push({
       // id ESTABLE (Capa A): id numérico de edición + número de carta.
       // No cambia aunque cambie el nombre/slug. Es la clave que referencia el inventario.
@@ -146,12 +158,12 @@ for (const slug of editionsToFetch) {
       editionName: edTitle,
       format,
       edid,
-      type: types.get(String(c.type)) || "—",
+      type,
       race: races.get(String(c.race)) || "—",
       rarity: rarities.get(String(c.rarity)) || "—",
       keyword: keywords.get(String(c.keywords)) || "",
       cost: num(c.cost),
-      strength: num(c.damage),
+      strength: hasStrength ? num(c.damage) : null,
       ability: (c.ability || "").replace(/\s+/g, " ").trim(),
       flavour: (c.flavour || "").replace(/\s+/g, " ").trim(),
       image: edImgId && edidRaw ? `${IMG}/${edImgId}/${edidRaw}.png` : "",
