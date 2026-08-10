@@ -275,6 +275,8 @@ main { padding: 0; }
    tradeCardEl en app.js), buscador (reutiliza .deck-add-search/.dsr) e
    historiales de intercambios/ventas registrados. */
 .trade-h3 { margin: 22px 0 8px; font-size: 15px; }
+.trade-value { font-size: 13px; font-weight: 700; color: var(--accent-2); margin-top: 6px; }
+.trade-value .tv-note { display: block; font-size: 11px; font-weight: 400; color: var(--muted); margin-top: 2px; }
 .trade-grid { min-height: 40px; }
 .trade-price { font-size: 13px; font-weight: 700; color: var(--accent-2); margin-top: 4px; }
 .trade-price.muted { font-weight: 400; }

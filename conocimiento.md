@@ -378,6 +378,34 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-10 (24ª iteración) — "Cambio y Ventas": sumatoria del valor potencial de venta de todas las copias ofrecidas
+- El dueño pidió agregar un dato que sume el valor referencial (en
+  pesos) de todas las cartas ofrecidas para cambio/venta, como
+  estimativo del total que podría sacar por sus repetidas.
+- **`js/app.js`**: nueva `renderTradeValue(entries)`, llamada desde
+  `renderTradeList()` con las mismas `entries` (`store.getTradeList()`)
+  que ya se usaban para el resumen de arriba. Por cada carta ofrecida
+  toma `cardPriceInfo(id)` (mismo `data/prices.json`, cobertura
+  parcial) y usa `mylserena ?? mesaredonda` como precio unitario —
+  igual criterio que ya usaba `openSellModal` para prellenar el precio
+  sugerido — multiplicado por la cantidad ofrecida, sumado entre todas
+  las cartas. Las copias sin precio de referencia NO se inventan un
+  valor: se cuentan aparte y se muestran en una nota
+  ("N copias con precio · M sin precio de referencia, no incluidas en
+  el total"). Si ninguna carta ofrecida tiene precio, muestra un
+  aviso en vez de "$0" (evita dar una cifra falsa). Vista vacía (sin
+  cartas ofrecidas) no muestra nada.
+- **`index.html`**: nuevo `#trade-value` bajo `#trade-summary`, dentro
+  del panel lateral de la pestaña Cambio y Ventas.
+- **`css/styles.css`**: `.trade-value`/`.tv-note` (mismo estilo que
+  `.trade-price`, nota secundaria en `--muted`).
+- Validado con Playwright: sembrando 3 cartas con precio conocido en
+  `data/prices.json` (×2 copias c/u) + 1 carta sin precio (×1 copia),
+  el total calculado en pantalla coincidió exactamente con la suma
+  esperada calculada manualmente ($3.100), la nota de copias
+  con/sin precio salió correcta, y la vista vacía no deja HTML
+  residual. 0 `pageerror` en ambos escenarios.
+
 ### 2026-08-10 (23ª iteración) — Titán Licántropo y Hombre Lobo (Leyendas 4.0, Set Clásico): imágenes cruzadas ENTRE ELLAS, mismo bug de siempre
 - El dueño reportó que Titán Licántropo (SCLPE4-20) y Hombre Lobo
   (SCLPE4-21) tenían mal las imágenes, con dos URLs de referencia de
