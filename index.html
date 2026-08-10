@@ -23,7 +23,7 @@
     <nav class="tabs">
       <button class="tab active" data-view="coleccion">Catálogo</button>
       <button class="tab" data-view="colecciones">Colecciones</button>
-      <button class="tab" data-view="cambios">Cambios</button>
+      <button class="tab" data-view="cambios">Cambio y Ventas</button>
       <button class="tab" data-view="mazos">Mazos</button>
       <button class="tab" data-view="stats">Estadísticas</button>
     </nav>
@@ -151,23 +151,25 @@
       </div>
     </section>
 
-    <!-- ===== VISTA CAMBIOS (inventario de intercambio) ===== -->
+    <!-- ===== VISTA CAMBIO Y VENTAS ===== -->
     <section id="view-cambios" class="view">
       <aside class="filters">
-        <div class="filters-head"><h2>Cartas para cambio</h2></div>
-        <p class="muted" style="font-size:12px;margin-top:0">Marca copias repetidas como disponibles para cambiar con otros jugadores. Al registrar un intercambio se descuenta la carta entregada, se suma la recibida y esta entra automáticamente a la colección de su edición (si no existe, se crea sola).</p>
+        <div class="filters-head"><h2>Cambio y Ventas</h2></div>
+        <p class="muted" style="font-size:12px;margin-top:0">Marca copias repetidas como disponibles para cambiar o vender. <b>Intercambiar</b> descuenta la carta entregada, suma la recibida y la agrega automáticamente a la colección de su edición. <b>Vender</b> descuenta la cantidad vendida de tu inventario y deja registro en el historial de ventas, con el precio si lo ingresas.</p>
         <div id="trade-summary" class="muted"></div>
       </aside>
       <div class="content">
         <h3 class="trade-h3" style="margin-top:0">Ofrecer una carta</h3>
         <div class="deck-add-search" style="margin:6px 0 0">
-          <input id="trade-search" type="search" placeholder="Busca por nombre una carta que tengas, para ofrecerla en cambio…" autocomplete="off" />
+          <input id="trade-search" type="search" placeholder="Busca por nombre una carta que tengas, para ofrecerla en cambio o venta…" autocomplete="off" />
           <div id="trade-search-results" class="deck-search-results"></div>
         </div>
-        <h3 class="trade-h3">Ofrecidas para cambio</h3>
-        <div id="trade-list" class="trade-list"></div>
+        <h3 class="trade-h3">Ofrecidas para cambio o venta</h3>
+        <div id="trade-list" class="trade-grid"></div>
         <h3 class="trade-h3">Historial de intercambios</h3>
         <div id="trade-log" class="trade-log"></div>
+        <h3 class="trade-h3">Historial de ventas</h3>
+        <div id="sale-log" class="trade-log"></div>
       </div>
     </section>
 
@@ -332,6 +334,25 @@ create policy "acceso_log" on inventario_myl_log
         <input id="tm-search" type="search" placeholder="Carta recibida…" autocomplete="off" />
         <div id="tm-results" class="deck-search-results"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal: registrar una venta -->
+  <div id="sell-modal" class="modal hidden">
+    <div class="modal-backdrop" data-close-sell></div>
+    <div class="modal-box">
+      <button class="modal-close" data-close-sell>×</button>
+      <h2>Registrar venta</h2>
+      <p class="muted">Vendes <b id="sm-card"></b>.</p>
+      <label class="field">
+        <span>Cantidad a vender</span>
+        <input id="sm-qty" type="number" min="1" value="1" />
+      </label>
+      <label class="field">
+        <span>Precio total recibido (CLP, opcional)</span>
+        <input id="sm-price" type="number" min="0" step="1" placeholder="Ej: 3000" />
+      </label>
+      <button class="btn primary" id="sm-confirm" style="margin-top:10px">Confirmar venta</button>
     </div>
   </div>
 

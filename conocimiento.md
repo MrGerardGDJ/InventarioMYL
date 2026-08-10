@@ -378,6 +378,56 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-09 (22ª iteración) — Rediseño de la vista Cambios → "Cambio y Ventas": grilla con precio referencial + botón Vender nuevo
+- El dueño pidió rediseñar el módulo de Cambios: mostrar las cartas
+  ofrecidas como tarjetas con imagen (no la lista de texto que había),
+  cantidad disponible y precio referencial debajo, más un botón
+  "Vender" nuevo (aparte de "Intercambiar" que ya existía) para
+  descontar del inventario con su propio registro.
+- **`js/store.js`**: nuevo `saleLog` (`myl.salelog.v1`), mismo patrón
+  que `tradeLog` — `getSaleLog`/`addSaleLogEntry`/`replaceSaleLog`,
+  incluido en `getSnapshot`/`applySnapshot` (respaldo JSON y
+  sincronización en la nube). Vender NO usa una tabla nueva de
+  inventario — descuenta `inventory` y `trade` con las mismas funciones
+  que ya existían, el log es solo el registro histórico (carta,
+  cantidad, precio si se ingresó, fecha).
+- **`js/app.js`**: `loadData()` ahora también trae `data/prices.json`
+  (mismo patrón de cache-busting que los otros 3 archivos) a
+  `state.prices`. `renderTradeList()` pasó de filas de texto a una
+  grilla `tradeCardEl()` que reutiliza el `.card`/`.card-img` del
+  Catálogo (imagen, badges de coste/fuerza/número, click abre el mismo
+  modal de detalle) — agrega precio referencial (ambas tiendas si hay,
+  "Sin precio de referencia" si no) y dos botones, Intercambiar (flujo
+  ya existente) y Vender (nuevo `openSellModal`/`executeSale`, con
+  cantidad y precio total prellenado desde `data/prices.json`,
+  editable). Nuevo `renderSaleLog()` para el historial de ventas.
+- **Bug real encontrado en la propia implementación, corregido en la
+  misma iteración**: `executeSale()` llamaba `closeSellModal()` (que
+  pone `sellCard = null`) ANTES del `showToast` final, que todavía
+  usaba `displayName(sellCard)` — tiraba `TypeError` después de una
+  venta exitosa (el registro sí quedaba bien guardado, pero la
+  confirmación visual fallaba). Corregido capturando el nombre en una
+  variable local antes de cerrar el modal. Encontrado con Playwright
+  (`pageerrors`), no a simple vista.
+- **`index.html`**: pestaña renombrada "Cambio y Ventas"; agrega el
+  modal `#sell-modal` (cantidad + precio opcional) y la sección
+  "Historial de ventas" junto a la de intercambios ya existente.
+- **`css/styles.css`**: reemplaza `.trade-row`/`.tr-*` (listado de
+  texto, ya no se usa) por `.trade-price`/`.trade-actions` sobre la
+  grilla compartida `.cards-grid`; de paso se agregó
+  `input[type="number"]`/`input[type="text"]` a la regla `.field` (los
+  inputs del modal de venta quedaban sin estilo, la regla solo cubría
+  `select`/`range`).
+- Validado con Playwright: grilla muestra precio y cantidad
+  correctamente, Vender descuenta inventario Y "en cambio" a la vez y
+  deja el registro con precio, Intercambiar sigue funcionando igual que
+  antes (inventario/colección automática/historial), vista vacía sin
+  romperse, 0 `pageerror` en todos los flujos probados.
+- **Cobertura de precios**: como ya se documentó en la 15ª iteración,
+  `data/prices.json` solo cubre ~1.610 de ~21.500 cartas — las que no
+  tienen precio muestran "Sin precio de referencia" en vez de
+  inventarse un número.
+
 ### 2026-08-09 (21ª iteración) — Huanglong tenía todos sus datos de OTRA carta (misma raíz que el bug de imágenes); + fix estructural: ~9.346 cartas con Fuerza "0" espuria en Talismán/Arma/Tótem/Oro
 - El dueño reportó que Huanglong (LPE4-208, Leyendas 4.0) tenía
   Fuerza 7 / Coste 4 cuando la carta física real es Fuerza 3 / Coste 3,
