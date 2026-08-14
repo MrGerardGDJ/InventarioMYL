@@ -372,6 +372,22 @@ main { padding: 0; }
 .tag { background: var(--bg-3); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; font-size: 12px; }
 .modal-close { position: absolute; top: 12px; right: 14px; background: none; border: none; color: var(--muted); font-size: 24px; }
 
+.modal-nav {
+  position: fixed; top: 50%; transform: translateY(-50%); z-index: 51;
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border);
+  background: var(--bg-2); color: var(--text); font-size: 24px; line-height: 1;
+  cursor: pointer; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center;
+}
+.modal-nav:hover:not(:disabled) { background: var(--bg-3); }
+.modal-nav:disabled { opacity: 0.3; cursor: default; }
+.modal-nav-prev { left: 12px; }
+.modal-nav-next { right: 12px; }
+@media (max-width: 640px) {
+  .modal-nav { width: 36px; height: 36px; font-size: 20px; }
+  .modal-nav-prev { left: 4px; }
+  .modal-nav-next { right: 4px; }
+}
+
 /* ===== Detalle de carta interactivo ===== */
 .card-detail { display: flex; gap: 20px; flex-wrap: wrap; }
 .card-detail .cd-image { flex: 0 0 300px; max-width: 300px; position: relative; align-self: flex-start; }
