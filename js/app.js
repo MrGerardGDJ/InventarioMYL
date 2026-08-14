@@ -455,7 +455,7 @@ function renderGrid(reset) {
   const start = state.page * state.pageSize;
   const slice = state.filtered.slice(start, start + state.pageSize);
   const frag = document.createDocumentFragment();
-  for (const card of slice) frag.appendChild(cardEl(card));
+  for (const card of slice) frag.appendChild(cardEl(card, state.filtered));
   grid.appendChild(frag);
   scheduleNameCorrection(slice);
 
@@ -467,7 +467,10 @@ function renderGrid(reset) {
 // Crea el nodo de una carta para cualquier grilla (Catálogo y Colecciones).
 // La clase .owned refleja si hay copias en el inventario; en la vista
 // Colecciones el CSS usa esa clase para el efecto bloqueada/desbloqueada.
-function cardEl(card) {
+// navList (opcional): lista ordenada de cartas de la grilla actual, para que
+// el modal de detalle pueda ofrecer "anterior/siguiente" dentro de ese mismo
+// listado (ver openModal).
+function cardEl(card, navList) {
   const qty = store.getQty(card.id);
   const el = document.createElement("div");
   el.className = "card" + (qty > 0 ? " owned" : "");
@@ -507,7 +510,7 @@ function cardEl(card) {
     const act = e.target.closest("[data-act]")?.dataset.act;
     if (act === "plus") changeQty(el, card, +1);
     else if (act === "minus") changeQty(el, card, -1);
-    else if (act === "detail") openModal(card);
+    else if (act === "detail") openModal(card, navList);
   });
   return el;
 }
@@ -541,7 +544,35 @@ function fetchProfile(card) {
 }
 function nl2br(s) { return escapeHtml(s).replace(/\n/g, "<br>"); }
 
-function openModal(card) {
+// Navegación anterior/siguiente del modal de detalle: navList es la lista
+// (Catálogo filtrado, grilla de una Colección, u ofrecidas en Cambio y
+// Ventas) desde la que se abrió la carta actual — null si se abrió sin una
+// lista asociada (no debería pasar desde la UI, pero por si acaso).
+let modalNavList = null;
+let modalNavIndex = -1;
+
+function updateModalNavButtons() {
+  const prevBtn = $("#modal-prev");
+  const nextBtn = $("#modal-next");
+  const has = modalNavList && modalNavList.length > 1 && modalNavIndex !== -1;
+  prevBtn.classList.toggle("hidden", !has);
+  nextBtn.classList.toggle("hidden", !has);
+  if (!has) return;
+  prevBtn.disabled = modalNavIndex <= 0;
+  nextBtn.disabled = modalNavIndex >= modalNavList.length - 1;
+}
+
+function modalNavStep(delta) {
+  if (!modalNavList) return;
+  const i = modalNavIndex + delta;
+  if (i < 0 || i >= modalNavList.length) return;
+  openModal(modalNavList[i], modalNavList, i);
+}
+
+function openModal(card, navList, navIndex) {
+  modalNavList = navList || null;
+  modalNavIndex = modalNavList ? (navIndex ?? modalNavList.findIndex((c) => c.id === card.id)) : -1;
+  updateModalNavButtons();
   const qty = store.getQty(card.id);
   const box = $("#modal-box");
   const img = card.image
@@ -1581,6 +1612,10 @@ function renderCollectionGrid(col) {
   const specials = cards.filter((c) => c.specialId);
   const normals = cards.filter((c) => !c.specialId);
   wrap.innerHTML = "";
+  // Se va llenando en el mismo orden en que se arman las secciones abajo, así
+  // el modal navega anterior/siguiente siguiendo el orden visual real (todas
+  // las secciones ya están armadas para cuando el usuario alcanza a hacer clic).
+  const navList = [];
   const addSection = (title, list) => {
     if (!list.length) return;
     if (title) {
@@ -1591,7 +1626,7 @@ function renderCollectionGrid(col) {
     }
     const g = document.createElement("div");
     g.className = "cards-grid collection-grid";
-    for (const c of list) g.appendChild(cardEl(c));
+    for (const c of list) { navList.push(c); g.appendChild(cardEl(c, navList)); }
     wrap.appendChild(g);
   };
   if (col.editions.length > 1) {
@@ -1793,10 +1828,12 @@ function renderTradeList() {
   }
   wrap.innerHTML = "";
   const orphanIds = [];
+  const navList = [];
   for (const [id] of entries) {
     const c = cardById(id);
     if (!c) { orphanIds.push(id); continue; } // ya no está en el catálogo: no se puede mostrar como tarjeta
-    wrap.appendChild(tradeCardEl(c));
+    navList.push(c);
+    wrap.appendChild(tradeCardEl(c, navList));
   }
   if (orphanIds.length) {
     const note = document.createElement("p");
@@ -1841,7 +1878,8 @@ function renderTradeValue(entries) {
 // Tarjeta individual de la grilla de cambio/venta — mismo estilo visual que
 // el Catálogo/Colecciones (.card), pero con la cantidad ofrecida, el precio
 // referencial y los botones Intercambiar/Vender en vez del selector de mazo.
-function tradeCardEl(card) {
+// navList: ver cardEl().
+function tradeCardEl(card, navList) {
   const offered = store.getTradeQty(card.id);
   const owned = store.getQty(card.id);
   const el = document.createElement("div");
@@ -1887,7 +1925,7 @@ function tradeCardEl(card) {
   el.querySelector('[data-tr="plus"]').onclick = () => { store.addTradeQty(card.id, 1); renderTradeList(); };
   el.querySelector("[data-exchange]").onclick = () => openTradeModal(card);
   el.querySelector("[data-sell]").onclick = () => openSellModal(card);
-  el.querySelector('[data-act="detail"]').onclick = () => openModal(card);
+  el.querySelector('[data-act="detail"]').onclick = () => openModal(card, navList);
   return el;
 }
 
@@ -2679,7 +2717,17 @@ function bindEvents() {
 
   // Modal
   $("#modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeModal(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); closeCollectionModal(); closeTradeModal(); } });
+  $("#modal-prev").addEventListener("click", () => modalNavStep(-1));
+  $("#modal-next").addEventListener("click", () => modalNavStep(1));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); closeCollectionModal(); closeTradeModal(); return; }
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    if ($("#modal").classList.contains("hidden")) return;
+    const tag = document.activeElement?.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    e.preventDefault();
+    modalNavStep(e.key === "ArrowLeft" ? -1 : 1);
+  });
   $("#orphan-note").addEventListener("click", openOrphanModal);
   $("#orphan-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeOrphanModal(); });
   $$("[data-close-orphan]").forEach((el) => el.addEventListener("click", closeOrphanModal));

@@ -378,6 +378,57 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-10 (25ª iteración) — Modal de detalle: navegar anterior/siguiente sin cerrar (botones ‹ › + flechas del teclado)
+- El dueño pidió poder avanzar/retroceder entre cartas del listado
+  actual sin tener que cerrar el detalle y volver a hacer clic en la
+  grilla — con botones a los lados y también con las flechas ←/→ del
+  teclado.
+- **`js/app.js`**: `openModal(card, navList, navIndex)` ahora recibe
+  opcionalmente la lista ordenada desde la que se abrió la carta (y su
+  índice ya calculado, para no tener que volver a buscarlo al navegar).
+  Nuevo estado de módulo `modalNavList`/`modalNavIndex` +
+  `updateModalNavButtons()` (oculta los botones si la lista tiene 0-1
+  cartas, deshabilita el que corresponda en los extremos) +
+  `modalNavStep(delta)` (no da la vuelta al llegar al final, se queda
+  ahí con el botón deshabilitado). Los tres lugares que abren el modal
+  ahora arman y pasan su propia lista de navegación, en el mismo orden
+  en que se ve en pantalla:
+  - **Catálogo** (`renderGrid`): `state.filtered` completo (no solo la
+    página ya cargada — "siguiente" en la última carta cargada sigue
+    avanzando sin que haga falta pulsar antes "Cargar más").
+  - **Colecciones** (`renderCollectionGrid`): arma un `navList` propio
+    mientras genera las secciones (especiales primero, luego numeradas,
+    por edición si la colección agrupa varias) — sigue exactamente el
+    orden visual, no el orden crudo de datos.
+  - **Cambio y Ventas** (`renderTradeList`): solo las cartas
+    efectivamente ofrecidas y renderizadas (las huérfanas que ya no
+    están en el catálogo quedan afuera, como ya pasaba).
+  - `cardEl`/`tradeCardEl` ahora reciben ese `navList` y se lo pasan a
+    `openModal` en el clic de "detalle".
+  - Atajo de teclado: el listener de `keydown` ya existente (el que
+    maneja Escape) ahora también captura ArrowLeft/ArrowRight
+    mientras el modal está abierto, ignorándolas si el foco está en un
+    `input`/`textarea`/`select` (para no interferir con otros campos).
+- **`index.html`**: dos botones nuevos (`#modal-prev`/`#modal-next`,
+  ‹ / ›) como hermanos de `#modal-box` dentro de `#modal` — al no ir
+  dentro de la caja, no se pierden si el detalle scrollea.
+- **`css/styles.css`**: `.modal-nav` — círculo flotante fijo a los
+  bordes del viewport, centrado verticalmente, atenuado (`opacity:0.3`)
+  y sin click cuando `disabled`; achicado en móvil (`@media
+  max-width:640px`).
+- Validado con Playwright en las tres vistas: botón anterior
+  deshabilitado en la primera carta de cada listado, siguiente
+  deshabilitado en la última, clic en "siguiente" y en ArrowRight/
+  ArrowLeft cambian la carta mostrada correctamente y navegan solo
+  dentro de la lista de origen (probado que Cambio y Ventas con 3
+  cartas ofrecidas no se sale de esas 3, aunque el catálogo completo
+  tenga miles), botones ocultos por completo con una sola carta en la
+  lista. Capturas de pantalla en escritorio y móvil para revisar
+  la posición de los botones — confirmado con muestreo de píxeles que
+  el fondo oscurecido (backdrop) sigue funcionando igual que siempre
+  (se nota poco porque el tema ya es oscuro de por sí). 0 `pageerror`
+  en todos los escenarios.
+
 ### 2026-08-10 (24ª iteración) — "Cambio y Ventas": sumatoria del valor potencial de venta de todas las copias ofrecidas
 - El dueño pidió agregar un dato que sume el valor referencial (en
   pesos) de todas las cartas ofrecidas para cambio/venta, como
