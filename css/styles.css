@@ -425,6 +425,22 @@ main { padding: 0; }
 .deck-item .d-name { font-weight: 600; cursor: pointer; flex: 1; }
 .deck-item .d-count { color: var(--muted); font-size: 12px; margin: 0 8px; }
 .deck-detail h2 { margin-bottom: 4px; }
+.deck-tabs { margin: 14px 0 4px; display: inline-flex; }
+.deck-tab-panel { margin-top: 8px; }
+
+/* ===== Estrategia ===== */
+.strat-note { font-size: 12px; margin-bottom: 14px; }
+.strat-section { margin-bottom: 16px; }
+.strat-section h4 { margin: 0 0 6px; font-size: 13px; color: var(--accent-2); text-transform: uppercase; letter-spacing: .4px; }
+.strat-section ul { margin: 0; padding-left: 20px; }
+.strat-section li { margin-bottom: 5px; font-size: 13px; line-height: 1.5; }
+
+/* ===== Distribución ===== */
+.dist-zone { margin-bottom: 22px; border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; background: var(--bg-2); }
+.dist-zone-title { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+.dist-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+.dist-card .card-body { padding: 6px 8px; }
+.dist-card .card-name { font-size: 11.5px; }
 .deck-section-title { margin: 18px 0 8px; font-size: 14px; color: var(--accent-2); }
 .deck-row {
   display: flex; align-items: center; gap: 10px; padding: 7px 10px;
@@ -433,6 +449,7 @@ main { padding: 0; }
 .deck-row .dr-qty { font-weight: 700; width: 28px; }
 .deck-row .dr-name { flex: 1; }
 .deck-row .dr-sub { display: block; font-size: 11px; color: var(--muted); margin-top: 1px; }
+.deck-row .dr-ban { display: block; font-size: 11px; color: var(--danger); font-weight: 600; margin-top: 2px; }
 
 /* Resumen del mazo en pantalla */
 .deck-summary { margin: 14px 0; }
@@ -452,6 +469,10 @@ main { padding: 0; }
 .active-deck-banner {
   background: var(--bg-3); border: 1px dashed var(--accent); border-radius: 8px;
   padding: 8px 12px; margin-bottom: 14px; font-size: 13px;
+}
+.active-deck-banner.ban-banner {
+  border: 1px dashed var(--danger); border-style: solid; color: var(--danger);
+  background: rgba(229,72,77,0.1);
 }
 
 /* ===== Stats ===== */

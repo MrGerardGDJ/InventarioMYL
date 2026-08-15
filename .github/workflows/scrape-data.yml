@@ -41,11 +41,20 @@ jobs:
           echo "node scrape.js $ARGS"
           node scrape.js $ARGS
 
+      - name: Actualizar ban list (Primera Era — Racial Edición)
+        # No depende de --format/--limit: es una sola página, siempre completa.
+        # No debe tumbar el workflow si blog.myl.cl cambia de formato — solo se
+        # queda con el data/banlist.json anterior y lo avisa en el log.
+        working-directory: scraper
+        run: node scrape-banlist.js || echo "⚠ Scraper de ban list falló, se mantiene data/banlist.json anterior"
+
       - name: Subir artefacto (para revisión)
         uses: actions/upload-artifact@v4
         with:
           name: cards-json
-          path: data/cards.json
+          path: |
+            data/cards.json
+            data/banlist.json
 
       - name: Commit de los datos actualizados
         # En ejecuciones de prueba (con 'limit') no se hace commit, solo el artefacto.
@@ -53,11 +62,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet -- data/cards.json; then
-            echo "Sin cambios en data/cards.json"
+          if git diff --quiet -- data/cards.json data/banlist.json; then
+            echo "Sin cambios en data/cards.json ni data/banlist.json"
           else
-            git add data/cards.json
-            git commit -m "datos: actualiza catálogo de cartas desde tor.myl.cl"
+            git add data/cards.json data/banlist.json
+            MSG="datos: actualiza catálogo de cartas desde tor.myl.cl"
+            if ! git diff --cached --quiet -- data/banlist.json; then
+              MSG="$MSG + ban list Racial Edición desde blog.myl.cl"
+            fi
+            git commit -m "$MSG"
             # Reintenta integrando cambios remotos (evita rechazo si la rama avanzó)
             for i in 1 2 3; do
               git push origin ${{ github.ref_name }} && break

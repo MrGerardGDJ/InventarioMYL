@@ -1,0 +1,768 @@
+{
+  "meta": {
+    "sourceUrl": "https://blog.myl.cl/ban-list-primera-era-formato-racial-edicion/",
+    "format": "Primera Era — Racial Edición",
+    "updateLabel": "Julio 2026",
+    "effectiveNote": "Martes 07 de Julio y hasta principios de Agosto 2026",
+    "scrapedAt": "2026-08-15T16:28:48.378Z",
+    "totalEntries": 108
+  },
+  "entries": [
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Orejona",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Oráculo de Delfos",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Vishnu",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Zeus",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Walkirias",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Shenlong",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Salome",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Magnus",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Anima Negra",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Ataque Suicida",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Lucha de Gólems",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Inti",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Tsachila",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Cuchivilu",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Grifo",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Tótem de Guanaco",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Killa",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Kanillu",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Trauko",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Tesoro de Guayacán",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Rito del Dorado",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Cuero",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Drakkar",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Naglfar",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Draupnir",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Cuernos de Adumla",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Han Xiang Zi",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Ken Nage",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Niten Ichi Ryu",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Bushido",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Yingzhao Chuan Fa",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Kayakujutsu",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Dispositivo Espinoso",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Dokuenjutsu",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Tui",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Li",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Yoroi",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Kabuto",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Go",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Sello Imperial de Jade",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Shen Yi",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Yasakani",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "47 Ronin",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Grootslang",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Tótem del Bosque",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Exorcista",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Mosquete Puritano",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Machitún",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Puchao",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Sacrificio Humano",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Flechero",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Tótem de Serpiente",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Puerta del Sol",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Arco y Flechas",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Tótem de Jaguar",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Ataúd de Marfil",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Halatafl",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Galdar",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Arco de Ullr",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Nott",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Gyallarhorn",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Guan Yu",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Kyudo",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "I Ching",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Feng Shui",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Teatro Kabuki",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Dinastía Imperial",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Niú Kánzhe Cáodí",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Zhang Guo La",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Sakura",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Monte del Buitre",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Monte Wudang",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Kun",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Horóscopo Chino",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Hwandudaedo",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Yanhua",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Knochen",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Quetzalcoátl",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Kordrag",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Persival",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Titania",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Caballo de Mar",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Sir Gwain",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Dycom el Recaudador",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Niahm",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Stribog",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Zara",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Manada Mortífera",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Cazadores Implacables",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Pihuchén",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Sisiutl",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Shuar",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Bestias Furiosas",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Tótem del Águila",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Forma Voladora",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Bjorn Ragnarsson",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Horda Bárbara",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Hidromiel",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Fuerza Abominable",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Fenghuang",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Yoritomo",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Changquan",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Geon Si",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Xi You Ji",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Campeones de Oriente",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Fu",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Nodachi",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "espiritu_del_dragon",
+      "editionName": "Espiritu Del Dragon",
+      "name": "Sai",
+      "status": "limit2",
+      "maxCopies": 2
+    }
+  ]
+}

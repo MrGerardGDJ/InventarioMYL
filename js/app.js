@@ -37,6 +37,7 @@ const state = {
   view: "coleccion",
   colFilter: "all", // filtro de la vista Colecciones: all | missing | owned
   prices: {},       // data/prices.json → { cardId: { mylserena, mesaredonda } }, cobertura parcial
+  banlist: null,    // data/banlist.json → { meta, entries: [{edition, editionName, name, status, maxCopies}] }
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -55,13 +56,15 @@ async function loadData() {
   // práctica (09-08-2026): dos correcciones de datos ya subidas y
   // verificadas en el repo seguían sin verse en el sitio publicado.
   const v = Date.now();
-  const [cardsRes, edRes, customRes, pricesRes] = await Promise.all([
+  const [cardsRes, edRes, customRes, pricesRes, banlistRes] = await Promise.all([
     fetch(`./data/cards.json?v=${v}`).then((r) => r.json()).catch(() => ({ cards: [] })),
     fetch(`./data/editions.json?v=${v}`).then((r) => r.json()).catch(() => []),
     fetch(`./data/custom-cards.json?v=${v}`).then((r) => (r.ok ? r.json() : { cards: [] })).catch(() => ({ cards: [] })),
     fetch(`./data/prices.json?v=${v}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+    fetch(`./data/banlist.json?v=${v}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
   ]);
   state.prices = pricesRes?.prices || {};
+  state.banlist = banlistRes && Array.isArray(banlistRes.entries) ? banlistRes : null;
 
   const scraped = (cardsRes.cards || cardsRes || []).map(normalizeCard);
   const bundledCustom = (customRes.cards || []).map(normalizeCard);
@@ -2098,7 +2101,58 @@ function bindTradeEvents() {
   $("#sm-confirm").addEventListener("click", executeSale);
 }
 
+/* ===================== Ban List (Primera Era — Racial Edición) =====================
+   Fuente: data/banlist.json (scraper/scrape-banlist.js, se re-scrapea solo
+   cada semana junto al catálogo — ver .github/workflows/scrape-data.yml).
+   Es un aviso INFORMATIVO sobre UN formato específico (Racial Edición), no
+   una validación de legalidad general: un mazo pensado para otro formato
+   puede mostrar el aviso igual y no aplica.
+   Matching por NOMBRE solamente (no por edición): la propia página agrupa
+   las cartas por "edición que da soporte a esa raza", que no siempre
+   coincide con la edición real en la que TOR tiene catalogada la carta
+   (ej. "Grifo"/"Trauko" están bajo la columna Ira del Nahual en la ban list
+   pero en el catálogo están cargados como de El Reto) — intentarlo por
+   edición dejaba ~35% de las cartas sin poder verificarse. Por nombre solo
+   se resuelve un ~96%; el resto son 3 erratas de tipeo del blog (ver
+   BANLIST_NAME_ALIASES). */
+const BANLIST_NAME_ALIASES = {
+  "niahm": "niamh",              // blog.myl.cl: "Niahm" — catálogo (TOR): "Niamh"
+  "anima negra": "nima negra",   // blog.myl.cl: "Anima Negra" — catálogo: "Nima Negra"
+  "zhang guo la": "zhang guo lao", // blog.myl.cl: "Zhang Guo La" — catálogo: "Zhang Guo Lao"
+};
+function banlistNormName(s) {
+  const n = normText(s).replace(/[^a-z0-9]+/g, " ").trim();
+  return BANLIST_NAME_ALIASES[n] || n;
+}
+let banlistByName = null;
+function getBanlistEntry(card) {
+  if (!state.banlist || !card) return null;
+  if (!banlistByName) {
+    banlistByName = new Map();
+    for (const e of state.banlist.entries) banlistByName.set(banlistNormName(e.name), e);
+  }
+  return banlistByName.get(banlistNormName(card.name)) || null;
+}
+// Aviso en texto plano para una fila del mazo, o "" si no aplica.
+function banlistWarning(card, qtyInDeck) {
+  const e = getBanlistEntry(card);
+  if (!e) return "";
+  if (e.status === "banned") return `Prohibida en Racial Edición (ban list ${state.banlist.meta.updateLabel || ""})`;
+  if (qtyInDeck > e.maxCopies) return `Máx. ${e.maxCopies} copia${e.maxCopies === 1 ? "" : "s"} en Racial Edición, tienes ${qtyInDeck} (ban list ${state.banlist.meta.updateLabel || ""})`;
+  return "";
+}
+
 /* ===================== Mazos ===================== */
+// Tab activa dentro del detalle de un mazo (Cartas/Estadística/Estrategia/
+// Distribución) — un solo valor global, no por mazo: cambiar de mazo
+// mantiene la misma tab que se estaba mirando.
+let deckTab = "cartas";
+function switchDeckTab(tab) {
+  deckTab = tab;
+  $$("#deck-detail [data-deck-tab]").forEach((b) => b.classList.toggle("active", b.dataset.deckTab === tab));
+  $$("#deck-detail .deck-tab-panel").forEach((p) => p.classList.toggle("hidden", p.id !== `deck-tab-${tab}`));
+}
+
 function renderDecksView() {
   const list = $("#deck-list");
   const decks = store.getDecks();
@@ -2146,13 +2200,32 @@ function renderDeckDetail() {
       <button class="btn small" id="deck-txt">📋 Texto</button>
     </div>
     <div class="muted" style="font-size:12px;margin-top:4px">Actualizado: ${deck.updatedAt ? new Date(deck.updatedAt).toLocaleString("es-CL") : "—"}</div>
-    <div id="deck-banner"></div>
-    <div id="deck-summary" class="deck-summary"></div>
-    <div class="deck-add-search">
-      <input id="deck-search" type="search" placeholder="🔎 Buscar carta por nombre para añadir a este mazo…" autocomplete="off" />
-      <div id="deck-search-results" class="deck-search-results"></div>
+    <div class="tabs deck-tabs">
+      <button class="tab" data-deck-tab="cartas">🗂️ Cartas</button>
+      <button class="tab" data-deck-tab="estadistica">📊 Estadística</button>
+      <button class="tab" data-deck-tab="estrategia">🧠 Estrategia</button>
+      <button class="tab" data-deck-tab="distribucion">🖼️ Distribución</button>
     </div>
-    <div id="deck-contents"></div>`;
+    <div id="deck-tab-cartas" class="deck-tab-panel">
+      <div id="deck-banner"></div>
+      <div class="deck-add-search">
+        <input id="deck-search" type="search" placeholder="🔎 Buscar carta por nombre para añadir a este mazo…" autocomplete="off" />
+        <div id="deck-search-results" class="deck-search-results"></div>
+      </div>
+      <div id="deck-contents"></div>
+    </div>
+    <div id="deck-tab-estadistica" class="deck-tab-panel">
+      <div id="deck-summary" class="deck-summary"></div>
+    </div>
+    <div id="deck-tab-estrategia" class="deck-tab-panel">
+      <div id="deck-strategy"></div>
+    </div>
+    <div id="deck-tab-distribucion" class="deck-tab-panel">
+      <div id="deck-distribution"></div>
+    </div>`;
+
+  $$("#deck-detail [data-deck-tab]").forEach((b) => (b.onclick = () => switchDeckTab(b.dataset.deckTab)));
+  switchDeckTab(deckTab);
 
   $("#deck-name").onchange = (e) => { store.renameDeck(deck.id, e.target.value || "Mazo"); populateActiveDeckSelect(); updateDeckCounts(); };
   $("#deck-txt").onclick = () => exportDeck(deck);
@@ -2205,16 +2278,23 @@ function renderDeckContents(deck) {
 
   const byType = {};
   let missing = 0;
+  let banIssues = 0;
   for (const [cid, q] of entries) {
     const card = state.cards.find((c) => c.id === cid);
     const own = store.getQty(cid);
     if (own < q) missing += q - own;
+    if (card && banlistWarning(card, q)) banIssues++;
     if (query && !(card ? card.searchText.includes(query) : normText(cid).includes(query))) continue;
     const t = card ? card.type : "Otro";
     (byType[t] ||= []).push({ card, cid, q });
   }
   const banner = $("#deck-banner");
-  if (banner) banner.innerHTML = missing > 0 ? `<div class="active-deck-banner">Te faltan <b>${missing}</b> copias de este mazo en tu colección.</div>` : "";
+  if (banner) {
+    let bannerHtml = "";
+    if (missing > 0) bannerHtml += `<div class="active-deck-banner">Te faltan <b>${missing}</b> copias de este mazo en tu colección.</div>`;
+    if (banIssues > 0) bannerHtml += `<div class="active-deck-banner ban-banner">⛔ <b>${banIssues}</b> carta${banIssues === 1 ? "" : "s"} de este mazo ${banIssues === 1 ? "tiene un problema" : "tienen problemas"} con la ban list del formato Racial Edición (ver detalle abajo, en rojo).</div>`;
+    banner.innerHTML = bannerHtml;
+  }
 
   let html = "";
   for (const [type, rows] of Object.entries(byType)) {
@@ -2226,10 +2306,11 @@ function renderDeckContents(deck) {
       const meta = card
         ? `${raceIcon(card.race)} ${escapeHtml(card.race)}${card.cost != null ? " · ⛁" + card.cost : ""}${card.strength != null ? " · ⚔" + card.strength : ""}`
         : "";
+      const banWarn = card ? banlistWarning(card, q) : "";
       html += `
         <div class="deck-row" data-cid="${escapeAttr(cid)}">
           <span class="dr-qty">${q}×</span>
-          <span class="dr-name">${escapeHtml(name)}${lack}<span class="dr-sub">${meta}</span></span>
+          <span class="dr-name">${escapeHtml(name)}${lack}<span class="dr-sub">${meta}</span>${banWarn ? `<span class="dr-ban">⛔ ${escapeHtml(banWarn)}</span>` : ""}</span>
           <span class="dr-actions">
             <button class="qty-btn" data-d="minus">−</button>
             <button class="qty-btn" data-d="plus">+</button>
@@ -2247,6 +2328,8 @@ function renderDeckContents(deck) {
     });
   });
   renderDeckSummary(deck);
+  renderDeckStrategy(deck);
+  renderDeckDistribution(deck);
 }
 
 function renderDeckSummary(deck) {
@@ -2264,6 +2347,172 @@ function renderDeckSummary(deck) {
     `<div class="ds-title">Distribución por tipo</div><div class="ds-chips">${chips}</div>
      <div class="ds-title">Detalle por tipo y coste</div>
      <div class="ds-matrix"><table>${head}${body}${totalRow}</table></div>`;
+}
+
+/* ===================== Estrategia (análisis por reglas) =====================
+   Diagnóstico heurístico, NO una IA conversacional: son puros cálculos sobre
+   curva de coste, proporciones de tipo, concentración racial, ban list y
+   copias faltantes. Se separó el cálculo (computeDeckStrategy) del texto
+   (deckStrategyText) a propósito — si el día de mañana se conecta una IA de
+   verdad (ver conocimiento.md), esta misma estructura de datos le sirve de
+   entrada en vez de tener que rehacer el análisis. */
+function computeDeckStrategy(deck) {
+  const entries = Object.entries(deck.cards);
+  const cardsFull = entries.map(([cid, q]) => ({ card: state.cards.find((c) => c.id === cid), cid, q })).filter((x) => x.card);
+  const total = cardsFull.reduce((a, x) => a + x.q, 0);
+
+  const byType = {};
+  for (const { card, q } of cardsFull) byType[card.type] = (byType[card.type] || 0) + q;
+
+  const allies = cardsFull.filter((x) => x.card.type === "Aliado");
+  const allyTotal = allies.reduce((a, x) => a + x.q, 0);
+
+  const curve = {};
+  for (const { card, q } of allies) {
+    const c = card.cost ?? 0;
+    curve[c] = (curve[c] || 0) + q;
+  }
+  const avgCost = allyTotal ? allies.reduce((a, x) => a + (x.card.cost || 0) * x.q, 0) / allyTotal : 0;
+  const lowCost = allies.filter((x) => (x.card.cost ?? 99) <= 2).reduce((a, x) => a + x.q, 0);
+  const highCost = allies.filter((x) => (x.card.cost ?? 0) >= 6).reduce((a, x) => a + x.q, 0);
+
+  const byRace = {};
+  for (const { card, q } of allies) {
+    if (card.race && card.race !== "—") byRace[card.race] = (byRace[card.race] || 0) + q;
+  }
+  const raceEntries = Object.entries(byRace).sort((a, b) => b[1] - a[1]);
+  const topRace = raceEntries[0] || null;
+  const raceConcentration = allyTotal && topRace ? topRace[1] / allyTotal : 0;
+
+  // Regla general de MyL: máximo 3 copias por nombre de carta (las únicas son
+  // 1, pero el catálogo no marca hoy cuáles son "única" así que no se filtra
+  // eso acá — ver nota en la recomendación).
+  const overLimit = cardsFull.filter((x) => x.q > 3);
+  const banIssues = cardsFull.filter((x) => banlistWarning(x.card, x.q));
+  const missingCopies = cardsFull.reduce((a, x) => a + Math.max(0, x.q - store.getQty(x.cid)), 0);
+
+  return { total, byType, allies, allyTotal, curve, avgCost, lowCost, highCost, raceEntries, topRace, raceConcentration, overLimit, banIssues, missingCopies };
+}
+
+function deckStrategyText(deck) {
+  const s = computeDeckStrategy(deck);
+  if (!s.total) return null;
+
+  const fortalezas = [];
+  const debilidades = [];
+  const recomendaciones = [];
+
+  if (s.total === 50) fortalezas.push("Tiene exactamente 50 cartas: el tamaño estándar del Mazo Castillo en Mitos y Leyendas.");
+  else if (s.total < 50) debilidades.push(`Tiene ${s.total} cartas — la construcción estándar usa 50 (te faltarían ${50 - s.total}; algunos formatos especiales usan otra regla).`);
+  else debilidades.push(`Tiene ${s.total} cartas, por sobre las 50 de la construcción estándar. Más cartas diluye la probabilidad de sacar tus piezas clave en un turno dado.`);
+
+  if (s.overLimit.length) {
+    recomendaciones.push(`${s.overLimit.length} carta${s.overLimit.length === 1 ? "" : "s"} supera${s.overLimit.length === 1 ? "" : "n"} las 3 copias que permite la regla general (las cartas "única" son solo 1 copia — revisa si alguna de estas lo es): ${s.overLimit.map((x) => `${displayName(x.card)} ×${x.q}`).join(", ")}.`);
+  }
+
+  const allyPct = s.total ? Math.round((s.allyTotal / s.total) * 100) : 0;
+  if (!s.allyTotal) debilidades.push("No tiene ningún Aliado — son las únicas cartas que atacan y defienden, sin ellos el mazo no puede jugarse.");
+  else if (allyPct < 40) debilidades.push(`Solo ${allyPct}% del mazo son Aliados (${s.allyTotal} de ${s.total}). Con pocos, te puedes quedar sin línea de batalla tras los primeros intercambios.`);
+  else if (allyPct <= 65) fortalezas.push(`Buena proporción de Aliados (${allyPct}% del mazo, ${s.allyTotal} cartas).`);
+  else debilidades.push(`${allyPct}% del mazo son Aliados — muy alto; puede faltarte remoción o soporte (Talismanes/Armas/Tótems) para complementarlos.`);
+
+  if (s.allyTotal) {
+    if (s.avgCost <= 3.5) fortalezas.push(`Curva de coste baja (promedio ${s.avgCost.toFixed(1)}): buen ritmo desde los primeros turnos.`);
+    else if (s.avgCost > 5) debilidades.push(`Curva de coste alta (promedio ${s.avgCost.toFixed(1)}): puede costarte tener presencia en el tablero temprano.`);
+    if (s.lowCost === 0) debilidades.push("No hay Aliados de coste 0 a 2: sin jugadas tempranas, dependes de tus Oros para llegar a las cartas caras.");
+    if (s.highCost === 0) recomendaciones.push("No hay Aliados de coste 6 o más: considera 1-2 amenazas grandes para cerrar partidas que se alargan.");
+  }
+
+  if (s.topRace) {
+    const [raceName, raceQty] = s.topRace;
+    const pct = Math.round(s.raceConcentration * 100);
+    if (pct >= 50) fortalezas.push(`Fuerte identidad racial: ${pct}% de tus Aliados son ${raceName} (${raceQty} de ${s.allyTotal}). Revisa si tus Talismanes/Tótems dan bonos a esa raza para aprovecharlo al máximo.`);
+    else if (s.raceEntries.length >= 5 && pct < 25) debilidades.push(`Los Aliados están repartidos en ${s.raceEntries.length} razas distintas sin ninguna dominante. La mayoría de las sinergias en MyL son por raza — así es difícil que tus cartas se potencien entre sí.`);
+  }
+
+  if (s.banIssues.length) {
+    const label = state.banlist?.meta?.updateLabel ? ` (ban list ${state.banlist.meta.updateLabel})` : "";
+    debilidades.push(`${s.banIssues.length} carta${s.banIssues.length === 1 ? "" : "s"} con problemas en el formato Racial Edición${label} — detalle en la pestaña Cartas.`);
+  }
+  if (s.missingCopies > 0) {
+    recomendaciones.push(`Te faltan ${s.missingCopies} copia${s.missingCopies === 1 ? "" : "s"} en tu colección física para poder armar este mazo tal cual está.`);
+  }
+
+  if (!fortalezas.length) fortalezas.push("Todavía no hay suficientes cartas para identificar fortalezas claras.");
+  if (!debilidades.length) debilidades.push("No se detectaron problemas estructurales con las reglas revisadas.");
+  if (!recomendaciones.length) recomendaciones.push("Sin recomendaciones adicionales por ahora.");
+
+  const diagnostico = `Mazo de ${s.total} cartas: ${s.allyTotal} Aliados, ${s.byType["Talismán"] || 0} Talismanes, ${s.byType["Arma"] || 0} Armas, ${s.byType["Tótem"] || 0} Tótems, ${s.byType["Oro"] || 0} Oros${s.byType["Monumento"] ? `, ${s.byType["Monumento"]} Monumentos` : ""}.`;
+
+  return { diagnostico, fortalezas, debilidades, recomendaciones };
+}
+
+function renderDeckStrategy(deck) {
+  const box = $("#deck-strategy");
+  if (!box) return;
+  const total = Object.values(deck.cards).reduce((a, b) => a + b, 0);
+  if (!total) { box.innerHTML = `<p class="muted">Mazo vacío — agrega cartas en la pestaña «Cartas» para ver un diagnóstico.</p>`; return; }
+  const r = deckStrategyText(deck);
+  const li = (arr) => arr.map((t) => `<li>${escapeHtml(t)}</li>`).join("");
+  box.innerHTML = `
+    <p class="muted strat-note">Análisis automático por reglas (curva de coste, proporciones, sinergia racial, ban list) — todavía no es una IA conversacional que lea habilidades en detalle.</p>
+    <div class="strat-section"><h4>Diagnóstico</h4><p>${escapeHtml(r.diagnostico)}</p></div>
+    <div class="strat-section"><h4>💪 Fortalezas</h4><ul>${li(r.fortalezas)}</ul></div>
+    <div class="strat-section"><h4>⚠️ Debilidades</h4><ul>${li(r.debilidades)}</ul></div>
+    <div class="strat-section"><h4>🛠️ Recomendaciones</h4><ul>${li(r.recomendaciones)}</ul></div>`;
+}
+
+/* ===================== Distribución (foto fija por zonas) =====================
+   Agrupa las cartas del mazo como se verían repartidas en una mesa de juego
+   (Aliados / Talismanes-Armas-Tótems / Oro), al estilo de la vista de
+   partida de mazos.cl — pero es una foto fija de la LISTA del mazo, no un
+   simulador: no hay turnos, mano ni zonas que cambien con el juego. */
+function renderDeckDistribution(deck) {
+  const box = $("#deck-distribution");
+  if (!box) return;
+  const entries = Object.entries(deck.cards);
+  if (!entries.length) { box.innerHTML = `<p class="muted">Mazo vacío — agrega cartas en la pestaña «Cartas» para ver la distribución.</p>`; return; }
+
+  const groups = {
+    Aliado: { title: "🛡️ Aliados", cards: [] },
+    Apoyo: { title: "✨ Talismanes, Armas y Tótems", cards: [] },
+    Oro: { title: "🪙 Oro", cards: [] },
+    Otro: { title: "🃏 Otras", cards: [] },
+  };
+  const SUPPORT_TYPES = new Set(["Talismán", "Arma", "Tótem"]);
+  for (const [cid, q] of entries) {
+    const card = state.cards.find((c) => c.id === cid);
+    if (!card) continue;
+    const bucket = card.type === "Oro" ? "Oro" : card.type === "Aliado" ? "Aliado" : SUPPORT_TYPES.has(card.type) ? "Apoyo" : "Otro";
+    groups[bucket].cards.push({ card, q });
+  }
+
+  let html = "";
+  for (const key of ["Aliado", "Apoyo", "Oro", "Otro"]) {
+    const g = groups[key];
+    if (!g.cards.length) continue;
+    const total = g.cards.reduce((a, x) => a + x.q, 0);
+    g.cards.sort((a, b) => displayName(a.card).localeCompare(displayName(b.card), "es"));
+    html += `<div class="dist-zone">
+      <div class="dist-zone-title">${g.title} <span class="muted">(${total})</span></div>
+      <div class="cards-grid dist-grid">${g.cards.map(({ card, q }) => distCardHtml(card, q)).join("")}</div>
+    </div>`;
+  }
+  box.innerHTML = html;
+}
+
+function distCardHtml(card, q) {
+  const dName = displayName(card);
+  const img = card.image
+    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
+    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div></div>`;
+  return `<div class="card dist-card">
+    <div class="card-img">
+      <span class="badge-num">×${q}</span>
+      ${img}
+    </div>
+    <div class="card-body"><div class="card-name">${escapeHtml(dName)}</div></div>
+  </div>`;
 }
 
 function updateDeckCounts() {
