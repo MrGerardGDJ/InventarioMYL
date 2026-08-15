@@ -294,7 +294,8 @@ main { padding: 0; }
 /* Indicador "Disponible ×n" en las tarjetas y control del modal de detalle */
 .card-trade { color: var(--accent-2); font-weight: 600; }
 .trade-ctl { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 13px; flex-wrap: wrap; }
-.deck-hint { font-size: 11.5px; color: var(--danger); margin-bottom: 14px; min-height: 1em; }
+.deck-hint { font-size: 11.5px; margin-bottom: 14px; min-height: 1em; }
+.deck-hint.warn { color: var(--danger); font-weight: 600; }
 
 /* ===== Gestor de ediciones personalizadas ===== */
 .ed-list, .ed-cards {

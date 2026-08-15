@@ -378,6 +378,42 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-15 (30ª iteración) — Ajuste de la 29ª: etiqueta "Disponible" en el control del modal + desglose siempre visible (Colección/Para cambio/En mazo)
+- Tras la 29ª iteración, el dueño probó la app y notó dos cosas: el
+  control del modal de detalle seguía diciendo "Para cambio" (el
+  número mostrado era lo ofrecido en bruto, no lo disponible en vivo),
+  y quería ver explícitamente DÓNDE están las copias que no aparecen
+  como disponibles, no solo un aviso cuando hay un problema.
+- `js/app.js`: la etiqueta del control pasó a **"Disponible:"** y el
+  número que muestra (y el que se actualiza al usar +/-) ahora es
+  `store.getAvailableQty()` (en vivo) en vez de `getTradeQty()` (bruto)
+  — el +/- del control sigue editando el total ofrecido por debajo
+  (`trade[id]`), pero lo que se ve siempre es lo realmente disponible.
+  Se agregó `tradeBreakdown(cardId)`, que reparte el total que tienes
+  de una carta en 3 baldes que **siempre suman el total que posees**
+  (para que ninguna copia quede "perdida" en la cuenta): `coleccion`
+  (= tenidas − ofrecidas), `paraCambio` (= disponible en vivo) y
+  `enMazo` (= ofrecidas − disponible). Si algún mazo llegara a usar más
+  copias de las que están ofrecidas, `enMazo` se recorta al total
+  ofrecido en vez de mostrar un número que no cuadre.
+  `renderDeckHint(el, cardId)` pinta esa leyenda ("Colección: X · Para
+  cambio: Y · En mazo: Z") bajo el control, siempre visible (antes solo
+  aparecía si había copias en algún mazo) y solo la pinta en rojo si
+  `enMazo > 0` — si no hay nada comprometido es información neutra, no
+  una advertencia.
+- Mismo desglose en la tarjeta de la vista Cambio y Ventas (antes solo
+  avisaba cuando había copias en mazos; ahora siempre muestra
+  "Colección: X · Disponible: Y · En mazo: Z").
+- `css/styles.css`: `.deck-hint` dejó de ser rojo fijo (ahora usa
+  `.deck-hint.warn` para el caso con copias comprometidas, y color
+  neutro el resto del tiempo).
+- Validado con Playwright: con 4 copias sin usar en ningún mazo, el
+  modal mostró "Disponible: 4" y el desglose "Colección: 1 · Para
+  cambio: 4 · En mazo: 0" sin la clase de aviso; tras usar 3 en un
+  mazo, mostró "Disponible: 1" y "Colección: 1 · Para cambio: 1 · En
+  mazo: 3" con la clase de aviso activa; la vista Cambio y Ventas
+  mostró la misma cuenta. 0 `pageerror`.
+
 ### 2026-08-15 (29ª iteración) — "Disponible" reemplaza el concepto de "Cambio": se ajusta solo al sumar copias y se descuenta por uso en mazos
 - El dueño planteaba una molestia real de uso diario: cuando sumaba
   copias al inventario, "para cambio" no subía solo — tenía que
