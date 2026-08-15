@@ -356,6 +356,23 @@ def strip_wiki(s):
     return s.replace("'''", "").replace("''", "").strip()
 
 
+
+# El wiki a veces lista el tipo "detallado" en vez del genérico que usa el
+# resto de la app (ej. "Oro Con Habilidad"/"Oro Sin Habilidad" en vez de
+# "Oro", o "Talisman"/"Totem" sin tilde) — normalizar acá evita que la carta
+# quede con un tipo que no calza con ningún filtro/ícono/agrupación de la app.
+TYPE_ALIASES = {
+    "oro con habilidad": "Oro",
+    "oro sin habilidad": "Oro",
+    "talisman": "Talismán",
+    "totem": "Tótem",
+}
+
+
+def normalize_type(t):
+    return TYPE_ALIASES.get(str(t or "").strip().lower(), t)
+
+
 def first_image_file(imagen_field):
     if not imagen_field:
         return None
@@ -485,7 +502,7 @@ def build_row(card, txt, special_id="", trust_image=True):
         "numero": "" if special_id else card.get("num", ""),
         "especial": special_id,
         "nombre": card["name"],
-        "tipo": strip_wiki(d.get("tipo", "")) or card.get("type", ""),
+        "tipo": normalize_type(strip_wiki(d.get("tipo", "")) or card.get("type", "")),
         "raza": strip_wiki(d.get("raza", "")),
         "rareza": strip_wiki(d.get("frecuencia", "")) or card.get("rarity", ""),
         "coste": coste,
