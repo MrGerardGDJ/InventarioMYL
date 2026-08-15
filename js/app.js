@@ -518,6 +518,21 @@ function cardEl(card, navList) {
   return el;
 }
 
+// Reparte el total que tienes de una carta en 3 baldes que SIEMPRE suman el
+// total (para poder mostrar "dónde están tus cartas" sin que los números
+// dejen copias sin contar): colección (las que nunca marcaste para cambio),
+// paraCambio (ofrecidas y libres ahora mismo — esto es "lo disponible") y
+// enMazo (ofrecidas pero que un mazo tuyo está usando). Si en algún momento
+// un mazo usa más copias de las que tienes ofrecidas, enMazo se recorta a lo
+// ofrecido (no puede "deber" más que eso) y paraCambio queda en 0.
+function tradeBreakdown(cardId) {
+  const owned = store.getQty(cardId);
+  const offered = store.getTradeQty(cardId);
+  const paraCambio = store.getAvailableQty(cardId); // max(0, offered - copias en mazos)
+  const enMazo = offered - paraCambio; // el resto de lo ofrecido, en uso en algún mazo
+  return { owned, offered, coleccion: owned - offered, paraCambio, enMazo };
+}
+
 // "Disponible ×N": copias que tienes marcadas para cambio/venta y que
 // ningún mazo tuyo está usando ahora mismo (store.getAvailableQty). Vacío si
 // no hay ninguna disponible, para no ensuciar la tarjeta.
@@ -526,14 +541,15 @@ function availableMetaHtml(cardId) {
   return avail > 0 ? `<div class="card-meta card-trade">Disponible ×${avail}</div>` : "";
 }
 
-// Nota que aparece bajo "Para cambio" cuando algún mazo tuyo está usando
-// copias de esta carta: aclara por qué lo disponible es menor a lo ofrecido.
-function deckHintHtml(cardId) {
-  const offered = store.getTradeQty(cardId);
-  const avail = store.getAvailableQty(cardId);
-  const inDecks = offered - avail;
-  if (inDecks <= 0) return "";
-  return `⚠️ ${inDecks} copia${inDecks === 1 ? "" : "s"} en uso en tus mazos — disponible ahora: ${avail}`;
+// Desglose siempre visible de dónde están las copias de esta carta, para
+// que el dueño no tenga que adivinar por qué "disponible" es menor a lo que
+// marcó para cambio. Pinta en rojo solo si hay copias comprometidas en un
+// mazo (si no, es pura información, no una advertencia).
+function renderDeckHint(el, cardId) {
+  if (!el) return;
+  const b = tradeBreakdown(cardId);
+  el.textContent = b.owned ? `Colección: ${b.coleccion} · Para cambio: ${b.paraCambio} · En mazo: ${b.enMazo}` : "";
+  el.classList.toggle("warn", b.enMazo > 0);
 }
 
 // Cambia la cantidad de una carta desde la grilla y actualiza SOLO los nodos
@@ -622,13 +638,13 @@ function openModal(card, navList, navIndex) {
           <button class="btn small" data-add-deck>🃏 Añadir a mazo</button>
         </div>
         <div class="trade-ctl">
-          <span class="muted">Para cambio:</span>
+          <span class="muted">Disponible:</span>
           <button class="qty-btn" data-t="minus">−</button>
-          <b data-role="tqty">${store.getTradeQty(card.id)}</b>
+          <b data-role="tqty">${store.getAvailableQty(card.id)}</b>
           <button class="qty-btn" data-t="plus">+</button>
-          <span class="muted">copias ofrecidas (máximo: las que tienes)</span>
+          <span class="muted">copias listas para cambiar, vender o meter a un mazo</span>
         </div>
-        <div class="muted deck-hint" data-role="deckhint">${deckHintHtml(card.id)}</div>
+        <div class="muted deck-hint" data-role="deckhint"></div>
         <div class="sync-row" style="margin-top:4px">
           <button class="btn small" data-edit-card>✏️ Editar</button>
           ${card.userCustom
@@ -641,6 +657,7 @@ function openModal(card, navList, navIndex) {
       </div>
     </div>`;
 
+  renderDeckHint(box.querySelector('[data-role="deckhint"]'), card.id);
   box.querySelector("[data-close]").onclick = closeModal;
   const zoomEl = box.querySelector("[data-zoom]");
   if (zoomEl) zoomEl.onclick = () => openZoom(card.image, card.name);
@@ -678,21 +695,22 @@ function openModal(card, navList, navIndex) {
       // Cambiar la cantidad ajusta lo disponible por defecto (ver
       // autoAdjustTradeOnQtyChange en store.js): refleja el nuevo valor.
       const tq = box.querySelector('[data-role="tqty"]');
-      if (tq) tq.textContent = store.getTradeQty(card.id);
-      const dh = box.querySelector('[data-role="deckhint"]');
-      if (dh) dh.innerHTML = deckHintHtml(card.id);
+      if (tq) tq.textContent = store.getAvailableQty(card.id);
+      renderDeckHint(box.querySelector('[data-role="deckhint"]'), card.id);
     };
   });
-  // Control "Para cambio" del detalle (marcar/desmarcar copias ofrecidas)
+  // Control "Disponible" del detalle (marcar/desmarcar copias ofrecidas para
+  // cambio/venta/mazo — el +/- edita el total ofrecido; lo mostrado es lo
+  // disponible EN VIVO, que puede no subir si un mazo ya está usando el resto)
   box.querySelectorAll("[data-t]").forEach((b) => {
     b.onclick = () => {
-      const before = store.getTradeQty(card.id);
-      const after = store.addTradeQty(card.id, b.dataset.t === "plus" ? 1 : -1);
-      if (b.dataset.t === "plus" && after === before) {
-        showToast(before === 0 ? "Primero marca que tienes la carta (+)" : "Ya ofreces todas tus copias", 2800);
+      const beforeOffered = store.getTradeQty(card.id);
+      const afterOffered = store.addTradeQty(card.id, b.dataset.t === "plus" ? 1 : -1);
+      if (b.dataset.t === "plus" && afterOffered === beforeOffered) {
+        showToast(beforeOffered === 0 ? "Primero marca que tienes la carta (+)" : "Ya ofreces todas tus copias", 2800);
       }
-      box.querySelector('[data-role="tqty"]').textContent = after;
-      box.querySelector('[data-role="deckhint"]').innerHTML = deckHintHtml(card.id);
+      box.querySelector('[data-role="tqty"]').textContent = store.getAvailableQty(card.id);
+      renderDeckHint(box.querySelector('[data-role="deckhint"]'), card.id);
       const gridCard = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
       const availEl = gridCard?.querySelector('[data-role="avail"]');
       if (availEl) availEl.innerHTML = availableMetaHtml(card.id);
@@ -1913,9 +1931,8 @@ function renderTradeValue(entries) {
 // referencial y los botones Intercambiar/Vender en vez del selector de mazo.
 // navList: ver cardEl().
 function tradeCardEl(card, navList) {
-  const offered = store.getTradeQty(card.id);
-  const owned = store.getQty(card.id);
-  const available = store.getAvailableQty(card.id);
+  const b = tradeBreakdown(card.id);
+  const { offered, owned, paraCambio: available } = b;
   const el = document.createElement("div");
   el.className = "card owned";
   el.dataset.id = card.id;
@@ -1948,9 +1965,7 @@ function tradeCardEl(card, navList) {
         <button class="qty-btn" data-tr="plus" ${offered >= owned ? "disabled" : ""}>+</button>
         <span class="muted trade-qty-label">ofrecidas</span>
       </div>
-      ${offered > available
-        ? `<div class="trade-avail-note">⚠️ ${offered - available} en uso en mazos — disponibles ahora: <b>${available}</b></div>`
-        : `<div class="trade-avail-note ok">✓ Las ${available} están disponibles ahora</div>`}
+      <div class="trade-avail-note${offered > available ? "" : " ok"}">Colección: ${b.coleccion} · Disponible: <b>${available}</b> · En mazo: ${b.enMazo}</div>
       ${priceHtml}
       <div class="trade-actions">
         <button class="btn small" data-exchange ${available < 1 ? "disabled" : ""}>Intercambiar</button>
