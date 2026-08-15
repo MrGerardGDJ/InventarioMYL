@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Scraper de cartas de Mitos y Leyendas (api.myl.cl) para Inventario MyL.",
   "scripts": {
-    "scrape": "node scrape.js"
+    "scrape": "node scrape.js",
+    "scrape-banlist": "node scrape-banlist.js"
   }
 }

@@ -378,6 +378,122 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-15 (26ª iteración) — Mazos en 4 pestañas (Cartas/Estadística/Estrategia/Distribución) + ban list automática del formato Racial Edición
+- El dueño pidió mejorar la construcción de mazos con varias cosas a la
+  vez: (1) que la app avise en rojo cuando una carta del mazo está en
+  la ban list oficial de Fénix (`blog.myl.cl/ban-list-primera-era-
+  formato-racial-edicion`, se actualiza mes a mes) o cuando se pasa de
+  copias permitidas; (2) un botón de "revisión de estrategia" con
+  diagnóstico/fortalezas/debilidades/recomendaciones; (3) una vista de
+  distribución por imagen agrupada en Oro/Aliados/Armas/Talismanes/
+  Tótems; (4) reorganizar el detalle de un mazo en 4 tabs bajo su
+  nombre: Cartas, Estadística (lo que ya existía), Estrategia y
+  Distribución.
+- Antes de implementar se preguntó explícitamente por dos decisiones
+  de diseño: **IA de estrategia** — el sitio es estático (GitHub
+  Pages, sin servidor propio), así que una IA real necesitaría una API
+  key, y exponerla en el navegador dejaría que cualquier visitante la
+  use a costa del dueño. Se acordó una **primera fase sin IA externa**
+  (análisis 100% por reglas, gratis, corre al instante en el
+  navegador), dejando la arquitectura lista para enchufar una IA real
+  más adelante (posiblemente Ollama u otra opción gratuita) sin tener
+  que rehacer el análisis. **Tab Distribución** — se acordó que fuera
+  una foto fija agrupada por tipo (no un simulador de partida jugable
+  como mazos.cl, que es un proyecto mucho más grande).
+- **Scraper nuevo — `scraper/scrape-banlist.js`**: parsea las 3 tablas
+  HTML del artículo de blog.myl.cl (prohibidas / límite 1 copia /
+  límite 2 copias × 5 ediciones: El Reto, Mundo Gótico, La Ira del
+  Nahual, Ragnarok, Espíritu de Dragón), resuelve el slug de edición
+  contra `data/editions.json` (con normalización que ignora tildes y
+  palabras de enlace "de/del/la", ej. "Espíritu de Dragón" ↔ "Espiritu
+  Del Dragon") y escribe `data/banlist.json` (108 entradas: 43
+  prohibidas, 33 a 1 copia, 32 a 2 copias, más metadatos de la
+  actualización). Se agregó como paso nuevo en
+  `.github/workflows/scrape-data.yml`, corre junto al scraper de
+  cartas cada semana y solo commitea si el contenido cambió; si
+  blog.myl.cl cambia de formato y el parser falla, el workflow sigue
+  (no tumba la actualización del catálogo) y se queda con el
+  `banlist.json` anterior.
+- **Hallazgo al validar el matching**: cruzar por (edición, nombre)
+  tal como las agrupa la propia página solo resolvía ~65% de las 108
+  cartas contra el catálogo — la página agrupa por "edición que da
+  soporte a esa raza", que no siempre es la edición real en la que TOR
+  tiene catalogada la carta (ej. "Grifo"/"Trauko"/"Kanillu" figuran
+  bajo la columna "La Ira del Nahual" pero el catálogo los tiene como
+  "El Reto", su edición de impresión original). Matchear solo por
+  **nombre** (sin exigir la edición) resuelve 104/108 (~96%); las 4
+  restantes son erratas de tipeo del propio blog ("Niahm" en vez de
+  "Niamh", "Anima Negra" en vez de "Nima Negra", "Zhang Guo La" en vez
+  de "Zhang Guo Lao") — se corrigieron con un alias chico
+  (`BANLIST_NAME_ALIASES` en `js/app.js`) para llegar a 108/108. Es un
+  aviso informativo pensado para UN formato específico, no una
+  validación de legalidad general — un mazo para otro formato puede
+  mostrar el aviso igual y no aplicarle.
+- **`js/app.js`**:
+  - `loadData()` ahora también trae `data/banlist.json` (mismo patrón
+    de cache-busting que los otros 4 archivos).
+  - `getBanlistEntry(card)`/`banlistWarning(card, qty)`: lookup por
+    nombre normalizado (tildes fuera + alias de erratas), devuelve
+    texto de aviso ("Prohibida en Racial Edición…" o "Máx. N copias
+    en Racial Edición, tienes M…") o `""` si no aplica.
+  - `renderDeckContents()`: cada fila del mazo muestra el aviso en
+    rojo (`.dr-ban`) bajo la carta si corresponde, y el banner de
+    arriba (ya usado para "te faltan copias") suma un segundo aviso
+    rojo con el total de cartas con problemas.
+  - `renderDeckDetail()` ahora arma 4 tabs (`.deck-tabs`/
+    `.deck-tab-panel`, reutiliza `.tabs`/`.tab` del nav principal) —
+    Cartas (lo que ya había: buscador + listado + banner), Estadística
+    (el `renderDeckSummary` que ya existía, sin cambios), Estrategia y
+    Distribución nuevas. La tab activa es una sola variable global
+    (`deckTab`), no por mazo — cambiar de mazo mantiene la pestaña que
+    se estaba mirando.
+  - **Estrategia** (`computeDeckStrategy`/`deckStrategyText`/
+    `renderDeckStrategy`): cálculo separado del texto a propósito (si
+    más adelante se conecta una IA real, esa función de cálculo le
+    sirve de entrada tal cual). Revisa: tamaño del mazo contra las 50
+    cartas de la construcción estándar (confirmado por fuente externa,
+    ver Fuentes), copias por sobre el límite general de 3 (Oro
+    incluido — la regla no distingue por tipo), proporción de Aliados,
+    curva de coste (promedio + ausencia de jugadas tempranas/tardías),
+    concentración racial de los Aliados (identidad fuerte vs. muy
+    repartida, ya que casi todas las sinergias en MyL son por raza),
+    cumplimiento de la ban list, y copias que faltan en la colección
+    física. Arma diagnóstico + listas de fortalezas/debilidades/
+    recomendaciones.
+  - **Distribución** (`renderDeckDistribution`/`distCardHtml`): agrupa
+    las cartas del mazo en 3-4 zonas visuales (Aliados / Talismanes-
+    Armas-Tótems / Oro / Otras) con la imagen de cada carta y su
+    cantidad, estilo "foto de mesa" pero estática — sin turnos, mano
+    ni simulación de partida.
+- **`index.html`**: sin cambios estructurales grandes — los 4 paneles
+  se generan desde `js/app.js` dentro de `#deck-detail`.
+- **`css/styles.css`**: `.deck-tabs`/`.deck-tab-panel`, `.dr-ban`
+  (aviso rojo por fila), `.ban-banner` (banner rojo de arriba),
+  `.strat-*` (secciones de Estrategia), `.dist-*` (zonas de
+  Distribución, reutiliza `.cards-grid`/`.card`/`.card-img` del
+  Catálogo para las miniaturas).
+- Validado con Playwright: mazo de prueba sembrado con una carta
+  prohibida (Orejona), una en el límite de 1 copia (Grootslang, dentro
+  del límite), una en el límite de 2 copias con 3 puestas (Knochen,
+  fuera del límite), y un Oro repetido 5 veces (fuera del límite
+  general de 3) — el banner y las 2 filas correspondientes mostraron
+  el aviso en rojo esperado (Knochen sí, Grootslang no por estar
+  dentro del límite), la tab Estrategia mencionó ambos problemas
+  (ban list + copias de más) con fortalezas/debilidades acertadas
+  para la composición armada a propósito, la tab Distribución agrupó
+  correctamente en 3 zonas, y el cambio entre las 4 tabs mostró
+  siempre un solo panel visible a la vez. 0 `pageerror` en todos los
+  escenarios.
+- **Fuentes externas usadas para las reglas generales** (no inventadas):
+  tamaño estándar de 50 cartas y límite de 3 copias por nombre desde
+  [Reglas de Mitos y Leyendas — cartasmitosyleyendasoficial](https://cartasmitosyleyendasoficial.wordpress.com/reglas-de-mitos-y-leyendas/);
+  reglas específicas del formato Racial Edición y su ban list desde
+  [blog.myl.cl](https://blog.myl.cl/ban-list-primera-era-formato-racial-edicion/).
+- **Pendiente para una fase futura** (ya conversado con el dueño, no
+  implementado todavía): conectar una IA real (posiblemente gratuita
+  vía Ollama) para que la Estrategia lea habilidades y combos en
+  lenguaje natural en vez de solo reglas numéricas.
+
 ### 2026-08-10 (25ª iteración) — Modal de detalle: navegar anterior/siguiente sin cerrar (botones ‹ › + flechas del teclado)
 - El dueño pidió poder avanzar/retroceder entre cartas del listado
   actual sin tener que cerrar el detalle y volver a hacer clic en la
