@@ -42,12 +42,16 @@ function sortedEntries(map, limit) {
 
 const FMT_NAMES = { PE: "Primera Era", PB: "Primer Bloque", SB: "Segundo Bloque", FX: "Furia Ext.", NE: "Nueva Era/IMP" };
 
-export async function renderCharts({ cards, getQty, scope = "all", format = "" }) {
-  await loadScript(CDN.chart);
+function setChartDefaults() {
   const Chart = window.Chart;
   Chart.defaults.color = cssVar("--muted") || "#9aa1b2";
   Chart.defaults.font.family = "Segoe UI, system-ui, sans-serif";
   Chart.defaults.plugins.legend.labels.boxWidth = 12;
+}
+
+export async function renderCharts({ cards, getQty, scope = "all", format = "" }) {
+  await loadScript(CDN.chart);
+  setChartDefaults();
 
   // Conjunto base (respeta formato elegido en estadísticas)
   const base = format ? cards.filter((c) => c.format === format) : cards;
@@ -136,5 +140,52 @@ export async function renderCharts({ cards, getQty, scope = "all", format = "" }
       datasets: [{ label: "Cartas", data: byRarity.map((e) => e[1]), backgroundColor: "#9b5de5", borderRadius: 4 }],
     },
     options: { ...baseOpts(), plugins: { legend: { display: false } } },
+  });
+}
+
+// Gráficos de la pestaña Estadística de UN mazo (mismos colores/estilo que
+// renderCharts para que se vean como parte de la misma app, no un widget
+// aparte). `strategy` es el resultado de computeDeckStrategy() en app.js.
+export async function renderDeckCharts(strategy) {
+  await loadScript(CDN.chart);
+  setChartDefaults();
+
+  const baseOpts = (legend = "right") => ({
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: legend } },
+  });
+
+  // Curva de coste (Aliados) — mismo azul que la curva de coste global
+  const costKeys = Object.keys(strategy.curve).map(Number).sort((a, b) => a - b).map(String);
+  draw("deck-chart-cost", {
+    type: "bar",
+    data: {
+      labels: costKeys,
+      datasets: [{ label: "Aliados", data: costKeys.map((k) => strategy.curve[k] || 0), backgroundColor: "#5b8def", borderRadius: 4 }],
+    },
+    options: { ...baseOpts(), plugins: { legend: { display: false } } },
+  });
+
+  // Distribución por tipo — mismo PALETTE que "Por tipo" en Estadísticas
+  const typeEntries = Object.entries(strategy.byType).sort((a, b) => b[1] - a[1]);
+  draw("deck-chart-type", {
+    type: "doughnut",
+    data: {
+      labels: typeEntries.map((e) => e[0]),
+      datasets: [{ data: typeEntries.map((e) => e[1]), backgroundColor: PALETTE, borderWidth: 0 }],
+    },
+    options: baseOpts("right"),
+  });
+
+  // Razas de los Aliados — mismo dorado que "Top razas" en Estadísticas
+  const raceEntries = strategy.raceEntries.slice(0, 12);
+  draw("deck-chart-race", {
+    type: "bar",
+    data: {
+      labels: raceEntries.map((e) => e[0]),
+      datasets: [{ label: "Aliados", data: raceEntries.map((e) => e[1]), backgroundColor: "#c9a13b", borderRadius: 4 }],
+    },
+    options: { ...baseOpts(), indexAxis: "y", plugins: { legend: { display: false } } },
   });
 }
