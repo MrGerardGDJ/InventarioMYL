@@ -378,6 +378,71 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-15 (28ª iteración) — Mazos en 3 tabs: Cartas fusionada con Distribución + espacios de carta faltante + Estadística con KPIs y gráficos
+- El dueño pidió tres ajustes sobre lo agregado en la 26ª iteración: (1)
+  las cartas se ven mucho mejor en la pestaña Distribución que en la
+  lista de texto de Cartas, así que pidió fusionarlas; (2) como el
+  formato Racial Edición exige mínimo 16 Aliados, si el mazo tiene
+  menos debía haber "un espacio de carta" indicando cuántos faltan; lo
+  mismo para completar las 50 cartas del Mazo Castillo, sin perder la
+  función de buscar/añadir cartas; (3) la pestaña Estadística le
+  pareció "muy simplona", pidió mejorarla en aspecto y en datos.
+- **Fusión Cartas + Distribución**: la pestaña Distribución dejó de
+  existir por separado — el mazo pasó de 4 a 3 tabs (Cartas/
+  Estadística/Estrategia). `renderDeckContents()` ahora arma las
+  mismas zonas por imagen que tenía Distribución (Aliados / Talismanes-
+  Armas-Tótems / Oro / Otras, con `deckZoneOf()`), pero cada carta
+  (`deckCardTileHtml()`) conserva toda la función que tenía la lista de
+  texto: stepper +/- de cantidad (`.qty-row`, mismo patrón que ya usan
+  las cartas de Colección), aviso de copias faltantes en la colección,
+  y el aviso de ban list — ahora como una insignia roja "⛔" en la
+  esquina de la carta (con el detalle en `title` al pasar el mouse) más
+  el texto completo debajo del nombre, y el borde de la carta se pone
+  rojo. El buscador para añadir cartas se mantuvo igual.
+- **Espacios de carta faltante** (`deckGapTileHtml()`): una carta
+  fantasma de borde punteado, del mismo tamaño que las demás, con un
+  "+" y el texto de qué falta. Aparece dentro de la zona Aliados si el
+  mazo tiene menos de `RACIAL_MIN_ALLIES` (16) Aliados ("Faltan N
+  Aliados — Mínimo 16 en el formato Racial Edición"), y como una zona
+  aparte "➕ Por completar" si el total del mazo es menor a
+  `MYL_DECK_SIZE` (50) ("Faltan N cartas — El Mazo Castillo estándar
+  usa 50 — busca arriba para completarlo"). Ambas constantes quedaron
+  compartidas con el texto de la pestaña Estrategia (que ya mencionaba
+  esas mismas reglas) para no repetir los números a mano en dos
+  lugares. El espacio de Aliados no desaparece aunque el buscador
+  superior esté filtrando esa zona a cero resultados — si no, el aviso
+  "parpadearía" con cada letra que se escribe en el buscador.
+- **Estadística mejorada**: antes eran solo unos chips ("Distribución
+  por tipo": nombre + % ) y la matriz tipo×coste. Ahora:
+  - 6 tarjetas KPI (mismo componente `.stat-card`/`statCard()` que ya
+    usa la Estadísticas general de toda la colección): cartas del mazo
+    (vs. 50), Aliados (vs. 16), coste promedio, razas distintas,
+    copias faltantes y avisos de ban list.
+  - 3 gráficos con Chart.js (`renderDeckCharts()` nuevo en
+    `js/charts.js`) reutilizando el `PALETTE` y los mismos colores por
+    tipo de gráfico que ya usa la Estadísticas general (curva de coste
+    en azul `#5b8def`, tipo en el `PALETTE` categórico, razas en
+    dorado `#c9a13b`) — se decidió así en vez de inventar una paleta
+    nueva, para que se vea como parte de la misma app y no un widget
+    aparte (revisada la skill `dataviz` antes de escribir esto: un eje,
+    color por la función del dato, nada de arcoíris).
+  - Se mantuvo la matriz "Detalle por tipo y coste" (los chips viejos
+    se sacaron porque el gráfico de tipo ya cubre esa misma info de
+    forma más visual; la matriz queda como la vista de datos exactos
+    que pide la skill junto a todo gráfico).
+- Se limpió CSS muerto que quedó de la lista de texto vieja (`.deck-
+  row`/`.dr-*`) y de los chips (`.ds-chip*`).
+- Validado con Playwright: mazo con 8 Aliados (bajo el mínimo) y 12-13
+  cartas totales (bajo las 50) — apareció el espacio "Faltan 8
+  Aliados" dentro de la zona Aliados y la zona "Por completar (37/38)"
+  aparte; el +/- de una carta real funcionó (2→3, la carta no
+  "desapareció" del grid); los 6 KPI mostraron los números correctos
+  tras el cambio; los 3 `<canvas>` de los gráficos se crean (Chart.js
+  no carga en este sandbox por la restricción de red ya documentada,
+  pero la URL del CDN se probó accesible por fuera de Playwright — en
+  el sitio publicado si carga, igual que ya lo hace la Estadísticas
+  general). Revisado también en tema claro. 0 `pageerror`.
+
 ### 2026-08-15 (27ª iteración) — Bugfix: tipos de carta no canónicos ("Oro Con Habilidad", "Talisman" sin tilde…) rotos en filtros/íconos/agrupaciones
 - El dueño preguntó por qué el Oro "Teepee" parecía tratarse distinto a
   "Puchao" siendo ambos Oro con habilidad. La causa: la carta Teepee de

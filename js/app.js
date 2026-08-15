@@ -20,7 +20,7 @@
    ========================================================================== */
 import * as store from "./store.js";
 import { exportExcel, exportPricesExcel, exportPDF, exportDeckExcel, exportDeckImage, exportCollectionPDF, deckSummary } from "./exporters.js";
-import { renderCharts } from "./charts.js";
+import { renderCharts, renderDeckCharts } from "./charts.js";
 import * as cloud from "./cloud.js";
 import { typeIcon, raceIcon, NO_STRENGTH_TYPES } from "./icons.js";
 import { importEditionFromWiki } from "./wiki-import.js";
@@ -2101,6 +2101,14 @@ function bindTradeEvents() {
   $("#sm-confirm").addEventListener("click", executeSale);
 }
 
+// Reglas generales de construcción de mazo (fuente: cartasmitosyleyendasoficial.
+// wordpress.com/reglas-de-mitos-y-leyendas — 50 cartas, 3 copias por nombre) y
+// del formato Racial Edición (mínimo de Aliados, ver blog.myl.cl/ban-list-
+// primera-era-formato-racial-edicion). Compartidas entre la pestaña Cartas
+// (espacios de carta faltante) y Estrategia (texto del diagnóstico).
+const MYL_DECK_SIZE = 50;
+const RACIAL_MIN_ALLIES = 16;
+
 /* ===================== Ban List (Primera Era — Racial Edición) =====================
    Fuente: data/banlist.json (scraper/scrape-banlist.js, se re-scrapea solo
    cada semana junto al catálogo — ver .github/workflows/scrape-data.yml).
@@ -2204,7 +2212,6 @@ function renderDeckDetail() {
       <button class="tab" data-deck-tab="cartas">🗂️ Cartas</button>
       <button class="tab" data-deck-tab="estadistica">📊 Estadística</button>
       <button class="tab" data-deck-tab="estrategia">🧠 Estrategia</button>
-      <button class="tab" data-deck-tab="distribucion">🖼️ Distribución</button>
     </div>
     <div id="deck-tab-cartas" class="deck-tab-panel">
       <div id="deck-banner"></div>
@@ -2219,9 +2226,6 @@ function renderDeckDetail() {
     </div>
     <div id="deck-tab-estrategia" class="deck-tab-panel">
       <div id="deck-strategy"></div>
-    </div>
-    <div id="deck-tab-distribucion" class="deck-tab-panel">
-      <div id="deck-distribution"></div>
     </div>`;
 
   $$("#deck-detail [data-deck-tab]").forEach((b) => (b.onclick = () => switchDeckTab(b.dataset.deckTab)));
@@ -2265,6 +2269,24 @@ function renderDeckDetail() {
   renderDeckContents(deck);
 }
 
+// Pestaña "Cartas": el listado de cartas del mazo, pero mostrado como la
+// pestaña Distribución que existía antes por separado (imágenes agrupadas
+// en zonas) — se fusionaron porque las imágenes se ven mucho mejor que la
+// lista de texto plana, sin perder ninguna función (buscador para añadir,
+// +/- de cantidad, avisos de ban list y de copias faltantes).
+const DECK_ZONE_TITLES = {
+  Aliado: "🛡️ Aliados",
+  Apoyo: "✨ Talismanes, Armas y Tótems",
+  Oro: "🪙 Oro",
+  Otro: "🃏 Otras",
+};
+const DECK_SUPPORT_TYPES = new Set(["Talismán", "Arma", "Tótem"]);
+function deckZoneOf(card) {
+  if (card.type === "Oro") return "Oro";
+  if (card.type === "Aliado") return "Aliado";
+  return DECK_SUPPORT_TYPES.has(card.type) ? "Apoyo" : "Otro";
+}
+
 function renderDeckContents(deck) {
   const cont = $("#deck-contents");
   if (!cont) return;
@@ -2272,22 +2294,25 @@ function renderDeckContents(deck) {
   const total = entries.reduce((a, [, q]) => a + q, 0);
   const totalEl = $("#deck-total"); if (totalEl) totalEl.textContent = `${total} cartas`;
 
-  // El buscador global filtra qué filas del mazo se muestran; los totales,
-  // el resumen y el aviso de faltantes siguen calculándose sobre el mazo completo
+  // El buscador global filtra qué cartas se muestran; los totales, el
+  // resumen y los avisos siguen calculándose sobre el mazo completo.
   const query = normText($("#search").value.trim());
 
-  const byType = {};
+  const groups = { Aliado: [], Apoyo: [], Oro: [], Otro: [] };
   let missing = 0;
   let banIssues = 0;
+  let allyTotal = 0;
   for (const [cid, q] of entries) {
     const card = state.cards.find((c) => c.id === cid);
+    if (!card) continue;
     const own = store.getQty(cid);
     if (own < q) missing += q - own;
-    if (card && banlistWarning(card, q)) banIssues++;
-    if (query && !(card ? card.searchText.includes(query) : normText(cid).includes(query))) continue;
-    const t = card ? card.type : "Otro";
-    (byType[t] ||= []).push({ card, cid, q });
+    if (banlistWarning(card, q)) banIssues++;
+    if (card.type === "Aliado") allyTotal += q;
+    if (query && !card.searchText.includes(query)) continue;
+    groups[deckZoneOf(card)].push({ card, cid, q });
   }
+
   const banner = $("#deck-banner");
   if (banner) {
     let bannerHtml = "";
@@ -2296,57 +2321,121 @@ function renderDeckContents(deck) {
     banner.innerHTML = bannerHtml;
   }
 
-  let html = "";
-  for (const [type, rows] of Object.entries(byType)) {
-    html += `<h3 class="deck-section-title">${typeIcon(type)} ${escapeHtml(type)} (${rows.reduce((a, r) => a + r.q, 0)})</h3>`;
-    for (const { card, cid, q } of rows) {
-      const name = card ? displayName(card) : cid;
-      const own = store.getQty(cid);
-      const lack = own < q ? ` <span style="color:var(--danger)">(faltan ${q - own})</span>` : "";
-      const meta = card
-        ? `${raceIcon(card.race)} ${escapeHtml(card.race)}${card.cost != null ? " · ⛁" + card.cost : ""}${card.strength != null ? " · ⚔" + card.strength : ""}`
-        : "";
-      const banWarn = card ? banlistWarning(card, q) : "";
-      html += `
-        <div class="deck-row" data-cid="${escapeAttr(cid)}">
-          <span class="dr-qty">${q}×</span>
-          <span class="dr-name">${escapeHtml(name)}${lack}<span class="dr-sub">${meta}</span>${banWarn ? `<span class="dr-ban">⛔ ${escapeHtml(banWarn)}</span>` : ""}</span>
-          <span class="dr-actions">
-            <button class="qty-btn" data-d="minus">−</button>
-            <button class="qty-btn" data-d="plus">+</button>
-          </span>
-        </div>`;
-    }
+  if (entries.length === 0) {
+    cont.innerHTML = `<p class="muted">Mazo vacío. Busca una carta arriba para añadirla, o usa 🃏＋ en la Colección.</p>`;
+    renderDeckSummary(deck); renderDeckStrategy(deck);
+    return;
   }
-  if (entries.length === 0) html = `<p class="muted">Mazo vacío. Busca una carta arriba para añadirla, o usa 🃏＋ en la Colección.</p>`;
-  else if (!html) html = `<p class="muted">Ninguna carta del mazo coincide con la búsqueda de la barra superior.</p>`;
+
+  let html = "";
+  for (const key of ["Aliado", "Apoyo", "Oro", "Otro"]) {
+    const zoneCards = groups[key];
+    // El "espacio de carta" de Aliados faltantes se muestra siempre que el
+    // mazo tenga menos del mínimo, incluso si el buscador de arriba está
+    // ocultando todas las filas de esa zona (para que no desaparezca).
+    const showAllyGap = key === "Aliado" && allyTotal < RACIAL_MIN_ALLIES;
+    if (!zoneCards.length && !showAllyGap) continue;
+    const zoneQty = zoneCards.reduce((a, x) => a + x.q, 0);
+    zoneCards.sort((a, b) => displayName(a.card).localeCompare(displayName(b.card), "es"));
+    html += `<div class="dist-zone">
+      <div class="dist-zone-title">${DECK_ZONE_TITLES[key]} <span class="muted">(${zoneQty})</span></div>
+      <div class="cards-grid dist-grid">${zoneCards.map(({ card, cid, q }) => deckCardTileHtml(card, cid, q)).join("")}`;
+    if (showAllyGap) {
+      const need = RACIAL_MIN_ALLIES - allyTotal;
+      html += deckGapTileHtml(`Faltan ${need} Aliado${need === 1 ? "" : "s"}`, `Mínimo ${RACIAL_MIN_ALLIES} en el formato Racial Edición`);
+    }
+    html += `</div></div>`;
+  }
+  if (total < MYL_DECK_SIZE) {
+    const need = MYL_DECK_SIZE - total;
+    html += `<div class="dist-zone">
+      <div class="dist-zone-title">➕ Por completar <span class="muted">(${need})</span></div>
+      <div class="cards-grid dist-grid">${deckGapTileHtml(`Faltan ${need} carta${need === 1 ? "" : "s"}`, `El Mazo Castillo estándar usa ${MYL_DECK_SIZE} — busca arriba para completarlo`)}</div>
+    </div>`;
+  }
+  if (!html) html = `<p class="muted">Ninguna carta del mazo coincide con la búsqueda de la barra superior.</p>`;
   cont.innerHTML = html;
-  cont.querySelectorAll(".deck-row").forEach((row) => {
-    const cid = row.dataset.cid;
-    row.querySelectorAll("[data-d]").forEach((b) => {
+  cont.querySelectorAll(".dist-card[data-cid]").forEach((tile) => {
+    const cid = tile.dataset.cid;
+    tile.querySelectorAll("[data-d]").forEach((b) => {
       b.onclick = () => { store.deckAdd(deck.id, cid, b.dataset.d === "plus" ? 1 : -1); renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount(); };
     });
   });
   renderDeckSummary(deck);
   renderDeckStrategy(deck);
-  renderDeckDistribution(deck);
+}
+
+function deckCardTileHtml(card, cid, q) {
+  const dName = displayName(card);
+  const own = store.getQty(cid);
+  const banWarn = banlistWarning(card, q);
+  const img = card.image
+    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
+    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div></div>`;
+  return `<div class="card dist-card${banWarn ? " has-ban" : ""}" data-cid="${escapeAttr(cid)}">
+    <div class="card-img">
+      <span class="badge-num">×${q}</span>
+      ${banWarn ? `<span class="ban-icon" title="${escapeAttr(banWarn)}">⛔</span>` : ""}
+      ${img}
+    </div>
+    <div class="card-body">
+      <div class="card-name">${escapeHtml(dName)}</div>
+      ${own < q ? `<div class="card-warn lack">Faltan ${q - own} en tu colección</div>` : ""}
+      ${banWarn ? `<div class="card-warn ban">⛔ ${escapeHtml(banWarn)}</div>` : ""}
+      <div class="qty-row">
+        <button class="qty-btn" data-d="minus">−</button>
+        <span class="qty-num">${q}</span>
+        <button class="qty-btn" data-d="plus">+</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// "Espacio de carta" punteado que marca un hueco del mazo (faltan Aliados
+// para el mínimo del formato, o cartas para llegar a las 50) — mismo tamaño
+// que una carta real para que se note al mirar la cuadrícula.
+function deckGapTileHtml(title, sub) {
+  return `<div class="card dist-card dist-gap">
+    <div class="card-img gap-img"><span class="gap-icon">➕</span></div>
+    <div class="card-body">
+      <div class="card-name">${escapeHtml(title)}</div>
+      <div class="card-meta">${escapeHtml(sub)}</div>
+    </div>
+  </div>`;
 }
 
 function renderDeckSummary(deck) {
   const box = $("#deck-summary");
   if (!box) return;
   const S = deckSummary(deck, state.cards, store.getQty, displayName);
-  if (!S.total) { box.innerHTML = ""; return; }
-  const chips = S.typesPresent.map((t) =>
-    `<div class="ds-chip"><div class="ds-t">${typeIcon(t)} ${escapeHtml(t)}</div><div class="ds-n">${S.typeTotal[t]} <span class="muted">· ${S.pct(S.typeTotal[t])}%</span></div></div>`).join("");
+  if (!S.total) { box.innerHTML = `<p class="muted">Mazo vacío — agrega cartas en la pestaña «Cartas» para ver las estadísticas.</p>`; return; }
+  const strat = computeDeckStrategy(deck);
+
+  const kpis = [
+    statCard(`${strat.total}<span class="num-of">/${MYL_DECK_SIZE}</span>`, "Cartas en el mazo"),
+    statCard(`${strat.allyTotal}<span class="num-of">/${RACIAL_MIN_ALLIES}</span>`, "Aliados (mín. Racial Ed.)"),
+    statCard(strat.allyTotal ? strat.avgCost.toFixed(1) : "—", "Coste promedio"),
+    statCard(strat.raceEntries.length, "Razas distintas"),
+    statCard(strat.missingCopies, "Copias faltantes"),
+    statCard(strat.banIssues.length, "Avisos de ban list"),
+  ].join("");
+
   const head = `<tr><th>Tipo</th>${S.cols.map((c) => `<th>${c}</th>`).join("")}<th>Total</th></tr>`;
   const body = S.typesPresent.map((t) =>
     `<tr><td>${typeIcon(t)} ${escapeHtml(t)}</td>${S.cols.map((c) => `<td>${S.matrix[t][c] || ""}</td>`).join("")}<td class="b">${S.typeTotal[t]}</td></tr>`).join("");
   const totalRow = `<tr class="tot"><td>Total</td>${S.cols.map((c) => `<td>${S.colTotal(c)}</td>`).join("")}<td>${S.total}</td></tr>`;
-  box.innerHTML =
-    `<div class="ds-title">Distribución por tipo</div><div class="ds-chips">${chips}</div>
-     <div class="ds-title">Detalle por tipo y coste</div>
-     <div class="ds-matrix"><table>${head}${body}${totalRow}</table></div>`;
+
+  box.innerHTML = `
+    <div class="stats-grid deck-kpis">${kpis}</div>
+    <div class="charts-grid deck-charts-grid">
+      <div class="chart-card"><h4>Curva de coste (Aliados)</h4><div class="chart-wrap"><canvas id="deck-chart-cost"></canvas></div></div>
+      <div class="chart-card"><h4>Distribución por tipo</h4><div class="chart-wrap"><canvas id="deck-chart-type"></canvas></div></div>
+      <div class="chart-card"><h4>Razas (Aliados)</h4><div class="chart-wrap"><canvas id="deck-chart-race"></canvas></div></div>
+    </div>
+    <div class="ds-title">Detalle por tipo y coste</div>
+    <div class="ds-matrix"><table>${head}${body}${totalRow}</table></div>`;
+
+  renderDeckCharts(strat).catch((e) => console.warn("deck charts:", e));
 }
 
 /* ===================== Estrategia (análisis por reglas) =====================
@@ -2402,9 +2491,9 @@ function deckStrategyText(deck) {
   const debilidades = [];
   const recomendaciones = [];
 
-  if (s.total === 50) fortalezas.push("Tiene exactamente 50 cartas: el tamaño estándar del Mazo Castillo en Mitos y Leyendas.");
-  else if (s.total < 50) debilidades.push(`Tiene ${s.total} cartas — la construcción estándar usa 50 (te faltarían ${50 - s.total}; algunos formatos especiales usan otra regla).`);
-  else debilidades.push(`Tiene ${s.total} cartas, por sobre las 50 de la construcción estándar. Más cartas diluye la probabilidad de sacar tus piezas clave en un turno dado.`);
+  if (s.total === MYL_DECK_SIZE) fortalezas.push(`Tiene exactamente ${MYL_DECK_SIZE} cartas: el tamaño estándar del Mazo Castillo en Mitos y Leyendas.`);
+  else if (s.total < MYL_DECK_SIZE) debilidades.push(`Tiene ${s.total} cartas — la construcción estándar usa ${MYL_DECK_SIZE} (te faltan ${MYL_DECK_SIZE - s.total}, marcadas en la pestaña Cartas; algunos formatos especiales usan otra regla).`);
+  else debilidades.push(`Tiene ${s.total} cartas, por sobre las ${MYL_DECK_SIZE} de la construcción estándar. Más cartas diluye la probabilidad de sacar tus piezas clave en un turno dado.`);
 
   if (s.overLimit.length) {
     recomendaciones.push(`${s.overLimit.length} carta${s.overLimit.length === 1 ? "" : "s"} supera${s.overLimit.length === 1 ? "" : "n"} las 3 copias que permite la regla general (las cartas "única" son solo 1 copia — revisa si alguna de estas lo es): ${s.overLimit.map((x) => `${displayName(x.card)} ×${x.q}`).join(", ")}.`);
@@ -2412,6 +2501,7 @@ function deckStrategyText(deck) {
 
   const allyPct = s.total ? Math.round((s.allyTotal / s.total) * 100) : 0;
   if (!s.allyTotal) debilidades.push("No tiene ningún Aliado — son las únicas cartas que atacan y defienden, sin ellos el mazo no puede jugarse.");
+  else if (s.allyTotal < RACIAL_MIN_ALLIES) debilidades.push(`Tiene ${s.allyTotal} Aliados — el formato Racial Edición exige un mínimo de ${RACIAL_MIN_ALLIES} (marcado en la pestaña Cartas). Si no juegas ese formato, esta regla no te aplica.`);
   else if (allyPct < 40) debilidades.push(`Solo ${allyPct}% del mazo son Aliados (${s.allyTotal} de ${s.total}). Con pocos, te puedes quedar sin línea de batalla tras los primeros intercambios.`);
   else if (allyPct <= 65) fortalezas.push(`Buena proporción de Aliados (${allyPct}% del mazo, ${s.allyTotal} cartas).`);
   else debilidades.push(`${allyPct}% del mazo son Aliados — muy alto; puede faltarte remoción o soporte (Talismanes/Armas/Tótems) para complementarlos.`);
@@ -2460,59 +2550,6 @@ function renderDeckStrategy(deck) {
     <div class="strat-section"><h4>💪 Fortalezas</h4><ul>${li(r.fortalezas)}</ul></div>
     <div class="strat-section"><h4>⚠️ Debilidades</h4><ul>${li(r.debilidades)}</ul></div>
     <div class="strat-section"><h4>🛠️ Recomendaciones</h4><ul>${li(r.recomendaciones)}</ul></div>`;
-}
-
-/* ===================== Distribución (foto fija por zonas) =====================
-   Agrupa las cartas del mazo como se verían repartidas en una mesa de juego
-   (Aliados / Talismanes-Armas-Tótems / Oro), al estilo de la vista de
-   partida de mazos.cl — pero es una foto fija de la LISTA del mazo, no un
-   simulador: no hay turnos, mano ni zonas que cambien con el juego. */
-function renderDeckDistribution(deck) {
-  const box = $("#deck-distribution");
-  if (!box) return;
-  const entries = Object.entries(deck.cards);
-  if (!entries.length) { box.innerHTML = `<p class="muted">Mazo vacío — agrega cartas en la pestaña «Cartas» para ver la distribución.</p>`; return; }
-
-  const groups = {
-    Aliado: { title: "🛡️ Aliados", cards: [] },
-    Apoyo: { title: "✨ Talismanes, Armas y Tótems", cards: [] },
-    Oro: { title: "🪙 Oro", cards: [] },
-    Otro: { title: "🃏 Otras", cards: [] },
-  };
-  const SUPPORT_TYPES = new Set(["Talismán", "Arma", "Tótem"]);
-  for (const [cid, q] of entries) {
-    const card = state.cards.find((c) => c.id === cid);
-    if (!card) continue;
-    const bucket = card.type === "Oro" ? "Oro" : card.type === "Aliado" ? "Aliado" : SUPPORT_TYPES.has(card.type) ? "Apoyo" : "Otro";
-    groups[bucket].cards.push({ card, q });
-  }
-
-  let html = "";
-  for (const key of ["Aliado", "Apoyo", "Oro", "Otro"]) {
-    const g = groups[key];
-    if (!g.cards.length) continue;
-    const total = g.cards.reduce((a, x) => a + x.q, 0);
-    g.cards.sort((a, b) => displayName(a.card).localeCompare(displayName(b.card), "es"));
-    html += `<div class="dist-zone">
-      <div class="dist-zone-title">${g.title} <span class="muted">(${total})</span></div>
-      <div class="cards-grid dist-grid">${g.cards.map(({ card, q }) => distCardHtml(card, q)).join("")}</div>
-    </div>`;
-  }
-  box.innerHTML = html;
-}
-
-function distCardHtml(card, q) {
-  const dName = displayName(card);
-  const img = card.image
-    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
-    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div></div>`;
-  return `<div class="card dist-card">
-    <div class="card-img">
-      <span class="badge-num">×${q}</span>
-      ${img}
-    </div>
-    <div class="card-body"><div class="card-name">${escapeHtml(dName)}</div></div>
-  </div>`;
 }
 
 function updateDeckCounts() {
