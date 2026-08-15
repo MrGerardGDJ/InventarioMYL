@@ -322,7 +322,7 @@ function applyFilters() {
     if (ownership === "owned" && qty < 1) return false;
     if (ownership === "missing" && qty >= 1) return false;
     if (ownership === "dup" && qty < 2) return false;
-    if (ownership === "trade" && store.getTradeQty(c.id) < 1) return false;
+    if (ownership === "trade" && store.getAvailableQty(c.id) < 1) return false;
     return true;
   });
 
@@ -499,7 +499,7 @@ function cardEl(card, navList) {
       <div class="card-name">${escapeHtml(dName)}</div>
       <div class="card-meta">${escapeHtml(card.race)} · ${escapeHtml(card.type)}</div>
       <div class="card-meta">${escapeHtml(card.editionName || "")}</div>
-      ${store.getTradeQty(card.id) > 0 ? `<div class="card-meta card-trade">En cambio ×${store.getTradeQty(card.id)}</div>` : ""}
+      <div data-role="avail">${availableMetaHtml(card.id)}</div>
       <div class="qty-row">
         <button class="qty-btn" data-act="minus">−</button>
         <span class="qty-num ${qty === 0 ? "zero" : ""}" data-role="qty">${qty}</span>
@@ -518,6 +518,24 @@ function cardEl(card, navList) {
   return el;
 }
 
+// "Disponible ×N": copias que tienes marcadas para cambio/venta y que
+// ningún mazo tuyo está usando ahora mismo (store.getAvailableQty). Vacío si
+// no hay ninguna disponible, para no ensuciar la tarjeta.
+function availableMetaHtml(cardId) {
+  const avail = store.getAvailableQty(cardId);
+  return avail > 0 ? `<div class="card-meta card-trade">Disponible ×${avail}</div>` : "";
+}
+
+// Nota que aparece bajo "Para cambio" cuando algún mazo tuyo está usando
+// copias de esta carta: aclara por qué lo disponible es menor a lo ofrecido.
+function deckHintHtml(cardId) {
+  const offered = store.getTradeQty(cardId);
+  const avail = store.getAvailableQty(cardId);
+  const inDecks = offered - avail;
+  if (inDecks <= 0) return "";
+  return `⚠️ ${inDecks} copia${inDecks === 1 ? "" : "s"} en uso en tus mazos — disponible ahora: ${avail}`;
+}
+
 // Cambia la cantidad de una carta desde la grilla y actualiza SOLO los nodos
 // afectados (sin re-render completo). Al alternar .owned, en Colecciones el
 // CSS anima el paso blanco y negro ⇄ color de la imagen.
@@ -527,6 +545,8 @@ function changeQty(el, card, delta) {
   numEl.textContent = qty;
   numEl.classList.toggle("zero", qty === 0);
   el.classList.toggle("owned", qty > 0);
+  const availEl = el.querySelector('[data-role="avail"]');
+  if (availEl) availEl.innerHTML = availableMetaHtml(card.id);
   updateResultCount();
   if (state.view === "colecciones") updateCollectionProgress();
 }
@@ -608,6 +628,7 @@ function openModal(card, navList, navIndex) {
           <button class="qty-btn" data-t="plus">+</button>
           <span class="muted">copias ofrecidas (máximo: las que tienes)</span>
         </div>
+        <div class="muted deck-hint" data-role="deckhint">${deckHintHtml(card.id)}</div>
         <div class="sync-row" style="margin-top:4px">
           <button class="btn small" data-edit-card>✏️ Editar</button>
           ${card.userCustom
@@ -649,12 +670,17 @@ function openModal(card, navList, navIndex) {
         const g = gridCard.querySelector('[data-role="qty"]');
         g.textContent = newQty; g.classList.toggle("zero", newQty === 0);
         gridCard.classList.toggle("owned", newQty > 0);
+        const availEl = gridCard.querySelector('[data-role="avail"]');
+        if (availEl) availEl.innerHTML = availableMetaHtml(card.id);
       }
       updateResultCount();
       if (state.view === "colecciones") updateCollectionProgress();
-      // Si bajó la cantidad, el store recorta lo ofrecido: refleja el nuevo tope
+      // Cambiar la cantidad ajusta lo disponible por defecto (ver
+      // autoAdjustTradeOnQtyChange en store.js): refleja el nuevo valor.
       const tq = box.querySelector('[data-role="tqty"]');
       if (tq) tq.textContent = store.getTradeQty(card.id);
+      const dh = box.querySelector('[data-role="deckhint"]');
+      if (dh) dh.innerHTML = deckHintHtml(card.id);
     };
   });
   // Control "Para cambio" del detalle (marcar/desmarcar copias ofrecidas)
@@ -666,6 +692,10 @@ function openModal(card, navList, navIndex) {
         showToast(before === 0 ? "Primero marca que tienes la carta (+)" : "Ya ofreces todas tus copias", 2800);
       }
       box.querySelector('[data-role="tqty"]').textContent = after;
+      box.querySelector('[data-role="deckhint"]').innerHTML = deckHintHtml(card.id);
+      const gridCard = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+      const availEl = gridCard?.querySelector('[data-role="avail"]');
+      if (availEl) availEl.innerHTML = availableMetaHtml(card.id);
     };
   });
 
@@ -1885,6 +1915,7 @@ function renderTradeValue(entries) {
 function tradeCardEl(card, navList) {
   const offered = store.getTradeQty(card.id);
   const owned = store.getQty(card.id);
+  const available = store.getAvailableQty(card.id);
   const el = document.createElement("div");
   el.className = "card owned";
   el.dataset.id = card.id;
@@ -1915,12 +1946,15 @@ function tradeCardEl(card, navList) {
         <button class="qty-btn" data-tr="minus">−</button>
         <span class="qty-num" data-role="tqty">${offered}</span>
         <button class="qty-btn" data-tr="plus" ${offered >= owned ? "disabled" : ""}>+</button>
-        <span class="muted trade-qty-label">para cambio/venta</span>
+        <span class="muted trade-qty-label">ofrecidas</span>
       </div>
+      ${offered > available
+        ? `<div class="trade-avail-note">⚠️ ${offered - available} en uso en mazos — disponibles ahora: <b>${available}</b></div>`
+        : `<div class="trade-avail-note ok">✓ Las ${available} están disponibles ahora</div>`}
       ${priceHtml}
       <div class="trade-actions">
-        <button class="btn small" data-exchange>Intercambiar</button>
-        <button class="btn small" data-sell>Vender</button>
+        <button class="btn small" data-exchange ${available < 1 ? "disabled" : ""}>Intercambiar</button>
+        <button class="btn small" data-sell ${available < 1 ? "disabled" : ""}>Vender</button>
       </div>
     </div>`;
 
@@ -2020,11 +2054,12 @@ function renderTradeModalResults() {
 
 // Ejecuta el intercambio: ajusta inventario, colección automática e historial
 function executeTrade(given, received) {
-  if (store.getQty(given.id) < 1) { showToast("Ya no tienes copias de la carta entregada", 3000); return; }
+  if (store.getAvailableQty(given.id) < 1) { showToast("Esta carta ya no está disponible (sin copias, o comprometida en un mazo)", 3200); return; }
   if (!confirm(`¿Registrar este intercambio?\n\nEntregas: ${displayName(given)}\nRecibes: ${displayName(received)}`)) return;
+  // addQty ya descuenta lo disponible por la misma cantidad (protege la
+  // copia de colección) — ver autoAdjustTradeOnQtyChange en store.js.
   store.addQty(given.id, -1);      // la copia entregada sale del inventario
-  store.addTradeQty(given.id, -1); // y deja de estar ofrecida
-  store.addQty(received.id, +1);   // la recibida entra al inventario
+  store.addQty(received.id, +1);   // la recibida entra al inventario (y suma a disponible si ya tenías más)
   // Colección automática: la carta recibida debe quedar dentro de alguna
   // colección que incluya su edición (una colección puede agrupar varias,
   // ver arriba); si ninguna la incluye, se crea una nueva de esa sola
@@ -2049,12 +2084,12 @@ let sellCard = null; // carta que se está vendiendo en el modal en curso
 
 function openSellModal(card) {
   sellCard = card;
-  const offered = store.getTradeQty(card.id);
+  const available = store.getAvailableQty(card.id);
   $("#sm-card").textContent = `«${displayName(card)}» (${card.editionName || "—"})`;
   const qtyInput = $("#sm-qty");
   qtyInput.value = 1;
   qtyInput.min = 1;
-  qtyInput.max = offered;
+  qtyInput.max = available;
   const price = cardPriceInfo(card.id);
   const suggested = price ? (price.mylserena ?? price.mesaredonda) : null;
   $("#sm-price").value = suggested != null ? suggested : "";
@@ -2069,18 +2104,19 @@ function closeSellModal() {
 // en el historial de ventas (con precio si se ingresó uno).
 function executeSale() {
   if (!sellCard) return;
-  const offered = store.getTradeQty(sellCard.id);
-  if (offered < 1) { showToast("Esta carta ya no está ofrecida para cambio/venta", 3000); return; }
+  const available = store.getAvailableQty(sellCard.id);
+  if (available < 1) { showToast("Esta carta ya no está disponible (sin copias, o comprometida en un mazo)", 3200); return; }
   let qty = parseInt($("#sm-qty").value, 10);
   if (!Number.isFinite(qty) || qty < 1) qty = 1;
-  qty = Math.min(qty, offered);
+  qty = Math.min(qty, available);
   const priceRaw = $("#sm-price").value.trim();
   const price = priceRaw ? Number(priceRaw) : null;
   const priceTxt = price != null && Number.isFinite(price) ? ` por ${fmtCLP(price)}` : "";
   const name = displayName(sellCard); // capturado antes de closeSellModal() (pone sellCard en null)
   if (!confirm(`¿Registrar venta de ${qty} copia${qty === 1 ? "" : "s"} de «${name}»${priceTxt}?`)) return;
+  // addQty ya descuenta lo disponible por la misma cantidad — ver
+  // autoAdjustTradeOnQtyChange en store.js.
   store.addQty(sellCard.id, -qty);
-  store.addTradeQty(sellCard.id, -qty);
   store.addSaleLogEntry({ cardId: sellCard.id, qty, price: Number.isFinite(price) ? price : null });
   closeSellModal();
   renderTradeView();

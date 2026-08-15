@@ -378,6 +378,75 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-15 (29ª iteración) — "Disponible" reemplaza el concepto de "Cambio": se ajusta solo al sumar copias y se descuenta por uso en mazos
+- El dueño planteaba una molestia real de uso diario: cuando sumaba
+  copias al inventario, "para cambio" no subía solo — tenía que
+  corregirlo a mano cada vez (ej. sumar 7 copias y ajustar manualmente
+  a 6 disponibles). Además notó que el concepto real que necesita no es
+  "cambio" sino "disponibilidad": una copia sirve para colección,
+  cambiar, vender O usar en un mazo, y quería que sumar una carta a un
+  mazo restara automáticamente de lo disponible.
+- Antes de tocar código se resolvieron dos decisiones de diseño con el
+  dueño: (1) si una misma carta se usa en más de un mazo, ¿la
+  disponibilidad se comparte entre todos o es independiente por mazo?
+  Eligió **compartida** (un mazo B no puede "ignorar" que un mazo A ya
+  está usando esas copias). (2) La pestaña se sigue llamando "Cambio y
+  Ventas" (ahí también se vende, no solo se cambia) — sólo cambia la
+  etiqueta por carta ("En cambio" → "Disponible") y el comportamiento
+  interno, no el nombre de la pestaña.
+- **Diseño elegido, y por qué**: en vez de mantener un número
+  "disponible" guardado aparte que hubiera que ir sincronizando cada
+  vez que se edita un mazo (con riesgo real de desincronizarse), el
+  descuento por mazos se calcula **en vivo, solo al mostrarlo**
+  (`store.getAvailableQty`) sumando cuántas copias usan TODOS los
+  mazos ahora mismo y restándolo de lo que el dueño marcó como
+  ofrecido (`trade[id]`, que sigue existiendo y sigue siendo editable
+  a mano). Nada se persiste doble, no hay forma de que quede
+  "pegado" un número viejo.
+- **`js/store.js`**:
+  - `setQty()` ahora ajusta `trade[id]` por delta cada vez que cambia
+    la cantidad (`autoAdjustTradeOnQtyChange`): la PRIMERA vez que una
+    carta entra al inventario (0→N) reserva 1 copia de colección y el
+    resto queda disponible por defecto; sumar copias después de eso
+    las suma íntegras a disponible (no se vuelve a reservar); restar
+    copias se descuenta primero de lo disponible, protegiendo la copia
+    de colección mientras quede al menos 1 en el inventario. Sigue
+    siendo editable a mano después (`setTradeQty`/`addTradeQty`) — el
+    auto-ajuste solo fija el valor por defecto al cambiar la cantidad.
+  - `getAvailableQty(id)` nuevo: `trade[id]` menos la suma de copias
+    de esa carta en TODOS los mazos (`deckUsageForCard`, compartido
+    entre mazos según lo acordado), con piso 0.
+- **Bug real evitado, no solo una mejora**: `executeTrade`/
+  `executeSale` en `js/app.js` ya llamaban a `store.addQty(id, -N)`
+  seguido de `store.addTradeQty(id, -N)` como dos pasos separados —
+  con el nuevo `setQty` que ya descuenta `trade[id]` automáticamente
+  por el mismo delta, esas dos llamadas hubieran restado DOBLE
+  (comprobado con el test: sin sacar las llamadas redundantes, vender
+  2 copias con oferta en 9 la dejaba en 5 en vez de 7). Se sacaron las
+  llamadas a `addTradeQty` ahora redundantes en ambas funciones.
+  También se endureció la validación: `executeTrade` ahora exige
+  `getAvailableQty(given.id) >= 1` (antes solo miraba que quedara al
+  menos 1 copia en el inventario general, sin mirar si estaba
+  comprometida en un mazo) y `openSellModal`/`executeSale` capan la
+  cantidad vendible al disponible en vivo, no a lo ofrecido en bruto.
+- **UI**: tarjetas del Catálogo/Colecciones muestran "Disponible ×N"
+  (antes "En cambio ×N") con `store.getAvailableQty`, actualizado en
+  vivo al usar los botones +/− sin recargar. El modal de detalle
+  muestra un aviso bajo el control "Para cambio" cuando hay copias
+  comprometidas en mazos ("⚠️ N copias en uso en tus mazos —
+  disponible ahora: M"). La grilla de "Cambio y Ventas" muestra lo
+  ofrecido en bruto (editable) más esa misma nota, y deshabilita
+  Intercambiar/Vender cuando lo disponible en vivo es 0 aunque lo
+  ofrecido en bruto sea mayor. El filtro "Ofrecidas para cambio" del
+  Catálogo ahora también usa el disponible en vivo, no lo ofrecido en
+  bruto.
+- Validado con Playwright de punta a punta: sumar 10 copias → disponible
+  9; usar 4 en un mazo y 3 en OTRO mazo de la misma carta → disponible
+  compartido baja a 2 (9-7); la vista Cambio y Ventas muestra la nota
+  correcta y capa el modal de venta en 2; vender esas 2 copias deja
+  owned=8, ofrecido=7 (NO 5, confirmando que no hay doble descuento) y
+  disponible en 0. 0 `pageerror`.
+
 ### 2026-08-15 (28ª iteración) — Mazos en 3 tabs: Cartas fusionada con Distribución + espacios de carta faltante + Estadística con KPIs y gráficos
 - El dueño pidió tres ajustes sobre lo agregado en la 26ª iteración: (1)
   las cartas se ven mucho mejor en la pestaña Distribución que en la

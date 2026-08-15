@@ -43,16 +43,32 @@ export function setUpdatedAt(ts) { meta.updatedAt = ts || Date.now(); write(KEYS
 let inventory = read(KEYS.inv, {}); // { cardId: cantidad }
 
 export function getQty(id) { return inventory[id] || 0; }
+// Ajusta cuántas copias quedan "disponibles" (trade[id]) cada vez que cambia
+// la cantidad que tienes, para no tener que corregirlo a mano cada vez:
+//   - Al SUMAR copias por primera vez (antes tenías 0), se reserva 1 copia
+//     de colección y el resto entra disponible por defecto.
+//   - Al sumar copias teniendo ya al menos 1, las nuevas entran disponibles
+//     completas (no se vuelve a reservar una copia de colección).
+//   - Al RESTAR copias, se resta primero de lo disponible (protege la copia
+//     de colección mientras te quede al menos 1 copia en el inventario).
+// Sigue siendo editable a mano después (setTradeQty/addTradeQty) — esto solo
+// fija el valor por defecto al cambiar la cantidad, no un tope fijo.
+function autoAdjustTradeOnQtyChange(id, prevQty, newQty) {
+  const delta = newQty - prevQty;
+  if (delta === 0) return;
+  let t = trade[id] || 0;
+  if (delta > 0) t += prevQty === 0 ? Math.max(0, delta - 1) : delta;
+  else t += delta;
+  t = Math.max(0, Math.min(t, newQty));
+  if (t === 0) delete trade[id]; else trade[id] = t;
+  write(KEYS.trade, trade);
+}
 export function setQty(id, qty) {
   qty = Math.max(0, Math.floor(qty || 0));
+  const prevQty = inventory[id] || 0;
   if (qty === 0) delete inventory[id];
   else inventory[id] = qty;
-  // No se pueden ofrecer para cambio más copias de las que quedan
-  if ((trade[id] || 0) > qty) {
-    if (qty === 0) delete trade[id];
-    else trade[id] = qty;
-    write(KEYS.trade, trade);
-  }
+  autoAdjustTradeOnQtyChange(id, prevQty, qty);
   write(KEYS.inv, inventory);
   notify();
 }
@@ -119,9 +135,13 @@ export function replaceDecks(arr, origin = "local") {
 }
 
 /* ===== Cartas para cambio (inventario de intercambio) =====
-   trade: { cardId: copias ofrecidas }. Son copias del inventario marcadas como
-   disponibles para cambiar con otros jugadores; nunca puede haber más ofrecidas
-   que copias en el inventario (setQty y setTradeQty lo garantizan).
+   trade: { cardId: copias ofrecidas }. Copias del inventario marcadas como
+   disponibles para cambiar/vender/usar en mazos; nunca puede haber más
+   ofrecidas que copias en el inventario (setQty y setTradeQty lo garantizan).
+   Su valor por defecto se ajusta solo al cambiar la cantidad que tienes (ver
+   autoAdjustTradeOnQtyChange) pero sigue siendo editable a mano. El
+   descuento por copias usadas en mazos NO se guarda acá — ver getAvailableQty,
+   que lo resta en vivo para no desincronizarse si editas mazos seguido.
    tradeLog: historial de intercambios registrados, del más reciente al más
    antiguo: [{ given: cardId entregada, received: cardId recibida, date }]. */
 let trade = read(KEYS.trade, {});
@@ -139,6 +159,20 @@ export function setTradeQty(id, n) {
 }
 export function addTradeQty(id, delta) { setTradeQty(id, getTradeQty(id) + delta); return getTradeQty(id); }
 export function getTradeList() { return { ...trade }; }
+// Cuántas copias de esta carta están comprometidas ahora mismo en TUS mazos
+// (sumado entre todos, no solo el activo — si dos mazos usan la misma carta
+// compiten por las mismas copias físicas).
+function deckUsageForCard(id) {
+  let total = 0;
+  for (const d of decks) total += d.cards[id] || 0;
+  return total;
+}
+// Disponible EN VIVO: lo que marcaste para cambio/venta menos lo que tus
+// mazos están usando ahora mismo. No se guarda aparte (evita que quede
+// desincronizado si editas mazos seguido) — se recalcula cada vez que se pide.
+export function getAvailableQty(id) {
+  return Math.max(0, getTradeQty(id) - deckUsageForCard(id));
+}
 export function replaceTrade(obj, origin = "local") {
   trade = {};
   for (const [id, n] of Object.entries(obj || {})) {
