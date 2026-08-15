@@ -378,6 +378,45 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-15 (27ª iteración) — Bugfix: tipos de carta no canónicos ("Oro Con Habilidad", "Talisman" sin tilde…) rotos en filtros/íconos/agrupaciones
+- El dueño preguntó por qué el Oro "Teepee" parecía tratarse distinto a
+  "Puchao" siendo ambos Oro con habilidad. La causa: la carta Teepee de
+  la edición "Leyendas - Primera Era 4.0" tenía `type: "Oro Con
+  Habilidad"` en vez de `"Oro"` en `data/custom-cards.json` — el wiki
+  (myl.fandom.com) a veces lista el tipo "detallado" en la plantilla
+  `{{Carta...}}` en vez del genérico que usa el resto de la app, y el
+  importador lo copiaba tal cual sin normalizar. Como todo en la app
+  (filtros, íconos, `NO_STRENGTH_TYPES`, agrupaciones de Estadística/
+  Distribución del mazo, etc.) compara el tipo por igualdad exacta de
+  string contra "Oro"/"Aliado"/"Talismán"/"Arma"/"Tótem"/"Monumento",
+  cualquier variante quedaba fuera de todo eso sin ningún error visible
+  — no es un caso aislado de una carta, es un bug de datos que afectaba
+  cualquier parte de la app que agrupe/filtre por tipo.
+- Alcance real: 31 cartas en `data/custom-cards.json` (0 en
+  `data/cards.json`, que viene limpio de la API) — 7 "Oro Con
+  Habilidad", 1 "Oro Sin Habilidad", 18 "Talisman" y 5 "Totem" (las
+  últimas dos, sin tilde), repartidas en 3 ediciones cargadas a mano:
+  `leyendas_primera_era_4_0` (29), `mundos_perdidos_horda_esteparia`
+  (1) y `juego_organizado_pe` (1).
+- **Arreglado en 3 lugares** para que no vuelva a pasar:
+  1. `data/custom-cards.json` — las 31 cartas corregidas con un
+     reemplazo de texto quirúrgico (no un `json.dump` completo, que
+     hubiera reformateado el archivo entero por una diferencia de
+     indentación y generado un diff gigante para un cambio de 31
+     líneas).
+  2. `js/wiki-import.js` — nuevo `normalizeType()`/`TYPE_ALIASES`
+     (mapea "oro con/sin habilidad"→Oro, "talisman"→Talismán,
+     "totem"→Tótem) aplicado al importador desde el navegador (botón
+     de Ediciones personalizadas).
+  3. `.claude/skills/importar-edicion-myl-wiki/scripts/
+     extract_myl_edition.py` — mismo `normalize_type()` aplicado al
+     script que usa la skill de terminal, que tiene su propia
+     implementación en Python independiente del JS.
+- Sin este fix, cualquier edición nueva importada del wiki donde la
+  tabla de esa edición liste el tipo "detallado" iba a volver a colar
+  cartas rotas — quedó cubierto tanto el camino del botón en la app
+  como el de la skill.
+
 ### 2026-08-15 (26ª iteración) — Mazos en 4 pestañas (Cartas/Estadística/Estrategia/Distribución) + ban list automática del formato Racial Edición
 - El dueño pidió mejorar la construcción de mazos con varias cosas a la
   vez: (1) que la app avise en rojo cuando una carta del mazo está en

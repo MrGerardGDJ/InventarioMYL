@@ -330,6 +330,20 @@ function resolveCardContent(card, editionName, contents, report) {
   return { txt: null, confidence: null };
 }
 
+// El wiki a veces lista el tipo "detallado" en vez del genérico que usa el
+// resto de la app (ej. "Oro Con Habilidad"/"Oro Sin Habilidad" en vez de
+// "Oro", o "Talisman"/"Totem" sin tilde) — sin esto la carta queda con un
+// tipo que no calza con ningún filtro/ícono/agrupación de la app.
+const TYPE_ALIASES = {
+  "oro con habilidad": "Oro",
+  "oro sin habilidad": "Oro",
+  "talisman": "Talismán",
+  "totem": "Tótem",
+};
+function normalizeType(t) {
+  return TYPE_ALIASES[String(t || "").trim().toLowerCase()] || t;
+}
+
 function buildCard(card, txt, editionSlug, editionDisplayName, format, specialId, trustImage) {
   const d = txt ? parseCardTemplate(txt) : {};
   let coste = (d["coste de oro"] || "").trim();
@@ -350,7 +364,7 @@ function buildCard(card, txt, editionSlug, editionDisplayName, format, specialId
     edid: specialId ? "" : (card.num != null ? String(card.num).padStart(3, "0") : ""),
     specialId: specialId || "",
     format,
-    type: stripWiki(d["tipo"] || "") || card.type || "—",
+    type: normalizeType(stripWiki(d["tipo"] || "") || card.type || "—"),
     race: stripWiki(d["raza"] || "") || "—",
     rarity: stripWiki(d["frecuencia"] || "") || card.rarity || "—",
     cost: coste === "" ? null : Number(coste),
