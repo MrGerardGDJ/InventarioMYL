@@ -940,6 +940,17 @@ function bindCardFormEvents() {
     reader.onload = () => { cfImageData = reader.result; $("#cf-image-url").value = ""; renderCfPreview(); };
     reader.readAsDataURL(f);
   });
+  // Antes no había forma de dejar una carta SIN imagen: borrar el texto del
+  // campo URL no alcanzaba, porque al guardar se seguía usando cfImageData
+  // (la imagen cargada al abrir el formulario, o el archivo subido) como
+  // respaldo — el campo de texto vacío nunca "ganaba". Este botón limpia
+  // los dos a la vez, que es la única forma real de vaciarla.
+  $("#cf-image-remove").addEventListener("click", () => {
+    $("#cf-image-url").value = "";
+    $("#cf-image-file").value = "";
+    cfImageData = "";
+    renderCfPreview();
+  });
 }
 
 /* ===================== Ediciones personalizadas (gestor) =====================
