@@ -378,6 +378,46 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-18 (33ª iteración) — Bugfix real: no se podía dejar una carta manual sin imagen
+- El dueño insistió en que no lograba quitar las imágenes equivocadas
+  de sus cartas de Brotherhood/Brotherhood V2/Bruderschaft (las mismas
+  ediciones personales de la iteración anterior, que siguen sin poder
+  verse desde este lado). Como no puedo ver esas cartas, en vez de
+  seguir pidiéndole que exporte su colección se revisó el formulario
+  "Editar carta" en busca de una explicación — y apareció un bug real
+  que probablemente sea la causa de fondo, no un error del dueño.
+- **El bug**: en `openCardForm()`, al abrir una carta con imagen se
+  precargan DOS lugares con el mismo valor: el campo de texto
+  `#cf-image-url` (solo si la imagen es una URL/ruta) y la variable
+  `cfImageData` (siempre, sin importar el formato — también cubre
+  imágenes subidas como archivo, guardadas como `data:` base64). Al
+  guardar, `saveCardForm()` arma la imagen final con
+  `$("#cf-image-url").value.trim() || cfImageData || ""` — el
+  problema es que **borrar el texto del campo URL a mano nunca borra
+  `cfImageData`** (no hay ningún listener que lo haga), así que el
+  `||` revive la imagen vieja igual, aunque el campo se vea vacío.
+  Confirmado con un test que reproduce el bug intencionalmente
+  (`test_confirm_bug.js`): crear una carta con imagen, borrar el
+  campo URL a mano, guardar → la imagen sigue ahí. No existía ninguna
+  forma de dejar una carta manual genuinamente sin imagen.
+- **Arreglo**: botón nuevo "🗑 Quitar imagen" (`#cf-image-remove` en
+  `index.html`, junto a la vista previa) que limpia los dos lugares a
+  la vez (`cf-image-url`, `cf-image-file` y `cfImageData`) y refresca
+  la vista previa — la única forma real de vaciarla. No se tocó el
+  comportamiento de los campos existentes (subir archivo / pegar URL
+  siguen igual) para no arriesgar romper nada que ya funcionaba.
+- Validado con Playwright: crear carta con imagen → editarla → click
+  en "Quitar imagen" → Guardar → el campo `image` queda `""` en
+  `myl.customcards.v1` (antes, sin el botón, seguía con la imagen
+  vieja pese a vaciar el campo de texto a mano — se dejó ese caso como
+  test de control para probar que el bug era real). 0 `pageerror`.
+- Sigue pendiente: revisar de verdad Brotherhood/Brotherhood V2/
+  Bruderschaft necesita que el dueño exporte su colección (Exportar →
+  JSON) y la comparta, porque esos datos siguen sin existir en este
+  repositorio — este fix soluciona la HERRAMIENTA para que él mismo
+  pueda corregirlas, no corrige esas cartas puntuales (que no puedo
+  ver desde acá).
+
 ### 2026-08-18 (32ª iteración) — Bugfix real: imagen equivocada en El Dorado (LPE4 #87) + completar 20 cartas sin habilidad con datos verificados del wiki
 - El dueño pidió tres cosas: (1) corregir imágenes equivocadas en sus
   colecciones personales "Brotherhood"/"Brotherhood V2"/"Bruderschaft";
