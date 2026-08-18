@@ -2226,9 +2226,15 @@ function renderDecksView() {
     row.dataset.deckId = d.id;
     row.innerHTML = `
       <span class="d-name">${escapeHtml(d.name)}</span>
+      ${deckStatusBadgeHtml(d)}
       <span class="d-count">${store.deckCount(d.id)}</span>
       <button class="qty-btn" data-del title="Eliminar">🗑</button>`;
     row.querySelector(".d-name").onclick = () => { store.setSetting("activeDeckId", d.id); renderDecksView(); renderDeckDetail(); };
+    row.querySelector("[data-status]").onclick = (e) => {
+      e.stopPropagation();
+      store.setDeckStatus(d.id, d.status === "principal" ? "secundario" : "principal");
+      renderDecksView(); // recalcula disponibilidad (afecta a todos los mazos que compartan cartas)
+    };
     row.querySelector("[data-del]").onclick = () => {
       if (confirm(`¿Eliminar el mazo «${d.name}»?`)) {
         store.deleteDeck(d.id);
@@ -2252,6 +2258,7 @@ function renderDeckDetail() {
   wrap.innerHTML = `
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <h2><input id="deck-name" value="${escapeAttr(deck.name)}" style="background:var(--bg-3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font-size:18px;font-weight:700" /></h2>
+      ${deckStatusBadgeHtml(deck)}
       <span class="muted" id="deck-total"></span>
       <div class="spacer" style="flex:1"></div>
       <button class="btn small" id="deck-xlsx">📊 Excel</button>
@@ -2259,6 +2266,9 @@ function renderDeckDetail() {
       <button class="btn small" id="deck-txt">📋 Texto</button>
     </div>
     <div class="muted" style="font-size:12px;margin-top:4px">Actualizado: ${deck.updatedAt ? new Date(deck.updatedAt).toLocaleString("es-CL") : "—"}</div>
+    <p class="muted deck-status-note">${deck.status === "secundario"
+      ? "📝 Mazo Secundario: es un plan/experimento — no reserva copias de tus cartas ni compite con tus otros mazos."
+      : "🧩 Mazo Principal: compite por copias con tus otros mazos Principal (si comparten una carta, la disponibilidad se reparte entre ellos)."}</p>
     <div class="tabs deck-tabs">
       <button class="tab" data-deck-tab="cartas">🗂️ Cartas</button>
       <button class="tab" data-deck-tab="estadistica">📊 Estadística</button>
@@ -2283,6 +2293,10 @@ function renderDeckDetail() {
   switchDeckTab(deckTab);
 
   $("#deck-name").onchange = (e) => { store.renameDeck(deck.id, e.target.value || "Mazo"); populateActiveDeckSelect(); updateDeckCounts(); };
+  wrap.querySelector("[data-status]").onclick = () => {
+    store.setDeckStatus(deck.id, deck.status === "principal" ? "secundario" : "principal");
+    renderDecksView(); // recalcula disponibilidad en este mazo y en los que compartan cartas
+  };
   $("#deck-txt").onclick = () => exportDeck(deck);
   $("#deck-xlsx").onclick = () => {
     showToast("Generando Excel…", 4000);
@@ -2601,6 +2615,16 @@ function renderDeckStrategy(deck) {
     <div class="strat-section"><h4>💪 Fortalezas</h4><ul>${li(r.fortalezas)}</ul></div>
     <div class="strat-section"><h4>⚠️ Debilidades</h4><ul>${li(r.debilidades)}</ul></div>
     <div class="strat-section"><h4>🛠️ Recomendaciones</h4><ul>${li(r.recomendaciones)}</ul></div>`;
+}
+
+// Badge clickeable del estado de un mazo: Principal (compite por cartas con
+// otros mazos Principal) o Secundario (plan/experimento, no reserva nada).
+function deckStatusBadgeHtml(deck) {
+  const isPrincipal = deck.status !== "secundario";
+  return `<button class="deck-status-badge ${isPrincipal ? "principal" : "secundario"}" data-status
+    title="${isPrincipal ? "Mazo Principal: compite por cartas con otros mazos Principal. Click para pasar a Secundario." : "Mazo Secundario: no reserva cartas, ideal para planes/experimentos. Click para pasar a Principal."}">
+    ${isPrincipal ? "🧩 Principal" : "📝 Secundario"}
+  </button>`;
 }
 
 function updateDeckCounts() {
