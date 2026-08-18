@@ -378,6 +378,59 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-18 (31ª iteración) — Mazos Principal/Secundario: varios mazos pueden compartir cartas sin generar falsos conflictos de disponibilidad
+- Conversación filosófica con el dueño a partir de la 29ª-30ª: notó que
+  el modelo "toda carta se resta de TODOS los mazos por igual" (lo
+  implementado en la 29ª) no calza con cómo realmente arma sus mazos —
+  tiene cartas caras de las que solo posee 1 copia y las mueve a mano
+  entre mazos según qué estrategia va a jugar, sin "registrar" ese
+  movimiento en la app porque hacerlo generaba una alerta de escasez
+  que no reflejaba su realidad física. Se llegó en conjunto (varias
+  rondas de preguntas, ver el hilo) a un modelo híbrido: cada mazo
+  tiene un **estado**, y ese estado —no la carta— es lo que decide si
+  compite por disponibilidad.
+- **Los dos estados**: 🧩 **Principal** (mazo que podría estar armado de
+  verdad; compite por cartas con TODOS los demás mazos Principal que
+  compartan una carta — igual que el modelo aditivo de la 29ª, pero
+  ahora acotado a este subconjunto) y 📝 **Secundario** (plan/idea/
+  experimento; no reserva ninguna carta, puede repetir cualquier
+  cantidad de cualquier carta sin afectar a nada más). Puede haber
+  cualquier cantidad de mazos en cada estado — no es "solo un mazo
+  activo a la vez", el dueño puede tener 2+ mazos Principal compitiendo
+  de verdad por una carta compartida (eso SÍ debe avisar) y a la vez
+  varios Secundario sueltos para experimentar.
+- **`js/store.js`**: cada mazo guarda `status: "principal"|"secundario"`
+  (mazos nuevos nacen "principal"). `deckUsageForCard()` ahora solo
+  suma mazos con `status !== "secundario"`. `setDeckStatus(id, status)`
+  nuevo. Migración (mazos guardados antes de este campo, o restaurados
+  desde un backup/dispositivo viejo sin él) quedan "principal" por
+  defecto — se preguntó explícitamente al dueño y prefirió no cambiar
+  en silencio los números que ya conocía, dejando que él baje a mano
+  los que en realidad son solo planes.
+- **Bug real encontrado al escribir el test, no relacionado con esta
+  feature**: `createDeck()` generaba el id solo con
+  `"d" + Date.now().toString(36)` — si se crean dos mazos en el mismo
+  milisegundo (pasó al crear 2 mazos seguidos en un script de prueba),
+  chocan y el segundo mazo termina mutando al primero en vez de crear
+  uno nuevo. Se corrigió con el mismo sufijo aleatorio que ya usa
+  `addCustomCard` para el mismo problema (`Date.now().toString(36) +
+  "_" + Math.random()...`). En el uso normal por clics (con el diálogo
+  `prompt()` de por medio) es extremadamente improbable que choque,
+  pero quedó corregido para cualquier flujo futuro que cree mazos por
+  código (import masivo, etc.).
+- **`js/app.js`**: `deckStatusBadgeHtml(deck)` — pastilla clickeable
+  ("🧩 Principal" / "📝 Secundario") que alterna el estado, usada en la
+  fila de cada mazo en la lista lateral y en el encabezado del detalle
+  del mazo (con una nota debajo explicando qué implica cada estado).
+- Validado con Playwright: dos mazos Principal usando la misma carta
+  (2+2, con solo 3 copias en inventario) → disponible 0 (compiten de
+  verdad); bajar uno de los dos a Secundario con un clic en su pastilla
+  → el mazo que queda Principal sigue reclamando sus copias
+  normalmente, el Secundario deja de contar aunque tenga la misma carta
+  repetida. Antes de este fix, el test de este mismo escenario falló
+  por el choque de ids de `createDeck` — quedó como regresión cubierta.
+  0 `pageerror`.
+
 ### 2026-08-15 (30ª iteración) — Ajuste de la 29ª: etiqueta "Disponible" en el control del modal + desglose siempre visible (Colección/Para cambio/En mazo)
 - Tras la 29ª iteración, el dueño probó la app y notó dos cosas: el
   control del modal de detalle seguía diciendo "Para cambio" (el

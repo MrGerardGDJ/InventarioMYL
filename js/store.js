@@ -94,13 +94,32 @@ export function mergeInventory(obj) {
   notify();
 }
 
-/* ===== Mazos ===== */
+/* ===== Mazos =====
+   status: "principal" | "secundario". Un mazo Principal está (o podría
+   estar) físicamente armado y compite con los demás mazos Principal por
+   las copias que tengas de cada carta (ver deckUsageForCard). Un mazo
+   Secundario es un plan/idea/experimento: no reserva nada, puedes repetir
+   ahí cualquier carta sin que le quite disponibilidad a nada más.
+   Migración: mazos guardados antes de que existiera este campo (o
+   restaurados desde un backup viejo) quedan "principal" — mantiene el
+   mismo comportamiento (aditivo entre todos) que ya tenían hasta ahora,
+   en vez de aflojar la cuenta de golpe sin que el dueño lo haya pedido. */
 let decks = read(KEYS.decks, []);
+(function migrateDeckStatus() {
+  let changed = false;
+  for (const d of decks) {
+    if (d.status !== "principal" && d.status !== "secundario") { d.status = "principal"; changed = true; }
+  }
+  if (changed) write(KEYS.decks, decks);
+})();
 
 export function getDecks() { return decks; }
 export function getDeck(id) { return decks.find((d) => d.id === id) || null; }
 export function createDeck(name) {
-  const deck = { id: "d" + Date.now().toString(36), name: name || "Mazo nuevo", cards: {}, updatedAt: Date.now() };
+  // Sufijo aleatorio: Date.now() solo no basta si se crean dos mazos en el
+  // mismo milisegundo (ej. un script) — mismo criterio que addCustomCard.
+  const id = "d" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 7);
+  const deck = { id, name: name || "Mazo nuevo", cards: {}, status: "principal", updatedAt: Date.now() };
   decks.push(deck);
   write(KEYS.decks, decks);
   notify();
@@ -109,6 +128,11 @@ export function createDeck(name) {
 export function renameDeck(id, name) {
   const d = getDeck(id);
   if (d) { d.name = name; d.updatedAt = Date.now(); write(KEYS.decks, decks); notify(); }
+}
+export function setDeckStatus(id, status) {
+  if (status !== "principal" && status !== "secundario") return;
+  const d = getDeck(id);
+  if (d) { d.status = status; d.updatedAt = Date.now(); write(KEYS.decks, decks); notify(); }
 }
 export function deleteDeck(id) {
   decks = decks.filter((d) => d.id !== id);
@@ -131,7 +155,13 @@ export function deckCount(deckId) {
   return Object.values(d.cards).reduce((a, b) => a + b, 0);
 }
 export function replaceDecks(arr, origin = "local") {
-  if (Array.isArray(arr)) { decks = arr; write(KEYS.decks, decks); notify(origin); }
+  if (!Array.isArray(arr)) return;
+  decks = arr;
+  // Mismo criterio que la migración de arriba: mazos sin status (backup
+  // viejo, u otro dispositivo con una versión anterior) quedan "principal".
+  for (const d of decks) if (d.status !== "principal" && d.status !== "secundario") d.status = "principal";
+  write(KEYS.decks, decks);
+  notify(origin);
 }
 
 /* ===== Cartas para cambio (inventario de intercambio) =====
@@ -159,12 +189,13 @@ export function setTradeQty(id, n) {
 }
 export function addTradeQty(id, delta) { setTradeQty(id, getTradeQty(id) + delta); return getTradeQty(id); }
 export function getTradeList() { return { ...trade }; }
-// Cuántas copias de esta carta están comprometidas ahora mismo en TUS mazos
-// (sumado entre todos, no solo el activo — si dos mazos usan la misma carta
-// compiten por las mismas copias físicas).
+// Cuántas copias de esta carta están comprometidas ahora mismo en tus mazos
+// PRINCIPAL (sumado entre todos los que tengan ese estado — si dos mazos
+// principal usan la misma carta compiten por las mismas copias físicas).
+// Los mazos Secundario (planes/experimentos) no reservan nada.
 function deckUsageForCard(id) {
   let total = 0;
-  for (const d of decks) total += d.cards[id] || 0;
+  for (const d of decks) if (d.status !== "secundario") total += d.cards[id] || 0;
   return total;
 }
 // Disponible EN VIVO: lo que marcaste para cambio/venta menos lo que tus

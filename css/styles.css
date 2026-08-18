@@ -427,8 +427,15 @@ main { padding: 0; }
   background: var(--bg-3); font-size: 13px;
 }
 .deck-item.active { border-color: var(--accent); }
-.deck-item .d-name { font-weight: 600; cursor: pointer; flex: 1; }
+.deck-item .d-name { font-weight: 600; cursor: pointer; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .deck-item .d-count { color: var(--muted); font-size: 12px; margin: 0 8px; }
+.deck-status-badge {
+  border: 1px solid var(--border); border-radius: 20px; padding: 2px 9px;
+  font-size: 10.5px; font-weight: 700; white-space: nowrap; cursor: pointer;
+  background: var(--bg-2); color: var(--muted);
+}
+.deck-status-badge.principal { border-color: var(--accent); color: var(--accent-2); }
+.deck-status-note { font-size: 12px; margin: 6px 0 0; }
 .deck-detail h2 { margin-bottom: 4px; }
 .deck-tabs { margin: 14px 0 4px; display: inline-flex; }
 .deck-tab-panel { margin-top: 8px; }
