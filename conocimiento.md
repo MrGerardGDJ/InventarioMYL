@@ -378,6 +378,81 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-18 (32ª iteración) — Bugfix real: imagen equivocada en El Dorado (LPE4 #87) + completar 20 cartas sin habilidad con datos verificados del wiki
+- El dueño pidió tres cosas: (1) corregir imágenes equivocadas en sus
+  colecciones personales "Brotherhood"/"Brotherhood V2"/"Bruderschaft";
+  (2) auditar coste/fuerza en todo el catálogo, con "Lautaro" como
+  ejemplo de carta que cambia de stats según la edición/rediseño; (3)
+  completar habilidad y leyenda de las 83 cartas personalizadas
+  detectadas sin habilidad en la iteración anterior, "sin que queden
+  como personalizadas". De paso reportó un bug puntual: "El Dorado" de
+  Leyendas - Primera Era 4.0 tiene la imagen de la carta #324 en vez de
+  la #87.
+- **(1) Brotherhood/Bruderschaft — fuera de alcance desde acá**: se
+  buscó en todo el repo (editions.json, custom-cards.json) y no
+  aparecen en ningún lado — son ediciones que el propio dueño creó con
+  "Ediciones personalizadas", así que viven solo en su navegador (o su
+  nube personal de Supabase). No hay forma de leerlas ni editarlas
+  desde esta sesión sin que el dueño exporte su colección (botón
+  Exportar → JSON) y la comparta.
+- **(2) Lautaro — no era un bug**: se verificó contra los datos reales
+  y cada edición YA tiene su propio coste/fuerza independiente
+  (Ira del Nahual: coste 4/fuerza X: Leyendas PE 2022, LPE 2023,
+  Lootbox PE 2025, CRPE2: coste 3/fuerza 3, la versión "rediseñada").
+  El modelo de datos actual ya trata cada carta como única por edición
+  — no hace falta ningún cambio estructural. Auditar las ~20.400
+  cartas oficiales + ~1.100 personalizadas a ciegas no es viable sin
+  arriesgar inventar datos, así que se acotó el trabajo real a lo
+  verificable: los 83 huecos concretos ya detectados.
+- **(3) El Dorado (LPE4 #87) — bug real confirmado y corregido**: se
+  comparó a simple vista la imagen usada para la #87
+  (`leyendas_primera_era_4_0_87_el_dorado.webp`) contra la imagen de la
+  #324 (URL de wikia) — son literalmente la misma pieza de arte (dice
+  "LPE4 - 324/320 P" en la esquina de AMBAS). Se corrigió: `image: ""`
+  para la #87 (archivo `.webp` eliminado del repo, sin ninguna otra
+  carta que lo referenciara) y `rarity: "Mega Real"` (verificado
+  directo en la fila de la tabla de listado del wiki: "LPE4 - 87/320
+  MR"). No se rellenó una imagen nueva porque no hay ninguna fuente
+  confiable todavía: la página específica "El Dorado (LPE4)" no existe
+  en el wiki (redlink), TOR no tiene esta edición scrapeada, y mylserena
+  solo vende la versión promocional (#324), no la base (#87).
+- **(3) Las 83 sin habilidad — se completaron 20, 63 quedan
+  pendientes por falta de fuente confiable**: se corrió el script de la
+  skill `importar-edicion-myl-wiki`
+  (`extract_myl_edition.py`) contra las 4 ediciones involucradas:
+  - **Mundos Perdidos - Horda Esteparia / Aliento de Fuego / Locura de
+    Dragón** (20 cartas objetivo): las 3 ediciones resolvieron 100% con
+    páginas específicas del wiki (0 sin resolver, 0 sin imagen) — muy
+    recientes (páginas creadas días antes de esta sesión, agosto 2026).
+    Se completó `ability`, `flavour`, `cost`, `strength` y `race`
+    (cuando aplica) para las 20, todo verificado, sin adivinar nada
+    (las imágenes YA existían correctamente en estas 20, no se
+    tocaron).
+  - **Leyendas - Primera Era 4.0** (61 cartas objetivo, de 432 en la
+    edición): se corrió el script completo — resultado real: **0**
+    resueltas con confianza alta, 24 solo con página base de OTRA
+    edición (y esa página tampoco traía habilidad), 37 sin ninguna
+    página en absoluto. Conclusión honesta: el wiki todavía no
+    documenta esta edición (lanzada recién en septiembre 2025) a nivel
+    de carta individual — no es un problema de búsqueda, es que el
+    dato no existe públicamente todavía. No se rellenó nada a la
+    fuerza.
+  - **Juego Organizado - Primera Era** (2 cartas: Rapto de Idunn JO-62,
+    Ave Fénix JO-116): no se encontró página del wiki que calce con
+    esa serie promocional específica (sí existen páginas de "Rapto de
+    Idunn"/"Ave Fénix" de OTRAS ediciones/años, pero asignarlas sería
+    adivinar). Quedan pendientes.
+  - Sobre "que no queden como personalizadas": estructuralmente van a
+    seguir en `data/custom-cards.json` mientras TOR/api.myl.cl no
+    scrapee estas ediciones (es justamente para eso que existe ese
+    archivo aparte, para no perderlas en cada actualización semanal del
+    catálogo) — pero las 20 completadas ahora tienen el mismo nivel de
+    verificación/calidad de dato que cualquier carta oficial, no quedan
+    "a medias" solo por ser personalizadas.
+- Cambio puramente de datos (`data/custom-cards.json` +
+  `data/custom-images/`), sin tocar `js/`ni `css/` — validado cargando
+  la app y confirmando los valores nuevos en vivo. 0 `pageerror`.
+
 ### 2026-08-18 (31ª iteración) — Mazos Principal/Secundario: varios mazos pueden compartir cartas sin generar falsos conflictos de disponibilidad
 - Conversación filosófica con el dueño a partir de la 29ª-30ª: notó que
   el modelo "toda carta se resta de TODOS los mazos por igual" (lo
