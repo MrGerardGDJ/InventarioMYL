@@ -378,6 +378,26 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-18 (34ª iteración) — El buscador global ahora también filtra Cambio y Ventas
+- El dueño notó que el buscador de la barra superior ya filtraba
+  Catálogo, Colecciones y el mazo abierto, pero no hacía nada en
+  Cambio y Ventas — tenía que desplazarse a mano entre todas las
+  cartas ofrecidas para encontrar una.
+- `renderTradeList()` ahora respeta `#search` con el mismo criterio
+  que ya usan Mazos/Colecciones (`card.searchText.includes(query)`):
+  filtra qué tarjetas se muestran, pero el resumen ("N cartas
+  distintas · M copias ofrecidas") y el valor potencial de venta
+  siguen calculándose sobre TODO lo ofrecido, no solo lo que calza con
+  la búsqueda — igual que "te faltan X copias" en un mazo filtrado.
+  Mensaje aparte si la búsqueda no encuentra ninguna coincidencia.
+  El listener del buscador global (`bindEvents`) suma la vista
+  `"cambios"` a los `else if` que ya tenía para refrescar la vista
+  activa sin recargar toda la página.
+- Validado con Playwright: 2 cartas ofrecidas, buscar por el nombre de
+  una las deja solo a ella, buscar algo que no existe muestra el
+  mensaje de "sin coincidencias", limpiar la búsqueda restaura las 2.
+  0 `pageerror`.
+
 ### 2026-08-18 (33ª iteración) — Bugfix real: no se podía dejar una carta manual sin imagen
 - El dueño insistió en que no lograba quitar las imágenes equivocadas
   de sus cartas de Brotherhood/Brotherhood V2/Bruderschaft (las mismas

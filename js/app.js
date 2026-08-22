@@ -1888,14 +1888,26 @@ function renderTradeList() {
     wrap.innerHTML = `<p class="muted">Busca arriba una carta que tengas repetida y ofrécela; también puedes hacerlo desde el detalle de cualquier carta.</p>`;
     return;
   }
+  // El buscador de la barra superior filtra qué tarjetas se muestran acá
+  // (mismo criterio que ya usan Mazos y Colecciones); el resumen y el valor
+  // potencial de arriba siguen calculándose sobre TODO lo ofrecido, no solo
+  // lo que calza con la búsqueda.
+  const query = normText($("#search").value.trim());
   wrap.innerHTML = "";
   const orphanIds = [];
   const navList = [];
+  let shown = 0;
   for (const [id] of entries) {
     const c = cardById(id);
     if (!c) { orphanIds.push(id); continue; } // ya no está en el catálogo: no se puede mostrar como tarjeta
+    if (query && !c.searchText.includes(query)) continue;
     navList.push(c);
     wrap.appendChild(tradeCardEl(c, navList));
+    shown++;
+  }
+  if (!shown && !orphanIds.length) {
+    wrap.innerHTML = `<p class="muted">Ninguna carta ofrecida coincide con la búsqueda de la barra superior.</p>`;
+    return;
   }
   if (orphanIds.length) {
     const note = document.createElement("p");
@@ -3055,7 +3067,7 @@ function bindEvents() {
   $$(".tab").forEach((t) => t.addEventListener("click", () => switchView(t.dataset.view)));
 
   // Buscador global: filtra el Catálogo y también la vista activa
-  // (dentro de una colección o del mazo abierto)
+  // (dentro de una colección, del mazo abierto, o de Cambio y Ventas)
   const debounced = debounce(() => {
     applyFilters();
     if (state.view === "colecciones") {
@@ -3064,6 +3076,8 @@ function bindEvents() {
     } else if (state.view === "mazos") {
       const deck = store.getDeck(store.getSetting("activeDeckId"));
       if (deck) renderDeckContents(deck);
+    } else if (state.view === "cambios") {
+      renderTradeList();
     }
   }, 180);
   $("#search").addEventListener("input", debounced);
