@@ -378,6 +378,71 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-23 (37ª iteración) — Bugfix real: "Ciudad de los Césares" y "Uxmal" en Leyendas - Primera Era 4.0 estaban como Oro en vez de Tótem
+- El dueño reportó que en su Mazo Principal, "Ciudad de los Césares"
+  contaba como Oro en vez de Tótem. Investigando se confirmó que **no es
+  un error en general**: en la edición "Ira del Nahual" esa carta
+  genuinamente es un Oro Básico (confirmado en la API de TOR y en el
+  wiki, código 126-126/Primera Edición) — el nombre se reimprimió varias
+  veces y en ediciones posteriores (Mundos Perdidos - Ciudad de los
+  Césares, Tierra Austral, Libertadores, Mazo Eterno, AyD Vigilantes,
+  Kaiju vs Mecha - Titanes) sí es Tótem, un cambio real de diseño entre
+  ediciones, no un dato mal cargado.
+- El problema real estaba específicamente en la copia de **Leyendas -
+  Primera Era 4.0** (edid 030): tipo "Oro", rareza "Sin Frecuencia",
+  habilidad vacía — heredado por error de la página del wiki de "Ira del
+  Nahual" (la fuente de fallback usada cuando LPE4 no tenía página
+  propia, ver iteración de El Dorado #87), que trae el Oro básico, NO el
+  Tótem real de esta edición. La imagen sí estaba bien (se había resuelto
+  aparte, cruzando mylserena.cl por código exacto) — el problema era solo
+  en los campos de texto, que quedaron desincronizados de su propia
+  imagen. Se leyó la carta directo del scan ya guardado en
+  `data/custom-images/mylserena/`: Tótem, coste 2, rareza Ultra Real
+  (código "LPE4 - 30/320 UR"), habilidad "Sólo puedes tener una Ciudad de
+  los Césares en juego. En tu Fase Final, si jugaste uno o más Aliados
+  este turno, puedes robar una carta." La leyenda impresa anteriormente
+  (heredada de Ira del Nahual) se quitó por no poder confirmarse para
+  esta impresión distinta — mismo criterio de "no adivinar" que con las
+  imágenes.
+- Se revisó si el mismo patrón (imagen correcta ya resuelta + tipo/rareza
+  heredados mal de una página base) se repetía en otras cartas de LPE4:
+  se filtraron las cartas con imagen propia ya resuelta pero rareza
+  "Sin Frecuencia" (21 candidatas) y se leyó cada scan directamente.
+  Encontrado un segundo caso real: **"Uxmal"** (edid 338) también estaba
+  como Oro cuando la carta impresa es Tótem, coste 2, rareza Promocional
+  (código "LPE4 - 338/320 P"), con habilidad "Cuando entra en juego,
+  puedes buscar un Tótem en tu Mazo Castillo que no sea Uxmal y ponerlo
+  en tu Mano. Cada vez que otro Tótem entre en juego bajo tu control, tu
+  oponente bota 1 carta." — mismo patrón: el nombre también existe en
+  otra edición con tipo distinto (Tótem), señal que ya había servido para
+  detectar el caso de Ciudad de los Césares.
+- Las otras 17 candidatas revisadas (Monedas de Oro, Diamante Turquesa,
+  Bafometh, Armadura de Valkyria, Sakura, Tzolkin, Codex Runicus ×2,
+  Calabaza del Inmortal ×2, Fruto Sagrado, Raza Nocturna, Rosa de los
+  Vientos, Lámpara Mágica, Ataúd de Marfil, Halatafl, Yasakani, Teatro
+  Kabuki) sí eran genuinamente Oro — el tipo estaba bien, solo les
+  faltaba completar habilidad/rareza/coste, que estaban visibles en su
+  propio scan y no se habían transcrito. Se completaron las 17
+  directamente desde la imagen ya guardada de cada una (fuente de máxima
+  confianza: es la carta física exacta, no una página base ni una
+  búsqueda). 4 de ellas (las "Set Clásico", prefijo `SCLPE4-`) no
+  mostraban letra de rareza en el scan, así que su rareza se dejó como
+  estaba (no se adivinó).
+- **Pendiente sin resolver, no se tocó**: revisando este mismo lote
+  apareció una inconsistencia distinta en **"Knarr"** (edid 091): la
+  imagen ya guardada (`leyendas_primera_era_4_0_91_knarr.webp`) muestra
+  el código impreso "LPE4 - 325/320 P" — una posición fuera del rango
+  base de 320 cartas, no la 091 con la que está registrada. Puede ser
+  una carta promocional/extra mal numerada (similar al bug real de
+  numeración de Mundos Perdidos) o una imagen cruzada con el nombre
+  equivocado (similar al caso de El Dorado #87/#324) — no se pudo
+  determinar cuál sin una fuente adicional que confirme qué carta va
+  realmente en la posición 091, así que se dejó intacta a la espera de
+  esa confirmación en vez de adivinar.
+- Validado: JSON válido, Playwright con la API real bloqueada — "Uxmal"
+  y "Ciudad de los Césares" filtrados por nombre muestran la copia de
+  Leyendas - Primera Era 4.0 como Tótem, 0 `pageerror`.
+
 ### 2026-08-23 (36ª iteración) — Nueva edición "Colecciones Raciales Primera Era 2025" (CRPE4), 117/117 cartas + bugfix real de texto con `<br>`
 - El dueño preguntó si la API hablaba de "Colecciones raciales" porque
   tenía una carta física, **Pájaro Trueno (CRPE4)**, sin poder
