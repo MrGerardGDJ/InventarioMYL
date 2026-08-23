@@ -378,6 +378,72 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-23 (36ª iteración) — Nueva edición "Colecciones Raciales Primera Era 2025" (CRPE4), 117/117 cartas + bugfix real de texto con `<br>`
+- El dueño preguntó si la API hablaba de "Colecciones raciales" porque
+  tenía una carta física, **Pájaro Trueno (CRPE4)**, sin poder
+  clasificarla. Se confirmó que ni `data/cards.json` (API de TOR) ni
+  `data/custom-cards.json` tenían nada de "Colecciones Raciales Primera
+  Era 2025" — solo estaban cargadas la de 2022 (`raciales_pe`) y la
+  "Segunda Parte" (`crpe2`). El dueño pidió registrarla completa.
+- **Extracción del wiki**: `Lista de cartas de Colecciones Raciales
+  Primera Era 2025` lista 117 cartas en 9 "Kits" (uno por raza:
+  Cazador, Licántropo, Vampiro, Bestia, Chamán, Guerrero, Abominación,
+  Bárbaro, Dios), código `CRPE4 NN - 117`, cada una con su propia página
+  de wiki (algunas con sufijo `(CRPE4)` cuando son reprint/remake de una
+  carta anterior, otras sin sufijo cuando son cartas nuevas exclusivas de
+  este producto — el título de página ya venía resuelto en el enlace de
+  la tabla, no hubo que adivinar ninguno). Las 117 páginas se bajaron sin
+  huecos; a diferencia de "Aniversario 25 años", la mayoría trae el campo
+  `texto` (leyenda) directo en su propia plantilla `{{Carta}}` — 112/117
+  con leyenda propia, más 3 recuperadas de una plantilla base transcluida
+  (`Pájaro de Trueno`, `Karib`, `Hodur`), solo 5 sin leyenda documentada
+  en ningún lado (Abramelin el Mago, Cerdo Calavera, Las Lilim, Brujo de
+  Salamanca, Volsung — las 5 restantes de las 9 "Buy a Box").
+- **Rareza mixta real, no numeración corrida**: la edición usa 4 rarezas
+  (`Real` 88, `Vasallo` 14, `Cortesano` 6, `Promocional` 9) — a
+  diferencia del bug de Mundos Perdidos, acá la mezcla es el diseño
+  real del producto (tiers de rareza del juego) y la numeración
+  `CRPE4 01..117` es correlativa sin saltos ni repeticiones, así que las
+  117 llevan `edid` normal (no `specialId`). Los 9 `Promocional`
+  correlativos al final (109-117) son las cartas "Buy a Box" de cada kit
+  (una por raza), documentado explícitamente en su propia página, no una
+  suposición.
+- **Imágenes**: 117/117 resueltas por `action=query&prop=imageinfo`
+  contra `Archivo:CRPE4-NNN-117.png`, subidas a la página específica de
+  cada carta — mismo criterio de confianza que ya se usa para el resto
+  de cartas de este archivo hospedadas en `static.wikia.nocookie.net`.
+- **Bugfix real encontrado de paso**: varias habilidades de dos líneas en
+  el wiki vienen con el HTML literal `<br>` en el texto (ej. Pájaro
+  Trueno: `"...prevenirlo.<br>Una vez por turno..."`). `nl2br()` en
+  `js/app.js` (usada para pintar la Habilidad en el detalle de carta)
+  hace `escapeHtml(s).replace(/\n/g, "<br>")` — es decir, espera saltos
+  de línea reales (`\n`), no la etiqueta `<br>` ya escrita: si el texto
+  trae `<br>` literal, `escapeHtml` lo escapa a `&lt;br&gt;` y se ve roto
+  en pantalla en vez de cortar la línea. Se corrigieron las 34
+  habilidades/leyendas de esta edición (`<br>` → `\n` en el momento de
+  extraer del wiki) y también 2 que habían quedado así en la edición
+  "Aniversario 25 años" de la iteración anterior (Guerreros Indomables,
+  Ullr) — corrección quirúrgica sobre esas 2 cartas puntuales en
+  `data/custom-cards.json`, sin tocar nada más. **Nota para el futuro**:
+  quedan ~249 ocurrencias de `<br>` literal en habilidad/leyenda en el
+  resto del archivo (ediciones cargadas en iteraciones anteriores, antes
+  de que se notara este patrón) — no se tocaron por quedar fuera del
+  alcance de lo pedido acá, pero es un bug real pendiente si se quiere
+  arreglar en otra pasada.
+- **Registro**: `data/editions.json` — entrada nueva `crpe4`
+  (`format: "PE"`), insertada según su fecha de lanzamiento real (11 de
+  julio de 2025, confirmada en la página del producto del wiki) — antes
+  de `leyendas_primera_era_4_0` (que salió después, ~septiembre 2025).
+  `data/custom-cards.json` — 117 cartas nuevas, `id` con el patrón
+  `crpe4__custom__{edid}_{nombre_slug}`.
+- Validado: JSON válido en ambos archivos, Playwright con la API real
+  bloqueada — filtrar por "Colecciones Raciales Primera Era 2025"
+  muestra "117 cartas" en el contador (60 visibles de entrada por la
+  paginación normal de la grilla, el resto tras "Cargar más", no es un
+  bug), Pájaro Trueno aparece por búsqueda y su detalle ya renderiza el
+  salto de línea como `<br>` real en el DOM en vez de texto escapado,
+  0 `pageerror`.
+
 ### 2026-08-23 (35ª iteración) — Nueva edición "Aniversario 25 años" (Aniversario LPE25), 26/26 cartas
 - El dueño tiene una carta física de **Maui** que dice "25 aniversario" y
   no aparecía en el inventario. La investigación pasó por tres
