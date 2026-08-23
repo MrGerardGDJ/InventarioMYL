@@ -378,6 +378,77 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-23 (35ª iteración) — Nueva edición "Aniversario 25 años" (Aniversario LPE25), 26/26 cartas
+- El dueño tiene una carta física de **Maui** que dice "25 aniversario" y
+  no aparecía en el inventario. La investigación pasó por tres
+  correcciones sucesivas (documentadas en la conversación, no repetidas
+  acá): un primer intento con un blog encontró solo 6 cartas y era
+  incompleto; un segundo intento encontró el evento "25 Aniversario Años"
+  (25 cartas en 4 formatos, PE 01-06/PB 07-12/FX 13-18/Imperio 19-25) pero
+  su carta #13 (Caballero Negro) no calzaba; el enlace directo que pasó el
+  dueño (`Maui_(Aniversario_LPE25)` en el fandom) reveló el set correcto:
+  **"Aniversario LPE25"**, 26 cartas Primera Era, premio del **Torneo
+  Nacional Primera Era 2025** (jugado 14-15 de marzo de 2026) a los 128
+  mejores lugares + 2 mejores de cada Torneo Relámpago — ahí sí, carta #13
+  = Maui, coincide con la física del dueño.
+- **Confirmado que NO está en la API de TOR**: `curl
+  https://api.myl.cl/cards/edition/todas` no trae ningún `ed_slug` que
+  contenga "lpe25" ni "aniversario" salvo `espada_sagrada_aniversario`,
+  `helenica_aniversario`, `producto_especial_furia_aniversario` (aniversarios
+  de OTROS bloques, sin relación). Corresponde extraerla del wiki
+  (Paso 2 de la skill `registrar-nueva-edicion`).
+- **Extracción del wiki**: la tabla de premios de
+  `Torneo Nacional Primera Era 2025` (sección "Cartas promocionales
+  Aniversario Primera Era") lista los 26 códigos `ANIVERSARIO LPE25
+  01`..`26` con su página específica `<Nombre> (Aniversario LPE25)`. Se
+  bajaron las 26 páginas — cada una es una plantilla `{{Cartasintexto}}`
+  completa (tipo, raza, coste de oro, ataque, habilidad, código, imagen)
+  en la página específica de la edición, la fuente de máxima confianza
+  según la skill. Ninguna hubo que resolverla por fallback ni por
+  búsqueda — las 26 tenían su propia página.
+- **Frecuencia**: las 26 cartas son `Promocional` de forma pareja (no hay
+  mezcla con "Real" dentro de la edición), así que van numeradas
+  correlativas por `edid` ("001".."026"), no como `specialId` — no aplica
+  el caso de numeración corrida que sí aplicó en Mundos Perdidos.
+- **Imágenes**: las 26 vienen de `Archivo:ANIVERSARIO LPE25 NN.png`,
+  subidas a la propia página de la edición (no a una página base
+  compartida) — se resolvieron las 26 URLs reales vía
+  `action=query&prop=imageinfo` y se enlazan directo a
+  `static.wikia.nocookie.net`, igual que ya se hace con el resto de
+  cartas traídas del wiki en este archivo (ej. Leyendas - Primera Era
+  4.0, ~588 URLs de ese mismo host ya en uso) — no se trata de una tienda
+  comercial, así que no aplica la regla de auto-hospedaje en
+  `data/custom-images/`.
+- **Leyenda (flavour)**: cada página de la edición transcluye `{{Maui}}`,
+  `{{Gilgamesh}}`, etc. — la plantilla base de la carta original de la
+  que esta es reprint/remake — cuando esa página base existe. Se bajaron
+  las 11 plantillas base referenciadas y se extrajo su campo `texto`
+  (10 con éxito: Gilgamesh, Dragón Oriental, Ogro, Solomon→Puritano,
+  Beerwolf, Enjambre, Maui, Lu Junyi, Daikoku, Sha Heshang→Sha Wujing;
+  `Yokai`, la única que trascluye Criaturas Siniestras, no existe como
+  página propia). Las 16 cartas restantes (mayoría Oro/Tótem/Talismán sin
+  plantilla base transcluida) quedan con `flavour: ""` — no se inventó
+  texto para ellas, es un hueco real de documentación del wiki, no un
+  error de extracción.
+- **Registro**: `data/editions.json` — entrada nueva `aniversario_lpe25`
+  (`format: "PE"`), insertada al final del bloque PE (después de
+  `toolkit_primera_era_2026`, ya que el torneo se jugó en marzo de 2026).
+  Nombre visible **"Aniversario 25 años"**, tal como lo pidió el dueño.
+  `data/custom-cards.json` — 26 cartas nuevas, `id` con el patrón
+  `aniversario_lpe25__custom__{edid}_{nombre_slug}`.
+- **Aviso de nombre parecido, no resuelto todavía**: el nombre pedido
+  "Aniversario 25 años" es muy similar al del OTRO set de 25 cartas (el
+  de las 4 mesas regionales, "25 Aniversario Años"/PE-PB-FX-Imperio)
+  investigado en la misma conversación — ese otro set sigue sin estar en
+  el catálogo. Quedan como dos ediciones con nombre casi idéntico si
+  algún día se carga el otro también (`aniversario_lpe25` vs. un futuro
+  slug distinto para el otro) — el dueño fue avisado para que decida si
+  renombrar alguna cuando llegue ese caso.
+- Validado: `python3 -c "import json; json.load(...)"` en ambos JSON,
+  Playwright con la API real bloqueada — filtrar por "Aniversario 25
+  años" en el selector de edición muestra las 26 cartas, Maui con su
+  imagen cargando desde la URL del wiki, 0 `pageerror`.
+
 ### 2026-08-18 (34ª iteración) — El buscador global ahora también filtra Cambio y Ventas
 - El dueño notó que el buscador de la barra superior ya filtraba
   Catálogo, Colecciones y el mazo abierto, pero no hacía nada en

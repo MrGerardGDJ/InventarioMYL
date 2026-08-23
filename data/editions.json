@@ -228,6 +228,12 @@
     "name": "Toolkit Primera Era 2026"
   },
   {
+    "slug": "aniversario_lpe25",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Aniversario 25 años"
+  },
+  {
     "slug": "espada_sagrada",
     "format": "PB",
     "formatName": "Primer Bloque",
