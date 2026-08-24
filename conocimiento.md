@@ -424,11 +424,13 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
   "EDICIÓN LIMITADA JO" (confirmado también en la descripción del
   producto de mylserena, idéntico texto) — no tienen número individual
   propio, es el nombre de esta sub-tanda 2026 completa. Se registraron
-  con `specialId` (nunca `edid`, siguiendo la regla de la skill para
-  cartas sin numeración secuencial): `"EDICIÓN LIMITADA JO"` para Hrist y
-  `"EDICIÓN LIMITADA JO-b"` para Comerciantes del Río, mismo patrón de
-  sufijo de letra ya usado en Lootbox PE 2025 para varias cartas que
-  comparten un código genérico ("EDICIÓN LIMITADA PE25", "-b", "-c"...).
+  primero con ese código literal como `specialId` (nunca `edid`, la
+  carta no trae numeración propia); a pedido explícito del dueño ("que
+  sean la JO-126 y JO-127 para que exista un orden") se renumeraron
+  después a `specialId: "JO-126"` (Hrist) y `"JO-127"` (Comerciantes del
+  Río), continuando la secuencia — es una numeración asignada por el
+  dueño para orden interno del inventario, no el código real impreso en
+  la carta (que sigue siendo "EDICIÓN LIMITADA JO" en ambas).
 - Imágenes resueltas por `action=query&prop=imageinfo` contra los
   archivos `Hrist_JO.png` / `Comerciantes_del_Río_JO.png`, subidos a la
   página específica de cada carta — mismo criterio que el resto del
