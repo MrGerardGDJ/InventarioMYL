@@ -378,6 +378,64 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-24 (38ª iteración) — Completa "Juego Organizado - Primera Era" (JO): 2 cartas nuevas, Hrist y Comerciantes del Río
+- El dueño está agregando cartas a su colección de "Juego Organizado -
+  Primera Era" (125 cartas ya en el catálogo, numeradas JO-01 a JO-125
+  sin huecos) y notó que le faltaba **Hrist**, que tiene físicamente
+  (confirmó con `https://mylserena.cl/hrist-promocional-jo` y
+  `https://myl.fandom.com/es/wiki/Hrist_(J.O.)`). Pidió revisar TODAS las
+  páginas del wiki que terminan en "(J.O.)" que sean de Primera Era, y
+  cruzar también con mylserena.cl buscando slugs "-promocional-jo".
+- **Wiki**: `action=query&list=search&srsearch=(J.O.)` (paginado, ~990
+  resultados de texto libre) dio **95 páginas** cuyo título termina
+  literalmente en " (J.O.)". Comparando contra el catálogo (125 cartas
+  ya cargadas) solo 3 nombres no calzaban: Beleth, Comerciantes del Río,
+  Hrist. **Beleth se descartó**: su página dice `edición = J.O. Primer
+  Bloque 2025` — no es Primera Era, es de otro formato/bloque (fuera de
+  lo pedido explícitamente por el dueño).
+- **mylserena.cl**: se corrió `match_mylserena_sitemap.py --code-filter
+  "promocional-jo"` (recorre el sitemap completo, no la categoría, que
+  suele estar incompleta) → 63 páginas de producto. Cruzadas contra el
+  catálogo, todas correspondían a cartas que ya estaban cargadas
+  (algunas con nombre ligeramente distinto al de la URL — ej. "Mù Shé"
+  ya estaba como JO-85, "Mordida" como JO-52, "Origami" como JO-80,
+  "Maelstrom" como JO-36 pese a que el sitemap trae también el slug
+  duplicado "malestrom-2025") — sin cartas nuevas que esta fuente no
+  hubiera ya señalado. Confirma que las 2 fuentes coinciden: solo faltan
+  **Hrist** y **Comerciantes del Río**.
+- **Dato de ambas, extraído de su propia página del wiki** (fuente de
+  máxima confianza, página específica J.O., no una base compartida):
+  - **Hrist**: Aliado Dios, coste 2, fuerza 2, Promocional. "En tu Fase
+    de Vigilia, puedes jugar este Aliado de tu Cementerio pagando su
+    Coste. Una vez por turno, puedes descartar una carta de tu Mano para
+    robar 1 carta o para que este Aliado gane 2 a la Fuerza hasta la
+    Fase Final." Reprint full art de Hrist, entregada en los Torneos
+    Relámpago del Torneo Premier Primera Era de agosto de 2026 a cambio
+    de 3 Dracma Relámpago.
+  - **Comerciantes del Río**: Oro Promocional. "Cuando entra en juego,
+    tu oponente bota una carta de su Mazo Castillo. Puedes destruir este
+    Oro para que tu oponente bote 1 carta de su Mazo Castillo." Mismo
+    origen (Torneo Premier PE agosto 2026, Dracma Relámpago).
+  - Ninguna trae texto de sabor (`historia`) documentado en su página ni
+    en una plantilla base transcluida — se dejó `flavour` vacío, no se
+    adivinó.
+- **Numeración distinta al resto de la edición**: a diferencia de las
+  125 cartas `JO-NN`, ambas traen el mismo código genérico impreso
+  "EDICIÓN LIMITADA JO" (confirmado también en la descripción del
+  producto de mylserena, idéntico texto) — no tienen número individual
+  propio, es el nombre de esta sub-tanda 2026 completa. Se registraron
+  con `specialId` (nunca `edid`, siguiendo la regla de la skill para
+  cartas sin numeración secuencial): `"EDICIÓN LIMITADA JO"` para Hrist y
+  `"EDICIÓN LIMITADA JO-b"` para Comerciantes del Río, mismo patrón de
+  sufijo de letra ya usado en Lootbox PE 2025 para varias cartas que
+  comparten un código genérico ("EDICIÓN LIMITADA PE25", "-b", "-c"...).
+- Imágenes resueltas por `action=query&prop=imageinfo` contra los
+  archivos `Hrist_JO.png` / `Comerciantes_del_Río_JO.png`, subidos a la
+  página específica de cada carta — mismo criterio que el resto del
+  archivo.
+- Validado: JSON válido, Playwright con la API real bloqueada — ambas
+  cartas aparecen por búsqueda en el catálogo, 0 `pageerror`.
+
 ### 2026-08-23 (37ª iteración) — Bugfix real: "Ciudad de los Césares" y "Uxmal" en Leyendas - Primera Era 4.0 estaban como Oro en vez de Tótem
 - El dueño reportó que en su Mazo Principal, "Ciudad de los Césares"
   contaba como Oro en vez de Tótem. Investigando se confirmó que **no es

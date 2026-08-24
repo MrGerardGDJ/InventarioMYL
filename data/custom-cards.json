@@ -21555,6 +21555,42 @@
    "flavour": "La reunión disfrutaba usando a Baldur como blanco, festejaba su invulnerabilidad. Ciego como la guerra, Hodur se mantenía apartado... Una maliciosa voz le instó a participar, le facilitó para disparar una inocente saeta de muérdago...",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/fe/CRPE4-117-117.png/revision/latest?cb=20250628155931&path-prefix=es",
    "custom": true
+  },
+  {
+   "id": "juego_organizado_pe__custom__hrist",
+   "name": "Hrist",
+   "edition": "juego_organizado_pe",
+   "editionName": "Juego Organizado - Primera Era",
+   "format": "PE",
+   "edid": "",
+   "type": "Aliado",
+   "race": "Dios",
+   "rarity": "Promocional",
+   "cost": 2,
+   "strength": 2,
+   "ability": "En tu Fase de Vigilia, puedes jugar este Aliado de tu Cementerio pagando su Coste. Una vez por turno, puedes descartar una carta de tu Mano para robar 1 carta o para que este Aliado gane 2 a la Fuerza hasta la Fase Final.",
+   "flavour": "",
+   "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/63/Hrist_JO.png/revision/latest?cb=20260821020005&path-prefix=es",
+   "custom": true,
+   "specialId": "EDICIÓN LIMITADA JO"
+  },
+  {
+   "id": "juego_organizado_pe__custom__comerciantes_del_rio",
+   "name": "Comerciantes del Río",
+   "edition": "juego_organizado_pe",
+   "editionName": "Juego Organizado - Primera Era",
+   "format": "PE",
+   "edid": "",
+   "type": "Oro",
+   "race": "—",
+   "rarity": "Promocional",
+   "cost": null,
+   "strength": null,
+   "ability": "Cuando entra en juego, tu oponente bota una carta de su Mazo Castillo. Puedes destruir este Oro para que tu oponente bote 1 carta de su Mazo Castillo.",
+   "flavour": "",
+   "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/e4/Comerciantes_del_R%C3%ADo_JO.png/revision/latest?cb=20260821020501&path-prefix=es",
+   "custom": true,
+   "specialId": "EDICIÓN LIMITADA JO-b"
   }
  ]
 }
