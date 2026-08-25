@@ -378,6 +378,72 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-24 (39ª iteración) — Nueva edición "Kit de Juego Primera Era - Full Art", 30/30 cartas + laguarida.store como fuente nueva
+- El dueño encontró en una tienda nueva, **laguarida.store**, varias cartas
+  "full art" (Chac's, Huracán, etc.) de Primera Era que no lograba ubicar
+  en el catálogo, y pidió: (1) que existan como cartas propias para poder
+  inventariarlas, con imagen de esa tienda; (2) guardar laguarida.store
+  como referente de búsqueda/precios; (3) revisar el resto del sitio
+  buscando fotos de mejor calidad para el catálogo de Primera Era en
+  general ("tal y como lo hicimos una vez" — mismo criterio que con
+  mylserena.cl).
+- **Origen real de las 30 cartas**: dos productos del wiki, `Kit de Juego:
+  Leyendas - Primera Era` (nov 2020) y su sucesor `... II` (dic 2020) — 8
+  sobres + 6 cartas full art al azar de un pool de 12, más 3 extra de
+  regalo por reserva ("Buy-a-Box"), 15 cartas por kit = 30 en total. El
+  wiki aclara textualmente: **"las cartas full art mantienen su
+  numeración original"** — o sea, son la MISMA carta (mismo nombre,
+  mismo número, misma habilidad) que ya vive en el catálogo bajo su
+  edición de origen (El Reto, Mundo Gótico, Ira del Nahual, Ragnarok, La
+  Cofradía, Espíritu de Dragón) — solo cambia el arte a página completa.
+  No hubo que adivinar el dato de juego de ninguna: se copió tipo, raza,
+  coste, fuerza, habilidad y leyenda directo de la carta de origen que el
+  wiki mismo declara en la tabla (columna "Origen"), cruzada por
+  nombre+edid exacto contra `data/cards.json` — no por nombre solo.
+- **2 casos que casi generan un hueco falso, resueltos sin adivinar**:
+  - "Ataque Suicida" full art viene de una edición que en verdad NO
+    tenemos, **"Mundo Gótico X"** (edid 013 de un total de 174 — el
+    "Mundo Gótico" que sí tenemos solo llega a 170). Se usó igual la
+    versión de "Mundo Gótico" (edid 139, mismo nombre, mecánica de Oro
+    idéntica en las reimpresiones simples de esta franquicia) como dato
+    base — "Mundo Gótico X" en sí queda pendiente de registrar si el
+    dueño lo pide más adelante (edición completa faltante, no solo esta
+    carta).
+  - "Ánima Negra" full art no aparecía en el catálogo buscando por ese
+    nombre — resultó que SÍ está (Mundo Gótico, Arma, edid 038), pero la
+    API de TOR la entrega con el nombre roto **"Nima Negra"** (falta la
+    "Á" completa, no solo el acento — no es el bug ya conocido de tildes
+    que corrige `nameCache`). No se tocó `data/cards.json` (lo regenera
+    el scraper); queda pendiente si el dueño quiere una entrada en
+    `scraper/corrections.js` para ese nombre.
+- **Imágenes**: las 30 se bajaron de laguarida.store (fotos propias,
+  buena resolución) y se auto-hospedaron en
+  `data/custom-images/laguarida/` — nunca se hotlinkean, mismo criterio
+  que mylserena/mesaredonda (sin cabecera CORS confiable + no usar el
+  ancho de banda de una tienda competidora).
+- **Registro**: `data/editions.json` — entrada nueva
+  `kit_juego_pe_fullart` (`format: "PE"`), insertada después de
+  `espiritu_del_dragon` (las cartas de origen terminan ahí
+  cronológicamente, y el kit salió después, nov/dic 2020). Nombre visible
+  **"Kit de Juego Primera Era - Full Art"**. `data/custom-cards.json` —
+  30 cartas nuevas, `specialId` con el código impreso tal cual aparece en
+  la carta física (ej. `"76-126"` para Huracán) — 2 colisiones reales de
+  código entre cartas de distinto origen (Naglfar/Grootslang ambas
+  "5-126"; Hidromiel/Chacs ambas "79-126") resueltas con sufijo `-b`,
+  mismo patrón ya usado en Lootbox PE 2025.
+- **laguarida.store documentada** en `docs/FUENTES-DATOS.md` §6b como
+  fuente de imágenes (WooCommerce/WordPress, JSON-LD con `sku` exacto,
+  sitemap de productos en 15 archivos). **Pendiente, no hecho todavía**:
+  recorrer el resto del sitio buscando fotos de mejor calidad para el
+  resto del catálogo de Primera Era — el dueño lo pidió explícitamente,
+  pero es un cruce de escala mayor (15 sitemaps de productos, potencial-
+  mente miles de URLs de TODOS los juegos que vende la tienda, no solo
+  MyL) que necesita su propio script de recorrido y filtro antes de
+  ejecutarse — se deja para una iteración separada.
+- Validado: JSON válido, Playwright con la API real bloqueada — filtrar
+  por "Kit de Juego Primera Era - Full Art" muestra "30 cartas", Huracán
+  aparece con su imagen de laguarida cargando, 0 `pageerror`.
+
 ### 2026-08-24 (38ª iteración) — Completa "Juego Organizado - Primera Era" (JO): 2 cartas nuevas, Hrist y Comerciantes del Río
 - El dueño está agregando cartas a su colección de "Juego Organizado -
   Primera Era" (125 cartas ya en el catálogo, numeradas JO-01 a JO-125

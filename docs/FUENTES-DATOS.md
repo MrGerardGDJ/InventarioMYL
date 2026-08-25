@@ -174,6 +174,17 @@ auto-hospedan en `data/custom-images/<tienda>/`, nunca se hotlinkean.
   una foto real de "Tótem de Guerra (Edición Limitada 20 Años)" que no
   tenía scan disponible en el wiki — la URL del producto la trae el usuario,
   no hace falta recorrer su sitemap para esto.
+- **laguarida.store** (WooCommerce/WordPress) — referente de búsqueda y
+  precios elegido por el dueño del inventario. Cada producto trae bloque
+  `application/ld+json` tipo `Product` con `"sku"` exacto (ej.
+  `"KJPE-011"` para el Kit de Juego PE) y `"image"` directa (fotos propias
+  de buena resolución, alojadas en `wp-content/uploads/...`). Tiene
+  `sitemap.xml` → `product-sitemap.xml` a `product-sitemap15.xml` (WordPress
+  All in One SEO, ~2000 URLs por archivo — recorrer TODOS antes de dar por
+  completo un cruce, no solo el primero). Usada 2026-08-24 para registrar
+  las 30 cartas "Full Art" del Kit de Juego PE I y II (ver
+  `conocimiento.md`) — pendiente recorrer el resto del catálogo Primera
+  Era buscando fotos de mejor calidad que las ya cargadas.
 
 ---
 
