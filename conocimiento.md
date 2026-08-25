@@ -378,6 +378,38 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-24 (41ª iteración) — Imagen real de "Ira del Nahual" #6 (con el logo de la reedición 2022)
+- El dueño encontró en laguarida.store la foto exacta de su carta física
+  de "Ira del Nahual" (la que el sábado confirmamos que es la #6, con el
+  logo "LA IRA DEL NAHUAL" agregado entre el ícono de Talismán y el
+  coste — la reedición "Colección Completa 20 Años" de mayo 2022):
+  `https://laguarida.store/product/ira-del-nahual-ira-del-nahual/`
+  (categoría del sitio: Promocionales PE+ → Cartas Cole Completa PE, SKU
+  `CCPE-INA-001`). La imagen confirma código "6-126 / PRIMERA EDICIÓN"
+  visible en la carta, mismo texto de habilidad — no es una carta
+  distinta, es la misma #6 que ya estaba registrada, solo que el
+  catálogo mostraba el arte original sin el logo (el que trae la API de
+  TOR) y no esta reimpresión.
+- **Nuevo tipo de corrección**: hasta ahora `corrections.js` solo pisaba
+  `edid`/`specialId`/`edition`/`editionName` (y desde la iteración
+  anterior, `name`). Se agregó soporte para pisar también `image` —
+  nueva tabla `IMAGE_CORRECTIONS` en `corrections.js`, sumada a
+  `ALL_CORRECTIONS` en `scrape.js` con
+  `if (fix.image !== undefined) c.image = fix.image;`. Pensada para
+  casos donde la imagen que trae TOR es el arte "de fábrica" pero la
+  mayoría de copias físicas en circulación hoy son de una reedición con
+  arte distinto (mismo patrón que el logo "20/25 Años") — siempre
+  confirmando contra el código impreso visible en la foto, nunca por
+  nombre solo.
+- Imagen descargada y auto-hospedada en
+  `data/custom-images/laguarida/ira_del_nahual_006_logo.png` (nunca se
+  hotlinkea). `IMAGE_CORRECTIONS["59-006"]` apunta a esa ruta; aplicado
+  también directo al `data/cards.json` ya commiteado para que se vea de
+  inmediato.
+- Validado: JSON válido, Playwright con la API real bloqueada —
+  filtrando por "Ira Del Nahual" y buscando "Ira del Nahual", la carta
+  #6 ahora carga la imagen de laguarida con el logo, 0 `pageerror`.
+
 ### 2026-08-24 (40ª iteración) — Corrige nombre roto de TOR: "Nima Negra" → "Ánima Negra"
 - Pendiente de la iteración anterior: TOR entrega esta carta (Mundo
   Gótico #038) con el nombre **"Nima Negra"** en el listado — no es el

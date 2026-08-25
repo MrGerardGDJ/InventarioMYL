@@ -547,3 +547,20 @@ export const MUNDOS_PERDIDOS_TOR_CORRECTIONS = {
 export const NAME_CORRECTIONS = {
   "58-038": { name: "Ánima Negra" }, // Mundo Gótico #038, TOR la lista como "Nima Negra"
 };
+
+// La imagen que trae TOR para cada carta es una sola por id, sin variantes de
+// reimpresión — para cartas que se reeditaron con arte distinto (ej. el logo
+// "20 Años"/"25 Años" agregado en la caja "Colección Completa" de 2022, ver
+// conocimiento.md) esto deja la imagen del catálogo desactualizada respecto a
+// lo que la mayoría de las copias físicas en circulación hoy realmente traen.
+// Se auto-hospeda en data/custom-images/<tienda>/, nunca se hotlinkea (mismo
+// criterio que las imágenes de ediciones custom, ver skill
+// registrar-nueva-edicion). Confirmado carta por carta contra el código
+// impreso visible en la foto (ej. "6-126") antes de reemplazar — nunca por
+// nombre solo.
+export const IMAGE_CORRECTIONS = {
+  // Ira del Nahual #006 — foto real de la reedición "Colección Completa 20
+  // Años" (mayo 2022, logo de la edición agregado), confirmada por el dueño
+  // del inventario (24-08-2026) contra su carta física.
+  "59-006": { image: "./data/custom-images/laguarida/ira_del_nahual_006_logo.png" },
+};
