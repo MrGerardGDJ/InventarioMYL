@@ -378,6 +378,36 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-24 (40ª iteración) — Corrige nombre roto de TOR: "Nima Negra" → "Ánima Negra"
+- Pendiente de la iteración anterior: TOR entrega esta carta (Mundo
+  Gótico #038) con el nombre **"Nima Negra"** en el listado — no es el
+  caso normal de "falta el acento" que ya cubre el enriquecimiento
+  perezoso de nombres del navegador (`nameCache`/`scheduleNameCorrection`
+  en `js/app.js`), acá falta la letra "Á" completa. Verificado que el
+  endpoint de perfil de la propia API (`/cards/profile/mundo_gotico/anima_negra`)
+  sí trae el nombre correcto, y que el `slug`/`legacyId` de la carta ya
+  usan "anima_negra" — solo el campo `name` del listado está roto.
+- **Por qué no se autocorregía sola**: el enriquecimiento de nombres del
+  scraper (`--names` en `scrape.js`) es incremental — reutiliza los
+  nombres de la corrida anterior y solo consulta cartas NUEVAS, salvo que
+  se pase `--reenrich`. Como esta carta ya tenía una "base" con acentos
+  guardada de antes (por otras cartas corregidas), nunca se volvía a
+  consultar su perfil — el nombre roto quedaba pegado para siempre.
+- **Arreglo, mismo patrón que las tablas de corrección existentes**: se
+  agregó `NAME_CORRECTIONS` en `scraper/corrections.js` (nueva tabla,
+  documentada igual que las demás) con `"58-038": { name: "Ánima Negra" }`,
+  y se sumó `NAME_CORRECTIONS` a `ALL_CORRECTIONS` en `scrape.js` más un
+  nuevo `if (fix.name !== undefined) c.name = fix.name;` en el loop de
+  aplicación — así sobrevive a que el scraper se vuelva a correr (antes
+  solo pisaba `edid`/`specialId`/`edition`/`editionName`, nunca `name`).
+  Se aplicó el mismo cambio directo al `data/cards.json` ya commiteado
+  (reemplazo puntual por `id`, el archivo es JSON minificado en una sola
+  línea) para que se vea corregido de inmediato, sin esperar a la próxima
+  corrida semanal del scraper.
+- Validado: JSON válido, Playwright con la API real bloqueada — buscar
+  "Anima Negra" muestra "Ánima Negra" en las 2 ediciones donde aparece
+  (Mundo Gótico y Kit de Juego Primera Era - Full Art), 0 `pageerror`.
+
 ### 2026-08-24 (39ª iteración) — Nueva edición "Kit de Juego Primera Era - Full Art", 30/30 cartas + laguarida.store como fuente nueva
 - El dueño encontró en una tienda nueva, **laguarida.store**, varias cartas
   "full art" (Chac's, Huracán, etc.) de Primera Era que no lograba ubicar

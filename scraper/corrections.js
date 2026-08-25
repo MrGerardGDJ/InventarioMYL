@@ -533,3 +533,17 @@ export const MUNDOS_PERDIDOS_TOR_CORRECTIONS = {
   "132-019": { edid: "018", specialId: "" },
   "132-020": { edid: "019", specialId: "" },
 };
+
+// TOR entrega el nombre de esta carta roto en el LISTADO (falta la "Á"
+// completa, no solo el acento — no es el caso normal que ya cubre el
+// enriquecimiento perezoso de nombres, que solo agrega tildes/ñ). Verificado
+// contra su propio endpoint de perfil (`/cards/profile/mundo_gotico/anima_negra`),
+// que sí trae el nombre correcto — y contra el wiki. El enriquecimiento por
+// perfil (`--names` en scrape.js) es incremental y no re-consulta cartas que
+// ya tienen una base con acentos, así que sin esta corrección el nombre roto
+// queda pegado para siempre salvo `--reenrich`. Reportado por el dueño del
+// inventario (24-08-2026), encontrado revisando las cartas "full art" de
+// laguarida.store (ver conocimiento.md).
+export const NAME_CORRECTIONS = {
+  "58-038": { name: "Ánima Negra" }, // Mundo Gótico #038, TOR la lista como "Nima Negra"
+};

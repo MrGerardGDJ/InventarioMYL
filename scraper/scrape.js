@@ -21,7 +21,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { allEditions, slugToName, FORMATS } from "./editions.js";
-import { LEYENDAS_2023_CORRECTIONS, TOOLKIT_PE_2024_CORRECTIONS, MUNDOS_PERDIDOS_TOR_CORRECTIONS } from "./corrections.js";
+import { LEYENDAS_2023_CORRECTIONS, TOOLKIT_PE_2024_CORRECTIONS, MUNDOS_PERDIDOS_TOR_CORRECTIONS, NAME_CORRECTIONS } from "./corrections.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(__dirname, "..", "data", "cards.json");
@@ -176,7 +176,7 @@ for (const slug of editionsToFetch) {
 }
 
 /* ---------- 3.1) correcciones manuales conocidas (ver corrections.js) ---------- */
-// Pisa SOLO campos de salida (edid/specialId/edition/editionName) por id —
+// Pisa SOLO campos de salida (edid/specialId/edition/editionName/name) por id —
 // nunca el id mismo, para no romper el inventario/mazos ya guardados contra
 // el id "de fábrica" de estas cartas. `drop: true` saca la carta del todo
 // (usado para descartar duplicados exactos que TOR lista dos veces bajo dos
@@ -184,7 +184,7 @@ for (const slug of editionsToFetch) {
 // edid/specialId, remover una carta sí es seguro de "deshacer" simplemente
 // quitando la entrada del correction table más adelante, porque nunca tocó
 // el id de ninguna otra carta.
-const ALL_CORRECTIONS = [LEYENDAS_2023_CORRECTIONS, TOOLKIT_PE_2024_CORRECTIONS, MUNDOS_PERDIDOS_TOR_CORRECTIONS];
+const ALL_CORRECTIONS = [LEYENDAS_2023_CORRECTIONS, TOOLKIT_PE_2024_CORRECTIONS, MUNDOS_PERDIDOS_TOR_CORRECTIONS, NAME_CORRECTIONS];
 let corrected = 0;
 let dropped = 0;
 // ids descartados a propósito (duplicados) — el merge no-destructivo del
@@ -201,6 +201,7 @@ for (const c of all) {
   if (fix.specialId !== undefined) c.specialId = fix.specialId;
   if (fix.edition !== undefined) c.edition = fix.edition;
   if (fix.editionName !== undefined) c.editionName = fix.editionName;
+  if (fix.name !== undefined) c.name = fix.name;
   corrected++;
   keep.push(c);
 }
