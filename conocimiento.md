@@ -378,6 +378,41 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-24 (44ª iteración) — Cierra los 2 gaps puntuales del reporte: Tecpatl y Madre de Dragones
+- El dueño pidió seguir con "todos" los gaps del reporte de la 43ª
+  iteración. Empezando por los 2 más chicos:
+- **"Madre de Dragones" (Mundo Medieval El Reto) no era un gap real**:
+  al comparar la foto de laguarida.store (código impreso "REX - 00/12")
+  contra la carta ya cargada como edid "013", la habilidad coincide
+  EXACTA ("Destierra una carta oponente en juego que no sea Oro...").
+  Es el mismo bug de numeración ya documentado en
+  `MUNDOS_PERDIDOS_TOR_CORRECTIONS` — TOR trae la carta "00"
+  (firma/especial de un set de 12) como si fuera la #13 corrida, en vez
+  de tratarla como especial. A diferencia de Mundos Perdidos, acá NO hay
+  corrimiento en cascada (001-012 sí son su número real) — solo esa una
+  carta necesitaba pasar de `edid` a `specialId`. Se agregó
+  `MUNDO_MEDIEVAL_TOR_CORRECTIONS` en `corrections.js` (mismo patrón que
+  las otras tablas) con `"113-013": { edid: "", specialId: "REX-00" }`,
+  sumada a `ALL_CORRECTIONS` en `scrape.js`, y aplicada también directo
+  al `data/cards.json` ya commiteado.
+- **"Tecpatl" (Toolkit Primera Era 2024 #41) sí era un gap real, y con
+  una trampa**: la página base del wiki ("Tecpatl", sin sufijo de
+  edición) describe la carta ORIGINAL de "La Ira del Nahual" —
+  coste 2, "El Aliado portador de esta Arma es imbloqueable." — pero la
+  foto real de la reimpresión en el Toolkit 2024 (verificada en
+  laguarida.store, código "TKPE24 - 41/28") muestra una carta
+  REDISEÑADA: coste 4, "El portador gana 1 a la Fuerza y es
+  Imbloqueable. Cuando entra en juego, gana el control de un Aliado
+  oponente hasta que esta Arma salga del juego." — exactamente el caso
+  que la skill `registrar-nueva-edicion` advierte de no copiar de una
+  página base sin verificar cada dato contra la foto real de ESA
+  impresión. Agregada a `data/custom-cards.json` con los datos leídos
+  directo de la foto (no de la página base), rareza Promocional por
+  patrón de posición (las 3 cartas inmediatamente anteriores del mismo
+  lote, edid 038-040, ya cargadas como Promocional).
+- Validado: JSON válido en ambos archivos, Playwright con la API real
+  bloqueada — ambas cartas aparecen por búsqueda, 0 `pageerror`.
+
 ### 2026-08-24 (43ª iteración) — Auditoría completa de Primera Era contra laguarida.store; agrega "Trono de Odín" (Ragnarok #126)
 - A pedido del dueño ("revisa toda la estructura y compárala con la
   fuente de conocimiento, hagamos un análisis exhaustivo"), se recorrió
