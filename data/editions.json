@@ -66,6 +66,18 @@
     "name": "EXtension PE"
   },
   {
+    "slug": "cartas_zombies_pe",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Cartas Zombies"
+  },
+  {
+    "slug": "cartas_coleccion_completa_pe",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Cartas Colección Completa PE"
+  },
+  {
     "slug": "leyendas_primera_era_2022",
     "format": "PE",
     "formatName": "Primera Era",

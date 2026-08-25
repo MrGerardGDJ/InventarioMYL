@@ -378,6 +378,47 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-24 (45ª iteración) — 3 líneas promocionales del reporte: 2 resultaron ya cubiertas, 2 se registraron nuevas (35 cartas)
+- Siguiendo con "todos" los gaps del reporte:
+- **"Misión Santiago" no era un gap**: sus 4 cartas (Golpe Vampiro,
+  Guardián, Resplandor Dorado, Tótem de Guerra) ya estaban cargadas
+  bajo la edición "Cartas Promo 20 Años" (`promo_20_anos_pe`,
+  specialId `20A-01`..`20A-09`) — mismo nombre de evento, mismo
+  producto, categoría de tienda distinta nomás.
+- **"Cartas Coleccionistas" (PCPE) y "Cartas Colecciones Legendarias"
+  (CLER/CLRG) tampoco eran gaps**: se verificó carta por carta (leyendo
+  el código y la habilidad impresos en la foto de cada una, ej. "Odín"
+  PCPE/CLRE código "1-126", ability idéntica a la de El Reto #001 ya
+  cargada) — son reimpresiones con arte alternativo de cartas que ya
+  existen en Leyendas Primera Era / El Reto / Ragnarok, mismo dato de
+  juego exacto. No se creó ninguna entrada nueva para estas dos.
+- **"Cartas Zombies" (ZPE) sí era un gap real** — 5 cartas, entregadas
+  como Buy-a-Box de "Extensión Primera Era": Falsa Cautiva (Mundo
+  Gótico #78), Miyamoto Musashi (Espíritu de Dragón #84), Odín (El
+  Reto #1), Thor (La Cofradía #95), Walkirias (El Reto #162) — todas
+  reimpresiones con arte "zombie" pero habilidad idéntica a su carta de
+  origen (verificado leyendo cada foto, no adivinado). Registradas
+  como edición nueva `cartas_zombies_pe`.
+- **"Cartas Colección Completa PE" (CCPE) sí era un gap real** — 30
+  cartas, el mismo tipo de producto "logo" que la carta física de Ira
+  del Nahual de la 42ª iteración, pero para 6 ediciones base (Cofradía,
+  Mundo Gótico, El Reto, Espíritu del Dragón, Ragnarok, Ira del Nahual,
+  5 cartas c/u). Las 30 se cruzaron por nombre contra su edición de
+  origen citada en el propio nombre del producto ("X (Mundo Gótico)"
+  etc.) y se verificaron 2 al azar contra su foto (Odín, Naglfar) —
+  ability y código impreso ("5-126" para Naglfar) coinciden exacto con
+  la carta ya cargada. 2 nombres con typo de la tienda corregidos antes
+  de cruzar ("Oraculo de Zingaro" → "Oraculo Zingaro", "Walkiris" →
+  "Walkirias"). Registradas como edición nueva
+  `cartas_coleccion_completa_pe`, rareza Promocional, `specialId` con
+  el código impreso de la carta de origen (ej. `"6-126"` para Ira del
+  Nahual) — 2 colisiones reales resueltas con sufijo `-b`, mismo patrón
+  de siempre.
+- Imágenes de ambas líneas nuevas auto-hospedadas en
+  `data/custom-images/laguarida/`, nunca hotlinkeadas.
+- Validado: JSON válido, Playwright con la API real bloqueada — ambas
+  ediciones muestran su conteo completo (5 y 30), 0 `pageerror`.
+
 ### 2026-08-24 (44ª iteración) — Cierra los 2 gaps puntuales del reporte: Tecpatl y Madre de Dragones
 - El dueño pidió seguir con "todos" los gaps del reporte de la 43ª
   iteración. Empezando por los 2 más chicos:
