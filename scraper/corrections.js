@@ -558,9 +558,17 @@ export const NAME_CORRECTIONS = {
 // registrar-nueva-edicion). Confirmado carta por carta contra el código
 // impreso visible en la foto (ej. "6-126") antes de reemplazar — nunca por
 // nombre solo.
+// OJO: un producto de tienda con el mismo número impreso que una carta base
+// (ej. "Ira del Nahual" código "6-126") NO implica que sea la misma carta —
+// laguarida.store separa sus "Colección Completa PE"/otras líneas
+// promocionales en su PROPIA categoría ("Promocionales PE+"), distinta de la
+// categoría de la edición base ("Primera Era Reedit+"). Revisa la categoría/
+// breadcrumb del producto antes de asumir que es un simple cambio de arte de
+// la carta ya cargada — puede ser una carta promocional aparte que necesita
+// su propia entrada en el catálogo (ver skill registrar-nueva-edicion), no
+// una corrección de imagen acá. Caso real descartado 24-08-2026: "Ira del
+// Nahual (Ira del Nahual)" de la categoría "Cartas Cole Completa PE" — se
+// intentó cargar como corrección de imagen de la carta base y el dueño
+// corrigió que son dos cosas distintas.
 export const IMAGE_CORRECTIONS = {
-  // Ira del Nahual #006 — foto real de la reedición "Colección Completa 20
-  // Años" (mayo 2022, logo de la edición agregado), confirmada por el dueño
-  // del inventario (24-08-2026) contra su carta física.
-  "59-006": { image: "./data/custom-images/laguarida/ira_del_nahual_006_logo.png" },
 };

@@ -378,7 +378,34 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
-### 2026-08-24 (41ª iteración) — Imagen real de "Ira del Nahual" #6 (con el logo de la reedición 2022)
+### 2026-08-24 (42ª iteración) — Revierte la 41ª: "Ira del Nahual (Ira del Nahual)" de laguarida NO es la misma carta que la base #6
+- La 41ª iteración de abajo fue un error: asumió que el producto de
+  laguarida.store `Ira del Nahual (Ira del Nahual)` (SKU `CCPE-INA-001`)
+  era solo una foto distinta de la carta base #6 de "Ira del Nahual"
+  porque comparte el mismo número impreso ("6-126"). El dueño corrigió:
+  **son dos cosas distintas** — ese producto vive en la categoría
+  **"Promocionales PE+" → "Cartas Cole Completa PE"** del sitio, una
+  línea de producto separada de "Primera Era Reedit+" → "La Ira del
+  Nahual" (la categoría de la edición base). Que el número impreso
+  coincida no basta como señal — el sitio mismo las tiene clasificadas
+  aparte, señal más confiable que "se ve parecido".
+- Se revirtió el `image` de la carta `59-006` (Ira del Nahual base) a la
+  URL original de la API de TOR, y se vació `IMAGE_CORRECTIONS` en
+  `corrections.js` (se deja el mecanismo — sigue siendo útil para casos
+  reales futuros — pero con una advertencia nueva en el comentario:
+  revisar SIEMPRE la categoría/breadcrumb del producto de la tienda
+  antes de asumir que es la misma carta con otra foto, no solo el
+  número impreso).
+- La imagen ya descargada (`data/custom-images/laguarida/ira_del_nahual_006_logo.png`)
+  se deja en el repo sin usar por ahora — es candidata a convertirse en
+  la imagen de una futura carta separada "Ira del Nahual (Cartas Cole
+  Completa PE)" si se decide registrar esa línea promocional completa
+  (ver pedido del dueño de auditar toda la estructura de laguarida.store
+  contra el catálogo, en curso).
+- Validado: JSON válido, `data/cards.json` con la imagen original de TOR
+  de nuevo en `59-006`.
+
+### 2026-08-24 (41ª iteración) — Imagen real de "Ira del Nahual" #6 (con el logo de la reedición 2022) — REVERTIDO, ver 42ª iteración arriba
 - El dueño encontró en laguarida.store la foto exacta de su carta física
   de "Ira del Nahual" (la que el sábado confirmamos que es la #6, con el
   logo "LA IRA DEL NAHUAL" agregado entre el ícono de Talismán y el
