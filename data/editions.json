@@ -36,6 +36,12 @@
     "name": "Espiritu Del Dragon"
   },
   {
+    "slug": "kit_juego_pe_fullart",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Kit de Juego Primera Era - Full Art"
+  },
+  {
     "slug": "leyendas_primera_era",
     "format": "PE",
     "formatName": "Primera Era",
