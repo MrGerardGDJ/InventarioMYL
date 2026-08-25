@@ -22131,6 +22131,23 @@
    "image": "./data/custom-images/laguarida/kit_juego_pe_fullart_hattori_hanzo.jpg",
    "custom": true,
    "specialId": "81-236"
+  },
+  {
+   "id": "ragnarok__custom__126_trono_de_odin",
+   "name": "Trono de Odín",
+   "edition": "ragnarok",
+   "editionName": "Ragnarok",
+   "format": "PE",
+   "edid": "126",
+   "type": "Oro",
+   "race": "—",
+   "rarity": "Sin Frecuencia",
+   "cost": null,
+   "strength": null,
+   "ability": "",
+   "flavour": "En este sitio, lugar de privilegio, cada mañana los cuervos me informan. En las fiestas por la noche los manjares me son servidos y las más suculentas porciones las regalo a mis lobos. Sólo el hidromiel de los poetas es mi alimento.",
+   "image": "./data/custom-images/laguarida/ragnarok_126_trono_de_odin.png",
+   "custom": true
   }
  ]
 }

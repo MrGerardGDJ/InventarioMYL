@@ -378,6 +378,42 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-24 (43ª iteración) — Auditoría completa de Primera Era contra laguarida.store; agrega "Trono de Odín" (Ragnarok #126)
+- A pedido del dueño ("revisa toda la estructura y compárala con la
+  fuente de conocimiento, hagamos un análisis exhaustivo"), se recorrió
+  la categoría Primera Era completa de laguarida.store: 2.227 fichas de
+  producto en 23 categorías/sub-líneas (11 ediciones base bajo "Primera
+  Era Reedit+", 12 líneas promocionales bajo "Promocionales PE+"). Cada
+  código de producto (SKU, ej. `RGK-126`) se cruzó contra el `edid`/
+  `specialId` exacto del catálogo — nunca por nombre solo, mismo criterio
+  que ya costó un error real hoy mismo con "Ira del Nahual (Ira del
+  Nahual)" (ver 42ª iteración).
+- **Resultado resumido** (detalle completo en el artefacto publicado,
+  enlazado en el chat): 25 ediciones/sub-líneas con cobertura completa o
+  casi completa (1.706+ cartas verificadas sin diferencias), 3 gaps
+  puntuales de 1 carta cada uno, 2 ediciones enteras sin registrar
+  (Xinnián Año de la Serpiente 2025 — el slug existe en
+  `editions.json` pero sin cartas — y Colecciones Raciales Primera Era
+  2023/CRPE3, 39 cartas), y 5 líneas promocionales aparte sin registrar
+  (Cartas Colección Completa PE, Cartas Colecciones Legendarias, Cartas
+  Coleccionistas, Cartas Zombies, Misión Santiago — 71 cartas en total).
+- **Corregido en el momento**: "Trono de Odín" (Ragnarok #126, Oro básico
+  sin habilidad) faltaba por completo del catálogo scrapeado — TOR solo
+  trae 125/126 cartas de Ragnarok. Verificado contra el wiki (código
+  "126 - 126 / Primera Edición") y contra la foto de laguarida.store
+  (mismo código visible, mismo texto de leyenda). Agregado a
+  `data/custom-cards.json`, imagen auto-hospedada en
+  `data/custom-images/laguarida/ragnarok_126_trono_de_odin.png`.
+- **Pendiente, no corregido todavía** (queda para cuando el dueño
+  priorice): "Tecpatl" (Toolkit Primera Era 2024 #41) y "Madre de
+  Dragones (FullArt)" (Mundo Medieval El Reto, código especial "000") —
+  las 2 ediciones completas faltantes — y las 5 líneas promocionales,
+  cada una necesita su propia investigación antes de registrarse (en
+  particular "Cartas Colecciones Legendarias" comparte nombres con el
+  "Kit de Juego PE - Full Art" ya cargado pero es un producto y código
+  distinto, sin confirmar todavía si el arte es el mismo).
+- Validado: JSON válido, `data/custom-cards.json` con 1272 cartas.
+
 ### 2026-08-24 (42ª iteración) — Revierte la 41ª: "Ira del Nahual (Ira del Nahual)" de laguarida NO es la misma carta que la base #6
 - La 41ª iteración de abajo fue un error: asumió que el producto de
   laguarida.store `Ira del Nahual (Ira del Nahual)` (SKU `CCPE-INA-001`)
