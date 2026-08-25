@@ -572,3 +572,19 @@ export const NAME_CORRECTIONS = {
 // corrigió que son dos cosas distintas.
 export const IMAGE_CORRECTIONS = {
 };
+
+// Mismo bug de numeración que MUNDOS_PERDIDOS_TOR_CORRECTIONS arriba, pero
+// sin el corrimiento en cascada: TOR trae "Mundo Medieval El Reto" con 13
+// cartas (001-013), pero la carta "013" ("Madre De Dragones") es en realidad
+// la carta "00" (firma/especial) de un set de 12 — TOR la puso al FINAL de
+// la numeración en vez de tratarla como especial, así que 001-012 SÍ
+// corresponden a su número real (no hace falta correrlas), solo esta una
+// necesita pasar a specialId. Verificado contra la foto de laguarida.store
+// (código impreso "REX - 00/12") y contra el resto del catálogo: la
+// habilidad de "013" ("Destierra una carta oponente en juego que no sea
+// Oro...") coincide exacta con la carta de la foto — es la misma carta, mal
+// numerada, no una carta nueva que falte agregar. Encontrado en la
+// auditoría de Primera Era del 24-08-2026 (ver conocimiento.md).
+export const MUNDO_MEDIEVAL_TOR_CORRECTIONS = {
+  "113-013": { edid: "", specialId: "REX-00" }, // Madre De Dragones
+};

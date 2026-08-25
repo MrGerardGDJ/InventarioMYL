@@ -22148,6 +22148,23 @@
    "flavour": "En este sitio, lugar de privilegio, cada mañana los cuervos me informan. En las fiestas por la noche los manjares me son servidos y las más suculentas porciones las regalo a mis lobos. Sólo el hidromiel de los poetas es mi alimento.",
    "image": "./data/custom-images/laguarida/ragnarok_126_trono_de_odin.png",
    "custom": true
+  },
+  {
+   "id": "toolkit_primera_era_2024__custom__tkpe24_41_tecpatl",
+   "name": "Tecpatl",
+   "edition": "toolkit_primera_era_2024",
+   "editionName": "Toolkit Primera Era 2024",
+   "format": "PE",
+   "edid": "041",
+   "type": "Arma",
+   "race": "—",
+   "rarity": "Promocional",
+   "cost": 4,
+   "strength": null,
+   "ability": "El portador gana 1 a la Fuerza y es Imbloqueable. Cuando entra en juego, gana el control de un Aliado oponente hasta que esta Arma salga del juego.",
+   "flavour": "Con vida propia, con fuerza propia, el afilado pedernal guía la mano del sacerdote en su tarea.",
+   "image": "./data/custom-images/laguarida/toolkit_primera_era_2024_41_tecpatl.jpg",
+   "custom": true
   }
  ]
 }
