@@ -378,6 +378,40 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-24 (46ª iteración) — Cierra el reporte de auditoría: Xinnián Año de la Serpiente 2025 (32) y Colecciones Raciales Primera Era 2023/CRPE3 (40)
+- Últimos 2 gaps grandes del reporte de la 43ª iteración, ambas
+  ediciones completas que faltaban por entero.
+- **Xinnián Año de la Serpiente 2025**: el slug `xinnian_año_serpiente_2025`
+  ya existía en `editions.json` de una iteración anterior pero sin
+  cartas detrás. Extraídas las 32 (`Lista de cartas de Xinnián 2025 -
+  Año de la Serpiente`), cada una con página propia — 31/32 con
+  habilidad y leyenda directo en su plantilla, solo la carta "00" (Shé
+  Nián, Talismán firma Buy-a-Box) sin leyenda documentada. Numeración:
+  "00" (Shé Nián) y "31" (Horóscopo Chino, reprint Promocional) van con
+  `specialId` (la app no acepta `edid < 1`, y el "31" es un extra fuera
+  del rango 00-30 del set base); "01" a "30" con `edid` normal.
+- **Colecciones Raciales Primera Era 2023 (CRPE3)**: no existía ninguna
+  entrada. Extraídas las 40 (`Lista de cartas de Colecciones Raciales
+  Primera Era 2023`, 3 Kits: Caballero/Dragón/Faerie, cartas 01-36 +
+  Buy-a-Box 37-39 + "Diamante Turquesa" "EDICIÓN LIMITADA" sin número
+  propio) — 36/40 con leyenda directa, 4 recuperadas de su plantilla
+  base transcluida (Nibelungos, Morgana, Dragón de Magma, Diamante
+  Turquesa), solo "Reina Guinivere" quedó sin leyenda documentada.
+  "Diamante Turquesa" con `specialId: "CRPE3-EL"` (sin número impreso,
+  el resto 001-039 con `edid` normal, coincide con la numeración de la
+  tienda).
+- Con esto quedan cerrados los 9 hallazgos del reporte de auditoría del
+  24-08-2026: 3 resultaron ser falsos gaps (ya cargados con otro
+  nombre o reimpresiones idénticas de cartas existentes), 2 eran
+  errores de numeración sin carta nueva que agregar (Ragnarok #126 fue
+  el único que sí faltaba de verdad ahí; Mundo Medieval solo necesitaba
+  corrección de `edid`→`specialId`), y 4 eran ediciones/líneas
+  genuinamente nuevas (Tecpatl suelto, Cartas Zombies, Cartas Colección
+  Completa PE, Xinnián 2025, CRPE3 — 148 cartas nuevas en total entre
+  todas).
+- Validado: JSON válido, Playwright con la API real bloqueada — ambas
+  ediciones muestran su conteo completo (32 y 40), 0 `pageerror`.
+
 ### 2026-08-24 (45ª iteración) — 3 líneas promocionales del reporte: 2 resultaron ya cubiertas, 2 se registraron nuevas (35 cartas)
 - Siguiendo con "todos" los gaps del reporte:
 - **"Misión Santiago" no era un gap**: sus 4 cartas (Golpe Vampiro,
