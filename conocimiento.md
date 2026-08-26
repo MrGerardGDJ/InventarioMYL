@@ -378,6 +378,35 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-26 (47ª iteración) — Orden por rareza en la vista de Mazo
+
+- Nueva opción en la ficha de mazo (junto al buscador de cartas para
+  añadir): selector "Ordenar cartas por", con 4 modos — Nombre (A→Z),
+  Nombre (Z→A), Rareza (más pro primero) y Rareza (más básica primero).
+  Se guarda por dispositivo en `store.getSetting("deckSort")` y aplica a
+  cada zona del mazo (Aliado/Apoyo/Oro/Otro) por separado, igual que el
+  orden alfabético anterior.
+- **Orden de rareza acordado con el dueño**: las rarezas especiales (no
+  se obtienen de sobres) van todas arriba de la escalera normal, en este
+  orden fijo entre ellas — Milenaria, Set Paralelo, Promocional, Ficha.
+  Luego la escalera de sobre normal, de más alta a más baja: Secreta,
+  Legendaria, Ultra Real, Mega Real, Real, Cortesano, Vasallo (la más
+  baja de todas). Cualquier rareza no listada (vacía, "Sin Frecuencia",
+  error de datos) cae al final.
+  - El dueño planteó inicialmente ordenar las 4 especiales por acabado
+    de impresión (full art > foil > normal), pero la app no guarda ese
+    dato por carta — solo la rareza. Se le preguntó cómo resolverlo y
+    eligió mantener un orden fijo por categoría entre las 4 especiales
+    en vez de intentar inferir el acabado.
+  - Con empate de rareza, desempata alfabéticamente (`localeCompare`
+    con locale `es`), igual en ambas direcciones de rareza.
+- Implementado en `js/app.js`: tabla `RARITY_ORDER` + función
+  `rarityRank(card)`, usado en el `.sort()` de `renderDeckContents()`.
+  CSS del nuevo `<select>` en `css/styles.css` (`.deck-sort-field`).
+- Verificado con Playwright: alternar entre `rarity_desc` y
+  `rarity_asc` produce órdenes exactamente espejadas (por `id` de
+  carta), confirmando que la lógica de comparación es correcta.
+
 ### 2026-08-24 (46ª iteración) — Cierra el reporte de auditoría: Xinnián Año de la Serpiente 2025 (32) y Colecciones Raciales Primera Era 2023/CRPE3 (40)
 - Últimos 2 gaps grandes del reporte de la 43ª iteración, ambas
   ediciones completas que faltaban por entero.

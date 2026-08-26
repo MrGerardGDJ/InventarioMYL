@@ -340,6 +340,11 @@ main { padding: 0; }
   background: var(--bg-3); color: var(--text); font-size: 14px;
 }
 .deck-search-results { margin-top: 6px; max-height: 320px; overflow-y: auto; }
+.deck-sort-field { margin: 4px 0 14px; }
+.deck-sort-field select {
+  padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg-3); color: var(--text); font-size: 13px;
+}
 .dsr { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-bottom: 1px solid var(--border); font-size: 13px; }
 .dsr .dsr-name { font-weight: 600; }
 .dsr .dsr-meta { color: var(--muted); font-size: 11px; flex: 1; }
