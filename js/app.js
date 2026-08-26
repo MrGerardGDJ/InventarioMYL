@@ -2303,6 +2303,15 @@ function renderDeckDetail() {
         <input id="deck-search" type="search" placeholder="🔎 Buscar carta por nombre para añadir a este mazo…" autocomplete="off" />
         <div id="deck-search-results" class="deck-search-results"></div>
       </div>
+      <label class="field inline deck-sort-field">
+        <span>Ordenar cartas por</span>
+        <select id="deck-sort">
+          <option value="name">Nombre (A→Z)</option>
+          <option value="name_desc">Nombre (Z→A)</option>
+          <option value="rarity_desc">Rareza (más pro primero)</option>
+          <option value="rarity_asc">Rareza (más básica primero)</option>
+        </select>
+      </label>
       <div id="deck-contents"></div>
     </div>
     <div id="deck-tab-estadistica" class="deck-tab-panel">
@@ -2316,6 +2325,8 @@ function renderDeckDetail() {
   switchDeckTab(deckTab);
 
   $("#deck-name").onchange = (e) => { store.renameDeck(deck.id, e.target.value || "Mazo"); populateActiveDeckSelect(); updateDeckCounts(); };
+  $("#deck-sort").value = store.getSetting("deckSort") || "name";
+  $("#deck-sort").onchange = (e) => { store.setSetting("deckSort", e.target.value); renderDeckContents(deck); };
   wrap.querySelector("[data-status]").onclick = () => {
     store.setDeckStatus(deck.id, deck.status === "principal" ? "secundario" : "principal");
     renderDecksView(); // recalcula disponibilidad en este mazo y en los que compartan cartas
@@ -2369,6 +2380,20 @@ const DECK_ZONE_TITLES = {
   Otro: "🃏 Otras",
 };
 const DECK_SUPPORT_TYPES = new Set(["Talismán", "Arma", "Tótem"]);
+// Orden de "más pro" a "más básica" acordado con el dueño (24-08-2026): las
+// rarezas especiales (no se sacan de sobres) van arriba de todo, con un
+// orden fijo entre ellas ya que la app no guarda si una carta es foil/full
+// art/normal; luego la escalera normal de sobre, de Secreta a Vasallo (la
+// más baja). Cualquier rareza no listada (vacía, "Sin Frecuencia", errores
+// de datos) queda al final.
+const RARITY_ORDER = [
+  "Milenaria", "Set Paralelo", "Promocional", "Ficha",
+  "Secreta", "Legendaria", "Ultra Real", "Mega Real", "Real", "Cortesano", "Vasallo",
+];
+function rarityRank(card) {
+  const i = RARITY_ORDER.indexOf(card.rarity);
+  return i === -1 ? RARITY_ORDER.length : i;
+}
 function deckZoneOf(card) {
   if (card.type === "Oro") return "Oro";
   if (card.type === "Aliado") return "Aliado";
@@ -2424,7 +2449,15 @@ function renderDeckContents(deck) {
     const showAllyGap = key === "Aliado" && allyTotal < RACIAL_MIN_ALLIES;
     if (!zoneCards.length && !showAllyGap) continue;
     const zoneQty = zoneCards.reduce((a, x) => a + x.q, 0);
-    zoneCards.sort((a, b) => displayName(a.card).localeCompare(displayName(b.card), "es"));
+    const sortMode = store.getSetting("deckSort") || "name";
+    zoneCards.sort((a, b) => {
+      switch (sortMode) {
+        case "name_desc": return displayName(b.card).localeCompare(displayName(a.card), "es");
+        case "rarity_desc": return rarityRank(a.card) - rarityRank(b.card) || displayName(a.card).localeCompare(displayName(b.card), "es");
+        case "rarity_asc": return rarityRank(b.card) - rarityRank(a.card) || displayName(a.card).localeCompare(displayName(b.card), "es");
+        default: return displayName(a.card).localeCompare(displayName(b.card), "es");
+      }
+    });
     html += `<div class="dist-zone">
       <div class="dist-zone-title">${DECK_ZONE_TITLES[key]} <span class="muted">(${zoneQty})</span></div>
       <div class="cards-grid dist-grid">${zoneCards.map(({ card, cid, q }) => deckCardTileHtml(card, cid, q)).join("")}`;
