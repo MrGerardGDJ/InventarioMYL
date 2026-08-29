@@ -378,6 +378,29 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-29 (48ª iteración) — Corrige coste y habilidad de Tzitzimime (Leyendas - Primera Era 4.0)
+
+- El dueño avisó que su carta física de "Tzitzimime" en la edición
+  "Leyendas - Primera Era 4.0" tiene coste 2 y fuerza 2, pero la app
+  tenía coste 4 (fuerza 2 ya estaba bien).
+- Al registrar esta carta se había copiado el coste/habilidad de la
+  página base del wiki ("Tzitzimime", edición original La Ira del
+  Nahual #075: coste 4), porque no existe página propia
+  "Tzitzimime (LPE4)" en el wiki (enlace en rojo en la lista de
+  cartas). Otro caso del patrón ya documentado: un reprint puede tener
+  datos de juego distintos al original aunque comparta nombre e
+  imagen base.
+- Verificado directamente contra la foto física de la carta (ya
+  guardada en `data/custom-images/mylserena/leyendas_primera_era_4_0_239_tzitzimime.jpg`):
+  coste **2**, fuerza 2, y la habilidad es más larga que la
+  registrada — "Puede atacar cuando entra en juego. Cuando entra en
+  juego, puedes elegir un Aliado que controles para que sea
+  Imbloqueable hasta la Fase Final." (la original solo decía "Puede
+  atacar cuando entra en juego. (Imbloqueable)").
+- Corregido en `data/custom-cards.json`
+  (`leyendas_primera_era_4_0__custom__239_tzitzimime`): `cost` 4→2,
+  `ability` actualizada al texto completo.
+
 ### 2026-08-26 (47ª iteración) — Orden por rareza en la vista de Mazo
 
 - Nueva opción en la ficha de mazo (junto al buscador de cartas para

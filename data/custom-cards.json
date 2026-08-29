@@ -4078,9 +4078,9 @@
    "type": "Aliado",
    "race": "Guerrero",
    "rarity": "Cortesano",
-   "cost": 4,
+   "cost": 2,
    "strength": 2,
-   "ability": "Puede atacar cuando entra en juego. (Imbloqueable)",
+   "ability": "Puede atacar cuando entra en juego. Cuando entra en juego, puedes elegir un Aliado que controles para que sea Imbloqueable hasta la Fase Final.",
    "flavour": "Cuando el mundo acabe, habrá terremotos y las tzitzimime que rodean a Huitzcilopochtli bajarán del segundo cielo convertidas en jaguares a devorar a la humanidad, antes que los terremotos arruinen al Sol.",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_239_tzitzimime.jpg",
    "custom": true
