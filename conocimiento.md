@@ -378,6 +378,49 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-29 (49ª iteración) — Auditoría de triage + corrección masiva de Leyendas PE 4.0
+
+- El caso de Tzitzimime (iteración 48) planteó una pregunta de fondo: al
+  registrar reimpresiones (cartas custom que reciclan el nombre/arte de
+  una edición base), ¿cuántas más copiaron datos incorrectos sin
+  verificar? Con 1380 cartas custom en 28 ediciones, revisar las 1380 a
+  mano contra foto no era razonable de una sola vez.
+- **Triage automático** (sin fotos): para cada carta custom, se comparó
+  su tupla (coste, fuerza, habilidad) contra la de cualquier otra carta
+  del mismo nombre en el catálogo completo (`cards.json` + resto de
+  `custom-cards.json`). "Idéntica" = coincide exactamente con otra
+  impresión → nunca verificada por separado, candidata a revisar.
+  "Distinta" = ya tiene datos propios → probablemente ya corregida.
+  Resultado: 459 idénticas / 600 distintas / 321 únicas (sin otra
+  versión). Publicado como artefacto HTML ("Triage de Reimpresiones")
+  con desglose por edición y buscador.
+- El dueño eligió empezar por **Leyendas - Primera Era 4.0** (167 de
+  432 cartas de esta edición cayeron en "idéntica", la edición más
+  grande y más reciente). Se revisaron las 167 una por una contra su
+  foto física (`data/custom-images/mylserena/` y `mesaredonda/`,
+  descargando también las que solo tenían URL de wikia).
+- **Resultado: 71 de 167 tenían datos mal copiados** (43%) — coste,
+  fuerza y/o habilidad. El patrón más común: la habilidad registrada
+  describía una carta completamente distinta a la impresa (se había
+  copiado la habilidad de otra reimpresión del mismo Aliado/Talismán
+  por error), no solo un problema de redacción.
+- Además, un hallazgo distinto al de coste/fuerza/habilidad: las
+  imágenes de **Rapto de Idunn (edid 088)** y **Asaltar Santuario
+  (edid 089)** estaban físicamente intercambiadas en disco — el
+  archivo con nombre de una carta mostraba la otra. Se detectó porque
+  el código impreso "LPE4-NN/320" en la esquina de la foto no
+  coincidía con el edid del archivo. Corregido intercambiando los
+  archivos en `data/custom-images/mylserena/` (sin tocar los campos
+  `image` en el JSON, que ya apuntaban al nombre de archivo correcto).
+- Todo corregido directamente en `data/custom-cards.json` en 7 tandas
+  (commits `parte 1/N` a `parte 7/7, final`) para no perder progreso
+  si se interrumpía la sesión.
+- **Pendiente para el dueño**: quedan 292 cartas "idénticas" sin
+  revisar en las otras 27 ediciones (ver el artefacto de triage para
+  el desglose completo por edición — las de mayor riesgo relativo son
+  Cartas Colección Completa PE 100%, Kit de Juego PE Full Art 93%,
+  CRPE2 32%, Juego Organizado PE 46%).
+
 ### 2026-08-29 (48ª iteración) — Corrige coste y habilidad de Tzitzimime (Leyendas - Primera Era 4.0)
 
 - El dueño avisó que su carta física de "Tzitzimime" en la edición
