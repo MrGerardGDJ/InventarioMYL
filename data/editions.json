@@ -264,6 +264,12 @@
     "name": "Aniversario 25 años"
   },
   {
+    "slug": "torneo_aniversario_25_pe",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Torneo Aniversario 25 Años - Primera Era"
+  },
+  {
     "slug": "espada_sagrada",
     "format": "PB",
     "formatName": "Primer Bloque",

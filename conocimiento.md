@@ -378,6 +378,44 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-08-30 (50ª iteración) — Registra el set promocional "Torneo Aniversario 25 Años - Primera Era"
+
+- El dueño encontró "Monedas de Oro - Aniversario 25 Años" en
+  gorilatcg.cl y no estaba en el catálogo. **Importante**: ya existía
+  una edición registrada con el slug `aniversario_lpe25` y el nombre
+  "Aniversario 25 años" (26 cartas: Gilgamesh, Ogro, Solomon, etc.) —
+  pero al comparar contra el wiki, esas 26 cartas **no tienen nada que
+  ver** con el evento real "Aniversario 25 Años" de Fénix
+  Entertainment. Esa edición existente quedó tal cual (no se tocó,
+  puede tener copias ya marcadas), pero para evitar mezclar dos cosas
+  distintas bajo el mismo nombre, este set nuevo se registró con un
+  slug y nombre propios: `torneo_aniversario_25_pe` / "Torneo
+  Aniversario 25 Años - Primera Era". Queda pendiente para una futura
+  sesión averiguar qué es realmente `aniversario_lpe25` y si su nombre
+  hay que corregirlo.
+- El set real (wiki: `Aniversario 25 Años`) son los torneos
+  organizados por Fénix a fines de 2025/inicios de 2026 por los 25
+  años del juego (desde *El Reto*), con 25 cartas repartidas en los 4
+  formatos vigentes (Primera Era, Primer Bloque, Furia Extendido,
+  Imperio), arte estilo boceto a blanco y negro. Se registraron solo
+  las **6 de Primera Era** (`25 ANIVERSARIO 01/25` a `06/25`), que es
+  lo que pidió el dueño — quedan 19 más en otros formatos si algún día
+  se quiere completar el set entero.
+- Cartas registradas (specialId `25ANIV-01` a `25ANIV-06`, sin edid
+  propio ya que el código impreso es correlativo del evento, no de una
+  edición base): Odín (Talismán, 1, única, busca+destierra),
+  Kordrag (Aliado Caballero 4/4, reprint con arte nuevo de Mundo
+  Medieval), Knochen (Aliado Dragón 5/5, reprint de Mundo Medieval),
+  Titania (Aliado Faerie 3/3, remake de la de CRPE3), Ser Abominable
+  (Aliado Faerie 3/0, rework de El Reto), Monedas de Oro (Oro con
+  habilidad, reprint de Mundo Medieval).
+- Todos los datos (coste/fuerza/habilidad/imagen) se sacaron
+  directamente de las 6 páginas individuales del wiki
+  (`Nombre (25 Aniversario)`), que traen los datos ya extraídos de la
+  plantilla oficial de la carta, y se verificaron visualmente contra
+  el escaneo de cada carta antes de registrar — todo coincidió
+  exactamente, sin necesidad de corregir nada de la plantilla base.
+
 ### 2026-08-29 (49ª iteración) — Auditoría de triage + corrección masiva de Leyendas PE 4.0
 
 - El caso de Tzitzimime (iteración 48) planteó una pregunta de fondo: al
