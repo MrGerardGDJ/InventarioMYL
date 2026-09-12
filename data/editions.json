@@ -624,6 +624,12 @@
     "name": "Producto Especial Furia Aniversario"
   },
   {
+    "slug": "promo_20_anos_fx",
+    "format": "FX",
+    "formatName": "Furia Extendido",
+    "name": "Cartas Promo 20 Años - Bloque Furia"
+  },
+  {
     "slug": "sumeria",
     "format": "NE",
     "formatName": "Nueva Era / Imperio",
@@ -796,6 +802,12 @@
     "format": "NE",
     "formatName": "Nueva Era / Imperio",
     "name": "Tierra Austral"
+  },
+  {
+    "slug": "promo_20_anos_imperio",
+    "format": "NE",
+    "formatName": "Nueva Era / Imperio",
+    "name": "Cartas Promo 20 Años - Imperio"
   },
   {
     "slug": "conjuros",

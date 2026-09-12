@@ -378,6 +378,88 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-12 (51ª iteración) — Reordena "Cartas Promo 20 Años" y registra sus 3 bloques faltantes (Primer Bloque completo, Bloque Furia e Imperio nuevos)
+
+- El dueño pidió sacar Flechero e Hidromiel de "promocionales" porque
+  son full art. Al investigar: **sí son full art** (el wiki lo dice
+  textualmente para esas 2 + Drakkar), pero NO pertenecen al "Kit de
+  Juego Primera Era - Full Art" (producto de nov/dic 2020, pool
+  cerrado de 30 cartas ya verificado 30/30 en la 39ª iteración) — son
+  parte de un producto totalmente distinto, **"20 Años"** (línea
+  transversal anunciada marzo 2021, buy-a-box por tiempo limitado en
+  CasaMyL, con presencia en los 4 formatos vigentes a la fecha).
+  Moverlas al Kit de Juego habría mezclado dos productos reales sin
+  relación. El dueño confirmó no separarlas en una edición aparte y en
+  cambio pidió abordar "20 Años" completo usando
+  `https://myl.fandom.com/es/wiki/20_Años` (la página maestra) como
+  fuente de la verdad, ya que el orden que teníamos en Primera Era
+  estaba mal.
+- **Primera Era (`promo_20_anos_pe`, ya existía con 9 cartas)**:
+  reordenado + renumerado `20A-01`..`09` a la secuencia real de la
+  página maestra: Flechero, Tesoro de Guayacán, Tótem de Guerra, Golpe
+  Vampiro, Guardián, Resplandor Dorado, Hidromiel, Drakkar, Espada
+  Real (antes Tótem de Guerra/Golpe Vampiro estaban pegados al final
+  por decisión de la 13ª iteración de no reordenar ids ya usados — el
+  dueño esta vez pidió explícitamente renumerar). **El `id` interno de
+  cada carta NO cambió**, solo el `specialId` visible y su posición en
+  el array — así no se pierde ninguna copia ya marcada por el dueño,
+  que usa `id` como clave, no `specialId`.
+- **Primer Bloque (`promo_20_anos_pb`, tenía 9 de 11)**: la página
+  maestra reveló que faltaban **Takelot** y **Biblioteca Eterna**
+  (ambas al final de la secuencia real, así que se agregaron como
+  `20A-PB-10` y `11` sin reordenar las 9 ya existentes, que sí
+  coinciden con el orden real). Takelot no tiene página propia
+  `(20 Años)` en el wiki — se usó su carta base de **Dominios de Ra**
+  (edid 034, la que la propia tabla maestra declara como origen), dato
+  real, no inventado. Biblioteca Eterna sí tiene página propia; sin
+  imagen confirmada en ninguna de las dos (archivo de Takelot no
+  existe, el de Biblioteca Eterna está enlazado en la página pero el
+  archivo nunca se subió al wiki — mismo criterio que Cruz Templaria:
+  queda sin imagen en vez de adivinar).
+- **Bloque Furia (`promo_20_anos_fx`, edición nueva, 31 cartas)** e
+  **Imperio (`promo_20_anos_imperio`, edición nueva, 6 cartas)**: no
+  existían en el catálogo. Se registraron completas desde cero,
+  cruzando la página maestra con las ~37 páginas individuales
+  `Nombre (20 Años)` del wiki (fetch en lote vía API de MediaWiki,
+  hasta 10-15 títulos por consulta). Formato asignado: Furia Extendido
+  → `FX`; "Imperio" (nombre coloquial del wiki para la temporada
+  Ángeles & Demonios) → `NE`, igual que sus ediciones base (Olimpia,
+  Tierra Austral, etc., todas ya catalogadas como `NE`).
+  - **5 filas de la tabla maestra de Bloque Furia excluidas
+    deliberadamente**: Ánima Negra, Sumo Sacerdote, Ziusudra, Anzu y
+    Eastre. Las 5 no tienen página propia en el wiki, y su columna
+    "Origen" en la tabla resulta ser una copia exacta de la fila
+    inmediatamente anterior (ej. "Ziusudra" y "Anzu" ambas apuntan a
+    "Dub-Sar - Rebelión", el mismo origen que la fila de Dub-Sar justo
+    después) — patrón de error de copiado en la tabla, no dato real.
+    Mismo principio que ya se aplicó antes con la tabla "Klu" de 20
+    Años (13ª iteración): no confiar en una tabla resumen sin
+    verificación propia. Quedan pendientes si el dueño confirma tener
+    alguna físicamente y puede fotografiarla.
+  - Cada una de las 31+6 cartas se verificó contra su propia página
+    `(20 Años)` (plantilla `{{Cartasintexto}}`, parseada por campos:
+    tipo/raza/coste de oro/ataque/habilidad/imagen), nunca contra la
+    tabla resumen. 2 cartas (Devastador y Horus Vengativo) se
+    verificaron además visualmente contra el escaneo real —
+    coincidencia exacta en coste/fuerza/raza/habilidad.
+  - **Chequeo de duplicados contra todo el catálogo** (oficial +
+    custom) antes de registrar: la mayoría de las 37 coincide
+    EXACTAMENTE en coste+habilidad con su carta de origen en alguna
+    edición base — esperado y correcto (son reimpresiones full art,
+    mismo patrón que "Kit de Juego Primera Era - Full Art"), no un
+    indicio de duplicado. Se descartó puntualmente confundir esto con
+    la edición oficial ya existente `producto_especial_furia_aniversario`
+    ("Furia Aniversario FX", 15 cartas, edid 236-250): comparte nombre
+    con solo 3 de las 37 (Fe sin Límite, Guillatún, Llamar a la
+    Manada) — son productos distintos donde esas 3 cartas simples
+    resultan tener el mismo texto por coincidencia (pasa seguido con
+    reimpresiones cortas), no la misma promoción.
+- **Total agregado esta iteración**: 39 cartas nuevas (2 en Primer
+  Bloque + 31 en Bloque Furia + 6 en Imperio), más el reordenamiento
+  de las 9 de Primera Era. 2 ediciones nuevas en `editions.json`.
+- Validado: `data/custom-cards.json` y `data/editions.json` JSON
+  válidos, sin ids duplicados (1425 cartas custom en total).
+
 ### 2026-08-30 (50ª iteración) — Registra el set promocional "Torneo Aniversario 25 Años - Primera Era"
 
 - El dueño encontró "Monedas de Oro - Aniversario 25 Años" en
