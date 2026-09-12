@@ -378,6 +378,36 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-12 (52ª iteración) — Nueva edición "Set Coleccionista Primera Era" (12 cartas)
+
+- El dueño avisó que su confusión con Flechero (iteración 51) venía de
+  un TERCER producto full art distinto: `Set Coleccionista Primera
+  Era` (wiki), que no estaba registrado (confirmado: no existe ningún
+  slug/nombre con "coleccionista" en `editions.json`).
+- Es un producto propio, ni el Kit de Juego Full Art (nov/dic 2020) ni
+  "20 Años" (línea transversal 2021): 1 carta full art al azar por
+  display de Leyendas Primera Era, noviembre de 2021, código impreso
+  **"PROMO COLECCIONISTA PE NN"**. 12 cartas, todas reimpresiones full
+  art de cartas base ya en el catálogo (El Reto, El Reto X, Mundo
+  Gótico, La Ira del Nahual, Ragnarok, La Cofradía, Espíritu de
+  Dragón, Misión Santiago) — mismo patrón que el Kit de Juego Full
+  Art: se verificó cada una contra su propia página `(Coleccionista)`
+  del wiki (plantilla `{{Cartasintexto}}`), 2 confirmadas además
+  visualmente contra el escaneo real (Flechero, Hattori Hanzo) —
+  coincidencia exacta en coste/fuerza/raza/habilidad, diseño full art
+  confirmado (sin bordes, caja de texto semitransparente).
+- Registrada como `coleccionista_pe` / "Set Coleccionista Primera
+  Era", insertada antes de `leyendas_primera_era_2022` en
+  `editions.json`. `specialId` = código impreso tal cual
+  (`"PROMO COLECCIONISTA PE 01"`..`"12"`). Imágenes autohospedadas
+  desde el wiki (hotlink directo a static.wikia, mismo criterio que
+  Xinnián/CRPE3/Torneo Aniversario 25 Años). Sin duplicados: el
+  Flechero de esta colección es una carta y una entrada propias, sin
+  relación con el Flechero de "20 Años" (`promo_20_anos_pe`) ni con
+  ningún otro registrado — cada full art de un mismo nombre base es su
+  propia impresión real, con su propio código impreso.
+- Validado: JSON válido, sin ids duplicados.
+
 ### 2026-09-12 (51ª iteración) — Reordena "Cartas Promo 20 Años" y registra sus 3 bloques faltantes (Primer Bloque completo, Bloque Furia e Imperio nuevos)
 
 - El dueño pidió sacar Flechero e Hidromiel de "promocionales" porque

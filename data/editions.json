@@ -78,6 +78,12 @@
     "name": "Cartas Colección Completa PE"
   },
   {
+    "slug": "coleccionista_pe",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Set Coleccionista Primera Era"
+  },
+  {
     "slug": "leyendas_primera_era_2022",
     "format": "PE",
     "formatName": "Primera Era",
