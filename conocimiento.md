@@ -378,6 +378,23 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-13 (53ª iteración) — Corrige posición de los badges de coste/fuerza en las miniaturas de carta
+
+- El dueño notó que en las tarjetas del Catálogo/Colecciones, el
+  círculo de coste y el rombo de fuerza aparecen en el lado contrario
+  al de las cartas físicas reales — algo que esta misma sesión
+  confirmó carta por carta durante la auditoría de Leyendas PE 4.0:
+  en el impreso real, el ícono de fuerza (coloreado por raza) va a la
+  IZQUIERDA y el sol dorado de coste va a la DERECHA.
+- Arreglo puramente visual en `css/styles.css`: se intercambió
+  `left`/`right` entre `.badge-cost` y `.badge-str` (antes coste a la
+  izquierda, fuerza a la derecha — ahora al revés). No se tocó
+  `js/app.js`: los badges siguen mostrando el mismo dato de siempre
+  (`card.cost` en `.badge-cost`, `card.strength` en `.badge-str`),
+  solo cambia dónde se dibujan.
+- Validado con Playwright: badge de fuerza queda a la izquierda del
+  badge de coste en la miniatura, 0 `pageerror`.
+
 ### 2026-09-12 (52ª iteración) — Nueva edición "Set Coleccionista Primera Era" (12 cartas)
 
 - El dueño avisó que su confusión con Flechero (iteración 51) venía de
