@@ -571,6 +571,14 @@ export const NAME_CORRECTIONS = {
 // intentó cargar como corrección de imagen de la carta base y el dueño
 // corrigió que son dos cosas distintas.
 export const IMAGE_CORRECTIONS = {
+  // TOR ya marca esta carta como "Promocional" (rareza correcta) pero trae la
+  // imagen de la carta base "Vali" del Kit Dios (Colecciones Raciales
+  // Primera Era, código impreso "CRPE-46-72") en vez de la de esta versión
+  // promocional real ("CARTA PROMO PE 04", entregada al comprar los 6 kits
+  // en CasaMyL a fines de 2021) — mismo arte, marco/borde distinto. El
+  // dueño confirmó tener la física y que coincide con
+  // https://myl.fandom.com/es/wiki/Vali_(PE), no con la que traía la app.
+  "70-046": { image: "https://static.wikia.nocookie.net/myl-tcg/images/d/de/Vali_PE.png/revision/latest?cb=20211130185027&path-prefix=es" },
 };
 
 // Mismo bug de numeración que MUNDOS_PERDIDOS_TOR_CORRECTIONS arriba, pero

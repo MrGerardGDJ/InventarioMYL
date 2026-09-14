@@ -378,6 +378,28 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-14 (54ª iteración) — Corrige la imagen de Vali (Raciales, `70-046`)
+
+- El dueño avisó que su carta física de "Vali" (edición "Raciales",
+  `raciales_pe`) no coincide con la imagen que trae la app, y que
+  corresponde a la versión del wiki
+  `https://myl.fandom.com/es/wiki/Vali_(PE)`.
+- Confirmado: TOR ya clasifica correctamente esta carta como
+  `"rarity": "Promocional"` (coste/fuerza/habilidad también
+  coinciden con la carta promo), pero la `image` que trae es la de la
+  carta BASE "Vali" del Kit Dios (Colecciones Raciales Primera Era,
+  código impreso `CRPE-46-72`) — mismo arte pero marco/borde
+  distinto (ícono de fuerza en escudo, no en llama de "Promocional").
+  La imagen real de esta versión promo es `CARTA PROMO PE 04`
+  (entregada al comprar los 6 kits raciales en CasaMyL a fines de
+  2021), confirmada contra la página propia del wiki.
+- Corregido con el mecanismo `IMAGE_CORRECTIONS` de
+  `scraper/corrections.js` (nueva entrada `"70-046"`, ya no vacío) +
+  parche directo al mismo campo en `data/cards.json` para verse de
+  inmediato sin esperar la próxima corrida del scraper — mismo patrón
+  que la corrección de nombre de Ánima Negra (iteración 39).
+- Validado: JSON válido.
+
 ### 2026-09-13 (53ª iteración) — Corrige posición de los badges de coste/fuerza en las miniaturas de carta
 
 - El dueño notó que en las tarjetas del Catálogo/Colecciones, el
