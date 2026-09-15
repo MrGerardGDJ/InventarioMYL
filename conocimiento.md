@@ -378,6 +378,31 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-15 (58ª iteración) — Filtro de rareza y secciones por rareza en Cambio y Ventas
+
+- El dueño pidió poder filtrar lo ofrecido en Cambio y Ventas por
+  rareza, que las cartas se ordenen de la rareza más alta a la más
+  baja, y que se agrupen en secciones por rareza (pudiendo dejar
+  visible solo una).
+- Nuevo selector "Todas las rarezas" arriba de "Ofrecidas para cambio o
+  venta" (`#trade-rarity`), con solo las rarezas que efectivamente hay
+  entre lo ofrecido (no todo el catálogo) — igual que ya hacían las
+  píldoras de inventario del Catálogo, las opciones se calculan ANTES
+  de aplicar el propio filtro de rareza, para que no se autorrestrinjan
+  al elegir una.
+- `renderTradeList()` agrupa las cartas ofrecidas (ya filtradas por
+  búsqueda y por el selector de rareza) en secciones con encabezado por
+  rareza, ordenadas con el mismo `RARITY_ORDER` que ya se usaba para
+  ordenar la Distribución de un mazo (acordado con el dueño el
+  24-08-2026: rarezas especiales arriba, luego la escalera normal de
+  Secreta a Vasallo). Dentro de cada sección, las cartas van por nombre.
+  Se factorizó `rarityRank(card)` en un `rarityRankByName(nombre)` +
+  `rarityCompare(a, b)` reusable para no duplicar la lógica de orden.
+- Verificado con Playwright: las secciones aparecen en el orden
+  correcto (Promocional → Secreta → Mega Real → Real → Vasallo en los
+  datos de prueba), el selector solo lista rarezas presentes, y elegir
+  una deja visible solo esa sección; sin `pageerror` en consola.
+
 ### 2026-09-15 (57ª iteración) — "Ofrecidas para cambio o venta" en formato lista
 
 - El dueño mandó otra captura (vista "Mercado" de la misma plataforma de
