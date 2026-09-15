@@ -378,6 +378,77 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-15 (55ª iteración) — "Mi valor" en Cambio y Ventas: precio propio + indicador sobre/bajo mercado
+
+- El dueño pidió invertir el enfoque de precios: hasta ahora "Cambio y
+  Ventas" mostraba como dato principal los precios scrapeados de
+  mylserena/mesaredonda (`data/prices.json`). Ahora quiere ser él
+  quien le ponga precio a cada carta que tiene, y que la app le
+  indique si ese precio queda sobre o bajo el precio de referencia —
+  en vez de solo mostrarle el scrapeado.
+- El dueño también pegó un documento "Mercado — especificación alfa"
+  como inspiración, pero aclaró explícitamente que es para una versión
+  futura mucho más grande (multiusuario, trueques, pujas, sistema de
+  diseño "Nocturne" con Inter/Phosphor) que **no aplica** a este
+  inventario personal estático — solo se tomó la idea de fondo (dejar
+  que el usuario asigne valor y verlo distinguido visualmente),
+  adaptada a la arquitectura real de la app (mismo look and feel de
+  siempre, sin backend multiusuario).
+- **Alcance acordado con el dueño** (vía preguntas antes de programar):
+  rediseño "retoque" (mismos tokens de color/tipografía, sin sistema
+  nuevo) y el precio propio + indicador de mercado vive **solo en
+  Cambio y Ventas** — Catálogo y Colecciones (que comparten `cardEl()`)
+  quedan exactamente iguales, sin precio.
+- Punto del pedido original sobre "buscar cartas repetidas": ya existe
+  (filtro "Duplicadas (2+)" en `#f-ownership` del Catálogo) — no
+  necesitó cambios, solo se le confirmó al dueño dónde está.
+- **Dato nuevo** `myPrices: {cardId: CLP}` en `js/store.js`, mismo
+  patrón mecánico que `trade` (mapa plano, getter/setter que llama
+  `notify()`, `replaceMyPrices(obj, origin)` para sync entrante).
+  Sumado a `getSnapshot()`/`applySnapshot()` → sincroniza solo con
+  agregar el campo, sin tocar nada de Supabase (`cloud.js` sube/baja
+  el snapshot completo como un blob JSONB). `migrateKeys()` también
+  remapea `myPrices` cuando cambia el id estable de una carta, pero
+  SIN sumar como hace con las cantidades (un precio no se "suma" al
+  migrar; se conserva el que ya hubiera en el id nuevo si existía).
+- **Lógica de comparación** (`myPriceInfo()` en `js/app.js`): compara
+  `store.getMyPrice(id)` contra el precio de referencia (mylserena ??
+  mesaredonda, mismo criterio que ya usaba el resto de la vista), con
+  un margen de ±5% para "en línea con el mercado" (evita marcar como
+  "distinto" una diferencia de un par de pesos).
+- **`tradeCardEl()`**: la sección de precio cruda (`.trade-price`, dos
+  números scrapeados) se reemplaza por "Mi valor" protagonista + botón
+  editar (lápiz) o "Asignar valor" si no tiene, y debajo una píldora:
+  "▲ Sobre mercado (+N%)" (rojo), "▼ Bajo mercado (−N%)" (verde), "≈ En
+  línea con el mercado" (muted), o si no hay referencia scrapeada para
+  esa carta, "Sin referencia de mercado"; si todavía no le puso valor
+  pero sí hay referencia, se la muestra como pista ("Referencia: $X").
+- **Modal nuevo** `#value-modal` (en `index.html`, mismo patrón que
+  `#sell-modal`): input de precio, Guardar, Quitar valor (solo visible
+  si ya tenía uno). Funciones `openValueModal`/`closeValueModal`/
+  `saveValue`/`removeValueFromModal` en `js/app.js`, wireadas en
+  `bindTradeEvents()`.
+- **`renderTradeValue()`** (total de "valor potencial de venta"): ahora
+  prefiere `store.getMyPrice()` por copia y solo cae al precio
+  scrapeado si el dueño no valoró esa carta — la nota distingue
+  "copias valoradas por ti" de "con precio de referencia" de "sin
+  valor (no incluidas)".
+- **`openSellModal()`**: el precio sugerido al vender ahora prioriza el
+  valor propio sobre el scrapeado.
+- **`exportPricesExcel()`** (`js/exporters.js`): nueva columna "Mi
+  valor"; el listado ahora incluye cartas con valor propio Y/O precio
+  de referencia (antes solo las que tenían precio scrapeado).
+- CSS nuevo (`.my-value-row`, `.my-value-amount`, `.my-value-edit-btn`,
+  `.market-pill` + variantes `.over`/`.under`/`.even`/`.none`) dentro
+  de los tokens ya existentes — nada de paleta/tipografía nueva.
+- Validado con Playwright: asignar/editar/quitar valor persiste y se
+  refleja en la tarjeta; las 4 variantes de la píldora (sin valor con
+  referencia, sobre, bajo, en línea) renderizan correctamente contra
+  una carta real de `data/prices.json` ("47 Ronin", crpe2, referencia
+  $500); el total de "Cambio y Ventas" se actualiza; el modal de venta
+  prellena con el valor propio; Catálogo/Colecciones confirmados sin
+  cambios visuales (sin `.my-value-row`); 0 `pageerror`.
+
 ### 2026-09-14 (54ª iteración) — Corrige la imagen de Vali (Raciales, `70-046`)
 
 - El dueño avisó que su carta física de "Vali" (edición "Raciales",

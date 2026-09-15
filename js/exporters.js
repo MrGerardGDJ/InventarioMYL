@@ -92,15 +92,16 @@ export async function exportExcel(cards, getQty, scopeLabel = "Colección") {
 }
 
 /* ===================== EXCEL: precios referenciales ===================== */
-// Listado de cartas con su código, edición y precio referencial de venta de
-// carta suelta, cruzado contra data/prices.json (mylserena.cl +
-// mesaredondatcg.cl, ver docs/FUENTES-DATOS.md sección 6b). Cobertura
-// PARCIAL a propósito: solo se listan cartas con al menos un precio
-// verificado, nunca un valor inventado. Cuando hay precio de ambas
-// tiendas se muestran las dos columnas por separado — un solo número
+// Listado de cartas con su código, edición, el valor que el dueño le asignó
+// (getMyPrice, ver store.getMyPrice) y el precio referencial de venta de
+// carta suelta cruzado contra data/prices.json (mylserena.cl +
+// mesaredondatcg.cl, ver docs/FUENTES-DATOS.md sección 6b) como contexto.
+// Cobertura PARCIAL a propósito: solo se listan cartas con valor propio y/o
+// precio de referencia, nunca un valor inventado. Cuando hay precio de
+// ambas tiendas se muestran las dos columnas por separado — un solo número
 // "de mercado" con 2 fuentes sería un promedio inventado sin base
 // estadística real, así que se deja que el dueño decida cuál mirar.
-export async function exportPricesExcel(cards, getQty, scopeLabel = "Colección") {
+export async function exportPricesExcel(cards, getQty, getMyPrice, scopeLabel = "Colección") {
   await loadScript(CDN.xlsx);
   const XLSX = window.XLSX;
 
@@ -108,27 +109,27 @@ export async function exportPricesExcel(cards, getQty, scopeLabel = "Colección"
   const pricesRes = await fetch(`./data/prices.json?v=${v}`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
   const prices = pricesRes?.prices || {};
 
-  const withPrice = cards.filter((c) => prices[c.id]);
-  const header = ["Nombre", "Código", "Edición", "Formato", "Tengo", "Precio mylserena.cl", "Precio mesaredondatcg.cl"];
+  const withPrice = cards.filter((c) => prices[c.id] || getMyPrice(c.id) != null);
+  const header = ["Nombre", "Código", "Edición", "Formato", "Tengo", "Mi valor", "Precio mylserena.cl", "Precio mesaredondatcg.cl"];
   const data = [header];
   for (const c of withPrice) {
-    const p = prices[c.id];
+    const p = prices[c.id] || {};
     data.push([
       c.name, cardCode(c), c.editionName || c.edition, FMT_NAMES[c.format] || c.format,
-      getQty(c.id), p.mylserena ?? "", p.mesaredonda ?? "",
+      getQty(c.id), getMyPrice(c.id) ?? "", p.mylserena ?? "", p.mesaredonda ?? "",
     ]);
   }
 
   const info = [
-    ["Precios referenciales de cartas — Inventario MyL"],
+    ["Precios de cartas — Inventario MyL"],
     ["Generado", new Date().toLocaleString("es-CL")],
     ["Alcance", scopeLabel],
-    ["Fuentes", "mylserena.cl y mesaredondatcg.cl — precio de venta de carta suelta más barato encontrado en cada tienda"],
-    ["Cartas con precio encontrado", withPrice.length, "de", cards.length, "en este listado"],
+    ["Mi valor", "el precio que tú le asignaste a la carta desde Cambio y Ventas"],
+    ["Fuentes de referencia", "mylserena.cl y mesaredondatcg.cl — precio de venta de carta suelta más barato encontrado en cada tienda"],
+    ["Cartas listadas", withPrice.length, "de", cards.length, "(con valor propio y/o precio de referencia)"],
     [],
-    ["Este listado es parcial: solo incluye cartas cuya edición se pudo cruzar con evidencia real contra el código de cada"],
-    ["tienda (no se inventan precios de ediciones sin verificar). Si falta una carta que te interesa, es porque todavía no"],
-    ["se verificó esa edición contra ninguna tienda."],
+    ["El precio de referencia es parcial a propósito: solo aparece en cartas cuya edición se pudo cruzar con evidencia real"],
+    ["contra el código de cada tienda (no se inventan precios de ediciones sin verificar)."],
   ];
 
   const wb = XLSX.utils.book_new();
@@ -137,8 +138,8 @@ export async function exportPricesExcel(cards, getQty, scopeLabel = "Colección"
   XLSX.utils.book_append_sheet(wb, wsI, "Info");
 
   const wsC = XLSX.utils.aoa_to_sheet(data);
-  wsC["!cols"] = [{ wch: 34 }, { wch: 12 }, { wch: 30 }, { wch: 12 }, { wch: 7 }, { wch: 16 }, { wch: 18 }];
-  wsC["!autofilter"] = { ref: `A1:G${data.length}` };
+  wsC["!cols"] = [{ wch: 34 }, { wch: 12 }, { wch: 30 }, { wch: 12 }, { wch: 7 }, { wch: 10 }, { wch: 16 }, { wch: 18 }];
+  wsC["!autofilter"] = { ref: `A1:H${data.length}` };
   wsC["!freeze"] = { xSplit: 0, ySplit: 1 };
   XLSX.utils.book_append_sheet(wb, wsC, "Precios");
 

@@ -13,6 +13,7 @@ const KEYS = {
   settings: "myl.settings.v1",
   meta: "myl.meta.v1",
   custom: "myl.customcards.v1",
+  myPrices: "myl.myprices.v1",
 };
 
 function read(key, fallback) {
@@ -240,6 +241,32 @@ export function replaceSaleLog(arr, origin = "local") {
   if (Array.isArray(arr)) { saleLog = arr; write(KEYS.saleLog, saleLog); notify(origin); }
 }
 
+/* ===== Valor propio por carta (Cambio y Ventas) =====
+   myPrices: {cardId: CLP}. Precio que el DUEÑO le asigna a una carta que
+   posee — no se scrapea de ninguna tienda (eso vive en data/prices.json,
+   solo como referencia para comparar). Un valor por carta, no por copia
+   individual ni por estado de conservación (la app no modela eso). null/
+   ausente = "sin valorar", distinto de valorarla en $0. */
+let myPrices = read(KEYS.myPrices, {});
+
+export function getMyPrice(id) { return myPrices[id] ?? null; }
+export function getMyPrices() { return { ...myPrices }; }
+export function setMyPrice(id, value) {
+  if (value == null || !Number.isFinite(value)) { delete myPrices[id]; }
+  else { myPrices[id] = Math.max(0, Math.floor(value)); }
+  write(KEYS.myPrices, myPrices);
+  notify();
+}
+export function replaceMyPrices(obj, origin = "local") {
+  myPrices = {};
+  for (const [id, v] of Object.entries(obj || {})) {
+    const n = Number(v);
+    if (Number.isFinite(n) && n >= 0) myPrices[id] = Math.floor(n);
+  }
+  write(KEYS.myPrices, myPrices);
+  notify(origin);
+}
+
 /* ===== Colecciones (una o más ediciones que se quieren completar) =====
    Una colección NO guarda cantidades: es una vista de un grupo de ediciones
    sobre el inventario (ej. agrupar todas las "Mundos Perdidos" de un año en
@@ -320,13 +347,27 @@ export function migrateKeys(map) {
   };
   const newInv = remap(inventory);
   for (const d of decks) d.cards = remap(d.cards);
+  // myPrices no se suma como las cantidades (dos precios asignados por
+  // separado no tienen un "total" con sentido): si el id nuevo ya tenía un
+  // valor propio, se conserva ese; si no, se traslada el del id viejo.
+  const newPrices = {};
+  let pricesChanged = false;
+  for (const [k, v] of Object.entries(myPrices)) {
+    const nk = map[k] || k;
+    if (nk !== k) pricesChanged = true;
+    if (!(nk in newPrices)) newPrices[nk] = v;
+  }
   if (changed) {
     inventory = newInv;
     write(KEYS.inv, inventory);
     write(KEYS.decks, decks);
-    notify();
   }
-  return changed;
+  if (pricesChanged) {
+    myPrices = newPrices;
+    write(KEYS.myPrices, myPrices);
+  }
+  if (changed || pricesChanged) notify();
+  return changed || pricesChanged;
 }
 
 /* ===== Ediciones personalizadas del usuario =====
@@ -415,6 +456,7 @@ export function getSnapshot() {
     saleLog: saleLog.slice(),
     editions: getCustomEditions(),
     customCards: getCustomCards(),
+    myPrices: getMyPrices(),
     updatedAt: getUpdatedAt(),
   };
 }
@@ -432,6 +474,7 @@ export function applySnapshot(snap) {
   if (Array.isArray(snap.saleLog)) { saleLog = snap.saleLog; write(KEYS.saleLog, saleLog); }
   if (Array.isArray(snap.editions)) { customEditions = snap.editions; write(KEYS.editions, customEditions); }
   if (Array.isArray(snap.customCards)) { customCards = snap.customCards; write(KEYS.custom, customCards); }
+  if (snap.myPrices && typeof snap.myPrices === "object") { myPrices = { ...snap.myPrices }; write(KEYS.myPrices, myPrices); }
   if (snap.updatedAt) setUpdatedAt(snap.updatedAt);
   notify("remote");
 }
