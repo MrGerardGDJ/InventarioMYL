@@ -288,21 +288,50 @@ main { padding: 0; }
 .col-progress-big .ep-bar { flex: 1; height: 16px; }
 
 /* ===== Cambio y Ventas =====
-   Grilla de cartas ofrecidas (reusa .cards-grid/.card del Catálogo, ver
-   tradeCardEl en app.js), buscador (reutiliza .deck-add-search/.dsr) e
-   historiales de intercambios/ventas registrados. */
+   Lista de cartas ofrecidas (formato fila, inspirado en una vista de
+   mercado: miniatura + nombre a la izquierda, cantidad al centro, valor y
+   acciones a la derecha — ver tradeCardEl/renderTradeList en app.js),
+   buscador (reutiliza .deck-add-search/.dsr) e historiales de
+   intercambios/ventas registrados. */
 .trade-h3 { margin: 22px 0 8px; font-size: 15px; }
 .trade-value { font-size: 13px; font-weight: 700; color: var(--accent-2); margin-top: 6px; }
 .trade-value .tv-note { display: block; font-size: 11px; font-weight: 400; color: var(--muted); margin-top: 2px; }
-.trade-grid { min-height: 40px; }
-.trade-grid .card-name { font-size: 14.5px; }
+.trade-list { display: flex; flex-direction: column; gap: 8px; min-height: 40px; }
+.trade-row {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 8px 12px; transition: border-color 0.12s ease;
+}
+.trade-row:hover { border-color: var(--accent-2); }
+.tr-thumb {
+  flex: none; width: 46px; height: 64px; border-radius: 6px; overflow: hidden;
+  background: var(--bg-3); position: relative; cursor: pointer;
+}
+.tr-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tr-thumb .placeholder { font-size: 8px; padding: 2px; text-align: center; color: var(--muted); }
+.tr-thumb .badge-cost { width: 16px; height: 16px; font-size: 9px; top: 2px; right: 2px; }
+.tr-thumb .badge-str { padding: 1px 4px; font-size: 8px; top: 2px; left: 2px; }
+.tr-thumb .badge-num { padding: 1px 4px; font-size: 8px; bottom: 2px; left: 2px; }
+.tr-main { flex: 1 1 160px; min-width: 0; cursor: pointer; }
+.tr-name {
+  font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tr-meta { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tr-qty { flex: none; }
+.tr-value { flex: none; min-width: 150px; }
+.tr-actions { flex: none; }
 .trade-qty-label { font-size: 10.5px; margin-left: 2px; }
+.trade-row .qty-row { border: none; padding: 0; margin: 0; }
+.trade-row .trade-qty-label { display: none; }
 /* "Mi valor": el precio que el dueño le asigna a la carta (protagonista,
    igual de peso visual que .qty-num) + píldora de comparación contra el
    precio de referencia scrapeado. Ver myValueSectionHtml/myPriceInfo. */
 .my-value-row {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
   gap: 4px 8px; margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px;
+}
+.trade-row .my-value-row {
+  margin: 0; border: none; padding: 0; flex-direction: column; align-items: flex-end; gap: 2px;
 }
 .my-value-main { display: flex; align-items: center; gap: 6px; }
 .my-value-amount { font-size: 15px; font-weight: 700; color: var(--text); }
@@ -316,11 +345,20 @@ main { padding: 0; }
 .market-pill.over { color: var(--danger); }
 .market-pill.under { color: var(--ok); }
 .market-pill.even, .market-pill.none { color: var(--muted); font-weight: 400; }
-.trade-actions { display: flex; gap: 6px; margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; }
+.trade-actions { display: flex; gap: 6px; }
 .trade-actions .btn { flex: 1; padding: 6px 4px; font-size: 12px; }
 .trade-actions .btn:disabled { opacity: .45; cursor: not-allowed; }
+.trade-row .trade-actions { margin: 0; border: none; padding: 0; }
+.trade-row .trade-actions .btn { flex: none; }
 .trade-avail-note { font-size: 11px; font-weight: 600; color: var(--danger); margin-top: 4px; }
 .trade-avail-note.ok { color: var(--ok); font-weight: 400; }
+@media (max-width: 760px) {
+  .trade-row { flex-wrap: wrap; }
+  .tr-value { text-align: left; }
+  .trade-row .my-value-row { align-items: flex-start; }
+  .tr-actions { flex: 1 1 100%; }
+  .trade-row .trade-actions .btn { flex: 1; }
+}
 .trade-log .tlog-row {
   display: grid; grid-template-columns: 150px 1fr 1fr; gap: 10px;
   padding: 7px 10px; border-bottom: 1px solid var(--border); font-size: 13px;

@@ -378,6 +378,30 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-15 (57ª iteración) — "Ofrecidas para cambio o venta" en formato lista
+
+- El dueño mandó otra captura (vista "Mercado" de la misma plataforma de
+  referencia, ahora la de escritorio) y pidió puntualmente que las
+  cartas ofrecidas en Cambio y Ventas se vean en formato lista en vez
+  de grilla de tarjetas, inspirado en esa captura.
+- Se cambió solo la sección "Ofrecidas para cambio o venta" (no el
+  Catálogo/Colecciones/Mazos, que siguen en grilla de tarjetas como
+  siempre): cada carta ahora es una fila (`.trade-row`) con miniatura
+  chica a la izquierda, nombre/edición/disponibilidad al centro, los
+  controles de cantidad ofrecida, "Mi valor" + indicador de mercado y
+  los botones Intercambiar/Vender alineados a la derecha — mismo
+  patrón visual de una fila de mercado (nombre, precio, acción), con
+  los tokens de color de siempre.
+- `tradeCardEl()` (`js/app.js`) genera el nuevo marcado de fila en vez
+  del `.card` de tarjeta; la lógica de cantidades, valor propio y
+  botones no cambió, solo cómo se ve. En pantallas angostas la fila se
+  acomoda en dos líneas (miniatura+nombre+cantidad arriba, valor y
+  acciones abajo a ancho completo) en vez de recortarse.
+- Verificado con Playwright en escritorio y en un viewport de celular
+  (390px): las filas se arman bien, el indicador sobre/bajo mercado se
+  ve correcto, y el acomodo en dos líneas en mobile no rompe el layout;
+  sin `pageerror` en consola.
+
 ### 2026-09-15 (56ª iteración) — Retoque visual violeta + filtros como píldoras + link mágico para conectar el celular
 
 - El dueño mandó 2 capturas de un mockup ("Plataforma TCG", sistema de

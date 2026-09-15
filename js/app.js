@@ -1951,7 +1951,7 @@ function renderTradeList() {
     ? `${entries.length} carta${entries.length === 1 ? "" : "s"} distinta${entries.length === 1 ? "" : "s"} · ${copies} copia${copies === 1 ? "" : "s"} ofrecida${copies === 1 ? "" : "s"}`
     : "Aún no marcas cartas para cambio o venta.";
   renderTradeValue(entries);
-  wrap.className = "cards-grid trade-grid";
+  wrap.className = "trade-list";
   if (!entries.length) {
     wrap.innerHTML = `<p class="muted">Busca arriba una carta que tengas repetida y ofrécela; también puedes hacerlo desde el detalle de cualquier carta.</p>`;
     return;
@@ -1980,7 +1980,6 @@ function renderTradeList() {
   if (orphanIds.length) {
     const note = document.createElement("p");
     note.className = "muted";
-    note.style.gridColumn = "1 / -1";
     note.textContent = `${orphanIds.length} carta(s) ofrecida(s) ya no están en el catálogo (id: ${orphanIds.join(", ")}).`;
     wrap.appendChild(note);
   }
@@ -2022,47 +2021,48 @@ function renderTradeValue(entries) {
   el.innerHTML = `Valor potencial de venta: ${fmtCLP(total)}<span class="tv-note">${parts.join(" · ")}</span>`;
 }
 
-// Tarjeta individual de la grilla de cambio/venta — mismo estilo visual que
-// el Catálogo/Colecciones (.card), pero con la cantidad ofrecida, el precio
-// referencial y los botones Intercambiar/Vender en vez del selector de mazo.
+// Fila individual de la lista de cambio/venta — miniatura + nombre a la
+// izquierda, cantidad ofrecida al centro, "Mi valor" + indicador de mercado
+// y los botones Intercambiar/Vender a la derecha (formato lista, no grilla
+// de tarjetas — inspirado en la vista de mercado que mandó el dueño).
 // navList: ver cardEl().
 function tradeCardEl(card, navList) {
   const b = tradeBreakdown(card.id);
   const { offered, owned, paraCambio: available } = b;
   const el = document.createElement("div");
-  el.className = "card owned";
+  el.className = "trade-row";
   el.dataset.id = card.id;
 
   const dName = displayName(card);
   const num = cardNum(card);
   const img = card.image
     ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
-    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div>${card.editionName || ""}</div>`;
+    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div></div>`;
 
   const valueHtml = myValueSectionHtml(card.id);
 
   el.innerHTML = `
-    <div class="card-img" data-act="detail">
+    <div class="tr-thumb" data-act="detail">
       ${card.cost != null ? `<span class="badge-cost">${card.cost}</span>` : ""}
       ${card.strength != null ? `<span class="badge-str">${card.strength}</span>` : ""}
       ${card.specialId ? `<span class="badge-num special">${escapeHtml(card.specialId)}</span>` : Number.isFinite(num) ? `<span class="badge-num">#${num}</span>` : ""}
       ${img}
     </div>
-    <div class="card-body">
-      <div class="card-name">${escapeHtml(dName)}</div>
-      <div class="card-meta">${escapeHtml(card.editionName || "")}</div>
-      <div class="qty-row">
-        <button class="qty-btn" data-tr="minus">−</button>
-        <span class="qty-num" data-role="tqty">${offered}</span>
-        <button class="qty-btn" data-tr="plus" ${offered >= owned ? "disabled" : ""}>+</button>
-        <span class="muted trade-qty-label">ofrecidas</span>
-      </div>
+    <div class="tr-main" data-act="detail">
+      <div class="tr-name">${escapeHtml(dName)}</div>
+      <div class="tr-meta">${escapeHtml(card.editionName || "")}</div>
       <div class="trade-avail-note${offered > available ? "" : " ok"}">Colección: ${b.coleccion} · Disponible: <b>${available}</b> · En mazo: ${b.enMazo}</div>
-      ${valueHtml}
-      <div class="trade-actions">
-        <button class="btn small" data-exchange ${available < 1 ? "disabled" : ""}>Intercambiar</button>
-        <button class="btn small" data-sell ${available < 1 ? "disabled" : ""}>Vender</button>
-      </div>
+    </div>
+    <div class="tr-qty qty-row">
+      <button class="qty-btn" data-tr="minus">−</button>
+      <span class="qty-num" data-role="tqty">${offered}</span>
+      <button class="qty-btn" data-tr="plus" ${offered >= owned ? "disabled" : ""}>+</button>
+      <span class="muted trade-qty-label">ofrecidas</span>
+    </div>
+    <div class="tr-value">${valueHtml}</div>
+    <div class="tr-actions trade-actions">
+      <button class="btn small" data-exchange ${available < 1 ? "disabled" : ""}>Intercambiar</button>
+      <button class="btn small" data-sell ${available < 1 ? "disabled" : ""}>Vender</button>
     </div>`;
 
   el.querySelector('[data-tr="minus"]').onclick = () => { store.addTradeQty(card.id, -1); renderTradeList(); };
@@ -2070,7 +2070,7 @@ function tradeCardEl(card, navList) {
   el.querySelector("[data-exchange]").onclick = () => openTradeModal(card);
   el.querySelector("[data-sell]").onclick = () => openSellModal(card);
   el.querySelector("[data-edit-value]").onclick = () => openValueModal(card);
-  el.querySelector('[data-act="detail"]').onclick = () => openModal(card, navList);
+  el.querySelectorAll('[data-act="detail"]').forEach((n) => { n.onclick = () => openModal(card, navList); });
   return el;
 }
 
