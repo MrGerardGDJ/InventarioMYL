@@ -43,13 +43,14 @@
 
         <label class="field">
           <span>Inventario</span>
-          <select id="f-ownership">
+          <select id="f-ownership" class="hidden">
             <option value="all">Todas las cartas</option>
             <option value="owned">Solo las que tengo</option>
             <option value="missing">Solo las que me faltan</option>
             <option value="dup">Duplicadas (2+)</option>
             <option value="trade">Ofrecidas para cambio</option>
           </select>
+          <div id="f-ownership-pills" class="pill-row"></div>
         </label>
 
         <label class="field">
@@ -299,6 +300,10 @@ create policy "acceso_log" on inventario_myl_log
         <button class="btn" id="cloud-disconnect">Desconectar</button>
       </div>
       <p class="muted" id="cloud-status" style="margin-top:10px"></p>
+      <div class="sync-row">
+        <button class="btn" id="cloud-magic-link">🔗 Copiar link para este dispositivo</button>
+      </div>
+      <p class="muted" style="margin-top:6px">Abre ese link en tu celular (u otro dispositivo) ya conectado a esta colección: te ahorra escribir la URL y las claves a mano. El link contiene tu clave anon y tu código de colección — compártelo solo con dispositivos tuyos.</p>
       <div class="sync-row">
         <button class="btn" id="cloud-log-btn">📜 Ver historial</button>
       </div>
