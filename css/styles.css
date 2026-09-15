@@ -294,6 +294,18 @@ main { padding: 0; }
    buscador (reutiliza .deck-add-search/.dsr) e historiales de
    intercambios/ventas registrados. */
 .trade-h3 { margin: 22px 0 8px; font-size: 15px; }
+.trade-list-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.trade-list-head .trade-h3 { margin: 22px 0 8px; }
+.trade-rarity-select {
+  padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg-3); color: var(--text); font-size: 13px;
+}
+.trade-rarity-title {
+  margin: 18px 0 8px; font-size: 13px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.04em; color: var(--accent-2);
+  border-bottom: 1px solid var(--border); padding-bottom: 6px;
+}
+.trade-rarity-title:first-child { margin-top: 0; }
 .trade-value { font-size: 13px; font-weight: 700; color: var(--accent-2); margin-top: 6px; }
 .trade-value .tv-note { display: block; font-size: 11px; font-weight: 400; color: var(--muted); margin-top: 2px; }
 .trade-list { display: flex; flex-direction: column; gap: 8px; min-height: 40px; }

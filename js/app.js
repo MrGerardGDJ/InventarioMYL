@@ -1940,9 +1940,11 @@ function myPriceInfo(cardId) {
   return { mine, market, diffPct, status };
 }
 
-// Grilla de cartas ofrecidas para cambio/venta: imagen, cuántas hay
-// disponibles, precio referencial (si se encontró en alguna tienda) y los
-// botones Intercambiar/Vender.
+// Lista de cartas ofrecidas para cambio/venta, agrupada en secciones por
+// rareza (de más "pro" a más básica, ver RARITY_ORDER) y con un filtro para
+// ver solo una rareza a la vez. Cada fila: imagen, cantidad disponible,
+// precio referencial (si se encontró en alguna tienda) y los botones
+// Intercambiar/Vender.
 function renderTradeList() {
   const wrap = $("#trade-list");
   const entries = Object.entries(store.getTradeList());
@@ -1954,6 +1956,7 @@ function renderTradeList() {
   wrap.className = "trade-list";
   if (!entries.length) {
     wrap.innerHTML = `<p class="muted">Busca arriba una carta que tengas repetida y ofrécela; también puedes hacerlo desde el detalle de cualquier carta.</p>`;
+    updateTradeRarityFilter([]);
     return;
   }
   // El buscador de la barra superior filtra qué tarjetas se muestran acá
@@ -1961,21 +1964,42 @@ function renderTradeList() {
   // potencial de arriba siguen calculándose sobre TODO lo ofrecido, no solo
   // lo que calza con la búsqueda.
   const query = normText($("#search").value.trim());
-  wrap.innerHTML = "";
   const orphanIds = [];
-  const navList = [];
-  let shown = 0;
+  const offeredCards = [];
   for (const [id] of entries) {
     const c = cardById(id);
-    if (!c) { orphanIds.push(id); continue; } // ya no está en el catálogo: no se puede mostrar como tarjeta
+    if (!c) { orphanIds.push(id); continue; } // ya no está en el catálogo: no se puede mostrar como fila
     if (query && !c.searchText.includes(query)) continue;
-    navList.push(c);
-    wrap.appendChild(tradeCardEl(c, navList));
-    shown++;
+    offeredCards.push(c);
   }
-  if (!shown && !orphanIds.length) {
-    wrap.innerHTML = `<p class="muted">Ninguna carta ofrecida coincide con la búsqueda de la barra superior.</p>`;
+  // El selector de rareza se arma con lo ofrecido ANTES de aplicar su propio
+  // filtro (mismo criterio que las píldoras de inventario del Catálogo, ver
+  // baseFilteredCards): así no se autorrestringe al elegir una opción.
+  updateTradeRarityFilter(offeredCards);
+  const rarityFilter = $("#trade-rarity") ? $("#trade-rarity").value : "";
+  const shownCards = rarityFilter ? offeredCards.filter((c) => c.rarity === rarityFilter) : offeredCards;
+
+  wrap.innerHTML = "";
+  if (!shownCards.length && !orphanIds.length) {
+    wrap.innerHTML = `<p class="muted">Ninguna carta ofrecida coincide con ${rarityFilter ? "ese filtro de rareza" : "la búsqueda de la barra superior"}.</p>`;
     return;
+  }
+  const byRarity = new Map();
+  for (const c of shownCards) {
+    const key = c.rarity || "—";
+    if (!byRarity.has(key)) byRarity.set(key, []);
+    byRarity.get(key).push(c);
+  }
+  const groups = [...byRarity.keys()]
+    .sort(rarityCompare)
+    .map((rarity) => ({ rarity, cards: byRarity.get(rarity).sort((a, b) => displayName(a).localeCompare(displayName(b), "es")) }));
+  const navList = groups.flatMap((g) => g.cards);
+  for (const g of groups) {
+    const title = document.createElement("h4");
+    title.className = "trade-rarity-title";
+    title.textContent = g.rarity;
+    wrap.appendChild(title);
+    for (const c of g.cards) wrap.appendChild(tradeCardEl(c, navList));
   }
   if (orphanIds.length) {
     const note = document.createElement("p");
@@ -1983,6 +2007,20 @@ function renderTradeList() {
     note.textContent = `${orphanIds.length} carta(s) ofrecida(s) ya no están en el catálogo (id: ${orphanIds.join(", ")}).`;
     wrap.appendChild(note);
   }
+}
+
+// Opciones del filtro de rareza de Cambio y Ventas: solo las rarezas que
+// hay entre lo ofrecido (no todas las del catálogo), ordenadas igual que
+// las secciones (RARITY_ORDER). Conserva la selección previa si sigue
+// entre las opciones disponibles.
+function updateTradeRarityFilter(offeredCards) {
+  const sel = $("#trade-rarity");
+  if (!sel) return;
+  const prev = sel.value;
+  const rarities = [...new Set(offeredCards.map((c) => c.rarity || "—"))].sort(rarityCompare);
+  sel.innerHTML = `<option value="">Todas las rarezas</option>` +
+    rarities.map((r) => `<option value="${escapeAttr(r)}">${escapeHtml(r)}</option>`).join("");
+  sel.value = rarities.includes(prev) ? prev : "";
 }
 
 // Suma el valor potencial de venta de todas las copias ofrecidas (cantidad ×
@@ -2282,6 +2320,7 @@ function removeValueFromModal() {
 }
 
 function bindTradeEvents() {
+  $("#trade-rarity").addEventListener("change", renderTradeList);
   $("#trade-search").addEventListener("input", debounce(renderTradeSearchResults, 180));
   $("#tm-search").addEventListener("input", debounce(renderTradeModalResults, 180));
   $$("[data-close-trade]").forEach((el) => el.addEventListener("click", closeTradeModal));
@@ -2516,9 +2555,15 @@ const RARITY_ORDER = [
   "Milenaria", "Set Paralelo", "Promocional", "Ficha",
   "Secreta", "Legendaria", "Ultra Real", "Mega Real", "Real", "Cortesano", "Vasallo",
 ];
-function rarityRank(card) {
-  const i = RARITY_ORDER.indexOf(card.rarity);
+function rarityRankByName(name) {
+  const i = RARITY_ORDER.indexOf(name);
   return i === -1 ? RARITY_ORDER.length : i;
+}
+function rarityRank(card) { return rarityRankByName(card.rarity); }
+// Compara dos nombres de rareza según RARITY_ORDER (más "pro" primero),
+// con desempate alfabético para las que no están en la lista.
+function rarityCompare(a, b) {
+  return rarityRankByName(a) - rarityRankByName(b) || a.localeCompare(b, "es");
 }
 function deckZoneOf(card) {
   if (card.type === "Oro") return "Oro";
