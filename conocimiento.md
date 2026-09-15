@@ -378,6 +378,81 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-15 (56ª iteración) — Retoque visual violeta + filtros como píldoras + link mágico para conectar el celular
+
+- El dueño mandó 2 capturas de un mockup ("Plataforma TCG", sistema de
+  diseño "Nocturne") hecho con Claude Design, más un bloque de
+  instrucciones de exportación que hacía referencia a archivos
+  (`Plataforma TCG.dc.html`, `_ds/nocturne-.../`, `support.js`,
+  `chats/`) que **no existen** en este repositorio — se verificó con
+  búsquedas en el filesystem antes de asumir nada. Se avisó al dueño y
+  se trabajó solo a partir de las 2 capturas como referencia visual,
+  sin inventar contenido de archivos que no estaban adjuntos.
+- **Alcance acordado con el dueño** (vía preguntas): cambiar el color
+  de acento a violeta como en las capturas, y resolver aparte el pedido
+  de "que el inventario esté siempre conectado a Supabase, sin tener
+  que loguearme o cargar el JSON cada vez que lo abro desde el
+  celular" con un mecanismo de "link mágico por dispositivo".
+
+**Parte A — Retoque visual (violeta + filtro de inventario como píldoras + indicador de repetidas)**
+
+- `--accent` pasa de dorado (`#c9a13b`) a violeta (`#9184d9`);
+  `--accent-2` de `#d9b85a` a `#b5abfc`. Se agregó `--on-accent:
+  #16121f` (texto oscuro sobre fondo de acento) — **se verificó
+  contraste WCAG con cálculo real de luminancia/ratio antes de
+  decidir**: texto oscuro da 5.7:1 sobre el violeta (pasa AA), texto
+  blanco solo 2.9:1 (no pasa). Reemplaza el `#1b1300` que estaba
+  hardcodeado en 3 lugares (`.tab.active`, `.btn.primary`,
+  `.badge-num.special`).
+- El filtro "Inventario" del Catálogo (antes un `<select>` con
+  "Todas/Que tengo/Me faltan/Duplicadas/Para cambio") ahora se ve como
+  fila de píldoras clicables con el conteo de cartas al lado de cada
+  una (ej. "Repetidas 12"). El `<select>` original sigue existiendo
+  (oculto) como única fuente de verdad para `applyFilters()` y
+  "Limpiar filtros" — las píldoras solo lo leen/escriben y disparan su
+  evento `change`, sin duplicar lógica de filtrado. Los conteos salen
+  de una función nueva `baseFilteredCards()` (los mismos filtros de
+  siempre, menos el de inventario) para que cada píldora muestre cuántas
+  cartas tendría si se selecciona, no solo la que está activa.
+- Las cartas con 2+ copias ahora muestran el número de cantidad en
+  violeta (`.qty-num.dup`) en vez del color neutro de siempre, para
+  distinguir repetidas de un vistazo sin tener que aplicar el filtro.
+- Catálogo, Colecciones, Cambio y Ventas y Mazos comparten los mismos
+  tokens, así que el cambio de acento se ve en toda la app sin tocar
+  `cardEl()`/`tradeCardEl()` ni el layout de las tarjetas.
+
+**Parte B — Link mágico para autoconectar un dispositivo a Supabase**
+
+- El dueño quiere entrar desde el celular y que ya esté todo
+  sincronizado, sin escribir a mano la URL del proyecto, la clave
+  anon y el código de colección cada vez. Se descartó "dejar las
+  credenciales fijas en el código" porque la política de seguridad de
+  la tabla (`inventario_myl`) es `for all using (true) with check
+  (true)` — cualquiera con la clave anon pública Y el código de
+  colección tiene lectura/escritura total; hornear la clave anon en un
+  archivo público (GitHub Pages) sigue siendo razonable porque es la
+  clave "anon" pensada para el cliente, pero el código de colección
+  (`clave`) es lo que en la práctica protege los datos, así que no
+  conviene dejarlo fijo para todo el mundo que visite el sitio.
+- En vez de eso: nuevo botón **"🔗 Copiar link para este dispositivo"**
+  en el panel de sincronización (solo visible/útil una vez que el
+  dispositivo actual ya está conectado). Arma un link con la URL,
+  clave anon y código de colección codificados en base64 dentro del
+  fragmento `#sync=...` (el nombre del dispositivo queda fuera a
+  propósito — cada aparato debe tener su propio nombre).
+- Al abrir ese link en otro dispositivo (el celular), `js/app.js`
+  detecta `#sync=` al iniciar, decodifica, llama a `cloud.setConfig()`
+  y conecta automáticamente — mismo camino que el botón "Conectar y
+  sincronizar" de siempre, ahora extraído a una función reusable
+  `connectCloud()`. El fragmento se borra de la URL con
+  `history.replaceState()` apenas se lee, antes de intentar conectar,
+  para no dejar la clave más tiempo del necesario en el historial del
+  navegador.
+- Verificado con Playwright: el link generado decodifica correctamente
+  a `{url, key, clave}`, al abrirlo en un contexto limpio el estado
+  pasa de "Conectando…" a "Conexión lista" y el hash desaparece de la
+  barra de direcciones; sin `pageerror` en consola.
+
 ### 2026-09-15 (55ª iteración) — "Mi valor" en Cambio y Ventas: precio propio + indicador sobre/bajo mercado
 
 - El dueño pidió invertir el enfoque de precios: hasta ahora "Cambio y

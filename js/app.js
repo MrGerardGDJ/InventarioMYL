@@ -299,18 +299,19 @@ function fillSelect(sel, opts) {
    el resultado según #f-sort. El orden por "número de carta" usa edid (número
    dentro de la edición) y desempata por edición según el orden de publicación
    (editions.json), de modo que el listado quede estable y predecible. */
-function applyFilters() {
+// Filtros de catálogo/formato/edición/raza/tipo/rareza/coste, SIN el de
+// inventario (ownership) — se usa tanto para el listado real (applyFilters)
+// como para calcular el conteo de cada píldora de "Inventario" sobre el
+// resto de filtros activos (ver updateOwnershipPills).
+function baseFilteredCards() {
   const q = normText($("#search").value.trim());
-  const ownership = $("#f-ownership").value;
   const fmt = $("#f-format").value;
   const ed = $("#f-edition").value;
   const race = $("#f-race").value;
   const type = $("#f-type").value;
   const rarity = $("#f-rarity").value;
   const maxCost = Number($("#f-cost").value);
-  const sort = $("#f-sort").value;
-
-  let out = state.cards.filter((c) => {
+  return state.cards.filter((c) => {
     if (q && !c.searchText.includes(q)) return false;
     if (fmt && c.format !== fmt) return false;
     if (ed && c.edition !== ed) return false;
@@ -318,6 +319,14 @@ function applyFilters() {
     if (type && c.type !== type) return false;
     if (rarity && c.rarity !== rarity) return false;
     if (maxCost < 12 && c.cost != null && c.cost > maxCost) return false;
+    return true;
+  });
+}
+function applyFilters() {
+  const ownership = $("#f-ownership").value;
+  const sort = $("#f-sort").value;
+
+  let out = baseFilteredCards().filter((c) => {
     const qty = store.getQty(c.id);
     if (ownership === "owned" && qty < 1) return false;
     if (ownership === "missing" && qty >= 1) return false;
@@ -449,6 +458,39 @@ function updateResultCount() {
   const n = state.filtered.length;
   const owned = state.filtered.filter((c) => store.getQty(c.id) > 0).length;
   $("#result-count").textContent = `${n} carta${n === 1 ? "" : "s"} · ${owned} en tu colección`;
+  updateOwnershipPills();
+}
+
+// Píldoras del filtro "Inventario" (reemplaza visualmente al <select> oculto
+// #f-ownership, que sigue siendo la fuente de verdad). El conteo de cada
+// píldora es sobre el resto de filtros activos (formato/edición/raza/tipo/
+// rareza/coste/búsqueda), no sobre el catálogo completo — así "Repetidas"
+// muestra cuántas duplicadas hay DENTRO de lo que ya filtraste.
+const OWNERSHIP_PILLS = [
+  ["all", "Todas"], ["owned", "Que tengo"], ["missing", "Me faltan"],
+  ["dup", "Repetidas"], ["trade", "Para cambio"],
+];
+function updateOwnershipPills() {
+  const wrap = $("#f-ownership-pills");
+  if (!wrap) return;
+  const base = baseFilteredCards();
+  const counts = {
+    all: base.length,
+    owned: base.filter((c) => store.getQty(c.id) >= 1).length,
+    missing: base.filter((c) => store.getQty(c.id) < 1).length,
+    dup: base.filter((c) => store.getQty(c.id) >= 2).length,
+    trade: base.filter((c) => store.getAvailableQty(c.id) >= 1).length,
+  };
+  const current = $("#f-ownership").value;
+  wrap.innerHTML = OWNERSHIP_PILLS.map(([val, label]) =>
+    `<button type="button" class="pill${val === current ? " active" : ""}" data-own="${val}">${label} <span class="pill-count">${counts[val]}</span></button>`
+  ).join("");
+  wrap.querySelectorAll("[data-own]").forEach((btn) => {
+    btn.onclick = () => {
+      $("#f-ownership").value = btn.dataset.own;
+      $("#f-ownership").dispatchEvent(new Event("change"));
+    };
+  });
 }
 
 /* ===================== Render grid ===================== */
@@ -502,7 +544,7 @@ function cardEl(card, navList) {
       <div data-role="avail">${availableMetaHtml(card.id)}</div>
       <div class="qty-row">
         <button class="qty-btn" data-act="minus">−</button>
-        <span class="qty-num ${qty === 0 ? "zero" : ""}" data-role="qty">${qty}</span>
+        <span class="qty-num ${qty === 0 ? "zero" : qty >= 2 ? "dup" : ""}" data-role="qty">${qty}</span>
         <button class="qty-btn" data-act="plus">+</button>
         ${deckBtn}
       </div>
@@ -560,6 +602,7 @@ function changeQty(el, card, delta) {
   const numEl = el.querySelector('[data-role="qty"]');
   numEl.textContent = qty;
   numEl.classList.toggle("zero", qty === 0);
+  numEl.classList.toggle("dup", qty >= 2);
   el.classList.toggle("owned", qty > 0);
   const availEl = el.querySelector('[data-role="avail"]');
   if (availEl) availEl.innerHTML = availableMetaHtml(card.id);
@@ -3125,6 +3168,42 @@ async function showLog() {
     `</tbody></table>`;
 }
 
+async function connectCloud({ url, key, clave, device }) {
+  if (!url || !key || !clave) { showToast("Completa URL, clave y código de colección", 3500); return false; }
+  cloud.setConfig({ url, key, clave, device });
+  $("#cloud-status").textContent = "Conectando…";
+  await cloudReconcile();
+  startRealtime();
+  $("#cloud-status").textContent = "Conexión lista. " + (autoUpload() ? "Tus cambios se subirán solos." : "Recuerda tocar Guardar para subir.") + " Tiempo real activo.";
+  showToast("Nube conectada ✓");
+  return true;
+}
+
+// Arma un link con la config de sincronización (sin el nombre de dispositivo,
+// que se ingresa por separado en cada uno) para copiar y abrir en otro aparato.
+function buildMagicLink() {
+  const cfg = cloud.getConfig();
+  if (!cfg.url || !cfg.key || !cfg.clave) return null;
+  const payload = btoa(unescape(encodeURIComponent(JSON.stringify({ url: cfg.url, key: cfg.key, clave: cfg.clave }))));
+  return `${location.origin}${location.pathname}#sync=${payload}`;
+}
+
+// Si la URL trae #sync=..., autoconecta con esos datos y limpia el hash de
+// inmediato (evita dejar la clave más tiempo del necesario en el historial).
+async function tryMagicLinkFromHash() {
+  const m = /^#sync=(.+)$/.exec(location.hash);
+  if (!m) return;
+  history.replaceState(null, "", location.pathname + location.search);
+  try {
+    const data = JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    if (!data.url || !data.key || !data.clave) return;
+    const ok = await connectCloud({ url: data.url, key: data.key, clave: data.clave, device: $("#cloud-device").value });
+    if (ok) $("#cloud-device").value = cloud.getConfig().device || "";
+  } catch (e) {
+    showToast("El link de sincronización no es válido.", 3500);
+  }
+}
+
 function bindSyncEvents() {
   $("#open-sync").addEventListener("click", openSyncModal);
   $$("[data-close-sync]").forEach((el) => el.addEventListener("click", closeSyncModal));
@@ -3142,13 +3221,12 @@ function bindSyncEvents() {
 
   $("#cloud-connect").addEventListener("click", async () => {
     const url = $("#cloud-url").value, key = $("#cloud-key").value, clave = $("#cloud-clave").value, device = $("#cloud-device").value;
-    if (!url || !key || !clave) { showToast("Completa URL, clave y código de colección", 3500); return; }
-    cloud.setConfig({ url, key, clave, device });
-    $("#cloud-status").textContent = "Conectando…";
-    await cloudReconcile();
-    startRealtime();
-    $("#cloud-status").textContent = "Conexión lista. " + (autoUpload() ? "Tus cambios se subirán solos." : "Recuerda tocar Guardar para subir.") + " Tiempo real activo.";
-    showToast("Nube conectada ✓");
+    await connectCloud({ url, key, clave, device });
+  });
+  $("#cloud-magic-link").addEventListener("click", () => {
+    const link = buildMagicLink();
+    if (!link) { showToast("Conecta primero para poder generar el link", 3500); return; }
+    navigator.clipboard.writeText(link).then(() => showToast("Link copiado ✓ Ábrelo en tu otro dispositivo"));
   });
   $("#cloud-push").addEventListener("click", async () => { if (!cloud.isConfigured()) return showToast("Conecta primero"); await doCloudPush(true); showToast("Guardado en la nube ✓"); openSyncModal(); });
   $("#cloud-pull").addEventListener("click", async () => {
@@ -3299,8 +3377,12 @@ async function init() {
   populateFilters();
   refreshActiveDeckUI();
   applyFilters();
-  // Sincronización en la nube (si está configurada)
-  if (cloud.isConfigured()) { setChip("☁ Sincronizado", "ok"); cloudReconcile(); startRealtime(); }
+  // Sincronización en la nube (si está configurada, o si llega un link mágico #sync=...)
+  if (/^#sync=/.test(location.hash)) {
+    await tryMagicLinkFromHash();
+  } else if (cloud.isConfigured()) {
+    setChip("☁ Sincronizado", "ok"); cloudReconcile(); startRealtime();
+  }
   startCloudBackgroundSync();
 }
 init();
