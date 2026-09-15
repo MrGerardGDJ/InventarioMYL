@@ -1871,6 +1871,31 @@ function fmtCLP(n) { return "$" + Math.round(n).toLocaleString("es-CL"); }
 // Precio referencial de una carta (data/prices.json) — cobertura parcial,
 // ver docs/FUENTES-DATOS.md sección 6b. null si no se encontró ninguna tienda.
 function cardPriceInfo(cardId) { return state.prices[cardId] || null; }
+// Precio de referencia de una carta según cardPriceInfo, prefiriendo
+// mylserena sobre mesaredonda (mismo criterio que ya usaba el resto de la
+// vista de Cambio y Ventas). null si no hay ninguna fuente.
+function marketRefPrice(cardId) {
+  const p = cardPriceInfo(cardId);
+  return p ? (p.mylserena ?? p.mesaredonda ?? null) : null;
+}
+// Compara el valor que el dueño le asignó a una carta con el precio de
+// referencia scrapeado. El valor propio es el dato protagonista ahora (ver
+// conocimiento.md); la referencia solo se usa para el indicador
+// sobre/bajo/en mercado, con un margen de ±5% para no marcar como
+// "distinto" una diferencia de un par de pesos.
+function myPriceInfo(cardId) {
+  const mine = store.getMyPrice(cardId);
+  const market = marketRefPrice(cardId);
+  let status = "sin-valor";
+  let diffPct = null;
+  if (mine != null && market != null) {
+    diffPct = (mine - market) / market;
+    status = diffPct > 0.05 ? "sobre" : diffPct < -0.05 ? "bajo" : "en";
+  } else if (mine != null) {
+    status = "sin-mercado";
+  }
+  return { mine, market, diffPct, status };
+}
 
 // Grilla de cartas ofrecidas para cambio/venta: imagen, cuántas hay
 // disponibles, precio referencial (si se encontró en alguna tienda) y los
@@ -1919,34 +1944,39 @@ function renderTradeList() {
 }
 
 // Suma el valor potencial de venta de todas las copias ofrecidas (cantidad ×
-// precio referencial de cada carta, prefiriendo mylserena si hay ambos).
-// Cobertura parcial de data/prices.json: las copias sin precio no se
+// valor de cada carta). Preferimos el valor que el dueño le asignó
+// (store.getMyPrice); si no ha valorado esa carta, cae al precio de
+// referencia scrapeado como respaldo (mismo criterio que ya usaba
+// openSellModal al sugerir un precio). Las copias sin ningún valor no se
 // inventan, se cuentan aparte y se avisan en una nota.
 function renderTradeValue(entries) {
   const el = $("#trade-value");
   if (!el) return;
   if (!entries.length) { el.innerHTML = ""; return; }
   let total = 0;
-  let pricedCopies = 0;
+  let ownValuedCopies = 0;
+  let refValuedCopies = 0;
   let unpricedCopies = 0;
   for (const [id, qty] of entries) {
-    const price = cardPriceInfo(id);
-    const unit = price ? price.mylserena ?? price.mesaredonda : null;
+    const mine = store.getMyPrice(id);
+    const unit = mine != null ? mine : marketRefPrice(id);
     if (unit != null) {
       total += unit * qty;
-      pricedCopies += qty;
+      if (mine != null) ownValuedCopies += qty; else refValuedCopies += qty;
     } else {
       unpricedCopies += qty;
     }
   }
+  const pricedCopies = ownValuedCopies + refValuedCopies;
   if (!pricedCopies) {
-    el.innerHTML = `Valor potencial de venta: <span class="muted">sin precios de referencia para estas cartas</span>`;
+    el.innerHTML = `Valor potencial de venta: <span class="muted">sin valores asignados ni precios de referencia para estas cartas</span>`;
     return;
   }
-  const note = unpricedCopies
-    ? `<span class="tv-note">${pricedCopies} copia${pricedCopies === 1 ? "" : "s"} con precio · ${unpricedCopies} sin precio de referencia (no incluida${unpricedCopies === 1 ? "" : "s"} en el total)</span>`
-    : `<span class="tv-note">${pricedCopies} copia${pricedCopies === 1 ? "" : "s"} con precio de referencia</span>`;
-  el.innerHTML = `Valor potencial de venta: ${fmtCLP(total)}${note}`;
+  const parts = [];
+  if (ownValuedCopies) parts.push(`${ownValuedCopies} copia${ownValuedCopies === 1 ? "" : "s"} valorada${ownValuedCopies === 1 ? "" : "s"} por ti`);
+  if (refValuedCopies) parts.push(`${refValuedCopies} copia${refValuedCopies === 1 ? "" : "s"} con precio de referencia`);
+  if (unpricedCopies) parts.push(`${unpricedCopies} sin valor (no incluida${unpricedCopies === 1 ? "" : "s"} en el total)`);
+  el.innerHTML = `Valor potencial de venta: ${fmtCLP(total)}<span class="tv-note">${parts.join(" · ")}</span>`;
 }
 
 // Tarjeta individual de la grilla de cambio/venta — mismo estilo visual que
@@ -1966,11 +1996,7 @@ function tradeCardEl(card, navList) {
     ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
     : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div>${card.editionName || ""}</div>`;
 
-  const price = cardPriceInfo(card.id);
-  const priceParts = price ? [price.mylserena, price.mesaredonda].filter((v) => v != null) : [];
-  const priceHtml = priceParts.length
-    ? `<div class="trade-price">${priceParts.map(fmtCLP).join(" / ")}</div>`
-    : `<div class="trade-price muted">Sin precio de referencia</div>`;
+  const valueHtml = myValueSectionHtml(card.id);
 
   el.innerHTML = `
     <div class="card-img" data-act="detail">
@@ -1989,7 +2015,7 @@ function tradeCardEl(card, navList) {
         <span class="muted trade-qty-label">ofrecidas</span>
       </div>
       <div class="trade-avail-note${offered > available ? "" : " ok"}">Colección: ${b.coleccion} · Disponible: <b>${available}</b> · En mazo: ${b.enMazo}</div>
-      ${priceHtml}
+      ${valueHtml}
       <div class="trade-actions">
         <button class="btn small" data-exchange ${available < 1 ? "disabled" : ""}>Intercambiar</button>
         <button class="btn small" data-sell ${available < 1 ? "disabled" : ""}>Vender</button>
@@ -2000,8 +2026,27 @@ function tradeCardEl(card, navList) {
   el.querySelector('[data-tr="plus"]').onclick = () => { store.addTradeQty(card.id, 1); renderTradeList(); };
   el.querySelector("[data-exchange]").onclick = () => openTradeModal(card);
   el.querySelector("[data-sell]").onclick = () => openSellModal(card);
+  el.querySelector("[data-edit-value]").onclick = () => openValueModal(card);
   el.querySelector('[data-act="detail"]').onclick = () => openModal(card, navList);
   return el;
+}
+
+// Sección "Mi valor" de una tarjeta de Cambio y Ventas: el precio que el
+// dueño le asignó (protagonista) + una píldora sobre/bajo/en línea con el
+// precio de referencia scrapeado (data/prices.json), o solo la referencia
+// como pista si todavía no le puso valor. Ver myPriceInfo().
+function myValueSectionHtml(cardId) {
+  const info = myPriceInfo(cardId);
+  const mainHtml = info.mine != null
+    ? `<span class="my-value-amount">${fmtCLP(info.mine)}</span><button class="my-value-edit-btn" data-edit-value title="Editar valor">✎</button>`
+    : `<button class="btn small" data-edit-value>Asignar valor</button>`;
+  let pillHtml = "";
+  if (info.status === "sobre") pillHtml = `<span class="market-pill over">▲ Sobre mercado (${Math.round(info.diffPct * 100)}%)</span>`;
+  else if (info.status === "bajo") pillHtml = `<span class="market-pill under">▼ Bajo mercado (${Math.round(info.diffPct * 100)}%)</span>`;
+  else if (info.status === "en") pillHtml = `<span class="market-pill even">≈ En línea con el mercado</span>`;
+  else if (info.status === "sin-mercado") pillHtml = `<span class="market-pill none">Sin referencia de mercado</span>`;
+  else if (info.market != null) pillHtml = `<span class="market-pill none">Referencia: ${fmtCLP(info.market)}</span>`;
+  return `<div class="my-value-row"><div class="my-value-main">${mainHtml}</div>${pillHtml}</div>`;
 }
 
 function renderTradeLog() {
@@ -2128,8 +2173,7 @@ function openSellModal(card) {
   qtyInput.value = 1;
   qtyInput.min = 1;
   qtyInput.max = available;
-  const price = cardPriceInfo(card.id);
-  const suggested = price ? (price.mylserena ?? price.mesaredonda) : null;
+  const suggested = store.getMyPrice(card.id) ?? marketRefPrice(card.id);
   $("#sm-price").value = suggested != null ? suggested : "";
   $("#sell-modal").classList.remove("hidden");
   qtyInput.focus();
@@ -2161,6 +2205,39 @@ function executeSale() {
   showToast(`Venta registrada: ${qty} copia${qty === 1 ? "" : "s"} de «${name}»${priceTxt}.`, 4500);
 }
 
+/* --- Modal para asignar/editar el valor propio de una carta (Cambio y Ventas) --- */
+let valueCard = null; // carta que se está valorando en el modal en curso
+
+function openValueModal(card) {
+  valueCard = card;
+  $("#vm-card").textContent = `«${displayName(card)}» (${card.editionName || "—"})`;
+  const mine = store.getMyPrice(card.id);
+  $("#vm-price").value = mine != null ? mine : "";
+  $("#vm-remove").classList.toggle("hidden", mine == null);
+  $("#value-modal").classList.remove("hidden");
+  $("#vm-price").focus();
+}
+function closeValueModal() {
+  $("#value-modal").classList.add("hidden");
+  valueCard = null;
+}
+function saveValue() {
+  if (!valueCard) return;
+  const raw = $("#vm-price").value.trim();
+  const value = raw ? Number(raw) : null;
+  if (raw && !Number.isFinite(value)) { showToast("Valor inválido.", 2500); return; }
+  const name = displayName(valueCard); // capturado antes de closeValueModal() (pone valueCard en null)
+  store.setMyPrice(valueCard.id, value);
+  closeValueModal();
+  renderTradeList();
+  showToast(value != null ? `Valor de «${name}» guardado: ${fmtCLP(value)}.` : `Valor de «${name}» eliminado.`, 3000);
+}
+function removeValueFromModal() {
+  if (!valueCard) return;
+  $("#vm-price").value = "";
+  saveValue();
+}
+
 function bindTradeEvents() {
   $("#trade-search").addEventListener("input", debounce(renderTradeSearchResults, 180));
   $("#tm-search").addEventListener("input", debounce(renderTradeModalResults, 180));
@@ -2173,6 +2250,12 @@ function bindTradeEvents() {
     if (e.target.classList.contains("modal-backdrop")) closeSellModal();
   });
   $("#sm-confirm").addEventListener("click", executeSale);
+  $$("[data-close-value]").forEach((el) => el.addEventListener("click", closeValueModal));
+  $("#value-modal").addEventListener("click", (e) => {
+    if (e.target.classList.contains("modal-backdrop")) closeValueModal();
+  });
+  $("#vm-confirm").addEventListener("click", saveValue);
+  $("#vm-remove").addEventListener("click", removeValueFromModal);
 }
 
 // Reglas generales de construcción de mazo (fuente: cartasmitosyleyendasoficial.
@@ -2789,8 +2872,8 @@ function exportCollection(format) {
   if (format === "prices-xlsx") {
     const cards = state.filtered.length ? state.filtered : state.cards;
     showToast("Generando Excel de precios…", 5000);
-    exportPricesExcel(cards, store.getQty, scopeLabel())
-      .then(({ withPrice, total }) => showToast(`Excel descargado ✓ (${withPrice} de ${total} cartas con precio encontrado)`, 5000))
+    exportPricesExcel(cards, store.getQty, store.getMyPrice, scopeLabel())
+      .then(({ withPrice, total }) => showToast(`Excel descargado ✓ (${withPrice} de ${total} cartas con valor propio o precio de referencia)`, 5000))
       .catch((e) => showToast("Error al exportar: " + e.message, 4000));
     return;
   }

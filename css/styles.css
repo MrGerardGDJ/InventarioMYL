@@ -278,9 +278,27 @@ main { padding: 0; }
 .trade-value { font-size: 13px; font-weight: 700; color: var(--accent-2); margin-top: 6px; }
 .trade-value .tv-note { display: block; font-size: 11px; font-weight: 400; color: var(--muted); margin-top: 2px; }
 .trade-grid { min-height: 40px; }
-.trade-price { font-size: 13px; font-weight: 700; color: var(--accent-2); margin-top: 4px; }
-.trade-price.muted { font-weight: 400; }
+.trade-grid .card-name { font-size: 14.5px; }
 .trade-qty-label { font-size: 10.5px; margin-left: 2px; }
+/* "Mi valor": el precio que el dueño le asigna a la carta (protagonista,
+   igual de peso visual que .qty-num) + píldora de comparación contra el
+   precio de referencia scrapeado. Ver myValueSectionHtml/myPriceInfo. */
+.my-value-row {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  gap: 4px 8px; margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px;
+}
+.my-value-main { display: flex; align-items: center; gap: 6px; }
+.my-value-amount { font-size: 15px; font-weight: 700; color: var(--text); }
+.my-value-edit-btn {
+  border: 1px solid var(--border); background: var(--bg-3); color: var(--muted);
+  width: 22px; height: 22px; border-radius: 6px; font-size: 12px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+.my-value-edit-btn:hover { border-color: var(--accent); color: var(--text); }
+.market-pill { font-size: 11px; font-weight: 600; }
+.market-pill.over { color: var(--danger); }
+.market-pill.under { color: var(--ok); }
+.market-pill.even, .market-pill.none { color: var(--muted); font-weight: 400; }
 .trade-actions { display: flex; gap: 6px; margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; }
 .trade-actions .btn { flex: 1; padding: 6px 4px; font-size: 12px; }
 .trade-actions .btn:disabled { opacity: .45; cursor: not-allowed; }
