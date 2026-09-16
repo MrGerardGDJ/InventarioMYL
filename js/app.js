@@ -2087,11 +2087,7 @@ const TRADE_FILTERS = [
 function renderTradeList() {
   const wrap = $("#trade-list");
   const entries = Object.entries(store.getTradeList());
-  const copies = entries.reduce((a, [, n]) => a + n, 0);
-  $("#trade-summary").textContent = entries.length
-    ? `${entries.length} carta${entries.length === 1 ? "" : "s"} distinta${entries.length === 1 ? "" : "s"} · ${copies} copia${copies === 1 ? "" : "s"} ofrecida${copies === 1 ? "" : "s"}`
-    : "Aún no marcas cartas para cambio o venta.";
-  renderTradeValue(entries);
+  renderTradeStats(entries);
   wrap.className = "trade-list";
   if (!entries.length) {
     wrap.innerHTML = `<p class="muted">Busca arriba una carta que tengas repetida y ofrécela; también puedes hacerlo desde el detalle de cualquier carta.</p>`;
@@ -2185,40 +2181,42 @@ function updateTradeFilterSelect(id, field, allLabel, offeredCards) {
   sel.value = values.includes(prev) ? prev : "";
 }
 
-// Suma el valor potencial de venta de todas las copias ofrecidas (cantidad ×
-// valor de cada carta). Preferimos el valor que el dueño le asignó
-// (store.getMyPrice); si no ha valorado esa carta, cae al precio de
-// referencia scrapeado como respaldo (mismo criterio que ya usaba
-// openSellModal al sugerir un precio). Las copias sin ningún valor no se
-// inventan, se cuentan aparte y se avisan en una nota.
-function renderTradeValue(entries) {
-  const el = $("#trade-value");
+// Barra de estadísticas de Cambio y Ventas (arriba de la lista, mismo
+// componente .stats-grid/.stat-card que usa la vista Estadísticas): cartas
+// ofrecidas, valor potencial de venta, cambios hechos y vendido este año.
+// Reemplaza al viejo <aside> con texto explicativo + resumen en prosa.
+function renderTradeStats(entries) {
+  const el = $("#trade-stats");
   if (!el) return;
-  if (!entries.length) { el.innerHTML = ""; return; }
-  let total = 0;
-  let ownValuedCopies = 0;
-  let refValuedCopies = 0;
-  let unpricedCopies = 0;
+  const copies = entries.reduce((a, [, n]) => a + n, 0);
+  const offeredCard = entries.length
+    ? statCard(copies, `${entries.length} carta${entries.length === 1 ? "" : "s"} distinta${entries.length === 1 ? "" : "s"}`)
+    : statCard(0, "Sin cartas ofrecidas");
+
+  let total = 0, ownValuedCopies = 0, refValuedCopies = 0, unpricedCopies = 0;
   for (const [id, qty] of entries) {
     const mine = store.getMyPrice(id);
     const unit = mine != null ? mine : marketRefPrice(id);
-    if (unit != null) {
-      total += unit * qty;
-      if (mine != null) ownValuedCopies += qty; else refValuedCopies += qty;
-    } else {
-      unpricedCopies += qty;
-    }
+    if (unit != null) { total += unit * qty; if (mine != null) ownValuedCopies += qty; else refValuedCopies += qty; }
+    else unpricedCopies += qty;
   }
   const pricedCopies = ownValuedCopies + refValuedCopies;
-  if (!pricedCopies) {
-    el.innerHTML = `Valor potencial de venta: <span class="muted">sin valores asignados ni precios de referencia para estas cartas</span>`;
-    return;
-  }
-  const parts = [];
-  if (ownValuedCopies) parts.push(`${ownValuedCopies} copia${ownValuedCopies === 1 ? "" : "s"} valorada${ownValuedCopies === 1 ? "" : "s"} por ti`);
-  if (refValuedCopies) parts.push(`${refValuedCopies} copia${refValuedCopies === 1 ? "" : "s"} con precio de referencia`);
-  if (unpricedCopies) parts.push(`${unpricedCopies} sin valor (no incluida${unpricedCopies === 1 ? "" : "s"} en el total)`);
-  el.innerHTML = `Valor potencial de venta: ${fmtCLP(total)}<span class="tv-note">${parts.join(" · ")}</span>`;
+  const valueLbl = pricedCopies
+    ? `${pricedCopies} copia${pricedCopies === 1 ? "" : "s"} con valor${unpricedCopies ? ` · ${unpricedCopies} sin valor` : ""}`
+    : "Sin valores asignados";
+  const valueCard = statCard(pricedCopies ? fmtCLP(total) : "—", valueLbl);
+
+  const tradeLog = store.getTradeLog();
+  const tradeLbl = tradeLog.length ? `Último: ${new Date(tradeLog[0].date).toLocaleDateString("es-CL")}` : "Sin registros";
+  const tradeCard = statCard(tradeLog.length, tradeLbl);
+
+  const thisYear = new Date().getFullYear();
+  const salesThisYear = store.getSaleLog().filter((e) => new Date(e.date).getFullYear() === thisYear);
+  const soldThisYear = salesThisYear.reduce((a, e) => a + (e.price || 0), 0);
+  const soldLbl = `${salesThisYear.length} venta${salesThisYear.length === 1 ? "" : "s"} este año`;
+  const soldCard = statCard(fmtCLP(soldThisYear), soldLbl);
+
+  el.innerHTML = offeredCard + valueCard + tradeCard + soldCard;
 }
 
 // Fila individual de la lista de cambio/venta — miniatura + nombre a la

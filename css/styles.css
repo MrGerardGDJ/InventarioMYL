@@ -364,7 +364,7 @@ main { padding: 0; }
 .ficha-nav { margin-left: auto; display: flex; gap: 5px; }
 .ficha-nav-btn {
   width: 28px; height: 28px; border-radius: 7px; border: none;
-  box-shadow: inset 0 0 0 1px var(--border-strong); color: var(--text-70);
+  box-shadow: inset 0 0 0 1px var(--border-strong); background: transparent; color: var(--text-70);
   display: grid; place-items: center; font-size: 14px;
 }
 .ficha-nav-btn:hover { background: rgba(233, 233, 237, 0.07); }
@@ -387,7 +387,7 @@ main { padding: 0; }
 .ficha-stepper { margin-left: auto; display: flex; align-items: center; gap: 4px; }
 .ficha-step-btn {
   width: 30px; height: 30px; border-radius: 8px; border: none;
-  box-shadow: inset 0 0 0 1px var(--border-strong); color: var(--text-70);
+  box-shadow: inset 0 0 0 1px var(--border-strong); background: transparent; color: var(--text-70);
   display: grid; place-items: center; font-size: 14px;
 }
 .ficha-step-btn:hover { background: rgba(233, 233, 237, 0.08); }
@@ -491,8 +491,6 @@ main { padding: 0; }
   border-bottom: 1px solid var(--border); padding-bottom: 6px;
 }
 .trade-rarity-title:first-child { margin-top: 0; }
-.trade-value { font-size: 13px; font-weight: 700; color: var(--accent-2); margin-top: 6px; }
-.trade-value .tv-note { display: block; font-size: 11px; font-weight: 400; color: var(--muted); margin-top: 2px; }
 .trade-list { display: flex; flex-direction: column; gap: 8px; min-height: 40px; }
 .trade-row {
   display: flex; align-items: center; gap: 12px;
@@ -790,10 +788,10 @@ main { padding: 0; }
 
 /* ===== Stats ===== */
 .stats-content { max-width: 1000px; margin: 0 auto; }
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 8px 0 24px; }
-.stat-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; }
-.stat-card .num { font-size: 28px; font-weight: 800; color: var(--accent-2); }
-.stat-card .lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 8px 0 24px; }
+.stat-card { background: var(--bg-2); box-shadow: inset 0 0 0 1px var(--border); border-radius: var(--radius); padding: 14px 16px; text-align: left; }
+.stat-card .num { font-size: 26px; font-weight: 700; color: var(--accent-300); font-variant-numeric: tabular-nums; }
+.stat-card .lbl { font-size: 11.5px; color: var(--muted); margin-top: 4px; }
 .edition-progress { display: flex; flex-direction: column; gap: 8px; }
 .ep-row { display: grid; grid-template-columns: 220px 1fr 90px; gap: 10px; align-items: center; font-size: 13px; }
 .ep-bar { background: var(--bg-3); border-radius: 6px; height: 14px; overflow: hidden; }
@@ -814,9 +812,12 @@ main { padding: 0; }
 .stats-toolbar .spacer { flex: 1; }
 .field.inline { display: inline-block; margin: 0; min-width: 170px; }
 .field.inline > span { margin-bottom: 4px; }
-.charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-.chart-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 14px 8px; }
-.chart-card h4 { margin: 0 0 10px; font-size: 13px; color: var(--accent-2); font-weight: 700; }
+.stats-toolbar .field select {
+  border: none; box-shadow: inset 0 0 0 1px var(--border-strong); background: var(--bg-3);
+}
+.charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.chart-card { background: var(--bg-2); box-shadow: inset 0 0 0 1px var(--border); border-radius: var(--radius); padding: 14px 14px 8px; }
+.chart-card h4 { margin: 0 0 10px; font-size: 12.5px; color: var(--accent-2); font-weight: 600; }
 .chart-wrap { position: relative; height: 230px; }
 
 /* ===== Sync modal ===== */
