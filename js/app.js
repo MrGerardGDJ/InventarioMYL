@@ -38,6 +38,7 @@ const state = {
   colFilter: "all", // filtro de la vista Colecciones: all | missing | owned
   prices: {},       // data/prices.json → { cardId: { mylserena, mesaredonda } }, cobertura parcial
   banlist: null,    // data/banlist.json → { meta, entries: [{edition, editionName, name, status, maxCopies}] }
+  selectedCardId: null, // Catálogo: carta elegida para la ficha fija (memoria, no persiste)
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -518,33 +519,37 @@ function renderGrid(reset) {
 function cardEl(card, navList) {
   const qty = store.getQty(card.id);
   const el = document.createElement("div");
-  el.className = "card" + (qty > 0 ? " owned" : "");
+  el.className = "card" + (qty > 0 ? " owned" : "") + (card.id === state.selectedCardId ? " selected" : "");
   el.dataset.id = card.id;
 
   const dName = displayName(card);
   const num = cardNum(card); // número dentro de la edición (Infinity si no tiene)
   const img = card.image
-    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
-    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div>${card.editionName || ""}</div>`;
+    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder'}))" />`
+    : `<div class="placeholder"></div>`;
 
   const activeDeck = store.getDeck(store.getSetting("activeDeckId"));
   const deckBtn = `<button class="qty-btn deck-add" title="${activeDeck ? "Añadir a «" + escapeAttr(activeDeck.name) + "»" : "Añadir a un mazo"}">🃏＋</button>`;
 
   el.innerHTML = `
     <div class="card-img" data-act="detail">
-      ${card.cost != null ? `<span class="badge-cost">${card.cost}</span>` : ""}
-      ${card.strength != null ? `<span class="badge-str">${card.strength}</span>` : ""}
-      ${card.specialId ? `<span class="badge-num special">${escapeHtml(card.specialId)}</span>` : Number.isFinite(num) ? `<span class="badge-num">#${num}</span>` : ""}
       ${img}
+      <div class="card-veil"></div>
+      ${card.strength != null ? `<span class="badge-str"><i class="ph ph-sword"></i>${card.strength}</span>` : ""}
+      ${card.cost != null ? `<span class="badge-cost"><i class="ph ph-coin"></i>${card.cost}</span>` : ""}
+      ${card.specialId ? `<span class="badge-num special">${escapeHtml(card.specialId)}</span>` : Number.isFinite(num) ? `<span class="badge-num">#${num}</span>` : ""}
+      <span class="badge-qty${qty > 0 ? "" : " hidden"}" data-role="badge-qty">${qty}</span>
+      <div class="card-overlay-text">
+        <div class="card-name">${escapeHtml(dName)}</div>
+        <div class="card-type-rarity"><span>${escapeHtml(card.type)}</span><span class="dot">·</span><span>${escapeHtml(card.rarity)}</span></div>
+      </div>
     </div>
     <div class="card-body">
-      <div class="card-name">${escapeHtml(dName)}</div>
-      <div class="card-meta">${escapeHtml(card.race)} · ${escapeHtml(card.type)}</div>
       <div class="card-meta">${escapeHtml(card.editionName || "")}</div>
       <div data-role="avail">${availableMetaHtml(card.id)}</div>
       <div class="qty-row">
         <button class="qty-btn" data-act="minus">−</button>
-        <span class="qty-num ${qty === 0 ? "zero" : qty >= 2 ? "dup" : ""}" data-role="qty">${qty}</span>
+        <input type="number" min="0" class="qty-num-input ${qty === 0 ? "zero" : qty >= 2 ? "dup" : ""}" data-role="qty" value="${qty}" />
         <button class="qty-btn" data-act="plus">+</button>
         ${deckBtn}
       </div>
@@ -555,8 +560,15 @@ function cardEl(card, navList) {
     const act = e.target.closest("[data-act]")?.dataset.act;
     if (act === "plus") changeQty(el, card, +1);
     else if (act === "minus") changeQty(el, card, -1);
-    else if (act === "detail") openModal(card, navList);
+    else if (act === "detail") {
+      if (state.view === "coleccion") selectCard(card, navList);
+      else openModal(card, navList);
+    }
   });
+  el.querySelector('[data-role="qty"]').addEventListener("change", (e) => {
+    setQtyDirect(el, card, Number(e.target.value));
+  });
+  el.querySelector(".card-img").addEventListener("dblclick", () => openModal(card, navList));
   return el;
 }
 
@@ -599,15 +611,131 @@ function renderDeckHint(el, cardId) {
 // CSS anima el paso blanco y negro ⇄ color de la imagen.
 function changeQty(el, card, delta) {
   const qty = store.addQty(card.id, delta);
-  const numEl = el.querySelector('[data-role="qty"]');
-  numEl.textContent = qty;
-  numEl.classList.toggle("zero", qty === 0);
-  numEl.classList.toggle("dup", qty >= 2);
-  el.classList.toggle("owned", qty > 0);
-  const availEl = el.querySelector('[data-role="avail"]');
-  if (availEl) availEl.innerHTML = availableMetaHtml(card.id);
+  reflectQtyOnCardEl(el, card, qty);
+}
+// Edición directa: el input de cantidad de la tarjeta escribe el valor
+// absoluto (no un delta) — mismo patrón que store.setQty ya usa en otros
+// lados de la app (sin ventana flotante, se edita el dato mismo).
+function setQtyDirect(el, card, value) {
+  const qty = Math.max(0, Math.floor(Number(value) || 0));
+  store.setQty(card.id, qty);
+  reflectQtyOnCardEl(el, card, qty);
+}
+function reflectQtyOnCardEl(el, card, qty) {
+  if (el) {
+    const numEl = el.querySelector('[data-role="qty"]');
+    if (numEl && document.activeElement !== numEl) numEl.value = qty;
+    if (numEl) { numEl.classList.toggle("zero", qty === 0); numEl.classList.toggle("dup", qty >= 2); }
+    const badgeEl = el.querySelector('[data-role="badge-qty"]');
+    if (badgeEl) { badgeEl.textContent = qty; badgeEl.classList.toggle("hidden", qty === 0); }
+    el.classList.toggle("owned", qty > 0);
+    const availEl = el.querySelector('[data-role="avail"]');
+    if (availEl) availEl.innerHTML = availableMetaHtml(card.id);
+  }
   updateResultCount();
   if (state.view === "colecciones") updateCollectionProgress();
+  if (state.selectedCardId === card.id) updateFichaQty(qty);
+}
+
+/* ===================== Ficha fija (Catálogo) =====================
+   Panel a la derecha del Catálogo con la carta elegida en la grilla —
+   se actualiza al hacer click (no abre el modal; eso queda para el botón
+   de expandir, doble clic o la tecla Espacio) y admite recorrer con
+   teclado. state.selectedCardId vive en memoria (no persiste). */
+function selectCard(card, navList) {
+  state.selectedCardId = card.id;
+  state.fichaNavList = navList || state.filtered;
+  $$("#cards-grid .card").forEach((el) => el.classList.toggle("selected", el.dataset.id === card.id));
+  renderFicha();
+}
+function fichaNavIndex() {
+  const list = state.fichaNavList || state.filtered;
+  return list.findIndex((c) => c.id === state.selectedCardId);
+}
+function fichaNavStep(delta) {
+  const list = state.fichaNavList || state.filtered;
+  const i = fichaNavIndex();
+  if (i === -1) return;
+  const next = list[i + delta];
+  if (next) selectCard(next, list);
+}
+function updateFichaQty(qty) {
+  const el = $("#ficha-qty");
+  if (el) el.textContent = qty;
+}
+function fichaChangeQty(delta) {
+  const card = cardById(state.selectedCardId);
+  if (!card) return;
+  const qty = store.addQty(card.id, delta);
+  reflectQtyOnCardEl($(`#cards-grid .card[data-id="${escapeAttr(card.id)}"]`), card, qty);
+}
+function fichaSetQty(qty) {
+  const card = cardById(state.selectedCardId);
+  if (!card) return;
+  store.setQty(card.id, qty);
+  reflectQtyOnCardEl($(`#cards-grid .card[data-id="${escapeAttr(card.id)}"]`), card, qty);
+}
+function renderFicha() {
+  const panel = $("#ficha-panel");
+  if (!panel) return;
+  const card = cardById(state.selectedCardId);
+  const empty = panel.querySelector(".ficha-empty");
+  const content = panel.querySelector("#ficha-content");
+  if (!card) {
+    empty.classList.remove("hidden");
+    content.classList.add("hidden");
+    return;
+  }
+  empty.classList.add("hidden");
+  content.classList.remove("hidden");
+
+  const qty = store.getQty(card.id);
+  const dName = displayName(card);
+  const num = cardNum(card);
+  const img = card.image
+    ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" />`
+    : `<div class="placeholder"></div>`;
+  $("#ficha-art").className = "ficha-art" + (qty > 0 ? " owned" : "");
+  $("#ficha-art").innerHTML = `
+    ${img}
+    <div class="card-veil"></div>
+    ${card.strength != null ? `<span class="badge-str"><i class="ph ph-sword"></i>${card.strength}</span>` : ""}
+    ${card.cost != null ? `<span class="badge-cost"><i class="ph ph-coin"></i>${card.cost}</span>` : ""}
+    <div class="card-overlay-text ficha-overlay-text">
+      <div class="ficha-card-name">${escapeHtml(dName)}</div>
+      <div class="ficha-card-sub">${escapeHtml(card.editionName || "")} · ${card.specialId ? escapeHtml(card.specialId) : Number.isFinite(num) ? "nº " + String(num).padStart(3, "0") : ""} · ${escapeHtml(card.rarity)}</div>
+    </div>`;
+
+  updateFichaQty(qty);
+  $("#ficha-ability-text").innerHTML = card.ability ? nl2br(card.ability) : `<span class="muted">Sin texto.</span>`;
+
+  const b = tradeBreakdown(card.id);
+  const ref = marketRefPrice(card.id);
+  const banEntry = getBanlistEntry(card);
+  const banText = banEntry ? (banEntry.status === "banned" ? "Prohibida" : `Máx. ${banEntry.maxCopies}`) : "Sin restricción";
+  const nDecks = store.getDecks().filter((d) => (d.cards[card.id] || 0) > 0).length;
+  const meta = [
+    ["En tus mazos", nDecks ? `${nDecks} mazo${nDecks === 1 ? "" : "s"}` : "—"],
+    ["Repetidas", Math.max(0, b.owned - 1)],
+    ["Precio ref.", ref != null ? fmtCLP(ref) : "—"],
+    ["Banlist", banText],
+  ];
+  $("#ficha-meta").innerHTML = meta.map(([k, v]) =>
+    `<div class="ficha-meta-item"><span class="ficha-meta-k">${escapeHtml(k)}</span><span class="ficha-meta-v${k === "Banlist" && banEntry ? " warn" : ""}">${escapeHtml(String(v))}</span></div>`
+  ).join("");
+
+  $("#ficha-add-deck").onclick = () => addToDeckQuick(card);
+  $("#ficha-offer").onclick = () => {
+    if (store.getAvailableQty(card.id) < 1 && store.getQty(card.id) > 0) store.addTradeQty(card.id, 1);
+    showToast(`«${dName}» ofrecida para cambio o venta`);
+  };
+  $("#ficha-sell").onclick = () => openSellModal(card);
+  $("#ficha-expand").onclick = () => openModal(card, state.fichaNavList || state.filtered);
+
+  const i = fichaNavIndex();
+  const list = state.fichaNavList || state.filtered;
+  $("#ficha-prev").disabled = i <= 0;
+  $("#ficha-next").disabled = i === -1 || i >= list.length - 1;
 }
 
 /* ===================== Modal detalle ===================== */
@@ -3346,13 +3474,25 @@ function bindEvents() {
   $("#modal-next").addEventListener("click", () => modalNavStep(1));
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); closeCollectionModal(); closeTradeModal(); return; }
-    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-    if ($("#modal").classList.contains("hidden")) return;
     const tag = document.activeElement?.tagName;
-    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-    e.preventDefault();
-    modalNavStep(e.key === "ArrowLeft" ? -1 : 1);
+    const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+    if (!$("#modal").classList.contains("hidden")) {
+      if (typing) return;
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); modalNavStep(e.key === "ArrowLeft" ? -1 : 1); }
+      return;
+    }
+    // Atajos de teclado de la ficha fija (Catálogo): ← → recorre, ↑ ↓ suma/
+    // resta una copia, 0–9 fija la cantidad, Espacio abre el detalle.
+    if (state.view !== "coleccion" || typing || !state.selectedCardId) return;
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); fichaNavStep(e.key === "ArrowLeft" ? -1 : 1); }
+    else if (e.key === "ArrowUp" || e.key === "ArrowDown") { e.preventDefault(); fichaChangeQty(e.key === "ArrowUp" ? 1 : -1); }
+    else if (e.key === " ") { e.preventDefault(); openModal(cardById(state.selectedCardId), state.fichaNavList || state.filtered); }
+    else if (/^[0-9]$/.test(e.key)) { e.preventDefault(); fichaSetQty(Number(e.key)); }
   });
+  $("#ficha-prev").addEventListener("click", () => fichaNavStep(-1));
+  $("#ficha-next").addEventListener("click", () => fichaNavStep(1));
+  $("#ficha-minus").addEventListener("click", () => fichaChangeQty(-1));
+  $("#ficha-plus").addEventListener("click", () => fichaChangeQty(1));
   $("#orphan-note").addEventListener("click", openOrphanModal);
   $("#orphan-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeOrphanModal(); });
   $$("[data-close-orphan]").forEach((el) => el.addEventListener("click", closeOrphanModal));

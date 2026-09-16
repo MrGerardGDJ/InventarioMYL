@@ -378,6 +378,57 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (65ª iteración) — Rediseño "Nocturne" (parte 2/N): tarjeta "arte primero" + Ficha fija + cantidad editable sin modal
+
+- Segunda etapa del rediseño (ver 64ª). Cubre el Catálogo, la pantalla
+  principal del handoff (`3a`), y de paso resuelve el pedido original
+  del dueño de poder editar la cantidad directamente sobre el dato, sin
+  ventana flotante.
+- **Tarjeta "arte primero"** (`cardEl()` en `js/app.js`, CSS en
+  `css/styles.css`): el nombre, tipo y rareza ahora se leen superpuestos
+  sobre la imagen de la carta (velo de degradado abajo para legibilidad),
+  con píldoras de coste/fuerza y número de carta en las esquinas
+  superiores y un badge de cantidad (acento) arriba a la derecha cuando
+  `qty>0`. Se corrigió en el camino un choque real: el badge de coste y
+  el de cantidad compartían la misma esquina y se superponían cuando
+  ambos existían a la vez — el de cantidad ahora baja una fila si ya
+  hay un badge de coste ahí.
+- **Regla de posesión global**: lo que no tienes se ve sin color
+  (`grayscale(1) brightness(.68)`) en toda la grilla, no solo en
+  Colecciones como antes — se generalizó la regla que ya existía ahí
+  (antes escondida detrás de `.collection-grid`) para que aplique a
+  cualquier `.card`, tal como pide el sistema de diseño.
+- **Cantidad editable sin modal**: el número de copias en la tarjeta
+  pasa de `<span>` a `<input type="number">` — se puede escribir
+  directamente (ej. "12") además de usar los botones +/−, sin abrir
+  nada. Mismo criterio pedido para "Mi valor" en Cambio y Ventas, que
+  ya no usa modal desde una iteración anterior; esto lo extiende a la
+  cantidad en Catálogo/Colecciones/Mazos.
+- **Ficha fija** (`#ficha-panel`, nuevo, solo en Catálogo/`#view-coleccion`):
+  panel de 318px a la derecha con la carta elegida — un click en la
+  grilla la selecciona y actualiza la ficha (ya no abre el modal de
+  detalle directo; eso queda para doble clic, el botón de expandir, o
+  la tecla Espacio). Muestra el arte grande, stepper de cantidad,
+  habilidad completa, y una rejilla de metadatos (en tus mazos,
+  repetidas, precio de referencia, estado en la ban list). Se oculta
+  en pantallas angostas (`≤1100px`) — no hay ficha en móvil, solo el
+  modal de siempre.
+- **Atajos de teclado** (Catálogo, con una carta elegida y sin escribir
+  en ningún campo): `← →` recorre la grilla, `↑ ↓` suma/resta una
+  copia, `0–9` fija la cantidad exacta, `Espacio` abre el detalle a
+  pantalla completa.
+- La cantidad se mantiene sincronizada en los tres lugares donde puede
+  aparecer a la vez (tarjeta de la grilla, badge de cantidad, ficha)
+  sin necesidad de recargar ni re-renderizar toda la grilla.
+- Verificado con Playwright: selección por click, navegación por
+  teclado, edición directa del input de cantidad, sincronización
+  grilla↔ficha, badges sin superponerse, ficha oculta bajo 1100px,
+  Colecciones/Mazos/Cambio y Ventas/Estadísticas siguen funcionando
+  (comparten `cardEl()` sin romperse). 0 `pageerror`.
+- **Pendiente**: modal de detalle, Colecciones con reordenar por
+  arrastre, Cambio y Ventas (KPIs + filtros/orden combinables), Mazos,
+  Estadísticas con SVG propio, Modo Inventariar.
+
 ### 2026-09-16 (64ª iteración) — Rediseño "Nocturne" (parte 1/N): tokens de diseño + rail de navegación
 
 - El dueño pidió reestructurar completamente el diseño del sitio: menú
