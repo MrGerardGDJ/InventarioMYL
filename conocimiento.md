@@ -378,6 +378,31 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (62ª iteración) — Corrige "Mary Bradbury" (LPE4 #118) y "Sacrificio Humano" (Leyendas PE #071)
+
+- **"Mary Bradbury"** (Leyendas - Primera Era 4.0 #118, `custom-cards.json`):
+  el dueño aclaró que su carta física es la versión NORMAL, no la
+  Promocional (que también existe para esta edición, pero es una carta
+  distinta). El catálogo tenía esta entrada marcada como "Promocional".
+  Se re-examinó la foto guardada — el código estaba tapado por un
+  adorno del borde, por eso quedó sin verificar en la auditoría de la
+  60ª iteración — con más contraste se alcanza a leer la "R" final del
+  código ("LPE4 - .../320 R"), y la tabla de listado del wiki también
+  dice "Real" para el edid 118. Tres fuentes coincidiendo: rareza
+  Promocional→**Real**.
+- **"Sacrificio Humano"** (edición "Leyendas PE", no la versión Full
+  Art de Kit de Juego, que es una edición aparte y ya está correcta):
+  el dueño reportó que su carta física es Real, no Mega Real. Esta
+  carta viene de la API oficial (`data/cards.json`, id "154-071"), no
+  de una carga manual, así que no hay foto propia para contrastar —
+  se aplicó directo el reporte del dueño sobre su carta física.
+  **Primera corrección de rareza sobre datos de la API** en este
+  proyecto: se agregó `RARITY_CORRECTIONS` a `scraper/corrections.js`
+  (mismo mecanismo ya usado para nombres/imágenes/numeración mal
+  traídos de TOR — sobrevive a que el scraper se vuelva a correr cada
+  semana) y se parchó `data/cards.json` directo para que el sitio ya
+  publicado refleje el cambio sin esperar la próxima corrida.
+
 ### 2026-09-16 (61ª iteración) — Corrige "Teepee" (Leyendas PE 4.0 #248): rareza, habilidad y sabor faltantes
 
 - El dueño reportó que "Teepee" es un Oro pero su rareza (Real) no es
