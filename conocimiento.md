@@ -378,6 +378,51 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (83ª iteración) — El filtro Tipo mostraba Talismán/Tótem duplicados (con y sin tilde) — dato legacy de cartas manuales viejas
+
+El dueño reportó (con captura del sitio publicado) que el filtro "Tipo" del
+Catálogo mostraba **4** opciones donde debería haber 2: "Talisman" y
+"Talismán" por un lado, "Totem" y "Tótem" por otro. Primero descarté que
+fuera un problema de `data/cards.json`/`data/custom-cards.json` (ambos
+archivos, revisados exhaustivamente, solo tienen la forma con tilde en las
+~22.000 cartas del catálogo) — le pedí al dueño una captura para confirmar
+dónde lo veía exactamente, y con eso quedó claro: las variantes sin tilde
+no están en el catálogo compartido, están en **datos propios del dueño**
+guardados en su navegador (`localStorage`, cartas "manuales" que creó hace
+tiempo) — de cuando el campo Tipo del formulario "Carta manual" era texto
+libre, antes de convertirse en el `<select>` de opciones fijas que es hoy.
+El filtro comparaba con `===` exacto, así que un dato viejo sin tilde nunca
+calzaba con la opción "oficial" con tilde del resto del catálogo, y ambas
+formas aparecían como opciones separadas.
+
+- **`js/app.js`**: nueva `groupedUnique(values)` — como la `uniqueSorted()`
+  que ya existía, pero agrupa variantes que solo difieren en tildes,
+  mayúsculas o espacios bajo una sola etiqueta (la más frecuente entre las
+  variantes encontradas), y `looseEq(a, b)` para comparar dos valores con
+  el mismo criterio. Ambas reusan `normText()` (ya existía para el
+  buscador). Se aplicó **solo al campo `type`** (no a raza/edición/rareza,
+  donde nombres parecidos pueden ser categorías legítimamente distintas y
+  fusionarlas a ciegas sería el error contrario):
+  - `populateFilters()`: `#f-type` (Catálogo) usa `groupedUnique` en vez de
+    `uniqueSorted`.
+  - `baseFilteredCards()`: compara `looseEq(c.type, type)` en vez de
+    `c.type !== type`, así que elegir la opción con tilde también incluye
+    las cartas guardadas sin tilde.
+  - `updateTradeFilterSelect()`/`renderTradeList()` (Cambio y Ventas,
+    `#trade-type`, agregado en la 80ª iteración): mismo tratamiento, caso
+    especial para `field === "type"`.
+  - No se tocó ningún dato guardado del dueño (sus cartas manuales siguen
+    con el campo `type` tal cual las escribió) — el fix es solo en cómo el
+    filtro agrupa y compara, no reescribe nada.
+
+Verificado con Playwright simulando el caso real: se sembró
+`localStorage["myl.customcards.v1"]` con una carta "Talisman" y otra
+"Totem" (ambas sin tilde, como quedarían guardadas de un formulario viejo)
+antes de cargar la app. El filtro `#f-type` del Catálogo mostró
+exactamente 1 opción "Talismán" y 1 "Tótem" (no 4), y filtrar por la
+opción con tilde sí encontró la carta guardada sin tilde. Mismo resultado
+en `#trade-type` de Cambio y Ventas. 0 `pageerror`.
+
 ### 2026-09-16 (82ª iteración) — Oros sin habilidad brillan dorado, arregla etiquetas `<br>` visibles, pestañas del mazo sin estilo, y filtro/orden por "Mi valor" en Cambio y Ventas
 
 Cinco pedidos del dueño en un solo mensaje, con una captura de "Mazo

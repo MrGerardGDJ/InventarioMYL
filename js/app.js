@@ -217,13 +217,42 @@ function uniqueSorted(values) {
     String(a).localeCompare(String(b), "es")
   );
 }
+// Como uniqueSorted, pero agrupa variantes que solo difieren en
+// tildes/mayúsculas/espacios bajo UNA sola etiqueta (la más frecuente entre
+// las variantes) — evita que un dato viejo o cargado a mano con una tilde
+// distinta (ej. "Talisman" sin acento) aparezca como una opción de filtro
+// aparte de la misma categoría (bug real reportado 16-09-2026: "Talismán"
+// y "Tótem" salían duplicados en el filtro Tipo del Catálogo).
+function groupedUnique(values) {
+  const groups = new Map(); // normText(valor) -> Map(valor tal cual -> cuántas veces aparece)
+  for (const v of values) {
+    if (!v || v === "—") continue;
+    const key = normText(v).trim();
+    if (!key) continue;
+    if (!groups.has(key)) groups.set(key, new Map());
+    const counts = groups.get(key);
+    counts.set(v, (counts.get(v) || 0) + 1);
+  }
+  const canonical = [];
+  for (const counts of groups.values()) {
+    let best = null, bestCount = -1;
+    for (const [raw, n] of counts) if (n > bestCount) { best = raw; bestCount = n; }
+    canonical.push(best);
+  }
+  return canonical.sort((a, b) => String(a).localeCompare(String(b), "es"));
+}
+// Compara dos valores del mismo campo "agrupado" (ver groupedUnique) sin
+// importar tildes/mayúsculas/espacios — usar en los filtros que se
+// construyen con groupedUnique, para que elegir la opción canónica también
+// calce con las variantes viejas de los datos.
+function looseEq(a, b) { return normText(a).trim() === normText(b).trim(); }
 
 const FMT_NAMES = { PE: "Primera Era", PB: "Primer Bloque", SB: "Segundo Bloque", FX: "Furia Extendido", NE: "Nueva Era / Imperio" };
 function populateFilters() {
   // Formato
   fillSelect("#f-format", uniqueSorted(state.cards.map((c) => c.format)).map((f) => ({ value: f, label: FMT_NAMES[f] || f })));
   fillSelect("#f-race", uniqueSorted(state.cards.map((c) => c.race)).map((v) => ({ value: v, label: v })));
-  fillSelect("#f-type", uniqueSorted(state.cards.map((c) => c.type)).map((v) => ({ value: v, label: v })));
+  fillSelect("#f-type", groupedUnique(state.cards.map((c) => c.type)).map((v) => ({ value: v, label: v })));
   fillSelect("#f-rarity", uniqueSorted(state.cards.map((c) => c.rarity)).map((v) => ({ value: v, label: v })));
   // Formato también en la vista de estadísticas
   fillSelect("#stats-format", uniqueSorted(state.cards.map((c) => c.format)).map((f) => ({ value: f, label: FMT_NAMES[f] || f })));
@@ -328,7 +357,7 @@ function baseFilteredCards() {
     if (fmt && c.format !== fmt) return false;
     if (ed && c.edition !== ed) return false;
     if (race && c.race !== race) return false;
-    if (type && c.type !== type) return false;
+    if (type && !looseEq(c.type, type)) return false;
     if (rarity && c.rarity !== rarity) return false;
     if (maxCost < 12 && c.cost != null && c.cost > maxCost) return false;
     return true;
@@ -2357,7 +2386,12 @@ function renderTradeList() {
   for (const [id, field] of TRADE_FILTERS) {
     const sel = $("#" + id);
     const val = sel ? sel.value : "";
-    if (val) { shownCards = shownCards.filter((c) => (c[field] || "—") === val); activeFilters.push(true); }
+    if (val) {
+      shownCards = field === "type"
+        ? shownCards.filter((c) => looseEq(c.type, val))
+        : shownCards.filter((c) => (c[field] || "—") === val);
+      activeFilters.push(true);
+    }
   }
   const valueFilter = $("#trade-value-filter") ? $("#trade-value-filter").value : "";
   if (valueFilter === "sin-valor") { shownCards = shownCards.filter((c) => store.getMyPrice(c.id) == null); activeFilters.push(true); }
@@ -2428,7 +2462,12 @@ function updateTradeFilterSelect(id, field, allLabel, offeredCards) {
   const sel = $("#" + id);
   if (!sel) return;
   const prev = sel.value;
-  const values = [...new Set(offeredCards.map((c) => c[field] || "—"))];
+  // El campo "type" agrupa variantes con/sin tilde (ver groupedUnique) —
+  // mismo bug real que el filtro Tipo del Catálogo, con datos legacy de
+  // cartas manuales viejas.
+  const values = field === "type"
+    ? groupedUnique(offeredCards.map((c) => c.type))
+    : [...new Set(offeredCards.map((c) => c[field] || "—"))];
   values.sort(field === "rarity" ? rarityCompare : (a, b) => a.localeCompare(b, "es"));
   sel.innerHTML = `<option value="">${escapeHtml(allLabel)}</option>` +
     values.map((v) => `<option value="${escapeAttr(v)}">${escapeHtml(v)}</option>`).join("");
