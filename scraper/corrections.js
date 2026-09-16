@@ -602,6 +602,39 @@ export const RARITY_CORRECTIONS = {
   "112-324": { rarity: "Secreta" }, // Sakura (Secreta Exclusiva 1)
   "112-325": { rarity: "Secreta" }, // Los Cinco Anillos (Secreta Exclusiva 2)
   "112-326": { rarity: "Secreta" }, // Ocelote Del Templo (Secreta Exclusiva 3)
+
+  // Mundos Perdidos - Horrores de Salem / Ciudad de los Césares / La Saga
+  // de Volsung: el dueño reportó "hay reales que están como cortesana o
+  // vasallo" en las ediciones Mundos Perdidos. Se verificó cada carta de
+  // las 11 ediciones Mundos Perdidos contra la columna "Frecuencia" del
+  // wiki (myl.fandom.com, página "Lista de cartas de Mundos Perdidos -
+  // <edición>" de cada una, fuente autoritativa que ya usa esta skill para
+  // cargar estas ediciones) — 16-09-2026. Encontró dos patrones reales:
+  // (a) varias cartas numeradas 001-018 que debían ser "Real" quedaron
+  // como "Cortesano" (nunca "Vasallo" en estos 3 casos), y (b) en las 3
+  // ediciones de abajo, la carta Promocional final (numerada como si fuera
+  // una carta normal más) quedó con rarity="Real" en vez de "Promocional"
+  // — el mismo bug de numeración/frecuencia ya documentado el 04-08-2026
+  // para otras 8 ediciones Mundos Perdidos, que a estas 3 no les había
+  // llegado la corrección. Las demás Cortesano/Vasallo de estas y otras
+  // ediciones Mundos Perdidos (ej. Apu Illa, Sif, Hydra, 47 Ronin, Sko'yo…)
+  // SÍ coinciden con el wiki y no se tocaron — no es "todo pasa a Real".
+  "130-003": { rarity: "Real" },        // Tituba (Horrores de Salem, MPS 02/18)
+  "130-007": { rarity: "Real" },        // Rugaru (Horrores de Salem, MPS 06/18)
+  "130-009": { rarity: "Real" },        // Sarah Good (Horrores de Salem, MPS 08/18)
+  "130-013": { rarity: "Real" },        // Canción Coyote (Horrores de Salem, MPS 12/18)
+  "130-014": { rarity: "Real" },        // Mosquete Puritano (Horrores de Salem, MPS 13/18)
+  "130-015": { rarity: "Real" },        // Colina del Ahorcado (Horrores de Salem, MPS 14/18)
+  "130-020": { rarity: "Promocional" }, // Mary Bradbury (Horrores de Salem, MPS 19/18)
+  "131-003": { rarity: "Real" },        // Guirivilo (Ciudad de los Césares, MPC 02/18)
+  "131-007": { rarity: "Real" },        // Guardián del Sol (Ciudad de los Césares, MPC 06/18)
+  "131-009": { rarity: "Real" },        // Huáscar (Ciudad de los Césares, MPC 08/18)
+  "131-014": { rarity: "Real" },        // Lanza Astral (Ciudad de los Césares, MPC 13/18)
+  "131-015": { rarity: "Real" },        // Melimoyu (Ciudad de los Césares, MPC 14/18)
+  "131-020": { rarity: "Promocional" }, // Pájaro Inti (Ciudad de los Césares, MPC 19/18)
+  "132-013": { rarity: "Real" },        // Sacar la Espada (La Saga de Volsung, MPV 12/18)
+  "132-015": { rarity: "Real" },        // Barnstokk (La Saga de Volsung, MPV 14/18)
+  "132-020": { rarity: "Promocional" }, // Volsung (La Saga de Volsung, MPV 19/18)
 };
 
 // Mismo bug de numeración que MUNDOS_PERDIDOS_TOR_CORRECTIONS arriba, pero
