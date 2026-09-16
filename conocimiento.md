@@ -378,6 +378,70 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (75ª iteración) — Foil sutil sobre cartas premium + corrige numeración "Secreta Exclusiva" de LPE 2023
+
+El dueño pidió el foil (complemento del marco holográfico de la 73ª/74ª)
+pero antes preguntó algo clave: ¿la app tiene alguna propiedad para saber
+si UNA carta puntual es foil, más allá de su rareza? Porque en ediciones
+nuevas/reediciones hay Vasallo y Cortesano (rarezas que normalmente no
+llevan foil) que sí lo son, pero no todas.
+
+- **Investigación antes de tocar código**: se revisaron todas las claves
+  presentes en `data/cards.json`/`data/custom-cards.json` (ninguna
+  menciona foil/finish/variant/acabado/versión) y además se hizo un
+  `fetch` en vivo contra la API cruda de TOR
+  (`api.myl.cl/cards/edition/...`) para inspeccionar el objeto de una
+  carta tal cual lo entrega el servidor: `id, edid, slug, name, rarity,
+  race, type, keywords, cost, damage, ability, flavour, ed_edid,
+  ed_slug`. **No existe ningún campo de acabado en la fuente de datos.**
+  Conclusión: hoy no se puede distinguir foil por dato, solo por rareza
+  (con la excepción manual que se deje declarada).
+- **`js/app.js`**: `hasFoil(card)`/`declaresFoil(card)` — Real, Mega Real,
+  Ultra Real, Secreta (y rareza desconocida) son foil siempre; Vasallo y
+  Cortesano NO son foil por defecto, solo si la carta lo declara.
+  `declaresFoil()` revisa `card.foil === true`, y también
+  `card.foil/finish/variant/acabado/version` como texto que contenga
+  "foil" (por si algún día el dato trae eso), más una tabla nueva
+  `FOIL_CORRECTIONS` (cardId → true) — **vacía por ahora**, lista para
+  que el dueño vaya marcando a mano los Vasallo/Cortesano puntuales que
+  identifique como foil, mismo mecanismo que `RARITY_CORRECTIONS`.
+- **`css/styles.css`**: `.foil` — retícula diagonal de 3 capas (18px ×2
+  cruzadas + 9px de punteado) teñida por un degradado tornasol de 260%
+  que se desliza en diagonal (`background-position`, 9s
+  `ease-in-out infinite alternate`), mezclada con `mix-blend-mode:
+  overlay` y opacidad `.72` para que reaccione al arte sin taparlo.
+  `pointer-events:none` (no interfiere con los clics) y respeta
+  `prefers-reduced-motion`.
+- El `<div class="foil">` se agrega como hijo de `.holo-art`, entre el
+  arte/velo y las píldoras/nombre, en los tres lugares del marco
+  holográfico (ficha del Catálogo, ficha de Mazos, modal de detalle) —
+  siempre presente en el DOM, se oculta con el atributo `hidden` en vez
+  de crearse/destruirse, para no reiniciar la animación al cambiar de
+  carta. **No** se agrega a la grilla, el Álbum ni las filas de mazo
+  (mismo criterio que el marco: a esos tamaños sería ruido).
+- **Bug de datos encontrado de rebote**: al revisar el set "Secreta
+  Exclusiva" de LPE 2023 (donde vive Ocelote Del Templo, corregido en la
+  74ª), se encontró que sus compañeras de numeración —**Sakura**
+  ("Secreta Exclusiva 1") y **Los Cinco Anillos** ("Secreta Exclusiva
+  2")— tenían exactamente el mismo problema: `specialId` correcto pero
+  `rarity` sin actualizar a Secreta. Se corrigieron las tres juntas en
+  `RARITY_CORRECTIONS` + parche directo a `data/cards.json`. De paso se
+  corrigió un comentario impreciso del commit anterior: ese `specialId`
+  no lo trae TOR, sale de nuestra propia `LEYENDAS_2023_CORRECTIONS`
+  (numeración ya corregida en una sesión previa).
+- **Otra corrección reportada en la misma iteración**: "Sotz' Na" de
+  Leyendas - Primera Era 4.0
+  (`leyendas_primera_era_4_0__custom__85_sotz_na`, entrada de
+  `data/custom-cards.json` — no pasa por el scraper, así que se edita
+  directo ahí, no en `RARITY_CORRECTIONS`) tenía coste 3 y rareza "Mega
+  Real"; la carta física del dueño tiene coste 2 y es "Real". Corregidos
+  ambos campos.
+- Verificado con Playwright: una carta Vasallo sin declarar foil lo
+  muestra oculto (`hidden`), una Real lo muestra visible con la trama y
+  el degradado corriendo; con `reducedMotion:'reduce'` el
+  `animationName` computado es `none`; el modal también lo muestra; la
+  grilla no tiene ningún `.foil` en el DOM. 0 `pageerror`.
+
 ### 2026-09-16 (74ª iteración) — Corrige los colores del marco holográfico (morado es Promocional, verde jade es Secreta) y la rareza de «Ocelote Del Templo» LPE 2023
 
 El dueño corrigió la 73ª iteración: el aro morado que se había asignado a

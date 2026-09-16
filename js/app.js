@@ -711,6 +711,7 @@ function renderFicha() {
   $("#ficha-art").innerHTML = `
     ${img}
     <div class="card-veil"></div>
+    <div class="foil" ${hasFoil(card) ? "" : "hidden"}></div>
     ${card.strength != null ? `<span class="badge-str"><i class="ph ph-sword"></i>${card.strength}</span>` : ""}
     ${card.cost != null ? `<span class="badge-cost"><i class="ph ph-coin"></i>${card.cost}</span>` : ""}
     <div class="card-overlay-text ficha-overlay-text">
@@ -824,6 +825,7 @@ function renderDeckFicha() {
   $("#deck-ficha-art").innerHTML = `
     ${img}
     <div class="card-veil"></div>
+    <div class="foil" ${hasFoil(card) ? "" : "hidden"}></div>
     ${card.strength != null ? `<span class="badge-str"><i class="ph ph-sword"></i>${card.strength}</span>` : ""}
     ${card.cost != null ? `<span class="badge-cost"><i class="ph ph-coin"></i>${card.cost}</span>` : ""}
     <div class="card-overlay-text ficha-overlay-text">
@@ -941,6 +943,7 @@ function openModal(card, navList, navIndex) {
       <div class="cd-image holo holo-lg" data-rarity="${raritySlug(card.rarity)}" ${card.image ? 'data-zoom="1"' : ""}>
         <div class="holo-art">
           ${img}
+          <div class="foil" ${hasFoil(card) ? "" : "hidden"}></div>
           ${card.image ? '<span class="cd-zoom-hint"><i class="ph ph-magnifying-glass-plus"></i> Ampliar</span>' : ""}
         </div>
       </div>
@@ -2222,6 +2225,32 @@ function raritySlug(rarity) {
     .replace(/\s+/g, " ")
     .trim();
   return RARITY_SLUG[key] || "";
+}
+
+// Foil sobre el arte de la carta (ver .foil en styles.css). Vasallo y
+// Cortesano NO son foil por sí solos — TOR/nuestro catálogo hoy no trae
+// ningún campo de acabado (foil/finish/variant/acabado/version: se
+// comprobó contra la API cruda de TOR y no existe), así que solo se
+// pueden marcar foil a mano, carta por carta, agregándolas a
+// FOIL_CORRECTIONS más abajo (mismo mecanismo que RARITY_CORRECTIONS en
+// scraper/corrections.js — pendiente de poblar cuando el dueño identifique
+// ediciones/cartas puntuales). El resto de las rarezas es foil siempre.
+const FOIL_OPT_IN = new Set(["vasallo", "cortesano"]);
+// cardId -> true, para cartas Vasallo/Cortesano puntuales que sí son foil
+// (llenar a mano cuando se identifiquen; ver nota arriba).
+const FOIL_CORRECTIONS = {};
+function declaresFoil(card) {
+  if (FOIL_CORRECTIONS[card.id]) return true;
+  if (card.foil === true) return true;
+  const fields = [card.foil, card.finish, card.variant, card.acabado, card.version];
+  return fields.some((v) =>
+    typeof v === "string" &&
+    v.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().includes("foil")
+  );
+}
+function hasFoil(card) {
+  if (declaresFoil(card)) return true;
+  return !FOIL_OPT_IN.has(raritySlug(card.rarity));
 }
 // Precio referencial de una carta (data/prices.json) — cobertura parcial,
 // ver docs/FUENTES-DATOS.md sección 6b. null si no se encontró ninguna tienda.

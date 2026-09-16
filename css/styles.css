@@ -1048,3 +1048,33 @@ main { padding: 0; }
 @media (prefers-reduced-motion: reduce) {
   .holo { animation: none }
 }
+
+/* ===== Foil sutil sobre cartas premium =====
+   Retícula diagonal a 45° teñida por un velo tornasol que se desplaza de
+   ida y vuelta — ver hasFoil()/declaresFoil() en app.js para qué cartas lo
+   muestran. Va dentro de .holo-art, entre el arte y los textos/píldoras. */
+@keyframes foil-slide {
+  from { background-position: 0 0, 0 0, 0 0,   0% 100% }
+  to   { background-position: 0 0, 0 0, 0 0, 100%   0% }
+}
+.foil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: .72;
+  background-image:
+    repeating-linear-gradient( 45deg, rgba(255,255,255,.75) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,.55) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient( 45deg, rgba(255,255,255,.28) 0 2px, transparent 2px 4.5px),
+    linear-gradient(45deg,
+      #8ad9ff, #c9a6ff 18%, #ffd1a8 34%, #fff3a8 50%,
+      #a8ffd0 66%, #a8d8ff 82%, #d9b3ff);
+  background-size: 18px 18px, 18px 18px, 9px 9px, 260% 260%;
+  animation: foil-slide 9s ease-in-out infinite alternate;
+}
+.foil[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .foil { animation: none; background-position: 0 0, 0 0, 0 0, 50% 50% }
+}
