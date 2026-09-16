@@ -378,6 +378,65 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (71ª iteración) — Rediseña Estadísticas al estilo Nocturne, reemplaza el panel lateral de Cambio y Ventas por una barra de estadísticas arriba de la lista, corrige botones de la ficha sin estilo
+
+El dueño mandó 3 capturas anotadas: el panel lateral de Cambio y Ventas
+(descripción + resumen en prosa) circulado para eliminar, los botones
+de navegación y +/− de la ficha fija circulados porque se ven como
+cajas blancas sin ningún estilo, y una captura de referencia del
+handoff de diseño original (pantalla "Cambio y ventas" del mockup) que
+muestra 4 tarjetas de estadística (Repetidas/Ofrecidas/Cambios
+hechos/Vendido este año) en una barra arriba del listado, no en un
+panel lateral.
+
+- **Bug real encontrado**: `.ficha-nav-btn` y `.ficha-step-btn` (los
+  botones ← → ⤢ de "Carta elegida" y −/+ de "Copias que tienes") nunca
+  tuvieron `background: transparent` en su regla base — a diferencia
+  de todos los demás botones "contorno" de la app (`.qty-btn`,
+  `.chip-select`, `.btn`, etc.), que sí lo declaran explícitamente. Sin
+  eso, el navegador les aplica su estilo nativo de `<button>` (caja
+  gris/blanca con relieve), que es exactamente lo que se veía en la
+  captura. Se agregó `background: transparent` a ambas reglas.
+- **Cambio y Ventas — quita el `<aside class="filters">` de siempre**
+  (título + párrafo explicativo + resumen en prosa "Valor potencial de
+  venta…") y lo reemplaza por `#trade-stats`, una fila de 4
+  `.stat-card` (el mismo componente que ya usa Estadísticas, reutilizado
+  para que ambas vistas se vean como parte del mismo sistema) **arriba**
+  de "Ofrecer una carta" y de la lista, como en la referencia:
+  - **Ofrecidas**: copias totales ofrecidas, con cuántas cartas
+    distintas son.
+  - **Valor potencial**: suma de `Mi valor` (o precio de referencia
+    como respaldo) de las copias ofrecidas, con cuántas están sin
+    valorar.
+  - **Cambios hechos**: tamaño del historial de intercambios
+    (`store.getTradeLog()`), con la fecha del último.
+  - **Vendido este año**: suma de precios del historial de ventas
+    (`store.getSaleLog()`) filtrado al año en curso, con cuántas ventas.
+  Las funciones viejas `renderTradeValue()` + el `textContent` de
+  `#trade-summary` se reemplazan por una sola `renderTradeStats()`. La
+  vista pasa a ser una sola columna a ancho completo (como ya pasó con
+  el Catálogo en la 68ª iteración), sin el aside de 260px.
+- **Estadísticas al estilo Nocturne**: `.stat-card`/`.chart-card`
+  tenían `border: 1px solid var(--border)` (caja dura, centrada) desde
+  antes del rediseño — se cambiaron a `box-shadow: inset 0 0 0 1px
+  var(--border)` (mismo patrón "contorno" del resto de componentes) con
+  texto alineado a la izquierda y números en `--accent-300`. Los
+  `<select>` de "Mostrar"/"Formato" (`.stats-toolbar`) pasan del
+  `<select>` con borde sólido genérico al mismo tratamiento que
+  `.trade-filter-select` (sin borde, `box-shadow` inset, fondo
+  `--bg-3`). La disposición ya tenía las tarjetas de estadísticas
+  arriba de los gráficos (no se tocó el orden, ya cumplía "arriba de
+  las cartas").
+- Se eliminó el CSS ya sin uso `.trade-value`/`.tv-note`.
+- Verificado con Playwright: se sembraron datos de prueba (cantidades,
+  intercambios y ventas) vía `store.js` para confirmar que las 4
+  tarjetas nuevas calculan bien con datos reales, en desktop y en
+  380px de ancho (las tarjetas se apilan 2×2). 0 `pageerror`.
+- **Sigue pendiente**: las tarjetas de carta dentro de un mazo
+  (`deckCardTileHtml()`), Colecciones/Álbum y Modo Inventariar. Los
+  gráficos de Chart.js en sí (colores/rejilla) no se tocaron — solo los
+  contenedores; no hubo queja puntual sobre los gráficos mismos.
+
 ### 2026-09-16 (70ª iteración) — Pulido del rediseño Nocturne: botones "contorno", quita todos los emojis, corrige chips y sync-chip desbordados
 
 El dueño mandó 4 capturas anotadas señalando que el rediseño Nocturne
