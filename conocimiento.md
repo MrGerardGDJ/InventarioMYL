@@ -378,6 +378,58 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (73ª iteración) — Marco holográfico de rareza en el arte de la ficha y el modal
+
+El dueño mandó una spec detallada (pantallas 3b/3a/2e del handoff) para
+envolver el arte de la carta en un aro de 1px que gira, coloreado según la
+rareza, con un halo difuminado hacia fuera.
+
+- **CSS nuevo (`css/styles.css`, al final del archivo)**: clase `.holo`
+  (contorno + halo) usando `@property --holo-a` (ángulo animable con
+  `@keyframes holo-spin`, 12s lineal infinito) sobre un `conic-gradient` de
+  4 colores por rareza (`--holo-1..4`, en orden 1·2·3·4·3·2·1 para que el
+  giro no muestre costura). Siete rampas: Vasallo (azul/celeste/cian),
+  Cortesano (vino/rojo), Real (dorado/amarillo/limón), Mega Real (aura
+  blanca), Ultra Real (grafito/gris), Secreta (morado/zafiro), Secreta
+  Jade (verde/esmeralda, nombre provisional). Rareza sin rampa propia
+  (Milenaria, Set Paralelo, Promocional, Ficha, Legendaria) cae al
+  degradado de acento del sistema por defecto — no se inventó un color
+  para esas. `.holo-lg` es la variante del modal (radio 12/11px en vez de
+  11/10, ya que ahí el arte ya usaba un radio distinto). Respeta
+  `prefers-reduced-motion: reduce` (aro estático, mismo color).
+- **`js/app.js`**: `raritySlug(rarity)` normaliza el nombre de rareza
+  (minúsculas, sin tildes) contra un mapa fijo a los 7 slugs del CSS;
+  cualquier rareza no mapeada devuelve `""` y cae al fallback de acento a
+  propósito. Se aplica en `renderFicha()` (Catálogo), `renderDeckFicha()`
+  (Mazos) y `openModal()` (modal de detalle) — las tres seguían un patrón
+  encontrado durante la exploración: el div del arte reasignaba
+  `className` completo en cada render (`"ficha-art" + (owned ? " owned" :
+  "")`), así que había que sumarle `holo-art` ahí también o se perdía en
+  cada actualización.
+- **`index.html`**: `#ficha-art` y `#deck-ficha-art` (que ya existían)
+  ahora viven adentro de un `<div class="holo">` nuevo (`#ficha-holo` /
+  `#deck-ficha-holo`) — mismo id de siempre para el contenido interior, así
+  que no hubo que tocar el resto de `renderFicha`/`renderDeckFicha`. El
+  modal arma su propio `.cd-image.holo.holo-lg` con `.holo-art` adentro en
+  cada `openModal()`, ya que ahí el HTML se reconstruye entero de todas
+  formas.
+- El viejo `box-shadow` de borde fijo del arte (`0 0 0 1px rgba(181,171,
+  252,.35)`) se quitó de `.ficha-art` y de `.cd-image img` en los tres
+  lugares — el aro holográfico lo reemplaza. La sombra ambiental
+  (`0 12px 30px rgba(0,0,0,.5)`) se conserva, ahora en `.holo`.
+- **No** se aplicó a las miniaturas de la grilla del Catálogo, los
+  estantes del Álbum ni las filas de la composición de Mazos — ahí la
+  rareza ya se lee en el texto y el aro giratorio habría sido ruido
+  visual a ese tamaño (mismo criterio que ya traía la spec).
+- **Modo inventariar** (pantalla 2a) no existe todavía en la app — la
+  spec lo menciona como aplicación opcional a futuro si esa vista llega a
+  construirse; no había nada que tocar ahí en esta iteración.
+- Verificado con Playwright: aro visible y coloreado distinto para
+  Vasallo (azul), Real (dorado) y Secreta (morado) en la ficha del
+  Catálogo, la ficha de Mazos y el modal de detalle; con
+  `reducedMotion:'reduce'` el `animationName` computado pasa a `none`; 0
+  `pageerror` ni warnings de `@property` en consola.
+
 ### 2026-09-16 (72ª iteración) — Rediseño completo de Mazos y Estadísticas según spec del handoff (pantallas 2e/2f)
 
 El dueño mandó dos capturas del canvas de diseño original (Mazos y
