@@ -378,6 +378,20 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (81ª iteración) — Corrige de vuelta la rareza de Sotz' Na: es Mega Real, no Real
+
+En la 75ª iteración el dueño había pedido corregir Sotz' Na (Leyendas -
+Primera Era 4.0, #085) de "Mega Real" a "Real" además del coste (3→2). El
+dueño ahora confirmó, mirando el código impreso en la carta física ("MR"),
+que la rareza original SÍ era la correcta — el error estuvo en el pedido
+de corrección de rareza, no en el dato. Se revirtió solo el campo
+`rarity` a "Mega Real" en `data/custom-cards.json`; el coste queda en 2
+(esa corrección seguía siendo válida, no estaba en duda).
+
+Verificado con Playwright: la ficha de "Sotz' Na" muestra
+`Leyendas - Primera Era 4.0 · nº 085 · Mega Real` y el aro holográfico
+`data-rarity="mega-real"`. 0 `pageerror`.
+
 ### 2026-09-16 (80ª iteración) — Cierra el plan pendiente: "Mi valor" se edita en línea, sin modal (y cantidades ofrecidas/en detalle también)
 
 Un plan de rediseño anterior (sidebar colapsable + edición en línea sin
