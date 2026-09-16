@@ -372,7 +372,6 @@ main { padding: 0; }
 .ficha-art {
   position: relative; aspect-ratio: 63 / 88; border-radius: 10px; overflow: hidden;
   background: linear-gradient(155deg, #4a4176, #23253a 60%, var(--rail));
-  box-shadow: 0 0 0 1px rgba(181, 171, 252, 0.35), 0 12px 30px rgba(0, 0, 0, 0.5);
 }
 .ficha-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .ficha-art:not(.owned) img { filter: grayscale(1) brightness(0.68); }
@@ -681,10 +680,10 @@ main { padding: 0; }
 
 /* ===== Detalle de carta interactivo ===== */
 .card-detail { display: flex; gap: 24px; flex-wrap: wrap; }
-.card-detail .cd-image { flex: 0 0 300px; max-width: 300px; position: relative; align-self: flex-start; }
+.card-detail .cd-image { flex: 0 0 300px; max-width: 300px; align-self: flex-start; }
 .card-detail .cd-image[data-zoom] { cursor: zoom-in; }
-.card-detail .cd-image img { width: 100%; border-radius: 11px; display: block; box-shadow: 0 0 0 1px rgba(181, 171, 252, 0.35), 0 12px 30px rgba(0, 0, 0, 0.5); }
-.cd-zoom-hint { position: absolute; bottom: 8px; right: 8px; background: rgba(12, 13, 24, 0.75); color: var(--text); font-size: 11px; padding: 3px 9px; border-radius: 20px; pointer-events: none; }
+.card-detail .cd-image .holo-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cd-zoom-hint { position: absolute; bottom: 8px; right: 8px; background: rgba(12, 13, 24, 0.75); color: var(--text); font-size: 11px; padding: 3px 9px; border-radius: 20px; pointer-events: none; z-index: 2; }
 .cd-body { flex: 1; min-width: 250px; }
 .cd-body h2 { font: 500 26px var(--font); letter-spacing: -0.02em; margin-bottom: 8px; }
 .cd-section { margin-top: 18px; }
@@ -703,8 +702,7 @@ main { padding: 0; }
 .img-zoom img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
 
 @media (max-width: 640px) {
-  .card-detail .cd-image { flex-basis: 100%; max-width: 100%; text-align: center; }
-  .card-detail .cd-image img { max-width: 320px; margin: 0 auto; }
+  .card-detail .cd-image { flex-basis: 100%; max-width: 320px; margin: 0 auto; }
 }
 
 /* ===== Decks ===== */
@@ -990,4 +988,63 @@ main { padding: 0; }
   .sync-chip { display: none; }
   #rail-collapse { display: none; }
   main { padding-bottom: 58px; }
+}
+
+/* ===== Marco holográfico de rareza (arte de la ficha y del modal) =====
+   Aro de 1px que gira, coloreado según la rareza de la carta, con un halo
+   difuminado hacia fuera. Ver conocimiento.md para la referencia de diseño. */
+@property --holo-a {
+  syntax: "<angle>";
+  inherits: true; /* el ::before tiene que leer el mismo ángulo animado */
+  initial-value: 0deg;
+}
+
+@keyframes holo-spin { to { --holo-a: 360deg } }
+
+.holo {
+  position: relative;
+  padding: 1px;
+  border-radius: 11px;
+  background: conic-gradient(from var(--holo-a),
+    var(--holo-1)   0%,
+    var(--holo-2)  14%,
+    var(--holo-3)  28%,
+    var(--holo-4)  42%,
+    var(--holo-3)  56%,
+    var(--holo-2)  72%,
+    var(--holo-1) 100%);
+  animation: holo-spin 12s linear infinite;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .5);
+}
+.holo::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 16px;
+  background: inherit;
+  filter: blur(9px);
+  opacity: .3;
+}
+.holo > .holo-art { position: relative; z-index: 1; aspect-ratio: 63 / 88; border-radius: 10px; overflow: hidden; }
+
+/* Variante del modal de detalle: el arte ya usaba radio 11px ahí, así que el
+   aro y el halo suben un escalón para mantener el mismo grosor visible. */
+.holo.holo-lg { border-radius: 12px; }
+.holo.holo-lg::before { border-radius: 17px; }
+.holo.holo-lg > .holo-art { border-radius: 11px; }
+
+/* Rampas por rareza: 4 paradas en orden 1·2·3·4·3·2·1 (giro sin costura) */
+.holo[data-rarity="vasallo"]      { --holo-1:#0f2d63; --holo-2:#1f4fa3; --holo-3:#4ea3ff; --holo-4:#7ef0ff }
+.holo[data-rarity="cortesano"]    { --holo-1:#5c1019; --holo-2:#8d1b24; --holo-3:#c0392b; --holo-4:#ef8b7f }
+.holo[data-rarity="real"]         { --holo-1:#8a5f18; --holo-2:#f2c14e; --holo-3:#ffe98f; --holo-4:#d9f26a }
+.holo[data-rarity="mega-real"]    { --holo-1:#8d90a8; --holo-2:#d7d9e6; --holo-3:#ffffff; --holo-4:#f2f3fa }
+.holo[data-rarity="ultra-real"]   { --holo-1:#20242c; --holo-2:#4a4f5a; --holo-3:#7d838f; --holo-4:#a8adb8 }
+.holo[data-rarity="secreta"]      { --holo-1:#2a1454; --holo-2:#5b2bb0; --holo-3:#8a5cf0; --holo-4:#2f6dd8 }
+.holo[data-rarity="secreta-jade"] { --holo-1:#08321f; --holo-2:#126b45; --holo-3:#1ea87a; --holo-4:#6ff0bd }
+
+/* Fallback: rareza desconocida o ausente → acento del sistema */
+.holo { --holo-1:#3f3a5c; --holo-2:#5d5294; --holo-3:#9184d9; --holo-4:#b5abfc }
+
+@media (prefers-reduced-motion: reduce) {
+  .holo { animation: none }
 }

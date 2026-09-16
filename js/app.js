@@ -706,7 +706,8 @@ function renderFicha() {
   const img = card.image
     ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" />`
     : `<div class="placeholder"></div>`;
-  $("#ficha-art").className = "ficha-art" + (qty > 0 ? " owned" : "");
+  $("#ficha-holo").dataset.rarity = raritySlug(card.rarity);
+  $("#ficha-art").className = "ficha-art holo-art" + (qty > 0 ? " owned" : "");
   $("#ficha-art").innerHTML = `
     ${img}
     <div class="card-veil"></div>
@@ -818,7 +819,8 @@ function renderDeckFicha() {
   const img = card.image
     ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" />`
     : `<div class="placeholder"></div>`;
-  $("#deck-ficha-art").className = "ficha-art" + (own > 0 ? " owned" : "");
+  $("#deck-ficha-holo").dataset.rarity = raritySlug(card.rarity);
+  $("#deck-ficha-art").className = "ficha-art holo-art" + (own > 0 ? " owned" : "");
   $("#deck-ficha-art").innerHTML = `
     ${img}
     <div class="card-veil"></div>
@@ -936,9 +938,11 @@ function openModal(card, navList, navIndex) {
   box.innerHTML = `
     <button class="modal-close" data-close>×</button>
     <div class="card-detail">
-      <div class="cd-image" ${card.image ? 'data-zoom="1"' : ""}>
-        ${img}
-        ${card.image ? '<span class="cd-zoom-hint"><i class="ph ph-magnifying-glass-plus"></i> Ampliar</span>' : ""}
+      <div class="cd-image holo holo-lg" data-rarity="${raritySlug(card.rarity)}" ${card.image ? 'data-zoom="1"' : ""}>
+        <div class="holo-art">
+          ${img}
+          ${card.image ? '<span class="cd-zoom-hint"><i class="ph ph-magnifying-glass-plus"></i> Ampliar</span>' : ""}
+        </div>
       </div>
       <div class="cd-body">
         <h2 id="cd-name">${escapeHtml(displayName(card))}</h2>
@@ -2194,6 +2198,28 @@ function relTime(ts) {
   if (months < 12) return `hace ${months} mes${months === 1 ? "" : "es"}`;
   const years = Math.floor(months / 12);
   return `hace ${years} año${years === 1 ? "" : "s"}`;
+}
+// Rareza -> slug de la rampa de color del marco holográfico (ver .holo en
+// styles.css). Las rarezas sin rampa propia (Milenaria, Set Paralelo,
+// Promocional, Ficha, Legendaria) caen al degradado de acento del sistema
+// a propósito — devuelven "" y el CSS ya trae ese fallback.
+const RARITY_SLUG = {
+  "vasallo": "vasallo",
+  "cortesano": "cortesano",
+  "real": "real",
+  "mega real": "mega-real",
+  "ultra real": "ultra-real",
+  "secreta": "secreta",
+  "secreta jade": "secreta-jade",
+};
+function raritySlug(rarity) {
+  if (!rarity) return "";
+  const key = String(rarity)
+    .toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return RARITY_SLUG[key] || "";
 }
 // Precio referencial de una carta (data/prices.json) — cobertura parcial,
 // ver docs/FUENTES-DATOS.md sección 6b. null si no se encontró ninguna tienda.
