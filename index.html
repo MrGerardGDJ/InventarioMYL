@@ -211,7 +211,24 @@
         </div>
         <div class="trade-list-head">
           <h3 class="trade-h3">Ofrecidas para cambio o venta</h3>
-          <select id="trade-rarity" class="trade-rarity-select"><option value="">Todas las rarezas</option></select>
+        </div>
+        <div class="trade-toolbar">
+          <select id="trade-rarity" class="trade-filter-select"><option value="">Todas las rarezas</option></select>
+          <select id="trade-edition" class="trade-filter-select"><option value="">Todas las ediciones</option></select>
+          <select id="trade-race" class="trade-filter-select"><option value="">Todas las razas</option></select>
+          <select id="trade-type" class="trade-filter-select"><option value="">Todos los tipos</option></select>
+          <select id="trade-sort" class="trade-filter-select">
+            <option value="rarity_desc">Rareza (más pro primero)</option>
+            <option value="rarity_asc">Rareza (más básica primero)</option>
+            <option value="name">Nombre (A→Z)</option>
+            <option value="name_desc">Nombre (Z→A)</option>
+            <option value="edition">Edición (A→Z)</option>
+            <option value="edition_desc">Edición (Z→A)</option>
+            <option value="race">Raza (A→Z)</option>
+            <option value="race_desc">Raza (Z→A)</option>
+            <option value="type">Tipo (A→Z)</option>
+            <option value="type_desc">Tipo (Z→A)</option>
+          </select>
         </div>
         <div id="trade-list" class="trade-list"></div>
         <h3 class="trade-h3">Historial de intercambios</h3>

@@ -378,6 +378,31 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (67ª iteración) — Cambio y Ventas: filtros combinables por edición/raza/tipo + orden ascendente/descendente
+
+- Este es el pedido FUNCIONAL original del dueño (de antes del handoff
+  de diseño Nocturne): poder filtrar lo ofrecido en Cambio y Ventas
+  por varias características a la vez, y ordenar ascendente/
+  descendente, alfabético, por tipo, por raza, por edición.
+- Se sumaron tres selectores nuevos (`#trade-edition`, `#trade-race`,
+  `#trade-type`) junto al de rareza que ya existía (iteración 58),
+  todos combinables entre sí (AND) — mismo patrón que ya usa el
+  Catálogo (`baseFilteredCards()`): cada selector calcula sus opciones
+  desde lo ofrecido ANTES de aplicar los demás filtros, así ninguno se
+  autorrestringe.
+- Nuevo selector de orden `#trade-sort` (10 opciones, etiquetas con la
+  dirección ya incluida — mismo patrón que `#f-sort` del Catálogo y
+  `#deck-sort` de Mazos): "Rareza (más pro/básica primero)" mantiene
+  el agrupado en secciones de siempre; el resto (nombre/edición/raza/
+  tipo, A→Z o Z→A) muestra una lista plana sin encabezados.
+- `updateTradeRarityFilter()` se generalizó en `updateTradeFilterSelect()`
+  para no duplicar la lógica cuatro veces; `renderTradeList()` aplica
+  los filtros en cadena y elige agrupado o plano según el modo de orden.
+- Verificado con Playwright: 10 cartas ofrecidas, filtro por tipo deja
+  solo las que corresponden, orden por nombre quita los encabezados de
+  rareza, combinaciones de filtros se intersectan correctamente. 0
+  `pageerror`.
+
 ### 2026-09-16 (66ª iteración) — Rediseño "Nocturne" (parte 3/N): modal de detalle de carta
 
 - Tercera etapa del rediseño (ver 64ª/65ª). Solo retoque visual — el
