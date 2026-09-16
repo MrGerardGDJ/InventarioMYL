@@ -581,6 +581,15 @@ export const IMAGE_CORRECTIONS = {
   "70-046": { image: "https://static.wikia.nocookie.net/myl-tcg/images/d/de/Vali_PE.png/revision/latest?cb=20211130185027&path-prefix=es" },
 };
 
+// TOR trae la rareza equivocada para estas cartas. Reportado por el dueño
+// contra su carta física (no la versión Full Art / Kit de Juego, que es una
+// edición aparte con su propia entrada correcta en custom-cards.json).
+export const RARITY_CORRECTIONS = {
+  // "Sacrificio Humano" (Leyendas PE, edid 071): TOR la marca "Mega Real",
+  // pero la carta física del dueño es "Real". Reportado 16-09-2026.
+  "154-071": { rarity: "Real" },
+};
+
 // Mismo bug de numeración que MUNDOS_PERDIDOS_TOR_CORRECTIONS arriba, pero
 // sin el corrimiento en cascada: TOR trae "Mundo Medieval El Reto" con 13
 // cartas (001-013), pero la carta "013" ("Madre De Dragones") es en realidad
