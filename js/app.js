@@ -2200,9 +2200,11 @@ function relTime(ts) {
   return `hace ${years} año${years === 1 ? "" : "s"}`;
 }
 // Rareza -> slug de la rampa de color del marco holográfico (ver .holo en
-// styles.css). Las rarezas sin rampa propia (Milenaria, Set Paralelo,
-// Promocional, Ficha, Legendaria) caen al degradado de acento del sistema
-// a propósito — devuelven "" y el CSS ya trae ese fallback.
+// styles.css). Corregido 16-09-2026 (el dueño lo marcó al revés): el aro
+// morado es de Promocional, el verde jade es de Secreta. Las rarezas sin
+// rampa propia (Milenaria, Set Paralelo, Ficha, Legendaria) caen al
+// degradado de acento del sistema a propósito — devuelven "" y el CSS ya
+// trae ese fallback.
 const RARITY_SLUG = {
   "vasallo": "vasallo",
   "cortesano": "cortesano",
@@ -2210,7 +2212,7 @@ const RARITY_SLUG = {
   "mega real": "mega-real",
   "ultra real": "ultra-real",
   "secreta": "secreta",
-  "secreta jade": "secreta-jade",
+  "promocional": "promocional",
 };
 function raritySlug(rarity) {
   if (!rarity) return "";
