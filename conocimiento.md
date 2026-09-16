@@ -378,6 +378,25 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (77ª iteración) — Corrige la rareza de Shuar y Lautaro (Leyendas PE 4.0, set SCLPE4)
+
+El dueño mandó capturas del modal de detalle mostrando el aro holográfico
+mal coloreado en dos cartas del set "SCLPE4" (custom, Leyendas - Primera
+Era 4.0):
+
+- **Shuar** (`leyendas_primera_era_4_0__custom__sc_40_shuar`,
+  `specialId: "SCLPE4-40"`): tenía `rarity: "Vasallo"` (aro azul) y debería
+  ser **Cortesano** (aro rojo/vino).
+- **Lautaro** (`leyendas_primera_era_4_0__custom__sc_41_lautaro`,
+  `specialId: "SCLPE4-41"`): tenía `rarity: "Cortesano"` (aro rojo) y
+  debería ser **Real** (aro dorado).
+
+Ambas son entradas de `data/custom-cards.json` (no pasan por el scraper),
+así que se editaron directo ahí, igual que Sotz' Na en la 75ª. Verificado
+con Playwright: la ficha de Shuar ahora muestra `data-rarity="cortesano"`
+y la de Lautaro `data-rarity="real"`, coincidiendo con la línea de
+metadatos (`... · Cortesano` / `... · Real`). 0 `pageerror`.
+
 ### 2026-09-16 (76ª iteración) — Las cartas "Premium" de Lootbox llevan foil aunque su rareza normalmente no lo tenga
 
 El dueño confirmó la regla que había quedado pendiente en la 75ª: las
