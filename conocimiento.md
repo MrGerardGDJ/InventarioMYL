@@ -378,6 +378,22 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (66ª iteración) — Rediseño "Nocturne" (parte 3/N): modal de detalle de carta
+
+- Tercera etapa del rediseño (ver 64ª/65ª). Solo retoque visual — el
+  modal de detalle (`openModal()` en `js/app.js`) conserva toda su
+  lógica (stepper de cantidad, disponible para cambio, editar/
+  eliminar carta manual, detalle ampliado desde `api.myl.cl`) tal
+  cual; solo cambió `css/styles.css`: fondo del backdrop más oscuro
+  (`rgba(10,11,20,.72)`), la caja del modal con la paleta y sombra
+  Nocturne, las etiquetas (`.tag`) pasan a contorno con la primera
+  (edición) destacada con tinte de acento, y los botones de navegación/
+  cerrar con el mismo lenguaje visual que el resto de la app. Como
+  `.qty-btn` ya se había actualizado en la 65ª iteración, los steppers
+  del modal heredaron el estilo nuevo automáticamente sin tocarlos.
+- Verificado con Playwright (doble clic en una carta de la grilla abre
+  el modal): sin errores de consola.
+
 ### 2026-09-16 (65ª iteración) — Rediseño "Nocturne" (parte 2/N): tarjeta "arte primero" + Ficha fija + cantidad editable sin modal
 
 - Segunda etapa del rediseño (ver 64ª). Cubre el Catálogo, la pantalla
