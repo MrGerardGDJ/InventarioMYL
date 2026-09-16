@@ -378,6 +378,65 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (82ª iteración) — Oros sin habilidad brillan dorado, arregla etiquetas `<br>` visibles, pestañas del mazo sin estilo, y filtro/orden por "Mi valor" en Cambio y Ventas
+
+Cinco pedidos del dueño en un solo mensaje, con una captura de "Mazo
+Guerrero v2" (vista Mazos) como evidencia de dos de ellos:
+
+- **Oro sin habilidad → resplandor dorado**: el aro holográfico coloreaba
+  por rareza incluso en un Oro "vainilla" (sin texto de habilidad), así que
+  un Oro Vasallo salía azul, uno Cortesano rojo, etc. — pero un Oro básico
+  es "solo un Oro", no debería depender de su rareza para el color. Nueva
+  `holoSlug(card)` en `js/app.js`: si `card.type === "Oro"` y no tiene
+  `ability`, devuelve el slug fijo `"oro"` en vez de `raritySlug(card.rarity)`;
+  un Oro CON habilidad (El Dorado, Knarr, etc., ver 79ª iteración) sigue
+  coloreado por rareza como cualquier otra carta. Nueva rampa
+  `.holo[data-rarity="oro"]` en `css/styles.css` (dorado). Se actualizaron
+  los 3 lugares que fijaban `data-rarity` a mano (ficha del Catálogo, ficha
+  de Mazos, modal de detalle) para usar `holoSlug()` en vez de
+  `raritySlug(card.rarity)` directo.
+- **Etiquetas `<br>` visibles como texto literal** (se ve en la captura,
+  ficha de Lautaro: "...entra en juego.<br>Cuando entra en juego..."): el
+  dato de 219 cartas en `data/custom-cards.json` (+3 con el mismo problema
+  en `flavour`) traía el salto de línea como el string literal `<br>` en
+  vez de un salto de línea real (`\n`) — como el render (`nl2br()`) hace
+  `escapeHtml()` antes de convertir SOLO los `\n` reales en `<br>`, ese
+  `<br>` literal quedaba escapado a `&lt;br&gt;` y se veía tal cual en
+  pantalla. Reemplazo global y verificado de `<br>` → `\n` en los campos
+  `ability`/`flavour` de las 222 cartas afectadas (222 campos, 222 cartas —
+  cada una tenía como máximo una ocurrencia), con un script que solo tocó
+  esos dos campos (no arriesgó el resto del JSON) y preservó el formato de
+  indentación del archivo (diff de 222 líneas exactas, sin reformateo).
+- **Pestañas "Cartas / Estadística / Estrategia" del detalle de mazo
+  (también en la captura)**: estos 3 botones usaban `class="tab"` a secas,
+  pero esa clase SOLO tiene estilo definido como `.rail .tab` (el nav
+  lateral) — fuera de ese contexto caían al botón blanco por defecto del
+  navegador, un choque de nombre de clase entre dos componentes no
+  relacionados. Se agregó `.deck-tabs .tab` en `css/styles.css` con su
+  propio aspecto de pestañas segmentadas oscuras (activa resaltada con
+  `--accent-tint`/`--accent-300`, igual paleta que ya usa `.rail .tab.active`).
+- **Cambio y Ventas — nuevo filtro "Sin valor asignado" / "Con valor
+  asignado"** (`#trade-value-filter` en `index.html`, junto a los otros 4
+  filtros combinables): filtra por `store.getMyPrice(id) == null` (o
+  `!= null`), AND con el resto de los filtros activos, igual que ya
+  funcionan rareza/edición/raza/tipo.
+- **Cambio y Ventas — nuevo orden "Mi valor (más caras/más baratas
+  primero)"**: 2 opciones nuevas en `#trade-sort` (`value_desc`/`value_asc`).
+  `tradeSortComparator()` gana un caso numérico para `field === "value"`
+  que compara `store.getMyPrice(id)`, tratando "sin valor" como el valor
+  más bajo (queda al final ordenando de más cara a más barata, y primero
+  en el orden inverso) — mismo criterio que usan muchas planillas para
+  celdas vacías en una columna numérica.
+
+Verificado con Playwright: la ficha de "Lautaro" (Lootbox PE 2025) ya no
+muestra `<br>` literal, solo saltos de línea reales; un Oro sin habilidad
+muestra `data-rarity="oro"` en el aro; las pestañas del mazo tienen fondo
+`rgba(145,132,217,.16)` (tinte de acento) en la activa, no blanco; el
+filtro "Sin valor asignado" aísla la carta recién ofrecida sin precio, y
+tras asignarle un valor el filtro "Con valor asignado" la vuelve a
+mostrar; el selector de orden acepta `value_desc` sin error. 0 `pageerror`
+en toda la prueba.
+
 ### 2026-09-16 (81ª iteración) — Corrige de vuelta la rareza de Sotz' Na: es Mega Real, no Real
 
 En la 75ª iteración el dueño había pedido corregir Sotz' Na (Leyendas -

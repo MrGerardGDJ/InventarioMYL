@@ -706,7 +706,7 @@ function renderFicha() {
   const img = card.image
     ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" />`
     : `<div class="placeholder"></div>`;
-  $("#ficha-holo").dataset.rarity = raritySlug(card.rarity);
+  $("#ficha-holo").dataset.rarity = holoSlug(card);
   $("#ficha-art").className = "ficha-art holo-art" + (qty > 0 ? " owned" : "");
   $("#ficha-art").innerHTML = `
     ${img}
@@ -820,7 +820,7 @@ function renderDeckFicha() {
   const img = card.image
     ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" />`
     : `<div class="placeholder"></div>`;
-  $("#deck-ficha-holo").dataset.rarity = raritySlug(card.rarity);
+  $("#deck-ficha-holo").dataset.rarity = holoSlug(card);
   $("#deck-ficha-art").className = "ficha-art holo-art" + (own > 0 ? " owned" : "");
   $("#deck-ficha-art").innerHTML = `
     ${img}
@@ -940,7 +940,7 @@ function openModal(card, navList, navIndex) {
   box.innerHTML = `
     <button class="modal-close" data-close>×</button>
     <div class="card-detail">
-      <div class="cd-image holo holo-lg" data-rarity="${raritySlug(card.rarity)}" ${card.image ? 'data-zoom="1"' : ""}>
+      <div class="cd-image holo holo-lg" data-rarity="${holoSlug(card)}" ${card.image ? 'data-zoom="1"' : ""}>
         <div class="holo-art">
           ${img}
           <div class="foil" ${hasFoil(card) ? "" : "hidden"}></div>
@@ -2231,6 +2231,15 @@ function raritySlug(rarity) {
     .trim();
   return RARITY_SLUG[key] || "";
 }
+// Un Oro sin habilidad (el caso más común: solo aporta recursos) se ve con
+// el resplandor dorado del propio tipo de carta, no con el de su rareza —
+// un Oro Vasallo o Cortesano "vainilla" no tiene por qué verse azul o rojo.
+// Un Oro CON habilidad (ej. El Dorado, Knarr) sigue coloreado por rareza,
+// igual que cualquier otra carta.
+function holoSlug(card) {
+  if (card.type === "Oro" && !card.ability) return "oro";
+  return raritySlug(card.rarity);
+}
 
 // Foil sobre el arte de la carta (ver .foil en styles.css). Vasallo y
 // Cortesano NO son foil por sí solos — TOR/nuestro catálogo hoy no trae
@@ -2350,6 +2359,9 @@ function renderTradeList() {
     const val = sel ? sel.value : "";
     if (val) { shownCards = shownCards.filter((c) => (c[field] || "—") === val); activeFilters.push(true); }
   }
+  const valueFilter = $("#trade-value-filter") ? $("#trade-value-filter").value : "";
+  if (valueFilter === "sin-valor") { shownCards = shownCards.filter((c) => store.getMyPrice(c.id) == null); activeFilters.push(true); }
+  else if (valueFilter === "con-valor") { shownCards = shownCards.filter((c) => store.getMyPrice(c.id) != null); activeFilters.push(true); }
 
   wrap.innerHTML = "";
   if (!shownCards.length && !orphanIds.length) {
@@ -2391,6 +2403,16 @@ function renderTradeList() {
 function tradeSortComparator(mode) {
   const field = mode.replace(/_desc$/, "");
   const desc = mode.endsWith("_desc");
+  if (field === "value") {
+    // Sin valor asignado se trata como el más bajo (aparece al final al
+    // ordenar de más cara a más barata, y primero al ordenar al revés).
+    return (a, b) => {
+      const va = store.getMyPrice(a.id) ?? -1;
+      const vb = store.getMyPrice(b.id) ?? -1;
+      const cmp = va - vb || displayName(a).localeCompare(displayName(b), "es");
+      return desc ? -cmp : cmp;
+    };
+  }
   const key = field === "name" ? (c) => displayName(c) : field === "edition" ? (c) => c.editionName || "" : (c) => c[field] || "";
   return (a, b) => {
     const cmp = key(a).localeCompare(key(b), "es") || displayName(a).localeCompare(displayName(b), "es");
@@ -2688,6 +2710,7 @@ function executeSale() {
 
 function bindTradeEvents() {
   for (const [id] of TRADE_FILTERS) $("#" + id).addEventListener("change", renderTradeList);
+  $("#trade-value-filter").addEventListener("change", renderTradeList);
   $("#trade-sort").addEventListener("change", renderTradeList);
   $("#trade-search").addEventListener("input", debounce(renderTradeSearchResults, 180));
   $("#tm-search").addEventListener("input", debounce(renderTradeModalResults, 180));

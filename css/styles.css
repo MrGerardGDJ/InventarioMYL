@@ -743,6 +743,21 @@ main { padding: 0; }
 .deck-detail h2 { margin-bottom: 4px; }
 .deck-tabs { margin: 14px 0 4px; display: inline-flex; }
 .deck-tab-panel { margin-top: 8px; }
+/* .tab por sí sola solo tiene estilo dentro de .rail (nav lateral) — acá
+   se reusa la misma clase para las sub-pestañas Cartas/Estadística/
+   Estrategia, así que necesitan su propio aspecto o caen al botón blanco
+   por defecto del navegador (bug real reportado por el dueño). */
+.deck-tabs .tab {
+  border: none; background: transparent; color: var(--text-70);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+  padding: 7px 14px; font-size: 12.5px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px; border-radius: 0;
+}
+.deck-tabs .tab:first-child { border-radius: 8px 0 0 8px; }
+.deck-tabs .tab:last-child { border-radius: 0 8px 8px 0; }
+.deck-tabs .tab + .tab { margin-left: -1px; }
+.deck-tabs .tab:hover { background: rgba(233, 233, 237, 0.06); color: var(--text); }
+.deck-tabs .tab.active { background: var(--accent-tint); color: var(--accent-300); box-shadow: inset 0 0 0 1px var(--accent); position: relative; z-index: 1; }
 
 /* ===== Cabecera del mazo (kicker + título editable + contexto) ===== */
 .deck-kicker-line { font: 500 9.5px var(--font-mono); letter-spacing: .13em; text-transform: uppercase; color: var(--accent-2); }
@@ -1048,6 +1063,7 @@ main { padding: 0; }
 .holo[data-rarity="ultra-real"]   { --holo-1:#20242c; --holo-2:#4a4f5a; --holo-3:#7d838f; --holo-4:#a8adb8 }
 .holo[data-rarity="secreta"]      { --holo-1:#08321f; --holo-2:#126b45; --holo-3:#1ea87a; --holo-4:#6ff0bd }
 .holo[data-rarity="promocional"]  { --holo-1:#2a1454; --holo-2:#5b2bb0; --holo-3:#8a5cf0; --holo-4:#2f6dd8 }
+.holo[data-rarity="oro"]          { --holo-1:#5c4009; --holo-2:#c9932b; --holo-3:#f4cf6a; --holo-4:#fff2c2 }
 
 /* Fallback: rareza desconocida o ausente → acento del sistema */
 .holo { --holo-1:#3f3a5c; --holo-2:#5d5294; --holo-3:#9184d9; --holo-4:#b5abfc }
