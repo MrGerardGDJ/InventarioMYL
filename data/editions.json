@@ -6,6 +6,12 @@
     "name": "El Reto"
   },
   {
+    "slug": "coleccion_20_anos_el_reto",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Colección 20 años: El Reto"
+  },
+  {
     "slug": "mundo_gotico",
     "format": "PE",
     "formatName": "Primera Era",
@@ -16,6 +22,12 @@
     "format": "PE",
     "formatName": "Primera Era",
     "name": "Ira Del Nahual"
+  },
+  {
+    "slug": "coleccion_20_anos_ira_del_nahual",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Colección 20 años: Ira del Nahual"
   },
   {
     "slug": "ragnarok",
@@ -34,6 +46,12 @@
     "format": "PE",
     "formatName": "Primera Era",
     "name": "Espiritu Del Dragon"
+  },
+  {
+    "slug": "coleccion_20_anos_espiritu_del_dragon",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Colección 20 años: Espíritu de Dragón"
   },
   {
     "slug": "kit_juego_pe_fullart",
@@ -276,10 +294,16 @@
     "name": "Torneo Aniversario 25 Años - Primera Era"
   },
   {
-    "slug": "espada_sagrada",
+    "slug": "espada-sagrada",
     "format": "PB",
     "formatName": "Primer Bloque",
     "name": "Espada Sagrada"
+  },
+  {
+    "slug": "coleccion_20_anos_espada_sagrada",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Colección 20 años: Espada Sagrada"
   },
   {
     "slug": "cruzadas",
@@ -292,6 +316,12 @@
     "format": "PB",
     "formatName": "Primer Bloque",
     "name": "Helenica"
+  },
+  {
+    "slug": "coleccion_20_anos_helenica",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Colección 20 años: Helénica"
   },
   {
     "slug": "imperio",
@@ -312,10 +342,16 @@
     "name": "Tierras Altas"
   },
   {
-    "slug": "dominios_de_ra",
+    "slug": "dominios-de-ra",
     "format": "PB",
     "formatName": "Primer Bloque",
     "name": "Dominios De Ra"
+  },
+  {
+    "slug": "coleccion_20_anos_dominios_de_ra",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Colección 20 años: Dominios de Ra"
   },
   {
     "slug": "encrucijada",
