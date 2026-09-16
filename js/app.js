@@ -955,7 +955,7 @@ function openModal(card, navList, navIndex) {
         </div>
         <div class="qty-row" style="border:none;padding:0;margin:14px 0">
           <button class="qty-btn" data-m="minus">−</button>
-          <span class="qty-num ${qty === 0 ? "zero" : ""}" data-role="mqty">${qty}</span>
+          <input type="number" min="0" class="qty-num-input ${qty === 0 ? "zero" : ""}" data-role="mqty" value="${qty}" style="flex:none;width:44px" />
           <button class="qty-btn" data-m="plus">+</button>
           <button class="btn small" data-add-deck><i class="ph ph-stack"></i> Añadir a mazo</button>
         </div>
@@ -998,28 +998,33 @@ function openModal(card, navList, navIndex) {
     refreshEditionsModalIfOpen();
     showToast(isOverride ? "Carta revertida a la versión original" : "Carta eliminada");
   };
+  const applyModalQty = (newQty) => {
+    const mq = box.querySelector('[data-role="mqty"]');
+    if (document.activeElement !== mq) mq.value = newQty;
+    mq.classList.toggle("zero", newQty === 0);
+    const gridCard = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+    if (gridCard) {
+      const g = gridCard.querySelector('[data-role="qty"]');
+      g.value = newQty; g.classList.toggle("zero", newQty === 0); g.classList.toggle("dup", newQty >= 2);
+      gridCard.classList.toggle("owned", newQty > 0);
+      const availEl = gridCard.querySelector('[data-role="avail"]');
+      if (availEl) availEl.innerHTML = availableMetaHtml(card.id);
+    }
+    updateResultCount();
+    if (state.view === "colecciones") updateCollectionProgress();
+    // Cambiar la cantidad ajusta lo disponible por defecto (ver
+    // autoAdjustTradeOnQtyChange en store.js): refleja el nuevo valor.
+    const tq = box.querySelector('[data-role="tqty"]');
+    if (tq) tq.textContent = store.getAvailableQty(card.id);
+    renderDeckHint(box.querySelector('[data-role="deckhint"]'), card.id);
+  };
   box.querySelectorAll("[data-m]").forEach((b) => {
-    b.onclick = () => {
-      const newQty = store.addQty(card.id, b.dataset.m === "plus" ? 1 : -1);
-      const mq = box.querySelector('[data-role="mqty"]');
-      mq.textContent = newQty;
-      mq.classList.toggle("zero", newQty === 0);
-      const gridCard = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
-      if (gridCard) {
-        const g = gridCard.querySelector('[data-role="qty"]');
-        g.textContent = newQty; g.classList.toggle("zero", newQty === 0);
-        gridCard.classList.toggle("owned", newQty > 0);
-        const availEl = gridCard.querySelector('[data-role="avail"]');
-        if (availEl) availEl.innerHTML = availableMetaHtml(card.id);
-      }
-      updateResultCount();
-      if (state.view === "colecciones") updateCollectionProgress();
-      // Cambiar la cantidad ajusta lo disponible por defecto (ver
-      // autoAdjustTradeOnQtyChange en store.js): refleja el nuevo valor.
-      const tq = box.querySelector('[data-role="tqty"]');
-      if (tq) tq.textContent = store.getAvailableQty(card.id);
-      renderDeckHint(box.querySelector('[data-role="deckhint"]'), card.id);
-    };
+    b.onclick = () => applyModalQty(store.addQty(card.id, b.dataset.m === "plus" ? 1 : -1));
+  });
+  box.querySelector('[data-role="mqty"]').addEventListener("change", (e) => {
+    const newQty = Math.max(0, Math.floor(Number(e.target.value) || 0));
+    store.setQty(card.id, newQty);
+    applyModalQty(newQty);
   });
   // Control "Disponible" del detalle (marcar/desmarcar copias ofrecidas para
   // cambio/venta/mazo — el +/- edita el total ofrecido; lo mostrado es lo
@@ -2480,7 +2485,7 @@ function tradeCardEl(card, navList) {
     </div>
     <div class="tr-qty qty-row">
       <button class="qty-btn" data-tr="minus">−</button>
-      <span class="qty-num" data-role="tqty">${offered}</span>
+      <input type="number" min="0" max="${owned}" class="qty-num-input" data-role="tqty" value="${offered}" />
       <button class="qty-btn" data-tr="plus" ${offered >= owned ? "disabled" : ""}>+</button>
       <span class="muted trade-qty-label">ofrecidas</span>
     </div>
@@ -2492,9 +2497,19 @@ function tradeCardEl(card, navList) {
 
   el.querySelector('[data-tr="minus"]').onclick = () => { store.addTradeQty(card.id, -1); renderTradeList(); };
   el.querySelector('[data-tr="plus"]').onclick = () => { store.addTradeQty(card.id, 1); renderTradeList(); };
+  el.querySelector('[data-role="tqty"]').addEventListener("change", (e) => {
+    store.setTradeQty(card.id, Number(e.target.value));
+    renderTradeList();
+  });
   el.querySelector("[data-exchange]").onclick = () => openTradeModal(card);
   el.querySelector("[data-sell]").onclick = () => openSellModal(card);
-  el.querySelector("[data-edit-value]").onclick = () => openValueModal(card);
+  el.querySelector('[data-role="myvalue"]').addEventListener("change", (e) => {
+    const raw = e.target.value.trim();
+    const value = raw ? Number(raw) : null;
+    if (raw && !Number.isFinite(value)) { showToast("Valor inválido.", 2500); return; }
+    store.setMyPrice(card.id, value);
+    renderTradeList();
+  });
   el.querySelectorAll('[data-act="detail"]').forEach((n) => { n.onclick = () => openModal(card, navList); });
   return el;
 }
@@ -2505,9 +2520,7 @@ function tradeCardEl(card, navList) {
 // como pista si todavía no le puso valor. Ver myPriceInfo().
 function myValueSectionHtml(cardId) {
   const info = myPriceInfo(cardId);
-  const mainHtml = info.mine != null
-    ? `<span class="my-value-amount">${fmtCLP(info.mine)}</span><button class="my-value-edit-btn" data-edit-value title="Editar valor"><i class="ph ph-pencil-simple"></i></button>`
-    : `<button class="btn small" data-edit-value>Asignar valor</button>`;
+  const mainHtml = `<span class="my-value-prefix">$</span><input type="number" min="0" step="1" class="my-value-input" data-role="myvalue" placeholder="Sin valorar" value="${info.mine != null ? info.mine : ""}" />`;
   let pillHtml = "";
   if (info.status === "sobre") pillHtml = `<span class="market-pill over">▲ Sobre mercado (${Math.round(info.diffPct * 100)}%)</span>`;
   else if (info.status === "bajo") pillHtml = `<span class="market-pill under">▼ Bajo mercado (${Math.round(info.diffPct * 100)}%)</span>`;
@@ -2673,39 +2686,6 @@ function executeSale() {
   showToast(`Venta registrada: ${qty} copia${qty === 1 ? "" : "s"} de «${name}»${priceTxt}.`, 4500);
 }
 
-/* --- Modal para asignar/editar el valor propio de una carta (Cambio y Ventas) --- */
-let valueCard = null; // carta que se está valorando en el modal en curso
-
-function openValueModal(card) {
-  valueCard = card;
-  $("#vm-card").textContent = `«${displayName(card)}» (${card.editionName || "—"})`;
-  const mine = store.getMyPrice(card.id);
-  $("#vm-price").value = mine != null ? mine : "";
-  $("#vm-remove").classList.toggle("hidden", mine == null);
-  $("#value-modal").classList.remove("hidden");
-  $("#vm-price").focus();
-}
-function closeValueModal() {
-  $("#value-modal").classList.add("hidden");
-  valueCard = null;
-}
-function saveValue() {
-  if (!valueCard) return;
-  const raw = $("#vm-price").value.trim();
-  const value = raw ? Number(raw) : null;
-  if (raw && !Number.isFinite(value)) { showToast("Valor inválido.", 2500); return; }
-  const name = displayName(valueCard); // capturado antes de closeValueModal() (pone valueCard en null)
-  store.setMyPrice(valueCard.id, value);
-  closeValueModal();
-  renderTradeList();
-  showToast(value != null ? `Valor de «${name}» guardado: ${fmtCLP(value)}.` : `Valor de «${name}» eliminado.`, 3000);
-}
-function removeValueFromModal() {
-  if (!valueCard) return;
-  $("#vm-price").value = "";
-  saveValue();
-}
-
 function bindTradeEvents() {
   for (const [id] of TRADE_FILTERS) $("#" + id).addEventListener("change", renderTradeList);
   $("#trade-sort").addEventListener("change", renderTradeList);
@@ -2720,12 +2700,6 @@ function bindTradeEvents() {
     if (e.target.classList.contains("modal-backdrop")) closeSellModal();
   });
   $("#sm-confirm").addEventListener("click", executeSale);
-  $$("[data-close-value]").forEach((el) => el.addEventListener("click", closeValueModal));
-  $("#value-modal").addEventListener("click", (e) => {
-    if (e.target.classList.contains("modal-backdrop")) closeValueModal();
-  });
-  $("#vm-confirm").addEventListener("click", saveValue);
-  $("#vm-remove").addEventListener("click", removeValueFromModal);
 }
 
 // Reglas generales de construcción de mazo (fuente: cartasmitosyleyendasoficial.

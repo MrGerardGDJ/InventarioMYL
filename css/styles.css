@@ -517,6 +517,7 @@ main { padding: 0; }
 .tr-actions { flex: none; }
 .trade-qty-label { font-size: 10.5px; margin-left: 2px; }
 .trade-row .qty-row { border: none; padding: 0; margin: 0; }
+.trade-row .qty-num-input { flex: none; width: 26px; }
 .trade-row .trade-qty-label { display: none; }
 /* "Mi valor": el precio que el dueño le asigna a la carta (protagonista,
    igual de peso visual que .qty-num) + píldora de comparación contra el
@@ -528,14 +529,20 @@ main { padding: 0; }
 .trade-row .my-value-row {
   margin: 0; border: none; padding: 0; flex-direction: column; align-items: flex-end; gap: 2px;
 }
-.my-value-main { display: flex; align-items: center; gap: 6px; }
-.my-value-amount { font-size: 15px; font-weight: 700; color: var(--text); }
-.my-value-edit-btn {
-  border: 1px solid var(--border); background: var(--bg-3); color: var(--muted);
-  width: 22px; height: 22px; border-radius: 6px; font-size: 12px; line-height: 1;
-  display: flex; align-items: center; justify-content: center;
+.my-value-main {
+  display: flex; align-items: center; gap: 3px; border-radius: 6px;
+  box-shadow: inset 0 0 0 1px var(--border-strong); padding: 3px 6px;
 }
-.my-value-edit-btn:hover { border-color: var(--accent); color: var(--text); }
+.my-value-prefix { font-size: 13px; color: var(--muted); }
+.my-value-input {
+  width: 72px; text-align: left; font: 700 15px var(--font); font-variant-numeric: tabular-nums;
+  background: transparent; color: var(--text); border: none; padding: 0;
+  -moz-appearance: textfield;
+}
+.my-value-input::placeholder { font: 400 12px var(--font); color: var(--muted); }
+.my-value-input::-webkit-inner-spin-button, .my-value-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.my-value-input:focus { outline: none; }
+.my-value-main:focus-within { box-shadow: inset 0 0 0 1px var(--accent); }
 .market-pill { font-size: 11px; font-weight: 600; }
 .market-pill.over { color: var(--danger); }
 .market-pill.under { color: var(--ok); }
