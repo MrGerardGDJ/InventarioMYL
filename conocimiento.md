@@ -378,6 +378,64 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (70ª iteración) — Pulido del rediseño Nocturne: botones "contorno", quita todos los emojis, corrige chips y sync-chip desbordados
+
+El dueño mandó 4 capturas anotadas señalando que el rediseño Nocturne
+todavía no estaba terminado: botones sin el estilo "contorno" del resto
+de la app, uso de emojis en vez de iconos, el chip "Edición" del
+Catálogo desproporcionadamente ancho, y el texto de estado de
+sincronización desbordándose fuera del rail colapsado.
+
+- **`.btn` ahora es "contorno, nunca relleno"** (`css/styles.css`):
+  antes tenía fondo sólido (`--bg-3`) y borde de 1px — se cambió a
+  fondo transparente + `box-shadow: inset 0 0 0 1px var(--border-strong)`,
+  igual que `.chip-select`/`.ficha-btn`/`.tag`. `.btn.primary` pasa de
+  relleno de acento a contorno de acento (texto y borde `--accent`,
+  fondo `--accent-tint-soft` al hover) — mismo tratamiento que
+  `.ficha-btn.outline`. Afecta todos los botones de la app (Ediciones,
+  Importar, Exportar, Carta manual, Guardar/Conectar/Sincronizar del
+  modal de nube, Excel/Imagen/Texto de Mazos, etc.) sin tocar el HTML.
+- **Barrida completa de emojis** en `index.html` y `js/app.js`:
+  reemplazados por iconos Phosphor (`<i class="ph ph-...">`) donde el
+  botón necesitaba una señal visual (➕→`ph-plus`, 📊→`ph-file-xls`,
+  📄→`ph-file-pdf`, 🗑→`ph-trash`, ✏️→`ph-pencil-simple`, ☁️→`ph-cloud`,
+  💾→`ph-cloud-arrow-up`, ⬇️→`ph-cloud-arrow-down`, 🔗→`ph-link`,
+  📜→`ph-clock-counter-clockwise`, ⛔→`ph-prohibit`, 🃏→`ph-stack`,
+  🛡️/✨/🪙→`ph-shield`/`ph-sparkle`/`ph-coin`, etc.) y quitados sin
+  reemplazo donde eran puramente decorativos dentro de texto plano
+  (toasts, notas, placeholders). Se dejaron intactos los glifos
+  tipográficos que no son emoji y ya se usaban como iconografía
+  funcional propia del diseño (✓/✗ de validación, ←/→/‹/›/↑/↓ de
+  navegación y atajos de teclado, ×  de cerrar modal): no son "emotes",
+  son parte del lenguaje visual que el propio handoff ya define. El
+  emoji del texto del chip de sincronización (`☁ Sincronizado`, etc. en
+  `setChip()`) también se quitó — el rail ya muestra el icono de nube
+  por separado en `#open-sync`, era una señal duplicada.
+- **`.chip-select` desproporcionado**: no tenía `max-width` ni
+  `text-overflow`, así que un `<select>` con una opción larga (nombre
+  de edición) estiraba la píldora entera. Se le agregó
+  `max-width: 150px; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap` (+ `padding-right` para la flecha nativa),
+  mismo criterio que ya usa `#f-sort`.
+- **`.sync-chip` desbordado en el rail colapsado**: había **dos**
+  reglas `.sync-chip` en `css/styles.css` — una del rail nuevo (con
+  `max-width:60px`) y otra vieja, sin usar desde que el topbar se
+  reemplazó por el rail, que pisaba `font-size`/`white-space` sin
+  `overflow:hidden` ni `text-overflow`. El texto (p. ej.
+  "Sincronizado") se salía del rail de 68px porque nada lo recortaba.
+  Se eliminó la regla vieja duplicada y se le agregó
+  `overflow:hidden; text-overflow:ellipsis` a la única regla que queda.
+- Verificado con Playwright (desktop, rail colapsado/expandido, modal
+  de sincronización, formulario de carta manual, vista móvil 390px):
+  0 `pageerror`, sin emojis visibles, chips y sync-chip contenidos
+  dentro de sus cajas.
+- **Sigue pendiente** (ya reconocido, no es parte de esta iteración):
+  rediseño de Estadísticas (sigue con Chart.js y tarjetas planas),
+  las tarjetas de carta dentro de un mazo (`deckCardTileHtml()`, todavía
+  con el estilo antiguo, no el "arte primero" de `cardEl()`), el
+  `<aside class="filters">` de Cambio y Ventas (todavía con el estilo
+  pre-Nocturne), Colecciones/Álbum y Modo Inventariar.
+
 ### 2026-09-16 (69ª iteración) — Reemplaza el logo por el oficial de Mitos y Leyendas
 
 - El dueño pidió cambiar el logo por
