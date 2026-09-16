@@ -378,6 +378,30 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (59ª iteración) — Corrige "Dragón Rojo" (Leyendas PE 4.0 #109): rareza, coste, fuerza, raza, habilidad y sabor
+
+- El dueño reportó que "Dragón Rojo" de Leyendas - Primera Era 4.0
+  figuraba como Cortesano cuando su carta física es Real, y pidió
+  revisar el resto del catálogo contra el wiki por si hay más
+  inconsistencias.
+- Se confirmó directo contra la foto física ya guardada
+  (`data/custom-images/mylserena/leyendas_primera_era_4_0_109_dragon_rojo.jpg`,
+  código impreso "LPE4 · 109/320 R"): no era solo la rareza. Coste 3→4,
+  fuerza 2→4, raza Bestia→Dragón, y tanto la habilidad como el texto de
+  sabor registrados correspondían a una carta completamente distinta
+  (la habilidad tenía restos de plantilla de ícono del wiki sin
+  limpiar, "...30px..." — señal de que se había copiado mal desde otra
+  fuente). Único caso encontrado con ese patrón de "30px" corrupto en
+  todo `custom-cards.json`, así que no es un problema sistemático de
+  scraping, solo esta fila.
+- A partir de este caso se armó una comparación automática de
+  rareza/tipo contra el wiki para el resto del catálogo (ver iteración
+  60) usando la API de MediaWiki en vez de renderizar las páginas
+  (myl.fandom.com tiene protección Cloudflare que bloquea WebFetch y
+  curl normal, pero `api.php?action=parse&prop=wikitext` no tiene ese
+  bloqueo — mismo mecanismo que ya usa el skill
+  `importar-edicion-myl-wiki`).
+
 ### 2026-09-15 (58ª iteración) — Filtro de rareza y secciones por rareza en Cambio y Ventas
 
 - El dueño pidió poder filtrar lo ofrecido en Cambio y Ventas por
