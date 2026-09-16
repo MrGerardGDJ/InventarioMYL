@@ -2409,7 +2409,7 @@ function renderTradeList() {
     return;
   }
 
-  const sortMode = $("#trade-sort") ? $("#trade-sort").value : "rarity_desc";
+  const sortMode = $("#trade-sort") ? $("#trade-sort").value : "number";
   let navList;
   if (sortMode.startsWith("rarity")) {
     const byRarity = new Map();
@@ -2443,6 +2443,10 @@ function renderTradeList() {
 function tradeSortComparator(mode) {
   const field = mode.replace(/_desc$/, "");
   const desc = mode.endsWith("_desc");
+  if (field === "number") {
+    const cmp0 = (a, b) => cardNum(a) - cardNum(b) || editionOrd(a) - editionOrd(b) || displayName(a).localeCompare(displayName(b), "es");
+    return (a, b) => { const cmp = cmp0(a, b); return desc ? -cmp : cmp; };
+  }
   if (field === "value") {
     // Sin valor asignado se trata como el más bajo (aparece al final al
     // ordenar de más cara a más barata, y primero al ordenar al revés).
@@ -2980,6 +2984,8 @@ function renderDeckDetail() {
       <label class="field inline deck-sort-field">
         <span>Ordenar cartas por</span>
         <select id="deck-sort">
+          <option value="number">Número (ascendente)</option>
+          <option value="number_desc">Número (descendente)</option>
           <option value="name">Nombre (A→Z)</option>
           <option value="name_desc">Nombre (Z→A)</option>
           <option value="rarity_desc">Rareza (más pro primero)</option>
@@ -2999,7 +3005,7 @@ function renderDeckDetail() {
   switchDeckTab(deckTab);
 
   $("#deck-name").onchange = (e) => { store.renameDeck(deck.id, e.target.value || "Mazo"); populateActiveDeckSelect(); updateDeckCounts(); };
-  $("#deck-sort").value = store.getSetting("deckSort") || "name";
+  $("#deck-sort").value = store.getSetting("deckSort") || "number";
   $("#deck-sort").onchange = (e) => { store.setSetting("deckSort", e.target.value); renderDeckContents(deck); };
   wrap.querySelector("[data-status]").onclick = () => {
     store.setDeckStatus(deck.id, deck.status === "principal" ? "secundario" : "principal");
@@ -3142,9 +3148,11 @@ function renderDeckContents(deck) {
     const showAllyGap = key === "Aliado" && allyTotal < RACIAL_MIN_ALLIES;
     if (!zoneCards.length && !showAllyGap) continue;
     const zoneQty = zoneCards.reduce((a, x) => a + x.q, 0);
-    const sortMode = store.getSetting("deckSort") || "name";
+    const sortMode = store.getSetting("deckSort") || "number";
     zoneCards.sort((a, b) => {
       switch (sortMode) {
+        case "number": return cardNum(a.card) - cardNum(b.card) || editionOrd(a.card) - editionOrd(b.card) || displayName(a.card).localeCompare(displayName(b.card), "es");
+        case "number_desc": return cardNum(b.card) - cardNum(a.card) || editionOrd(a.card) - editionOrd(b.card) || displayName(a.card).localeCompare(displayName(b.card), "es");
         case "name_desc": return displayName(b.card).localeCompare(displayName(a.card), "es");
         case "rarity_desc": return rarityRank(a.card) - rarityRank(b.card) || displayName(a.card).localeCompare(displayName(b.card), "es");
         case "rarity_asc": return rarityRank(b.card) - rarityRank(a.card) || displayName(a.card).localeCompare(displayName(b.card), "es");
