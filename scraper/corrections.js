@@ -591,12 +591,17 @@ export const RARITY_CORRECTIONS = {
   // "Pachamama" (Leyendas PE, edid 070): mismo patrón, TOR la marca "Mega
   // Real" pero la carta física del dueño es "Real". Reportado 16-09-2026.
   "154-070": { rarity: "Real" },
-  // "Ocelote Del Templo" (LPE 2023, id 112-326): TOR ya trae specialId
-  // "Secreta Exclusiva 3" (o sea, TOR mismo la reconoce como una Secreta
-  // numerada) pero dejó rarity="Real" sin actualizar — contradicción
-  // dentro de sus propios datos. La carta física del dueño es Secreta.
-  // Reportado 16-09-2026.
-  "112-326": { rarity: "Secreta" },
+  // Set "Secreta Exclusiva" 1/2/3 de LPE 2023 (Sakura, Los Cinco Anillos,
+  // Ocelote Del Templo): ya tenían su specialId "Secreta Exclusiva N"
+  // puesto por LEYENDAS_2023_CORRECTIONS más arriba (numeración nuestra,
+  // no de TOR), pero se quedaron con rarity="Real" sin actualizar —
+  // contradicción dentro de nuestra propia corrección. Las tres deberían
+  // ser Secreta. Reportado 16-09-2026 (Ocelote Del Templo, carta física
+  // del dueño); Sakura y Los Cinco Anillos encontradas de rebote al
+  // revisar el resto del set numerado.
+  "112-324": { rarity: "Secreta" }, // Sakura (Secreta Exclusiva 1)
+  "112-325": { rarity: "Secreta" }, // Los Cinco Anillos (Secreta Exclusiva 2)
+  "112-326": { rarity: "Secreta" }, // Ocelote Del Templo (Secreta Exclusiva 3)
 };
 
 // Mismo bug de numeración que MUNDOS_PERDIDOS_TOR_CORRECTIONS arriba, pero
