@@ -378,6 +378,28 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (76ª iteración) — Las cartas "Premium" de Lootbox llevan foil aunque su rareza normalmente no lo tenga
+
+El dueño confirmó la regla que había quedado pendiente en la 75ª: las
+cartas Premium deben tener foil sin importar su rareza. Al buscar "premium"
+en todo el catálogo apareció la señal exacta: 42 cartas de las ediciones
+Lootbox (`data/custom-cards.json`, Lootbox Primera Era 2024 y 2025) ya
+traen `specialId` con el prefijo "PREMIUM " (ej. "PREMIUM PE 01", "PREMIUM
+LPE25 03") — 37 son Real, pero **5 son Vasallo o Cortesano**
+("Sátiro", "Forseti", "Pahuahtun", "Janaqueo", "Kuei Xing"), justo el caso
+"algunos Vasallo/Cortesano sí son foil" que el dueño había descrito antes
+de pedir el md de foil.
+
+- **`js/app.js`**: `declaresFoil()` ahora también reconoce
+  `/premium/i.test(card.specialId)` como declaración de foil, antes de
+  caer a `FOIL_CORRECTIONS` (que sigue vacía, para casos sin ninguna marca
+  en los datos). No hizo falta tocar `FOIL_OPT_IN` ni `hasFoil()` — el
+  camino de "la carta lo declara" que ya traía la 75ª solo necesitaba una
+  fuente de datos real en vez de la tabla manual.
+- Verificado con Playwright: "Sátiro" (Vasallo, `specialId: "PREMIUM
+  LPE25 03"`) muestra el foil visible; un Vasallo cualquiera sin esa marca
+  lo sigue mostrando oculto. 0 `pageerror`.
+
 ### 2026-09-16 (75ª iteración) — Foil sutil sobre cartas premium + corrige numeración "Secreta Exclusiva" de LPE 2023
 
 El dueño pidió el foil (complemento del marco holográfico de la 73ª/74ª)

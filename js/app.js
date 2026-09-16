@@ -2230,18 +2230,23 @@ function raritySlug(rarity) {
 // Foil sobre el arte de la carta (ver .foil en styles.css). Vasallo y
 // Cortesano NO son foil por sí solos — TOR/nuestro catálogo hoy no trae
 // ningún campo de acabado (foil/finish/variant/acabado/version: se
-// comprobó contra la API cruda de TOR y no existe), así que solo se
-// pueden marcar foil a mano, carta por carta, agregándolas a
-// FOIL_CORRECTIONS más abajo (mismo mecanismo que RARITY_CORRECTIONS en
-// scraper/corrections.js — pendiente de poblar cuando el dueño identifique
-// ediciones/cartas puntuales). El resto de las rarezas es foil siempre.
+// comprobó contra la API cruda de TOR y no existe) — salvo un caso real
+// que sí queda registrado en los datos: las cartas "Premium" de las
+// ediciones Lootbox (data/custom-cards.json) traen specialId "PREMIUM
+// ..." independiente de su rareza — 37 son Real pero 5 son Vasallo/
+// Cortesano, y esas 5 son justo el caso "algunas sí son foil aunque su
+// rareza normalmente no lo sea" que reportó el dueño. Para el resto de
+// Vasallo/Cortesano sin ninguna marca, solo queda declararlas a mano en
+// FOIL_CORRECTIONS (mismo mecanismo que RARITY_CORRECTIONS en
+// scraper/corrections.js). El resto de las rarezas es foil siempre.
 const FOIL_OPT_IN = new Set(["vasallo", "cortesano"]);
 // cardId -> true, para cartas Vasallo/Cortesano puntuales que sí son foil
-// (llenar a mano cuando se identifiquen; ver nota arriba).
+// y no se detectan por specialId "PREMIUM" (llenar a mano si aparecen).
 const FOIL_CORRECTIONS = {};
 function declaresFoil(card) {
   if (FOIL_CORRECTIONS[card.id]) return true;
   if (card.foil === true) return true;
+  if (typeof card.specialId === "string" && /premium/i.test(card.specialId)) return true;
   const fields = [card.foil, card.finish, card.variant, card.acabado, card.version];
   return fields.some((v) =>
     typeof v === "string" &&
