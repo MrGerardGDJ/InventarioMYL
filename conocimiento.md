@@ -378,6 +378,25 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (63ª iteración) — Corrige "Pachamama" (Leyendas PE #070): también Mega Real → Real
+
+- Mismo patrón que "Sacrificio Humano" (edid 071, iteración 62): el
+  dueño reportó que su carta física tampoco es Mega Real. Se preguntó
+  la rareza real (no hay foto propia de esta carta para leerla
+  directo) — confirmó **Real**. Se intentó cruzar contra el wiki antes
+  de preguntar, pero "Leyendas PE" (`leyendas_primera_era` en TOR) no
+  tiene una página de listado identificable con certeza en
+  myl.fandom.com (las páginas "Leyendas - Primera Era" y "... 2.0" que
+  existen no traen estas cartas), así que se confía en el reporte
+  directo del dueño, igual que con Sacrificio Humano.
+- Sumada a `RARITY_CORRECTIONS` en `scraper/corrections.js` (id
+  "154-070") y parcheada en `data/cards.json`.
+- **Dos de dos cartas revisadas de esta edición han salido con la
+  misma rareza mal cargada** (Mega Real cuando no correspondía) — vale
+  la pena que el dueño avise si encuentra más en "Leyendas PE"
+  específicamente, puede ser un problema más extendido en esta
+  edición y no solo estas dos cartas sueltas.
+
 ### 2026-09-16 (62ª iteración) — Corrige "Mary Bradbury" (LPE4 #118) y "Sacrificio Humano" (Leyendas PE #071)
 
 - **"Mary Bradbury"** (Leyendas - Primera Era 4.0 #118, `custom-cards.json`):

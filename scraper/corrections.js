@@ -588,6 +588,9 @@ export const RARITY_CORRECTIONS = {
   // "Sacrificio Humano" (Leyendas PE, edid 071): TOR la marca "Mega Real",
   // pero la carta física del dueño es "Real". Reportado 16-09-2026.
   "154-071": { rarity: "Real" },
+  // "Pachamama" (Leyendas PE, edid 070): mismo patrón, TOR la marca "Mega
+  // Real" pero la carta física del dueño es "Real". Reportado 16-09-2026.
+  "154-070": { rarity: "Real" },
 };
 
 // Mismo bug de numeración que MUNDOS_PERDIDOS_TOR_CORRECTIONS arriba, pero
