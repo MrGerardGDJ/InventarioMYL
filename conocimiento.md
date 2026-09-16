@@ -378,6 +378,27 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (69ª iteración) — Reemplaza el logo por el oficial de Mitos y Leyendas
+
+- El dueño pidió cambiar el logo por
+  https://static.wikia.nocookie.net/myl-tcg/images/f/f4/Myl-logo1-sf.png
+  (el logo oficial del juego, dragón verde + wordmark). Se descargó
+  (el archivo real es WebP pese al nombre ".png" en la URL) y se
+  guardó local como `assets/myl-logo.png`, sin hotlinkear — mismo
+  criterio que ya usa el resto de la app para imágenes externas.
+- Reemplaza al `assets/logo.jpg` anterior (que en realidad era el
+  dorso genérico de una carta, no el logo del juego) en las tres
+  partes donde aparecía: el ícono de la barra del navegador (`<link
+  rel="icon">`), el logo del rail de navegación, y el que se incrusta
+  en los PDF/Excel exportados (`js/exporters.js`).
+- El logo nuevo tiene fondo transparente; como la exportación lo
+  incrusta como JPEG (que no soporta transparencia), se agregó un
+  relleno blanco de fondo antes de convertirlo — si no, la
+  transparencia se habría visto negra en los documentos exportados
+  (que son blancos).
+- Verificado con Playwright: se ve bien tanto en el rail colapsado
+  como expandido, sin errores de consola.
+
 ### 2026-09-16 (68ª iteración) — Rediseño Nocturne: corrige tipografía inconsistente, tarjetas más chicas, filtros del Catálogo como chips horizontales
 
 - El dueño mandó capturas comparando el Catálogo ya desplegado contra
