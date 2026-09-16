@@ -18,6 +18,12 @@
     "name": "Mundo Gotico"
   },
   {
+    "slug": "coleccion_20_anos_mundo_gotico",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Colección 20 años: Mundo Gótico"
+  },
+  {
     "slug": "ira_del_nahual",
     "format": "PE",
     "formatName": "Primera Era",
@@ -34,6 +40,12 @@
     "format": "PE",
     "formatName": "Primera Era",
     "name": "Ragnarok"
+  },
+  {
+    "slug": "coleccion_20_anos_ragnarok",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Colección 20 años: Ragnarok"
   },
   {
     "slug": "cofradia",

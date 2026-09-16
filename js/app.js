@@ -2266,9 +2266,14 @@ function raritySlug(rarity) {
 // el resplandor dorado del propio tipo de carta, no con el de su rareza —
 // un Oro Vasallo o Cortesano "vainilla" no tiene por qué verse azul o rojo.
 // Un Oro CON habilidad (ej. El Dorado, Knarr) sigue coloreado por rareza,
-// igual que cualquier otra carta.
+// igual que cualquier otra carta — EXCEPTO cuando ni siquiera tenemos una
+// rareza real para él: TOR marca muchos Oro con `rarity: "Oro"` (un cajón
+// de sastre, no una rareza real) en vez de Real/Vasallo/etc — sin eso el
+// aro caía al degradado genérico de "rareza sin rampa propia", que no
+// corresponde a ninguna frecuencia real y se veía como un color al azar.
+// Reportado por el dueño 16-09-2026 al cargar la Colección 20 años.
 function holoSlug(card) {
-  if (card.type === "Oro" && !card.ability) return "oro";
+  if (card.type === "Oro" && (!card.ability || card.rarity === "Oro")) return "oro";
   return raritySlug(card.rarity);
 }
 
@@ -2310,8 +2315,19 @@ function declaresFoil(card) {
 function isNonFoilPrint(card) {
   return typeof card.specialId === "string" && /^sclpe/i.test(card.specialId);
 }
+// Un Oro sin habilidad Y sin una rareza real asignada (TOR lo marca
+// `rarity: "Oro"`, un cajón de sastre — ver holoSlug) es la carta de
+// relleno más básica del juego: nunca es foil, ni siquiera dentro de una
+// edición que por lo demás es foil completa (ej. Colección 20 años,
+// Mundos Perdidos). Reportado por el dueño 16-09-2026. Un Oro con
+// habilidad (aunque su rareza siga siendo el cajón de sastre "Oro") o con
+// una rareza real asignada sigue las reglas normales de abajo.
+function isPlainOro(card) {
+  return card.type === "Oro" && !card.ability && card.rarity === "Oro";
+}
 function hasFoil(card) {
   if (isNonFoilPrint(card)) return false;
+  if (isPlainOro(card)) return false;
   if (declaresFoil(card)) return true;
   return !FOIL_OPT_IN.has(raritySlug(card.rarity));
 }
