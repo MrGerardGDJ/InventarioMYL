@@ -378,6 +378,58 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (88ª iteración) — 2 ediciones "Colección 20 años" más (Mundo Gótico, Ragnarok) + corrige aura y foil de los Oro sin rareza real
+
+El dueño pidió agregar 2 ediciones "Colección 20 años" que faltaban de la
+85ª iteración (Mundo Gótico y Ragnarok, con enlace a casamyl.cl de cada
+una) y, mientras cargaba sus cartas físicas de la Colección 20 años,
+reportó dos incongruencias visuales en los Oro sin habilidad ni rareza
+real asignada.
+
+**Mundo Gótico y Ragnarok**: mismo método que las 6 anteriores — se
+verificó en el wiki que "Mundo Gótico Colección Completa 20 Años" incluye
+"las 174 cartas de la edición Mundo Gótico y Mundo Gótico X" (coincide
+exacto con las 174 cartas que ya tenemos para `mundo_gotico`) y que
+"Ragnarok Colección Completa 20 Años" incluye "la totalidad de las 126
+cartas que compusieron la edición original de Ragnarok" (coincide con
+nuestras 125 de TOR + 1 carta `custom` — "Trono de Odín", que TOR nunca
+tuvo y ya estaba cargada a mano — = 126). Se clonaron las 300 cartas
+(174+126) hacia las 2 ediciones nuevas en `data/custom-cards.json`, mismo
+patrón de `id`/`image` que las 6 anteriores, y se agregaron a
+`data/editions.json` junto a sus originales.
+
+**Incongruencia del aura ("el tipo de cartas... no le corresponde por
+frecuencia")**: TOR marca ~500 cartas Oro de todo el catálogo con
+`rarity: "Oro"` — no es una rareza real (Real/Vasallo/etc.), es un cajón
+de sastre para cuando TOR no tiene el dato. La 82ª iteración ya hacía que
+un Oro SIN habilidad mostrara el aro dorado fijo en vez de intentar
+colorear por esa "rareza" falsa — pero un Oro CON habilidad y esa misma
+rareza placeholder (ej. "Yasakani", "Corona Faraónica") seguía cayendo al
+degradado genérico de acento (pensado para rarezas especiales sin rampa
+propia, como Legendaria), que no corresponde a ninguna frecuencia real y
+se veía como un color arbitrario. `holoSlug()` ahora usa el aro dorado
+también cuando `rarity === "Oro"`, tenga o no habilidad — solo un Oro con
+una rareza real asignada (Real, Mega Real, etc.) sigue coloreado por esa
+rareza.
+
+**Oro "vainilla" sin foil**: nueva `isPlainOro(card)` (`type === "Oro" &&
+!ability && rarity === "Oro"` — las tres condiciones a la vez, como lo
+describió el dueño) usada como veto duro en `hasFoil()`, con la misma
+prioridad que `isNonFoilPrint()` (SCLPE) — pisa incluso el "toda la
+edición es foil" de Mundos Perdidos si algún día calzara ahí. Se verificó
+contra el resto del catálogo antes de aplicarlo: hay 315 cartas Oro sin
+habilidad que SÍ tienen una rareza real asignada (Real, Mega Real, Vasallo,
+Promocional…) — esas siguen las reglas normales y no pierden su foil; la
+regla nueva solo afecta a las ~511 que de verdad no tienen ni habilidad ni
+rareza conocida.
+
+Verificado con Playwright: "Colección 20 años: Mundo Gótico" (174) y
+"...Ragnarok" (126) aparecen en el filtro de Edición con su conteo
+correcto; "Trono de Odín" se clonó bien; "Lira" (Oro, sin habilidad,
+rareza "Oro") ahora muestra aro dorado y SIN foil; "Yasakani" (Oro, CON
+habilidad, rareza "Oro" igual) muestra aro dorado y SÍ mantiene el foil.
+0 `pageerror`.
+
 ### 2026-09-16 (87ª iteración) — El orden por defecto en toda la app pasa a ser "Número (ascendente)"
 
 El dueño pidió que el orden por defecto sea siempre por número de carta
