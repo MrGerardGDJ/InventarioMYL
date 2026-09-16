@@ -378,6 +378,28 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (61ª iteración) — Corrige "Teepee" (Leyendas PE 4.0 #248): rareza, habilidad y sabor faltantes
+
+- El dueño reportó que "Teepee" es un Oro pero su rareza (Real) no es
+  la de su carta física.
+- Confirmado contra la foto guardada
+  (`data/custom-images/mylserena/leyendas_primera_era_4_0_248_teepee.jpg`,
+  código impreso "LPE4-248/320 C"): rareza Real→**Cortesano**. La foto
+  también reveló que `ability` y `flavour` estaban vacíos en el
+  catálogo pese a que la carta sí tiene texto de habilidad ("Si este
+  Oro está en tu Reserva de Oros, puedes barajarlo en tu Mazo Castillo
+  para desterrar la primera carta del Mazo Castillo oponente. Luego,
+  puedes robar 1 carta.") y de sabor — se completaron ambos.
+- **Punto ciego real de la auditoría automática de la 60ª iteración**:
+  esta carta NO apareció en el reporte de discrepancias porque la
+  tabla de listado del wiki también dice "Real" para el edid 248 — el
+  wiki y el catálogo coincidían, ambos mal, así que no había nada que
+  diferenciar automáticamente. Un diff contra el wiki solo encuentra
+  desacuerdos ENTRE dos fuentes; cuando las dos fuentes comparten el
+  mismo error, solo se detecta revisando la carta física directamente,
+  como hizo el dueño acá. Vale la pena que siga reportando casos así
+  aunque la auditoría automática los haya dado por buenos.
+
 ### 2026-09-16 (60ª iteración) — Corrige 72 rarezas más de Leyendas PE 4.0, confirmadas contra foto física
 
 - Continuación directa de la 59ª: el dueño pidió corregir todo lo que
