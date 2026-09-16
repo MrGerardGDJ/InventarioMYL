@@ -378,6 +378,77 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (85ª iteración) — Agrega las 6 ediciones "Colección 20 años" (reimpresiones 1:1 de El Reto, Ira del Nahual, Espíritu de Dragón, Espada Sagrada, Dominios de Ra y Helénica)
+
+El dueño reportó que tiene físicamente 6 cajas "Colección Completa 20 Años"
+de Salo — reimpresiones como Primera Edición del listado completo de 6
+ediciones originales de Primera Era/Primer Bloque — y que la app no las
+contaba porque no existían como edición propia. Dio como ejemplo la de
+Ira del Nahual (tienda casamyl.cl + wiki) y pidió nombrarlas "Colección 20
+años: <edición original>".
+
+**Identificar cuáles 6 exactamente**: el dueño las acotó "desde El Reto a
+Espíritu de Dragón". La plantilla `Plantilla:Colecciones Completas` del
+wiki (myl.fandom.com) lista más de 25 productos "Colección Completa" en
+total (siguieron saliendo hasta 2022), pero exactamente 6 comparten fecha
+de lanzamiento "6 de julio de 2019" y coinciden con los dos nombres que
+acotan el pedido: **El Reto, La Ira del Nahual, Espíritu de Dragón, Espada
+Sagrada, Helénica y Dominios de Ra** — las 6 quedaron confirmadas con esa
+señal (misma fecha + nombres extremo coincidentes), no por "se parece".
+(El dueño también escribió "Colección 20 años: Mundo Gótico" como ejemplo
+de formato de nombre en su mensaje — Mundo Gótico Colección Completa 20
+Años existe en el wiki pero se lanzó el 28-05-2020, fuera de este grupo de
+6, así que se interpretó como un ejemplo de estilo de nombre, no como una
+7ª edición pedida; si el dueño la quiere igual, es la misma receta de esta
+entrada aplicada a esa edición.)
+
+**Confirmar que es reimpresión 1:1** (no cartas nuevas): se leyó la sección
+"Cartas" de las 6 páginas wiki de cada "Colección Completa 20 Años" — las 6
+dicen literalmente "Las N cartas de la edición [ORIGINAL] — Para una lista
+completa ver Lista de cartas de [ORIGINAL]", es decir el wiki mismo remite
+al listado de la edición original en vez de tener uno propio. Confirmado:
+no hace falta re-extraer nada del wiki, alcanza con clonar los datos que
+el catálogo ya tiene de cada edición original.
+
+**Bug encontrado de paso (y corregido)**: `data/editions.json` tenía
+`espada_sagrada` y `dominios_de_ra` (con guion bajo) como slugs, pero las
+472 cartas reales de esas dos ediciones en `data/cards.json` (TOR) usan
+`espada-sagrada` y `dominios-de-ra` (con guion) — un desajuste que dejaba
+esas dos ediciones **sin ninguna carta** al filtrar por ellas en la app
+(0 resultados). Se corrigieron los dos slugs en `editions.json` para que
+apunten a los datos reales — no relacionado con el pedido original, pero
+hacía falta arreglarlo para poder clonar sus cartas correctamente para la
+Colección 20 años correspondiente, y de paso deja de estar roto para
+cualquiera que ya use esas dos ediciones.
+
+**Clonado**: por cada una de las 6 ediciones originales (174+126+236+236+
+236+236 = **1244 cartas**), se generó una carta nueva en
+`data/custom-cards.json` con `id` nuevo (`coleccion_20_anos_<original>__custom__<edid>_<nombre>`),
+`edition`/`editionName` apuntando a la Colección 20 años correspondiente, y
+el resto de los campos (nombre, tipo, raza, rareza, coste, fuerza,
+habilidad, historia, **imagen**) copiados tal cual de la carta original —
+incluida la URL de imagen `api.myl.cl` (CDN propio de TOR, que todo el
+resto del catálogo ya hotlinkea directo sin problema de CORS, a diferencia
+de las tiendas comerciales que sí se autohospedan). 6 entradas nuevas en
+`data/editions.json`, cada una junto a su edición original para que se
+ubiquen fácil en el selector.
+
+**Fuera de alcance de esta pasada, dejado sin resolver a propósito**: cada
+caja "Colección 20 años" también incluye 3 cartas bonus "SP" (Set
+Paralelo) de regalo, pero esas mismas 3 cartas físicas se reparten
+compartidas entre 3 productos distintos cada una (ej. Miyamoto Musashi-SP
+viene en El Reto, Ira del Nahual Y Espíritu de Dragón a la vez) y además
+son de cantidad limitada ("versiones posteriores del producto no las
+incluyen") — representarlas bien requeriría resolver cómo una misma carta
+física "pertenece" a 3 ediciones sin triplicar el conteo, un problema
+aparte que no estaba pedido. No se agregaron.
+
+Verificado con Playwright: las 6 ediciones nuevas aparecen en el filtro de
+Edición del Catálogo con su conteo exacto (174/126/236/236/236/236);
+"Odin" (Colección 20 años: El Reto, nº 001) muestra `editionName` e imagen
+correctos; Espada Sagrada y Dominios de Ra (las originales, tras el fix
+del slug) pasaron de 0 a 236 cartas cada una. 0 `pageerror`.
+
 ### 2026-09-16 (84ª iteración) — Todas las ediciones "Mundos Perdidos" son foil, y corrige 17 rarezas mal cargadas contra el wiki
 
 El dueño pidió dos cosas relacionadas: (1) que todas las cartas de las 11
