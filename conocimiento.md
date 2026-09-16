@@ -378,6 +378,59 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (64ª iteración) — Rediseño "Nocturne" (parte 1/N): tokens de diseño + rail de navegación
+
+- El dueño pidió reestructurar completamente el diseño del sitio: menú
+  lateral izquierdo colapsable, edición en línea sin ventanas
+  flotantes y filtros/orden combinables en Cambio y Ventas. A mitad de
+  planificarlo con el patrón visual ya existente de la app, adjuntó un
+  handoff de diseño real (`Inventario MyL.dc.html` + `README.md`, del
+  sistema de diseño **Nocturne**) y pidió implementar ESE en vez del
+  plan propio — un rediseño completo de las 7 vistas más dos pantallas
+  nuevas (Modo Inventariar, Ficha fija). Es un trabajo grande; se
+  aborda en iteraciones sucesivas, empezando por la base que usan
+  todas las pantallas.
+- **Tokens de diseño** (`css/styles.css`, bloque `:root`): reemplazados
+  por la paleta Nocturne exacta del handoff (`--bg: #161826`,
+  `--bg-2`/`--bg-3`/`--rail`, `--border`/`--border-strong`,
+  `--text`/`--text-70`/`--muted`/`--text-45`, tokens de acento con tinte
+  — `--accent-tint`, `--accent-300`, `--accent-700` —, degradados de
+  cintillo `--section-a`/`--section-b`). El acento (`#9184d9`/`#b5abfc`)
+  ya era el mismo que se eligió en una iteración anterior (violeta), así
+  que no cambia. **Se mantuvieron los NOMBRES de variable existentes**
+  (`--bg`, `--accent`, etc.) en vez de introducir nombres nuevos — así
+  todo el CSS que todavía no se ha re-diseñado (Colecciones, Mazos,
+  Estadísticas, modales) hereda la paleta nueva automáticamente sin
+  tocar cada regla una por una.
+- Tipografía: Inter (Google Fonts) reemplaza la fuente del sistema,
+  peso máximo 500 en toda la UI (nunca bold), según especifica el
+  sistema Nocturne.
+- **Rail de navegación** (`index.html`, `css/styles.css`, `js/app.js`):
+  la barra horizontal de pestañas del header se reemplaza por una
+  barra vertical de iconos a la izquierda (68px, Phosphor Icons),
+  colapsable/expandible con un botón propio — el estado se persiste en
+  `store.getSetting("railExpanded")`/`setSetting`, mismo mecanismo que
+  ya usa el tema oscuro/claro (`applyTheme`). Los botones siguen
+  siendo los mismos `<button class="tab" data-view="...">` de antes
+  (`switchView()` no cambió nada), así que no se tocó la lógica de
+  navegación, solo dónde y cómo se ven. En pantallas angostas (≤760px)
+  el rail se convierte en una barra inferior fija de 5 destinos.
+- **Iconos Phosphor**: se autohospedan en `assets/phosphor/` (CSS +
+  woff2, ~430KB) en vez de cargarlos desde un CDN — así el sitio no
+  depende de un tercero para algo tan visible como la navegación, y
+  sigue funcionando si `unpkg`/`jsdelivr` están caídos o bloqueados
+  (recomendación explícita del propio handoff de diseño).
+- Verificado con Playwright: navegación entre las 5 vistas, colapsar/
+  expandir + persistencia tras recargar, barra inferior en viewport
+  móvil (390px), 0 `pageerror`. Colecciones/Mazos/Estadísticas siguen
+  funcionando igual (su contenido interno todavía no se rediseñó, eso
+  viene en las siguientes iteraciones).
+- **Pendiente** (próximas iteraciones): tarjeta de carta "arte
+  primero" + panel de Ficha fija en Catálogo, modal de detalle,
+  Colecciones con reordenar por arrastre, Cambio y Ventas con sus
+  filtros/orden combinables, Mazos, Estadísticas con gráficos SVG
+  propios, y el Modo Inventariar nuevo.
+
 ### 2026-09-16 (63ª iteración) — Corrige "Pachamama" (Leyendas PE #070): también Mega Real → Real
 
 - Mismo patrón que "Sacrificio Humano" (edid 071, iteración 62): el

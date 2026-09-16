@@ -3396,6 +3396,9 @@ function bindEvents() {
 
   // Tema
   $("#theme-toggle").addEventListener("click", toggleTheme);
+
+  // Rail de navegación: colapsar/expandir
+  $("#rail-collapse").addEventListener("click", toggleRail);
 }
 
 function toggleTheme() {
@@ -3405,7 +3408,19 @@ function toggleTheme() {
 }
 function applyTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
-  $("#theme-toggle").textContent = theme === "light" ? "☀️" : "🌙";
+  const icon = $("#theme-toggle i");
+  if (icon) icon.className = theme === "light" ? "ph ph-sun" : "ph ph-moon";
+}
+
+function toggleRail() {
+  const expanded = !$(".app-shell").classList.contains("rail-expanded");
+  applyRailState(expanded);
+  store.setSetting("railExpanded", expanded);
+}
+function applyRailState(expanded) {
+  $(".app-shell").classList.toggle("rail-expanded", expanded);
+  const icon = $("#rail-collapse i");
+  if (icon) icon.className = expanded ? "ph ph-caret-line-left" : "ph ph-caret-line-right";
 }
 
 function debounce(fn, ms) {
@@ -3416,6 +3431,7 @@ function debounce(fn, ms) {
 /* ===================== Init ===================== */
 async function init() {
   applyTheme(store.getSetting("theme") || "dark");
+  applyRailState(store.getSetting("railExpanded") ?? false);
   bindEvents();
   store.onChange(onStoreChange);
   await loadData();
