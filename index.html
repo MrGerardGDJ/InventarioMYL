@@ -48,16 +48,16 @@
           <button id="orphan-note" class="orphan-note hidden"></button>
           <div class="spacer"></div>
           <div class="actions">
-            <button id="btn-add-card" class="btn">➕ Carta manual</button>
+            <button id="btn-add-card" class="btn"><i class="ph ph-plus"></i> Carta manual</button>
             <button id="btn-editions" class="btn">Ediciones</button>
             <button id="btn-import" class="btn">Importar</button>
             <div class="dropdown">
-              <button id="btn-export" class="btn">Exportar ▾</button>
+              <button id="btn-export" class="btn">Exportar <i class="ph ph-caret-down"></i></button>
               <div class="dropdown-menu">
                 <div class="dropdown-note">Exporta lo que muestran los filtros actuales</div>
-                <button data-export="xlsx">📊 Excel (.xlsx)</button>
-                <button data-export="prices-xlsx">💰 Precios (.xlsx)</button>
-                <button data-export="pdf">📄 PDF</button>
+                <button data-export="xlsx"><i class="ph ph-file-xls"></i> Excel (.xlsx)</button>
+                <button data-export="prices-xlsx"><i class="ph ph-tag"></i> Precios (.xlsx)</button>
+                <button data-export="pdf"><i class="ph ph-file-pdf"></i> PDF</button>
                 <button data-export="csv">Colección (CSV)</button>
                 <button data-export="missing-csv">Faltantes (CSV)</button>
                 <button data-export="json">Respaldo (JSON)</button>
@@ -98,9 +98,9 @@
           <button id="clear-filters" class="link-btn">Limpiar</button>
         </div>
         <div class="deck-bar">
-          <span class="db-label">🃏 Mazo activo:</span>
+          <span class="db-label"><i class="ph ph-stack"></i> Mazo activo:</span>
           <select id="active-deck-select"><option value="">(ninguno)</option></select>
-          <button id="active-deck-new" class="btn small">＋ Nuevo</button>
+          <button id="active-deck-new" class="btn small"><i class="ph ph-plus"></i> Nuevo</button>
           <span id="active-deck-count" class="muted"></span>
         </div>
         <div id="cards-grid" class="cards-grid"></div>
@@ -234,7 +234,7 @@
             <select id="stats-format"><option value="">Todos</option></select>
           </label>
           <div class="spacer"></div>
-          <button id="stats-export-pdf" class="btn">📄 Exportar PDF</button>
+          <button id="stats-export-pdf" class="btn"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
         </div>
 
         <div id="stats-cards" class="stats-grid"></div>
@@ -272,14 +272,14 @@
       <h2 style="margin-bottom:4px">Datos y sincronización</h2>
       <p class="muted" id="sync-state-text">Tu inventario se guarda solo en este navegador al tocar +/−.</p>
 
-      <h3 class="sync-h3">📦 Respaldo local</h3>
+      <h3 class="sync-h3"><i class="ph ph-package"></i> Respaldo local</h3>
       <p class="muted">Descarga una copia de tu colección y mazos, o restáurala en otro dispositivo.</p>
       <div class="sync-row">
         <button class="btn" id="sync-backup">Descargar respaldo (JSON)</button>
         <button class="btn" id="sync-restore">Restaurar respaldo</button>
       </div>
 
-      <h3 class="sync-h3">☁️ Sincronizar entre dispositivos (opcional)</h3>
+      <h3 class="sync-h3"><i class="ph ph-cloud"></i> Sincronizar entre dispositivos (opcional)</h3>
       <p class="muted">Mantén tu inventario igual en el celular y el PC. Usa <b>Supabase</b> (gratis).
         <a href="#" id="sync-help-toggle">Ver cómo configurarlo ▾</a></p>
       <div id="sync-help" class="sync-help hidden">
@@ -325,17 +325,17 @@ create policy "acceso_log" on inventario_myl_log
       <label class="sync-check"><input type="checkbox" id="cloud-auto" /> Subir automáticamente al cambiar cantidades</label>
       <div class="sync-row">
         <button class="btn primary" id="cloud-connect">Conectar y sincronizar</button>
-        <button class="btn" id="cloud-push">💾 Guardar y subir</button>
-        <button class="btn" id="cloud-pull">⬇️ Bajar de la nube</button>
+        <button class="btn" id="cloud-push"><i class="ph ph-cloud-arrow-up"></i> Guardar y subir</button>
+        <button class="btn" id="cloud-pull"><i class="ph ph-cloud-arrow-down"></i> Bajar de la nube</button>
         <button class="btn" id="cloud-disconnect">Desconectar</button>
       </div>
       <p class="muted" id="cloud-status" style="margin-top:10px"></p>
       <div class="sync-row">
-        <button class="btn" id="cloud-magic-link">🔗 Copiar link para este dispositivo</button>
+        <button class="btn" id="cloud-magic-link"><i class="ph ph-link"></i> Copiar link para este dispositivo</button>
       </div>
       <p class="muted" style="margin-top:6px">Abre ese link en tu celular (u otro dispositivo) ya conectado a esta colección: te ahorra escribir la URL y las claves a mano. El link contiene tu clave anon y tu código de colección — compártelo solo con dispositivos tuyos.</p>
       <div class="sync-row">
-        <button class="btn" id="cloud-log-btn">📜 Ver historial</button>
+        <button class="btn" id="cloud-log-btn"><i class="ph ph-clock-counter-clockwise"></i> Ver historial</button>
       </div>
       <div id="cloud-log" class="cloud-log"></div>
     </div>
@@ -463,12 +463,12 @@ create policy "acceso_log" on inventario_myl_log
           <input id="cf-image-url" type="text" placeholder="https://… (opcional)" style="margin-top:6px" />
         </label>
         <div class="cf-preview" id="cf-preview"></div>
-        <button class="btn small cf-full" id="cf-image-remove" style="margin-top:6px;justify-self:start">🗑 Quitar imagen</button>
+        <button class="btn small cf-full" id="cf-image-remove" style="margin-top:6px;justify-self:start"><i class="ph ph-trash"></i> Quitar imagen</button>
       </div>
       <div class="sync-row">
         <button class="btn primary" id="cf-save">Guardar carta</button>
         <button class="btn" id="cf-save-another">Guardar y agregar otra</button>
-        <button class="btn" id="cf-delete" style="display:none">🗑 Eliminar</button>
+        <button class="btn" id="cf-delete" style="display:none"><i class="ph ph-trash"></i> Eliminar</button>
         <button class="btn" data-close-cf>Cancelar</button>
       </div>
     </div>

@@ -22,7 +22,7 @@ import * as store from "./store.js";
 import { exportExcel, exportPricesExcel, exportPDF, exportDeckExcel, exportDeckImage, exportCollectionPDF, deckSummary } from "./exporters.js";
 import { renderCharts, renderDeckCharts } from "./charts.js";
 import * as cloud from "./cloud.js";
-import { typeIcon, raceIcon, NO_STRENGTH_TYPES } from "./icons.js";
+import { NO_STRENGTH_TYPES } from "./icons.js";
 import { importEditionFromWiki } from "./wiki-import.js";
 
 /* ===================== Estado global ===================== */
@@ -425,7 +425,7 @@ function updateOrphanNote() {
   if (!el) return;
   const n = computeOrphans().length;
   el.classList.toggle("hidden", n === 0);
-  if (n) el.textContent = `⚠ ${n} fuera de catálogo`;
+  if (n) el.innerHTML = `<i class="ph ph-warning"></i> ${n} fuera de catálogo`;
 }
 function openOrphanModal() {
   const list = computeOrphans();
@@ -441,7 +441,7 @@ function openOrphanModal() {
             <span class="muted">×${o.qty}</span>
             <button class="btn small" data-del-orphan>Eliminar</button>
           </div>`).join("") + `</div>`
-      : `<p class="muted">No hay cartas fuera de catálogo. 🎉</p>`}`;
+      : `<p class="muted">No hay cartas fuera de catálogo.</p>`}`;
   box.querySelector("[data-close-orphan]").onclick = closeOrphanModal;
   box.querySelectorAll(".orphan-row").forEach((r) => {
     r.querySelector("[data-del-orphan]").onclick = () => {
@@ -529,7 +529,7 @@ function cardEl(card, navList) {
     : `<div class="placeholder"></div>`;
 
   const activeDeck = store.getDeck(store.getSetting("activeDeckId"));
-  const deckBtn = `<button class="qty-btn deck-add" title="${activeDeck ? "Añadir a «" + escapeAttr(activeDeck.name) + "»" : "Añadir a un mazo"}">🃏＋</button>`;
+  const deckBtn = `<button class="qty-btn deck-add" title="${activeDeck ? "Añadir a «" + escapeAttr(activeDeck.name) + "»" : "Añadir a un mazo"}"><i class="ph ph-stack"></i><i class="ph ph-plus"></i></button>`;
 
   el.innerHTML = `
     <div class="card-img" data-act="detail">
@@ -794,7 +794,7 @@ function openModal(card, navList, navIndex) {
     <div class="card-detail">
       <div class="cd-image" ${card.image ? 'data-zoom="1"' : ""}>
         ${img}
-        ${card.image ? '<span class="cd-zoom-hint">🔍 Ampliar</span>' : ""}
+        ${card.image ? '<span class="cd-zoom-hint"><i class="ph ph-magnifying-glass-plus"></i> Ampliar</span>' : ""}
       </div>
       <div class="cd-body">
         <h2 id="cd-name">${escapeHtml(displayName(card))}</h2>
@@ -806,7 +806,7 @@ function openModal(card, navList, navIndex) {
           <button class="qty-btn" data-m="minus">−</button>
           <span class="qty-num ${qty === 0 ? "zero" : ""}" data-role="mqty">${qty}</span>
           <button class="qty-btn" data-m="plus">+</button>
-          <button class="btn small" data-add-deck>🃏 Añadir a mazo</button>
+          <button class="btn small" data-add-deck><i class="ph ph-stack"></i> Añadir a mazo</button>
         </div>
         <div class="trade-ctl">
           <span class="muted">Disponible:</span>
@@ -817,9 +817,9 @@ function openModal(card, navList, navIndex) {
         </div>
         <div class="muted deck-hint" data-role="deckhint"></div>
         <div class="sync-row" style="margin-top:4px">
-          <button class="btn small" data-edit-card>✏️ Editar</button>
+          <button class="btn small" data-edit-card><i class="ph ph-pencil-simple"></i> Editar</button>
           ${card.userCustom
-            ? `<button class="btn small" data-del-card>${state.baseCardIds?.has(card.id) ? "↩ Revertir a la original" : "🗑 Eliminar"}</button>`
+            ? `<button class="btn small" data-del-card>${state.baseCardIds?.has(card.id) ? '<i class="ph ph-arrow-counter-clockwise"></i> Revertir a la original' : '<i class="ph ph-trash"></i> Eliminar'}</button>`
             : ""}
         </div>
         <div class="cd-section"><h4>Habilidad</h4><div id="cd-ability">${card.ability ? nl2br(card.ability) : "<span class='muted'>Sin texto.</span>"}</div></div>
@@ -1554,7 +1554,7 @@ function openDeckPicker(card) {
     <h2>Añadir a un mazo</h2>
     <p class="muted">«${escapeHtml(card.name)}»</p>
     <div class="picker-list">${list}</div>
-    <button class="btn full" data-new-deck>＋ Crear mazo nuevo y añadir</button>`;
+    <button class="btn full" data-new-deck><i class="ph ph-plus"></i> Crear mazo nuevo y añadir</button>`;
   box.querySelector("[data-close-deck]").onclick = closeDeckModal;
   box.querySelectorAll(".picker-deck").forEach((b) => {
     b.onclick = () => {
@@ -1593,7 +1593,7 @@ function refreshActiveDeckCount() {
   const el = $("#active-deck-count");
   if (!el) return;
   const d = store.getDeck(store.getSetting("activeDeckId"));
-  el.textContent = d ? `${store.deckCount(d.id)} cartas` : "Elige o crea un mazo para agregar con 🃏＋";
+  el.textContent = d ? `${store.deckCount(d.id)} cartas` : "Elige o crea un mazo para agregar";
 }
 function refreshActiveDeckUI() { populateActiveDeckSelect(); refreshActiveDeckCount(); }
 
@@ -1701,7 +1701,7 @@ function renderCollectionsView() {
         <span class="d-name">${escapeHtml(col.name)}</span>
         <button class="qty-btn" data-move-up title="Subir">▲</button>
         <button class="qty-btn" data-move-down title="Bajar">▼</button>
-        <button class="qty-btn" data-del title="Eliminar colección">🗑</button>
+        <button class="qty-btn" data-del title="Eliminar colección"><i class="ph ph-trash"></i></button>
       </div>
       <div class="col-ed muted" title="${escapeAttr(collectionEditionNames(col).join(", "))}">${escapeHtml(collectionEditionLabel(col))}</div>
       <span class="ep-bar"><span class="ep-fill" style="width:${s.pct}%"></span></span>
@@ -1782,8 +1782,8 @@ function renderCollectionDetail() {
       <h2><input id="col-name-edit" value="${escapeAttr(col.name)}" /></h2>
       <span class="tag" title="${escapeAttr(collectionEditionNames(col).join(", "))}">${escapeHtml(collectionEditionLabel(col))}</span>
       <div class="spacer"></div>
-      <button class="btn small" id="col-edit-editions" title="Agregar o quitar ediciones de esta colección">✏️ Editar ediciones</button>
-      <button class="btn small" id="col-export-pdf" title="PDF con la grilla de cartas, tal como se ve acá — para llevar a una jornada de intercambio">📄 Exportar PDF</button>
+      <button class="btn small" id="col-edit-editions" title="Agregar o quitar ediciones de esta colección"><i class="ph ph-pencil-simple"></i> Editar ediciones</button>
+      <button class="btn small" id="col-export-pdf" title="PDF con la grilla de cartas, tal como se ve acá — para llevar a una jornada de intercambio"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
       <label class="field inline"><span>Mostrar</span>
         <select id="col-filter">
           <option value="all">Todas las cartas</option>
@@ -2281,7 +2281,7 @@ function tradeCardEl(card, navList) {
 function myValueSectionHtml(cardId) {
   const info = myPriceInfo(cardId);
   const mainHtml = info.mine != null
-    ? `<span class="my-value-amount">${fmtCLP(info.mine)}</span><button class="my-value-edit-btn" data-edit-value title="Editar valor">✎</button>`
+    ? `<span class="my-value-amount">${fmtCLP(info.mine)}</span><button class="my-value-edit-btn" data-edit-value title="Editar valor"><i class="ph ph-pencil-simple"></i></button>`
     : `<button class="btn small" data-edit-value>Asignar valor</button>`;
   let pillHtml = "";
   if (info.status === "sobre") pillHtml = `<span class="market-pill over">▲ Sobre mercado (${Math.round(info.diffPct * 100)}%)</span>`;
@@ -2579,7 +2579,7 @@ function renderDecksView() {
       <span class="d-name">${escapeHtml(d.name)}</span>
       ${deckStatusBadgeHtml(d)}
       <span class="d-count">${store.deckCount(d.id)}</span>
-      <button class="qty-btn" data-del title="Eliminar">🗑</button>`;
+      <button class="qty-btn" data-del title="Eliminar"><i class="ph ph-trash"></i></button>`;
     row.querySelector(".d-name").onclick = () => { store.setSetting("activeDeckId", d.id); renderDecksView(); renderDeckDetail(); };
     row.querySelector("[data-status]").onclick = (e) => {
       e.stopPropagation();
@@ -2603,7 +2603,7 @@ function renderDeckDetail() {
   const wrap = $("#deck-detail");
   const deck = store.getDeck(store.getSetting("activeDeckId"));
   if (!deck) {
-    wrap.innerHTML = `<p class="muted">Selecciona o crea un mazo para empezar a construirlo. Desde la vista <b>Colección</b> puedes añadir cartas al mazo activo con el botón 🃏＋, o buscarlas aquí abajo.</p>`;
+    wrap.innerHTML = `<p class="muted">Selecciona o crea un mazo para empezar a construirlo. Desde la vista <b>Colección</b> puedes añadir cartas al mazo activo con el botón “+” de la tarjeta, o buscarlas aquí abajo.</p>`;
     return;
   }
   wrap.innerHTML = `
@@ -2612,23 +2612,23 @@ function renderDeckDetail() {
       ${deckStatusBadgeHtml(deck)}
       <span class="muted" id="deck-total"></span>
       <div class="spacer" style="flex:1"></div>
-      <button class="btn small" id="deck-xlsx">📊 Excel</button>
-      <button class="btn small" id="deck-img">🖼️ Imagen</button>
-      <button class="btn small" id="deck-txt">📋 Texto</button>
+      <button class="btn small" id="deck-xlsx"><i class="ph ph-file-xls"></i> Excel</button>
+      <button class="btn small" id="deck-img"><i class="ph ph-image"></i> Imagen</button>
+      <button class="btn small" id="deck-txt"><i class="ph ph-text-align-left"></i> Texto</button>
     </div>
     <div class="muted" style="font-size:12px;margin-top:4px">Actualizado: ${deck.updatedAt ? new Date(deck.updatedAt).toLocaleString("es-CL") : "—"}</div>
     <p class="muted deck-status-note">${deck.status === "secundario"
-      ? "📝 Mazo Secundario: es un plan/experimento — no reserva copias de tus cartas ni compite con tus otros mazos."
-      : "🧩 Mazo Principal: compite por copias con tus otros mazos Principal (si comparten una carta, la disponibilidad se reparte entre ellos)."}</p>
+      ? "Mazo Secundario: es un plan/experimento — no reserva copias de tus cartas ni compite con tus otros mazos."
+      : "Mazo Principal: compite por copias con tus otros mazos Principal (si comparten una carta, la disponibilidad se reparte entre ellos)."}</p>
     <div class="tabs deck-tabs">
-      <button class="tab" data-deck-tab="cartas">🗂️ Cartas</button>
-      <button class="tab" data-deck-tab="estadistica">📊 Estadística</button>
-      <button class="tab" data-deck-tab="estrategia">🧠 Estrategia</button>
+      <button class="tab" data-deck-tab="cartas"><i class="ph ph-cards"></i> Cartas</button>
+      <button class="tab" data-deck-tab="estadistica"><i class="ph ph-chart-bar"></i> Estadística</button>
+      <button class="tab" data-deck-tab="estrategia"><i class="ph ph-brain"></i> Estrategia</button>
     </div>
     <div id="deck-tab-cartas" class="deck-tab-panel">
       <div id="deck-banner"></div>
       <div class="deck-add-search">
-        <input id="deck-search" type="search" placeholder="🔎 Buscar carta por nombre para añadir a este mazo…" autocomplete="off" />
+        <input id="deck-search" type="search" placeholder="Buscar carta por nombre para añadir a este mazo…" autocomplete="off" />
         <div id="deck-search-results" class="deck-search-results"></div>
       </div>
       <label class="field inline deck-sort-field">
@@ -2682,7 +2682,7 @@ function renderDeckDetail() {
       return `<div class="dsr" data-id="${escapeAttr(c.id)}">
         <span class="dsr-name">${escapeHtml(displayName(c))}</span>
         <span class="dsr-meta">${escapeHtml(c.editionName || "")} · <span class="${own > 0 ? "owned-tag" : ""}">tengo ${own}</span></span>
-        <button class="qty-btn" data-add title="Añadir al mazo">＋</button>
+        <button class="qty-btn" data-add title="Añadir al mazo"><i class="ph ph-plus"></i></button>
       </div>`;
     }).join("") || `<p class="muted">Sin resultados</p>`;
     res.querySelectorAll(".dsr").forEach((row) => {
@@ -2702,10 +2702,10 @@ function renderDeckDetail() {
 // lista de texto plana, sin perder ninguna función (buscador para añadir,
 // +/- de cantidad, avisos de ban list y de copias faltantes).
 const DECK_ZONE_TITLES = {
-  Aliado: "🛡️ Aliados",
-  Apoyo: "✨ Talismanes, Armas y Tótems",
-  Oro: "🪙 Oro",
-  Otro: "🃏 Otras",
+  Aliado: '<i class="ph ph-shield"></i> Aliados',
+  Apoyo: '<i class="ph ph-sparkle"></i> Talismanes, Armas y Tótems',
+  Oro: '<i class="ph ph-coin"></i> Oro',
+  Otro: '<i class="ph ph-cards"></i> Otras',
 };
 const DECK_SUPPORT_TYPES = new Set(["Talismán", "Arma", "Tótem"]);
 // Orden de "más pro" a "más básica" acordado con el dueño (24-08-2026): las
@@ -2764,12 +2764,12 @@ function renderDeckContents(deck) {
   if (banner) {
     let bannerHtml = "";
     if (missing > 0) bannerHtml += `<div class="active-deck-banner">Te faltan <b>${missing}</b> copias de este mazo en tu colección.</div>`;
-    if (banIssues > 0) bannerHtml += `<div class="active-deck-banner ban-banner">⛔ <b>${banIssues}</b> carta${banIssues === 1 ? "" : "s"} de este mazo ${banIssues === 1 ? "tiene un problema" : "tienen problemas"} con la ban list del formato Racial Edición (ver detalle abajo, en rojo).</div>`;
+    if (banIssues > 0) bannerHtml += `<div class="active-deck-banner ban-banner"><i class="ph ph-prohibit"></i> <b>${banIssues}</b> carta${banIssues === 1 ? "" : "s"} de este mazo ${banIssues === 1 ? "tiene un problema" : "tienen problemas"} con la ban list del formato Racial Edición (ver detalle abajo, en rojo).</div>`;
     banner.innerHTML = bannerHtml;
   }
 
   if (entries.length === 0) {
-    cont.innerHTML = `<p class="muted">Mazo vacío. Busca una carta arriba para añadirla, o usa 🃏＋ en la Colección.</p>`;
+    cont.innerHTML = `<p class="muted">Mazo vacío. Busca una carta arriba para añadirla, o usa el botón “+” en la Colección.</p>`;
     renderDeckSummary(deck); renderDeckStrategy(deck);
     return;
   }
@@ -2804,7 +2804,7 @@ function renderDeckContents(deck) {
   if (total < MYL_DECK_SIZE) {
     const need = MYL_DECK_SIZE - total;
     html += `<div class="dist-zone">
-      <div class="dist-zone-title">➕ Por completar <span class="muted">(${need})</span></div>
+      <div class="dist-zone-title"><i class="ph ph-plus"></i> Por completar <span class="muted">(${need})</span></div>
       <div class="cards-grid dist-grid">${deckGapTileHtml(`Faltan ${need} carta${need === 1 ? "" : "s"}`, `El Mazo Castillo estándar usa ${MYL_DECK_SIZE} — busca arriba para completarlo`)}</div>
     </div>`;
   }
@@ -2830,13 +2830,13 @@ function deckCardTileHtml(card, cid, q) {
   return `<div class="card dist-card${banWarn ? " has-ban" : ""}" data-cid="${escapeAttr(cid)}">
     <div class="card-img">
       <span class="badge-num">×${q}</span>
-      ${banWarn ? `<span class="ban-icon" title="${escapeAttr(banWarn)}">⛔</span>` : ""}
+      ${banWarn ? `<span class="ban-icon" title="${escapeAttr(banWarn)}"><i class="ph ph-prohibit"></i></span>` : ""}
       ${img}
     </div>
     <div class="card-body">
       <div class="card-name">${escapeHtml(dName)}</div>
       ${own < q ? `<div class="card-warn lack">Faltan ${q - own} en tu colección</div>` : ""}
-      ${banWarn ? `<div class="card-warn ban">⛔ ${escapeHtml(banWarn)}</div>` : ""}
+      ${banWarn ? `<div class="card-warn ban"><i class="ph ph-prohibit"></i> ${escapeHtml(banWarn)}</div>` : ""}
       <div class="qty-row">
         <button class="qty-btn" data-d="minus">−</button>
         <span class="qty-num">${q}</span>
@@ -2851,7 +2851,7 @@ function deckCardTileHtml(card, cid, q) {
 // que una carta real para que se note al mirar la cuadrícula.
 function deckGapTileHtml(title, sub) {
   return `<div class="card dist-card dist-gap">
-    <div class="card-img gap-img"><span class="gap-icon">➕</span></div>
+    <div class="card-img gap-img"><span class="gap-icon"><i class="ph ph-plus"></i></span></div>
     <div class="card-body">
       <div class="card-name">${escapeHtml(title)}</div>
       <div class="card-meta">${escapeHtml(sub)}</div>
@@ -2877,7 +2877,7 @@ function renderDeckSummary(deck) {
 
   const head = `<tr><th>Tipo</th>${S.cols.map((c) => `<th>${c}</th>`).join("")}<th>Total</th></tr>`;
   const body = S.typesPresent.map((t) =>
-    `<tr><td>${typeIcon(t)} ${escapeHtml(t)}</td>${S.cols.map((c) => `<td>${S.matrix[t][c] || ""}</td>`).join("")}<td class="b">${S.typeTotal[t]}</td></tr>`).join("");
+    `<tr><td>${escapeHtml(t)}</td>${S.cols.map((c) => `<td>${S.matrix[t][c] || ""}</td>`).join("")}<td class="b">${S.typeTotal[t]}</td></tr>`).join("");
   const totalRow = `<tr class="tot"><td>Total</td>${S.cols.map((c) => `<td>${S.colTotal(c)}</td>`).join("")}<td>${S.total}</td></tr>`;
 
   box.innerHTML = `
@@ -3002,9 +3002,9 @@ function renderDeckStrategy(deck) {
   box.innerHTML = `
     <p class="muted strat-note">Análisis automático por reglas (curva de coste, proporciones, sinergia racial, ban list) — todavía no es una IA conversacional que lea habilidades en detalle.</p>
     <div class="strat-section"><h4>Diagnóstico</h4><p>${escapeHtml(r.diagnostico)}</p></div>
-    <div class="strat-section"><h4>💪 Fortalezas</h4><ul>${li(r.fortalezas)}</ul></div>
-    <div class="strat-section"><h4>⚠️ Debilidades</h4><ul>${li(r.debilidades)}</ul></div>
-    <div class="strat-section"><h4>🛠️ Recomendaciones</h4><ul>${li(r.recomendaciones)}</ul></div>`;
+    <div class="strat-section"><h4><i class="ph ph-shield-check"></i> Fortalezas</h4><ul>${li(r.fortalezas)}</ul></div>
+    <div class="strat-section"><h4><i class="ph ph-warning"></i> Debilidades</h4><ul>${li(r.debilidades)}</ul></div>
+    <div class="strat-section"><h4><i class="ph ph-wrench"></i> Recomendaciones</h4><ul>${li(r.recomendaciones)}</ul></div>`;
 }
 
 // Badge clickeable del estado de un mazo: Principal (compite por cartas con
@@ -3013,7 +3013,7 @@ function deckStatusBadgeHtml(deck) {
   const isPrincipal = deck.status !== "secundario";
   return `<button class="deck-status-badge ${isPrincipal ? "principal" : "secundario"}" data-status
     title="${isPrincipal ? "Mazo Principal: compite por cartas con otros mazos Principal. Click para pasar a Secundario." : "Mazo Secundario: no reserva cartas, ideal para planes/experimentos. Click para pasar a Principal."}">
-    ${isPrincipal ? "🧩 Principal" : "📝 Secundario"}
+    ${isPrincipal ? '<i class="ph ph-puzzle-piece"></i> Principal' : '<i class="ph ph-note-pencil"></i> Secundario'}
   </button>`;
 }
 
@@ -3239,7 +3239,7 @@ function autoUpload() { return store.getSetting("cloudAuto") !== false; } // por
 
 let pushTimer;
 function scheduleCloudPush() {
-  setChip("☁ Cambios sin subir…", "sync");
+  setChip("Cambios sin subir…", "sync");
   clearTimeout(pushTimer);
   pushTimer = setTimeout(() => doCloudPush(false), 1800);
 }
@@ -3247,12 +3247,12 @@ function scheduleCloudPush() {
 async function doCloudPush(manual) {
   if (!cloud.isConfigured()) return;
   try {
-    setChip("☁ Subiendo…", "sync");
+    setChip("Subiendo…", "sync");
     const ts = await cloud.push(store.getSnapshot(), { accion: manual ? "guardado manual" : "automático", copias: store.totalCards() });
     cloud.setLastTs(ts);
     cloud.clearDirty();
-    setChip("☁ Guardado ✓", "ok");
-  } catch (e) { setChip("☁ Error", "err"); showToast("Error al subir: " + e.message, 4000); }
+    setChip("Guardado ✓", "ok");
+  } catch (e) { setChip("Error", "err"); showToast("Error al subir: " + e.message, 4000); }
 }
 
 function adoptRemote(remote) {
@@ -3260,20 +3260,20 @@ function adoptRemote(remote) {
   cloud.setLastTs(remote.actualizado);
   cloud.clearDirty();
   refreshAll();
-  setChip("☁ Sincronizado", "ok");
+  setChip("Sincronizado", "ok");
 }
 
 // Reconciliación basada en "¿cambió la fila en la nube desde la última vez?"
 async function cloudReconcile() {
   if (!cloud.isConfigured()) return;
-  setChip("☁ Sincronizando…", "sync");
+  setChip("Sincronizando…", "sync");
   try {
     const remote = await cloud.pull();
     if (!remote || !remote.snapshot) { await doCloudPush(false); return; } // primera vez: subir
     const changedElsewhere = remote.actualizado !== cloud.getLastTs();
     if (!changedElsewhere) {
       if (cloud.isDirty()) await doCloudPush(false);
-      else setChip("☁ Sincronizado", "ok");
+      else setChip("Sincronizado", "ok");
       return;
     }
     // La nube cambió desde otro dispositivo
@@ -3288,7 +3288,7 @@ async function cloudReconcile() {
     } else {
       adoptRemote(remote);
     }
-  } catch (e) { setChip("☁ Error", "err"); showToast("Sincronización: " + e.message, 4000); }
+  } catch (e) { setChip("Error", "err"); showToast("Sincronización: " + e.message, 4000); }
 }
 
 /* ----- Tiempo real (Supabase Realtime) ----- */
@@ -3300,15 +3300,15 @@ async function startRealtime() {
 function onRealtime({ snapshot, actualizado }) {
   if (!snapshot || actualizado === cloud.getLastTs()) return; // cambio propio
   if (cloud.isDirty()) {
-    setChip("☁ Cambios nuevos en la nube — toca Bajar", "sync");
-    showToast("Hay cambios desde otro dispositivo. Toca ⬇️ Bajar para traerlos.", 4500);
+    setChip("Cambios nuevos en la nube — toca Bajar", "sync");
+    showToast("Hay cambios desde otro dispositivo. Toca Bajar para traerlos.", 4500);
     return;
   }
   store.applySnapshot(snapshot);
   cloud.setLastTs(actualizado);
   cloud.clearDirty();
   refreshAll();
-  setChip("☁ Actualizado", "ok");
+  setChip("Actualizado", "ok");
   showToast("Actualizado en tiempo real desde la nube");
 }
 
@@ -3317,7 +3317,7 @@ function onStoreChange(origin) {
   if (!cloud.isConfigured()) { flashChip("Guardado ✓", "ok"); return; }
   cloud.markDirty();
   if (autoUpload()) scheduleCloudPush();
-  else setChip("☁ Cambios sin subir — toca Guardar", "sync");
+  else setChip("Cambios sin subir — toca Guardar", "sync");
 }
 
 /* ----- Red de seguridad: re-sincroniza al volver a la pestaña y cada 30s ----- */
@@ -3330,7 +3330,7 @@ async function quietPull() {
       cloud.setLastTs(r.actualizado);
       cloud.clearDirty();
       refreshAll();
-      setChip("☁ Actualizado", "ok");
+      setChip("Actualizado", "ok");
     }
   } catch {}
 }
@@ -3617,7 +3617,7 @@ async function init() {
   if (/^#sync=/.test(location.hash)) {
     await tryMagicLinkFromHash();
   } else if (cloud.isConfigured()) {
-    setChip("☁ Sincronizado", "ok"); cloudReconcile(); startRealtime();
+    setChip("Sincronizado", "ok"); cloudReconcile(); startRealtime();
   }
   startCloudBackgroundSync();
 }
