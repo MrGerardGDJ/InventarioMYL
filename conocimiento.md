@@ -378,6 +378,36 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (74ª iteración) — Corrige los colores del marco holográfico (morado es Promocional, verde jade es Secreta) y la rareza de «Ocelote Del Templo» LPE 2023
+
+El dueño corrigió la 73ª iteración: el aro morado que se había asignado a
+`data-rarity="secreta"` en realidad corresponde a **Promocional**, y el aro
+verde jade (que antes vivía en un slug provisional `secreta-jade` sin usar)
+es el que corresponde a **Secreta**. De paso reportó que su carta física
+«Templo del Ocelote» debería verse con el aro verde y no lo hacía.
+
+- **`css/styles.css`**: `.holo[data-rarity="secreta"]` pasa a la rampa
+  verde jade (`#08321f·#126b45·#1ea87a·#6ff0bd`); se reemplaza el slug sin
+  usar `secreta-jade` por `.holo[data-rarity="promocional"]` con la rampa
+  morada que antes tenía "secreta" (`#2a1454·#5b2bb0·#8a5cf0·#2f6dd8`).
+- **`js/app.js`**: `RARITY_SLUG` se actualiza igual — quita `"secreta
+  jade"` (nunca fue un nombre de rareza real en los datos, era una
+  suposición) y agrega `"promocional": "promocional"`.
+- **Bug de datos encontrado al investigar**: ninguna carta "Ocelote Del
+  Templo" en el catálogo tenía rareza Secreta — hay versiones Real,
+  Vasallo y una Legendaria en Leyendas PE 4.0, pero ninguna Secreta. El
+  dueño identificó la física exacta: **LPE 2023, id `112-326`**, que ya
+  traía `specialId: "Secreta Exclusiva 3"` (TOR la reconoce como una
+  Secreta numerada) pero se había quedado con `rarity: "Real"` sin
+  actualizar — una contradicción dentro de los propios datos de TOR, no
+  un problema de esta app. Corrección agregada a
+  `RARITY_CORRECTIONS` en `scraper/corrections.js` (mismo patrón que Mary
+  Bradbury/Sacrificio Humano/Pachamama) y parche directo en
+  `data/cards.json` para que se vea de inmediato en el sitio.
+- Verificado con Playwright: `data/cards.json` ya sirve `rarity:"Secreta"`
+  para `112-326`, y su ficha muestra el aro verde jade
+  (`#ficha-holo[data-rarity="secreta"]`). 0 `pageerror`.
+
 ### 2026-09-16 (73ª iteración) — Marco holográfico de rareza en el arte de la ficha y el modal
 
 El dueño mandó una spec detallada (pantallas 3b/3a/2e del handoff) para

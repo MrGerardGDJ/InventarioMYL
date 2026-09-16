@@ -591,6 +591,12 @@ export const RARITY_CORRECTIONS = {
   // "Pachamama" (Leyendas PE, edid 070): mismo patrón, TOR la marca "Mega
   // Real" pero la carta física del dueño es "Real". Reportado 16-09-2026.
   "154-070": { rarity: "Real" },
+  // "Ocelote Del Templo" (LPE 2023, id 112-326): TOR ya trae specialId
+  // "Secreta Exclusiva 3" (o sea, TOR mismo la reconoce como una Secreta
+  // numerada) pero dejó rarity="Real" sin actualizar — contradicción
+  // dentro de sus propios datos. La carta física del dueño es Secreta.
+  // Reportado 16-09-2026.
+  "112-326": { rarity: "Secreta" },
 };
 
 // Mismo bug de numeración que MUNDOS_PERDIDOS_TOR_CORRECTIONS arriba, pero

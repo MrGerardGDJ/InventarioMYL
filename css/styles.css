@@ -1039,8 +1039,8 @@ main { padding: 0; }
 .holo[data-rarity="real"]         { --holo-1:#8a5f18; --holo-2:#f2c14e; --holo-3:#ffe98f; --holo-4:#d9f26a }
 .holo[data-rarity="mega-real"]    { --holo-1:#8d90a8; --holo-2:#d7d9e6; --holo-3:#ffffff; --holo-4:#f2f3fa }
 .holo[data-rarity="ultra-real"]   { --holo-1:#20242c; --holo-2:#4a4f5a; --holo-3:#7d838f; --holo-4:#a8adb8 }
-.holo[data-rarity="secreta"]      { --holo-1:#2a1454; --holo-2:#5b2bb0; --holo-3:#8a5cf0; --holo-4:#2f6dd8 }
-.holo[data-rarity="secreta-jade"] { --holo-1:#08321f; --holo-2:#126b45; --holo-3:#1ea87a; --holo-4:#6ff0bd }
+.holo[data-rarity="secreta"]      { --holo-1:#08321f; --holo-2:#126b45; --holo-3:#1ea87a; --holo-4:#6ff0bd }
+.holo[data-rarity="promocional"]  { --holo-1:#2a1454; --holo-2:#5b2bb0; --holo-3:#8a5cf0; --holo-4:#2f6dd8 }
 
 /* Fallback: rareza desconocida o ausente → acento del sistema */
 .holo { --holo-1:#3f3a5c; --holo-2:#5d5294; --holo-3:#9184d9; --holo-4:#b5abfc }
