@@ -449,22 +449,6 @@ create policy "acceso_log" on inventario_myl_log
     </div>
   </div>
 
-  <!-- Modal: asignar/editar el valor propio de una carta (Cambio y Ventas) -->
-  <div id="value-modal" class="modal hidden">
-    <div class="modal-backdrop" data-close-value></div>
-    <div class="modal-box">
-      <button class="modal-close" data-close-value>×</button>
-      <h2>Asignar valor</h2>
-      <p class="muted">Valoras <b id="vm-card"></b>.</p>
-      <label class="field">
-        <span>Tu valor (CLP)</span>
-        <input id="vm-price" type="number" min="0" step="1" placeholder="Ej: 3000" />
-      </label>
-      <button class="btn primary" id="vm-confirm" style="margin-top:10px">Guardar</button>
-      <button class="btn small hidden" id="vm-remove" style="margin-top:8px">Quitar valor</button>
-    </div>
-  </div>
-
   <!-- Modal: elegir mazo para una carta -->
   <div id="deck-modal" class="modal hidden">
     <div class="modal-backdrop" data-close-deck></div>

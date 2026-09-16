@@ -378,6 +378,71 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (80ª iteración) — Cierra el plan pendiente: "Mi valor" se edita en línea, sin modal (y cantidades ofrecidas/en detalle también)
+
+Un plan de rediseño anterior (sidebar colapsable + edición en línea sin
+modales + filtros/orden combinables en Cambio y Ventas) había quedado casi
+completo en el "Rediseño Nocturne" de esta misma sesión — el rail lateral
+colapsable (`96a7169`), la cantidad editable por teclado en la grilla del
+Catálogo (`03b81ab`) y los filtros/orden combinables de Cambio y Ventas
+(`37a823a`) ya estaban shippeados — pero el último punto quedó a medio
+hacer: "Mi valor" seguía abriendo `#value-modal` para escribir el precio.
+Se terminó ese punto y se extendió el mismo patrón a los dos lugares que
+también habían quedado con solo botones +/−:
+
+- **`js/app.js` `myValueSectionHtml()`**: en vez de un botón "Asignar
+  valor"/lápiz que abría el modal, ahora emite directo
+  `<input type="number" data-role="myvalue">` con el valor actual (o vacío
+  con placeholder "Sin valorar") — mismo patrón que ya usa `#deck-name` y
+  el input de cantidad de la grilla: el dato se edita ahí mismo, sin
+  ventana flotante. `tradeCardEl()` escucha `change` y llama
+  `store.setMyPrice(id, raw ? Number(raw) : null)` (vaciar el campo quita
+  el valor, igual que antes hacía el botón "Quitar valor" del modal) +
+  `renderTradeList()`.
+- Se eliminaron `openValueModal`, `closeValueModal`, `saveValue`,
+  `removeValueFromModal` y sus bindings en `bindTradeEvents()`, y el bloque
+  `#value-modal` completo de `index.html`. `openSellModal()` no dependía de
+  esas funciones (ya llamaba `store.getMyPrice` directo), así que no
+  necesitó cambios.
+- **Cantidad ofrecida** (`tradeCardEl`, `data-role="tqty"`): el plan
+  original también pedía este campo como input editable, no solo +/−. Se
+  convirtió a `<input type="number" min="0" max="${owned}">`, con `change`
+  → `store.setTradeQty(card.id, valor)` (la función ya clampeaba a lo que
+  el dueño realmente tiene, así que no hizo falta lógica nueva).
+- **Cantidad total en el modal de detalle** (`openModal`, `data-role="mqty"`):
+  mismo tratamiento — ahora es un input; se factorizó la sincronización
+  compartida (grilla + disponible + ficha del mazo) en una función
+  `applyModalQty()` para no duplicarla entre los botones +/− y el nuevo
+  listener `change`. El control "Disponible" del mismo modal (`data-role="tqty"`
+  ahí, un valor derivado — disponible = ofrecido − reservado en mazos, no
+  invertible 1 a 1) se dejó como estaba (stepper +/−, sin input directo):
+  convertirlo habría requerido inventar una traducción "disponible deseado
+  → delta de ofrecido" que el propio dato no define de forma única.
+- **Bug real encontrado de paso**: al convertir la cantidad de la grilla a
+  `<input>` en la 2/N del Rediseño Nocturne, el handler de +/− del modal
+  de detalle (`openModal`) seguía haciendo `gridCard.querySelector('[data-role="qty"]').textContent = newQty`
+  — no tiene efecto en un `<input>` (se lee/escribe con `.value`, no
+  `.textContent`), así que la grilla no reflejaba los cambios de cantidad
+  hechos desde el modal hasta el próximo re-render completo. Corregido
+  dentro de `applyModalQty()` (usa `.value` y también sincroniza la clase
+  `.dup`, que tampoco se estaba tocando).
+- **CSS**: `.my-value-input`/`.my-value-prefix` (mismo tamaño/peso que el
+  `.my-value-amount` que reemplazan, con foco vía `:focus-within` en el
+  contenedor en vez de borde fijo). Se agregó `.trade-row .qty-num-input { flex: none; width: 26px }`
+  porque el `.qty-num-input` genérico (`flex:1; width:0`, pensado para la
+  fila ancha de la grilla del Catálogo) colapsaba a 0px de ancho dentro de
+  `.tr-qty` (un contenedor `flex: none`, sin ancho propio que repartir) —
+  se detectó recién en la verificación con Playwright (`boundingBox()`
+  devolvía `width: 0`), no a simple vista.
+- Verificado con Playwright: cantidad de grilla editada por teclado (3) →
+  se abre el modal y muestra 3 → se edita a 5 en el modal → al cerrar, la
+  grilla muestra 5 (confirma el fix del bug de sincronización); se navega
+  a Cambio y Ventas por el rail lateral; `#value-modal` no existe en el
+  DOM; se edita "Mi valor" a $4200 sin abrir ningún modal y persiste tras
+  re-renderizar la lista; se edita la cantidad ofrecida a 2 en línea; el
+  selector de orden (`#trade-sort`) funciona. 0 `pageerror` en toda la
+  prueba.
+
 ### 2026-09-16 (79ª iteración) — Auditoría de imágenes mal emparejadas en Leyendas PE 4.0 (por el bug de nombres duplicados)
 
 El dueño reportó con captura que "Ocelote del Templo" (edid 086) y "El
