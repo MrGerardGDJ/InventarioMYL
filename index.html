@@ -200,24 +200,63 @@
 
     <!-- ===== VISTA MAZOS ===== -->
     <section id="view-mazos" class="view">
-      <aside class="filters">
-        <div class="filters-head"><h2>Mis mazos</h2></div>
+      <aside class="filters deck-list-aside">
+        <div class="filters-head"><h2>Mis mazos</h2><span class="muted" id="deck-list-count"></span></div>
         <div id="deck-list" class="deck-list"></div>
-        <button id="new-deck" class="btn full">+ Nuevo mazo</button>
+        <button id="new-deck" class="btn full primary"><i class="ph ph-plus"></i> Nuevo mazo</button>
       </aside>
       <div class="content">
         <div id="deck-detail" class="deck-detail">
           <p class="muted">Selecciona o crea un mazo para empezar a construirlo. Desde la vista <b>Colección</b> puedes añadir cartas al mazo activo.</p>
         </div>
       </div>
+      <aside id="deck-ficha-panel" class="ficha-panel">
+        <div class="ficha-empty">Elige una carta de la composición para ver su ficha.</div>
+        <div id="deck-ficha-content" class="ficha-content hidden">
+          <div class="ficha-head">
+            <span class="ficha-kicker">Carta elegida</span>
+            <div class="ficha-nav">
+              <button id="deck-ficha-prev" class="ficha-nav-btn" title="Anterior (←)"><i class="ph ph-caret-left"></i></button>
+              <button id="deck-ficha-next" class="ficha-nav-btn" title="Siguiente (→)"><i class="ph ph-caret-right"></i></button>
+              <button id="deck-ficha-expand" class="ficha-nav-btn" title="Ver detalle (Espacio)"><i class="ph ph-arrows-out"></i></button>
+            </div>
+          </div>
+          <div id="deck-ficha-art" class="ficha-art"></div>
+          <div class="ficha-qty-row">
+            <span>En este mazo</span>
+            <div class="ficha-stepper">
+              <button id="deck-ficha-minus" class="ficha-step-btn" title="Restar (↓)"><i class="ph ph-minus"></i></button>
+              <span id="deck-ficha-qty" class="ficha-qty-num">0</span>
+              <button id="deck-ficha-plus" class="ficha-step-btn primary" title="Sumar (↑)"><i class="ph ph-plus"></i></button>
+            </div>
+          </div>
+          <div class="ficha-ability">
+            <div class="ficha-kicker">Habilidad</div>
+            <div id="deck-ficha-ability-text"></div>
+          </div>
+          <div id="deck-ficha-meta" class="ficha-meta-grid"></div>
+          <div class="ficha-actions">
+            <button id="deck-ficha-remove" class="ficha-btn"><i class="ph ph-minus-circle"></i>Quitar del mazo</button>
+            <div class="ficha-actions-row">
+              <button id="deck-ficha-catalog" class="ficha-btn"><i class="ph ph-squares-four"></i>En catálogo</button>
+              <button id="deck-ficha-offer" class="ficha-btn"><i class="ph ph-arrows-left-right"></i>Ofrecer</button>
+            </div>
+          </div>
+          <div class="ficha-hints"><span>← → recorrer</span><span>0–9 copias</span></div>
+        </div>
+      </aside>
     </section>
 
     <!-- ===== VISTA ESTADÍSTICAS ===== -->
     <section id="view-stats" class="view">
       <div class="content stats-content">
         <div class="stats-toolbar">
+          <div>
+            <h2 style="margin-bottom:2px">Estadísticas</h2>
+            <div class="muted" id="stats-context" style="font-size:12.5px"></div>
+          </div>
+          <div class="spacer"></div>
           <label class="field inline">
-            <span>Mostrar</span>
             <select id="stats-scope">
               <option value="all">Todo el catálogo</option>
               <option value="owned">Solo las que tengo</option>
@@ -225,22 +264,39 @@
             </select>
           </label>
           <label class="field inline">
-            <span>Formato</span>
-            <select id="stats-format"><option value="">Todos</option></select>
+            <select id="stats-format"><option value="">Formato: todos</option></select>
           </label>
-          <div class="spacer"></div>
+          <label class="field inline">
+            <select id="stats-edition"><option value="">Edición: todas</option></select>
+          </label>
           <button id="stats-export-pdf" class="btn"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
         </div>
 
-        <div id="stats-cards" class="stats-grid"></div>
+        <div class="stats-top-row">
+          <div class="progress-ring-card">
+            <svg viewBox="0 0 112 112" width="112" height="112">
+              <circle cx="56" cy="56" r="46" stroke-width="11" fill="none" stroke="rgba(233,233,237,.14)" />
+              <circle id="progress-ring-fill" cx="56" cy="56" r="46" stroke-width="11" fill="none"
+                stroke="var(--accent-2)" stroke-linecap="round" transform="rotate(-90 56 56)" />
+            </svg>
+            <div class="progress-ring-text">
+              <div class="pr-kicker">Progreso total</div>
+              <div class="pr-pct" id="progress-ring-pct">0%</div>
+              <div class="pr-sub" id="progress-ring-sub"></div>
+            </div>
+          </div>
+          <div id="stats-cards" class="stats-grid cols-3"></div>
+        </div>
 
-        <div class="charts-grid">
-          <div class="chart-card"><h4>Progreso de la colección</h4><div class="chart-wrap"><canvas id="chart-progress"></canvas></div></div>
-          <div class="chart-card"><h4>Por formato</h4><div class="chart-wrap"><canvas id="chart-format"></canvas></div></div>
-          <div class="chart-card"><h4>Por tipo</h4><div class="chart-wrap"><canvas id="chart-type"></canvas></div></div>
-          <div class="chart-card"><h4>Top razas</h4><div class="chart-wrap"><canvas id="chart-race"></canvas></div></div>
-          <div class="chart-card"><h4>Curva de coste</h4><div class="chart-wrap"><canvas id="chart-cost"></canvas></div></div>
-          <div class="chart-card"><h4>Por rareza</h4><div class="chart-wrap"><canvas id="chart-rarity"></canvas></div></div>
+        <div class="charts-grid stats-charts-grid">
+          <div class="chart-card">
+            <h4>Curva de coste</h4><span class="muted chart-note">cartas que tienes</span>
+            <div id="cost-curve-bars" class="cost-curve-bars"></div>
+          </div>
+          <div class="chart-card">
+            <h4>Por tipo</h4>
+            <div id="type-bars" class="type-bars"></div>
+          </div>
         </div>
 
         <h3 style="margin-top:24px">Progreso por edición</h3>

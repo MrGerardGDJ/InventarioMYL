@@ -20,7 +20,7 @@
    ========================================================================== */
 import * as store from "./store.js";
 import { exportExcel, exportPricesExcel, exportPDF, exportDeckExcel, exportDeckImage, exportCollectionPDF, deckSummary } from "./exporters.js";
-import { renderCharts, renderDeckCharts } from "./charts.js";
+import { renderDeckCharts } from "./charts.js";
 import * as cloud from "./cloud.js";
 import { NO_STRENGTH_TYPES } from "./icons.js";
 import { importEditionFromWiki } from "./wiki-import.js";
@@ -39,6 +39,9 @@ const state = {
   prices: {},       // data/prices.json → { cardId: { mylserena, mesaredonda } }, cobertura parcial
   banlist: null,    // data/banlist.json → { meta, entries: [{edition, editionName, name, status, maxCopies}] }
   selectedCardId: null, // Catálogo: carta elegida para la ficha fija (memoria, no persiste)
+  fichaNavList: null,   // Catálogo: orden de recorrido ← → de la ficha fija
+  deckSelectedCardId: null, // Mazos: carta elegida para su propia ficha fija
+  deckFichaNavList: null,   // Mazos: orden de recorrido ← → (array de cardId)
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -215,16 +218,24 @@ function uniqueSorted(values) {
   );
 }
 
+const FMT_NAMES = { PE: "Primera Era", PB: "Primer Bloque", SB: "Segundo Bloque", FX: "Furia Extendido", NE: "Nueva Era / Imperio" };
 function populateFilters() {
   // Formato
-  const fmtNames = { PE: "Primera Era", PB: "Primer Bloque", SB: "Segundo Bloque", FX: "Furia Extendido", NE: "Nueva Era / Imperio" };
-  fillSelect("#f-format", uniqueSorted(state.cards.map((c) => c.format)).map((f) => ({ value: f, label: fmtNames[f] || f })));
+  fillSelect("#f-format", uniqueSorted(state.cards.map((c) => c.format)).map((f) => ({ value: f, label: FMT_NAMES[f] || f })));
   fillSelect("#f-race", uniqueSorted(state.cards.map((c) => c.race)).map((v) => ({ value: v, label: v })));
   fillSelect("#f-type", uniqueSorted(state.cards.map((c) => c.type)).map((v) => ({ value: v, label: v })));
   fillSelect("#f-rarity", uniqueSorted(state.cards.map((c) => c.rarity)).map((v) => ({ value: v, label: v })));
   // Formato también en la vista de estadísticas
-  fillSelect("#stats-format", uniqueSorted(state.cards.map((c) => c.format)).map((f) => ({ value: f, label: fmtNames[f] || f })));
+  fillSelect("#stats-format", uniqueSorted(state.cards.map((c) => c.format)).map((f) => ({ value: f, label: FMT_NAMES[f] || f })));
   refreshEditionOptions();
+  refreshStatsEditionOptions();
+}
+function refreshStatsEditionOptions() {
+  const sel = $("#stats-edition");
+  if (!sel) return;
+  const prev = sel.value;
+  fillEditionSelect(sel, $("#stats-format").value, "Edición: todas");
+  if ([...sel.options].some((o) => o.value === prev)) sel.value = prev;
 }
 
 function refreshEditionOptions() {
@@ -736,6 +747,139 @@ function renderFicha() {
   const list = state.fichaNavList || state.filtered;
   $("#ficha-prev").disabled = i <= 0;
   $("#ficha-next").disabled = i === -1 || i >= list.length - 1;
+}
+
+/* ===================== Ficha fija (Mazos) =====================
+   Misma idea que la ficha del Catálogo (arriba) pero el contador cuenta
+   copias EN EL MAZO (store.deckSetQty/deckAdd), no en el inventario, y las
+   acciones son de mazo: quitar, saltar a la carta en el Catálogo, u
+   ofrecerla para cambio. state.deckSelectedCardId/deckFichaNavList son
+   independientes de selectedCardId/fichaNavList (vistas distintas, no se
+   pisan entre sí). navList acá es un array de cardId (no de cartas), en el
+   orden visual de la composición (ver renderDeckContents). */
+function selectDeckCard(cid, navList) {
+  state.deckSelectedCardId = cid;
+  if (navList) state.deckFichaNavList = navList;
+  $$("#deck-contents .deck-card-row").forEach((el) => el.classList.toggle("selected", el.dataset.cid === cid));
+  renderDeckFicha();
+}
+function deckFichaNavIndex() {
+  const list = state.deckFichaNavList || [];
+  return list.indexOf(state.deckSelectedCardId);
+}
+function deckFichaNavStep(delta) {
+  const list = state.deckFichaNavList || [];
+  const i = deckFichaNavIndex();
+  if (i === -1) return;
+  const next = list[i + delta];
+  if (next) selectDeckCard(next, list);
+}
+function updateDeckFichaQty(qty) {
+  const el = $("#deck-ficha-qty");
+  if (el) el.textContent = qty;
+}
+function activeDeckOrNull() { return store.getDeck(store.getSetting("activeDeckId")); }
+function deckFichaChangeQty(delta) {
+  const deck = activeDeckOrNull();
+  const cid = state.deckSelectedCardId;
+  if (!deck || !cid) return;
+  store.deckAdd(deck.id, cid, delta);
+  updateDeckCounts(); refreshActiveDeckCount();
+  renderDeckContents(deck);
+}
+function deckFichaSetQty(qty) {
+  const deck = activeDeckOrNull();
+  const cid = state.deckSelectedCardId;
+  if (!deck || !cid) return;
+  store.deckSetQty(deck.id, cid, qty);
+  updateDeckCounts(); refreshActiveDeckCount();
+  renderDeckContents(deck);
+}
+function renderDeckFicha() {
+  const panel = $("#deck-ficha-panel");
+  if (!panel) return;
+  const deck = activeDeckOrNull();
+  const cid = state.deckSelectedCardId;
+  const card = deck && cid ? cardById(cid) : null;
+  const empty = panel.querySelector(".ficha-empty");
+  const content = panel.querySelector("#deck-ficha-content");
+  if (!deck || !card) {
+    empty.classList.remove("hidden");
+    content.classList.add("hidden");
+    return;
+  }
+  empty.classList.add("hidden");
+  content.classList.remove("hidden");
+
+  const qty = deck.cards[cid] || 0;
+  const own = store.getQty(cid);
+  const dName = displayName(card);
+  const num = cardNum(card);
+  const img = card.image
+    ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" />`
+    : `<div class="placeholder"></div>`;
+  $("#deck-ficha-art").className = "ficha-art" + (own > 0 ? " owned" : "");
+  $("#deck-ficha-art").innerHTML = `
+    ${img}
+    <div class="card-veil"></div>
+    ${card.strength != null ? `<span class="badge-str"><i class="ph ph-sword"></i>${card.strength}</span>` : ""}
+    ${card.cost != null ? `<span class="badge-cost"><i class="ph ph-coin"></i>${card.cost}</span>` : ""}
+    <div class="card-overlay-text ficha-overlay-text">
+      <div class="ficha-card-name">${escapeHtml(dName)}</div>
+      <div class="ficha-card-sub">${escapeHtml(card.editionName || "")} · ${card.specialId ? escapeHtml(card.specialId) : Number.isFinite(num) ? "nº " + String(num).padStart(3, "0") : ""} · ${escapeHtml(card.rarity)}</div>
+    </div>`;
+
+  updateDeckFichaQty(qty);
+  $("#deck-ficha-ability-text").innerHTML = card.ability ? nl2br(card.ability) : `<span class="muted">Sin texto.</span>`;
+
+  const otherDecks = store.decksUsingCard(cid, deck.id).length;
+  const ref = marketRefPrice(cid);
+  const meta = [
+    ["Copias que tienes", own],
+    ["En otros mazos", otherDecks ? `${otherDecks} mazo${otherDecks === 1 ? "" : "s"}` : "—"],
+    ["Repetidas libres", store.getAvailableQty(cid)],
+    ["Precio ref.", ref != null ? fmtCLP(ref) : "—"],
+  ];
+  $("#deck-ficha-meta").innerHTML = meta.map(([k, v]) =>
+    `<div class="ficha-meta-item"><span class="ficha-meta-k">${escapeHtml(k)}</span><span class="ficha-meta-v${k === "Repetidas libres" ? " accent" : ""}">${escapeHtml(String(v))}</span></div>`
+  ).join("");
+
+  $("#deck-ficha-remove").onclick = () => {
+    store.deckSetQty(deck.id, cid, 0);
+    updateDeckCounts(); refreshActiveDeckCount();
+    state.deckSelectedCardId = null;
+    renderDeckContents(deck);
+    showToast(`«${dName}» quitada del mazo`);
+  };
+  $("#deck-ficha-catalog").onclick = () => jumpToCatalogCard(card);
+  $("#deck-ficha-offer").onclick = () => {
+    if (store.getAvailableQty(cid) < 1 && own > 0) store.addTradeQty(cid, 1);
+    showToast(`«${dName}» ofrecida para cambio o venta`);
+  };
+  $("#deck-ficha-expand").onclick = () => {
+    const navCards = (state.deckFichaNavList || []).map((id) => cardById(id)).filter(Boolean);
+    openModal(card, navCards);
+  };
+
+  const i = deckFichaNavIndex();
+  const list = state.deckFichaNavList || [];
+  $("#deck-ficha-prev").disabled = i <= 0;
+  $("#deck-ficha-next").disabled = i === -1 || i >= list.length - 1;
+}
+// Salta al Catálogo, limpia los filtros para asegurar que la carta sea
+// visible, la busca por nombre y la deja seleccionada en su propia ficha.
+function jumpToCatalogCard(card) {
+  switchView("coleccion");
+  $("#search").value = displayName(card);
+  ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-sort"].forEach((s) => { const el = $(s); if (el) el.selectedIndex = 0; });
+  $("#f-cost").value = 12; $("#cost-val").textContent = "∞";
+  refreshEditionOptions();
+  applyFilters();
+  const found = state.filtered.find((c) => c.id === card.id);
+  if (found) {
+    selectCard(found, state.filtered);
+    requestAnimationFrame(() => $(`#cards-grid .card[data-id="${escapeAttr(card.id)}"]`)?.scrollIntoView({ block: "center" }));
+  }
 }
 
 /* ===================== Modal detalle ===================== */
@@ -2039,6 +2183,18 @@ function renderTradeView() {
 
 // Formatea un precio en pesos chilenos ($1.234)
 function fmtCLP(n) { return "$" + Math.round(n).toLocaleString("es-CL"); }
+// "hace 5 días" / "hoy" / "hace 3 meses" — usado en la cabecera de Mazos.
+function relTime(ts) {
+  if (!ts) return null;
+  const days = Math.floor((Date.now() - ts) / 86400000);
+  if (days <= 0) return "hoy";
+  if (days === 1) return "hace 1 día";
+  if (days < 30) return `hace ${days} días`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `hace ${months} mes${months === 1 ? "" : "es"}`;
+  const years = Math.floor(months / 12);
+  return `hace ${years} año${years === 1 ? "" : "s"}`;
+}
 // Precio referencial de una carta (data/prices.json) — cobertura parcial,
 // ver docs/FUENTES-DATOS.md sección 6b. null si no se encontró ninguna tienda.
 function cardPriceInfo(cardId) { return state.prices[cardId] || null; }
@@ -2561,11 +2717,24 @@ function switchDeckTab(tab) {
   $$("#deck-detail .deck-tab-panel").forEach((p) => p.classList.toggle("hidden", p.id !== `deck-tab-${tab}`));
 }
 
+// Estado de una fila de "Mis mazos": en borrador (menos de MYL_DECK_SIZE
+// cartas en total), faltan N copias (completo en cantidad pero sin todas
+// las copias en tu colección), o completo.
+function deckStatusInfo(deck) {
+  const total = store.deckCount(deck.id);
+  if (total < MYL_DECK_SIZE) return { cls: "", icon: "ph-warning-circle", text: "en borrador" };
+  const missing = computeDeckStrategy(deck).missingCopies;
+  if (missing > 0) return { cls: "", icon: "ph-warning-circle", text: `faltan ${missing} copia${missing === 1 ? "" : "s"}` };
+  return { cls: "complete", icon: "ph-check-circle", text: "completo" };
+}
+
 function renderDecksView() {
   const list = $("#deck-list");
   const decks = store.getDecks();
   list.innerHTML = "";
   const activeId = store.getSetting("activeDeckId");
+  const countEl = $("#deck-list-count");
+  if (countEl) countEl.textContent = decks.length || "";
   if (decks.length === 0) {
     list.innerHTML = `<p class="muted">Aún no tienes mazos.</p>`;
   }
@@ -2573,28 +2742,80 @@ function renderDecksView() {
     const row = document.createElement("div");
     row.className = "deck-item" + (d.id === activeId ? " active" : "");
     row.dataset.deckId = d.id;
+    const st = deckStatusInfo(d);
     row.innerHTML = `
-      <span class="d-name">${escapeHtml(d.name)}</span>
-      ${deckStatusBadgeHtml(d)}
-      <span class="d-count">${store.deckCount(d.id)}</span>
-      <button class="qty-btn" data-del title="Eliminar"><i class="ph ph-trash"></i></button>`;
-    row.querySelector(".d-name").onclick = () => { store.setSetting("activeDeckId", d.id); renderDecksView(); renderDeckDetail(); };
-    row.querySelector("[data-status]").onclick = (e) => {
+      <div class="deck-item-top">
+        <span class="d-name">${escapeHtml(d.name)}</span>
+        <span class="d-count">${store.deckCount(d.id)}</span>
+        <button class="d-del" data-del title="Eliminar"><i class="ph ph-trash"></i></button>
+      </div>
+      <div class="deck-item-status ${st.cls}"><i class="ph ${st.icon}"></i> ${escapeHtml(st.text)}</div>`;
+    row.addEventListener("click", (e) => {
+      if (e.target.closest("[data-del]")) return;
+      store.setSetting("activeDeckId", d.id);
+      renderDecksView();
+    });
+    row.querySelector("[data-del]").onclick = (e) => {
       e.stopPropagation();
-      store.setDeckStatus(d.id, d.status === "principal" ? "secundario" : "principal");
-      renderDecksView(); // recalcula disponibilidad (afecta a todos los mazos que compartan cartas)
-    };
-    row.querySelector("[data-del]").onclick = () => {
       if (confirm(`¿Eliminar el mazo «${d.name}»?`)) {
         store.deleteDeck(d.id);
         if (activeId === d.id) store.setSetting("activeDeckId", null);
-        renderDecksView(); renderDeckDetail();
+        renderDecksView();
       }
     };
     list.appendChild(row);
   }
   refreshActiveDeckUI();
   renderDeckDetail();
+}
+
+// Formato predominante entre las cartas del mazo (los mazos no guardan un
+// campo de formato propio — se infiere de sus cartas, igual que la barra de
+// disponibilidad ya usa card.format para otras cosas).
+function deckFormat(deck) {
+  const counts = {};
+  for (const cid of Object.keys(deck.cards)) {
+    const card = state.cards.find((c) => c.id === cid);
+    if (card?.format) counts[card.format] = (counts[card.format] || 0) + 1;
+  }
+  const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  return top ? FMT_NAMES[top[0]] || top[0] : null;
+}
+
+// Las 4 cifras de la fila de KPI de arriba (ver computeDeckStrategy para
+// missingCopies/avgCost, que ya se calculaban para la pestaña Estadística).
+function computeDeckKpis(deck) {
+  const strat = computeDeckStrategy(deck);
+  const total = strat.total;
+  const armed = total - strat.missingCopies;
+  const armedPct = total ? Math.round((armed / total) * 100) : 0;
+  const aliados = strat.byType["Aliado"] || 0;
+  const talismanesArmas = (strat.byType["Talismán"] || 0) + (strat.byType["Arma"] || 0) + (strat.byType["Tótem"] || 0);
+  const orosMonumentos = (strat.byType["Oro"] || 0) + (strat.byType["Monumento"] || 0);
+  let missingCards = 0, missingInRepeats = 0;
+  for (const [cid, q] of Object.entries(deck.cards)) {
+    const own = store.getQty(cid);
+    if (own < q) {
+      missingCards++;
+      // Cuánto de lo que falta se podría cubrir con copias de esa misma
+      // carta que ya marcaste para cambio (en vez de comprar/conseguir más).
+      missingInRepeats += Math.min(q - own, store.getTradeQty(cid));
+    }
+  }
+  return { total, armed, armedPct, aliados, talismanesArmas, orosMonumentos, missingCards, missingInRepeats, missingCopies: strat.missingCopies, avgCost: strat.avgCost, allyTotal: strat.allyTotal };
+}
+function renderDeckKpis(deck) {
+  const box = $("#deck-kpis-top");
+  if (!box) return;
+  const k = computeDeckKpis(deck);
+  box.innerHTML = [
+    statCard3("Cartas del mazo", k.total, `${k.aliados} aliados · ${k.talismanesArmas} talismanes · ${k.orosMonumentos} oros`),
+    statCard3("Armado", `${k.armed}<span class="num-of">/${k.total}</span>`, `${k.armedPct}% con lo que tienes`),
+    statCard3("Te faltan", `${k.missingCopies} copia${k.missingCopies === 1 ? "" : "s"}`,
+      k.missingCopies ? `de ${k.missingCards} carta${k.missingCards === 1 ? "" : "s"}${k.missingInRepeats ? ` · ${k.missingInRepeats} en tus repetidas` : ""}` : "tienes todas las copias",
+      k.missingCopies ? "highlight" : ""),
+    statCard3("Coste medio", k.allyTotal ? k.avgCost.toFixed(1) : "—", "de tus Aliados"),
+  ].join("");
 }
 
 function renderDeckDetail() {
@@ -2604,20 +2825,34 @@ function renderDeckDetail() {
     wrap.innerHTML = `<p class="muted">Selecciona o crea un mazo para empezar a construirlo. Desde la vista <b>Colección</b> puedes añadir cartas al mazo activo con el botón “+” de la tarjeta, o buscarlas aquí abajo.</p>`;
     return;
   }
+  const fmt = deckFormat(deck);
+  const createdLbl = deck.createdAt ? `Creado en ${new Date(deck.createdAt).toLocaleDateString("es-CL", { month: "long" })}` : null;
+  const updatedLbl = deck.updatedAt ? `última vez editado ${relTime(deck.updatedAt)}` : null;
   wrap.innerHTML = `
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <h2><input id="deck-name" value="${escapeAttr(deck.name)}" style="background:var(--bg-3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font-size:18px;font-weight:700" /></h2>
-      ${deckStatusBadgeHtml(deck)}
-      <span class="muted" id="deck-total"></span>
-      <div class="spacer" style="flex:1"></div>
-      <button class="btn small" id="deck-xlsx"><i class="ph ph-file-xls"></i> Excel</button>
-      <button class="btn small" id="deck-img"><i class="ph ph-image"></i> Imagen</button>
-      <button class="btn small" id="deck-txt"><i class="ph ph-text-align-left"></i> Texto</button>
+    <div class="deck-kicker-line">${fmt ? escapeHtml(fmt) + " · " : ""}${store.deckCount(deck.id)} CARTAS</div>
+    <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <h2><input id="deck-name" class="deck-title-input" value="${escapeAttr(deck.name)}" /></h2>
+        <div class="deck-context-line">${[createdLbl, updatedLbl].filter(Boolean).join(" · ") || "—"} ${deckStatusBadgeHtml(deck)}</div>
+      </div>
+      <div class="actions">
+        <div class="dropdown" id="deck-export-dropdown">
+          <button class="btn" id="deck-export-btn"><i class="ph ph-export"></i> Exportar</button>
+          <div class="dropdown-menu">
+            <button id="deck-xlsx"><i class="ph ph-file-xls"></i> Excel</button>
+            <button id="deck-img"><i class="ph ph-image"></i> Imagen</button>
+            <button id="deck-txt"><i class="ph ph-text-align-left"></i> Texto</button>
+          </div>
+        </div>
+        <button class="btn primary" id="deck-add-cards"><i class="ph ph-magnifying-glass"></i> Añadir cartas</button>
+      </div>
     </div>
-    <div class="muted" style="font-size:12px;margin-top:4px">Actualizado: ${deck.updatedAt ? new Date(deck.updatedAt).toLocaleString("es-CL") : "—"}</div>
     <p class="muted deck-status-note">${deck.status === "secundario"
       ? "Mazo Secundario: es un plan/experimento — no reserva copias de tus cartas ni compite con tus otros mazos."
       : "Mazo Principal: compite por copias con tus otros mazos Principal (si comparten una carta, la disponibilidad se reparte entre ellos)."}</p>
+
+    <div id="deck-kpis-top" class="stats-grid cols-4"></div>
+
     <div class="tabs deck-tabs">
       <button class="tab" data-deck-tab="cartas"><i class="ph ph-cards"></i> Cartas</button>
       <button class="tab" data-deck-tab="estadistica"><i class="ph ph-chart-bar"></i> Estadística</button>
@@ -2657,17 +2892,24 @@ function renderDeckDetail() {
     store.setDeckStatus(deck.id, deck.status === "principal" ? "secundario" : "principal");
     renderDecksView(); // recalcula disponibilidad en este mazo y en los que compartan cartas
   };
-  $("#deck-txt").onclick = () => exportDeck(deck);
+  const exportDd = $("#deck-export-dropdown");
+  $("#deck-export-btn").onclick = () => exportDd.classList.toggle("open");
+  $("#deck-txt").onclick = () => { exportDd.classList.remove("open"); exportDeck(deck); };
   $("#deck-xlsx").onclick = () => {
+    exportDd.classList.remove("open");
     showToast("Generando Excel…", 4000);
     exportDeckExcel(deck, state.cards, store.getQty, displayName)
       .then(() => showToast("Excel descargado ✓")).catch((e) => showToast("Error: " + e.message, 4000));
   };
   $("#deck-img").onclick = () => {
+    exportDd.classList.remove("open");
     showToast("Generando imagen…", 4000);
     exportDeckImage(deck, state.cards, store.getQty, displayName)
       .then(() => showToast("Imagen descargada ✓")).catch((e) => showToast("Error: " + e.message, 4000));
   };
+  $("#deck-add-cards").onclick = () => { switchDeckTab("cartas"); $("#deck-search")?.focus(); };
+
+  renderDeckKpis(deck);
 
   const di = $("#deck-search");
   di.oninput = debounce(() => {
@@ -2700,10 +2942,10 @@ function renderDeckDetail() {
 // lista de texto plana, sin perder ninguna función (buscador para añadir,
 // +/- de cantidad, avisos de ban list y de copias faltantes).
 const DECK_ZONE_TITLES = {
-  Aliado: '<i class="ph ph-shield"></i> Aliados',
-  Apoyo: '<i class="ph ph-sparkle"></i> Talismanes, Armas y Tótems',
-  Oro: '<i class="ph ph-coin"></i> Oro',
-  Otro: '<i class="ph ph-cards"></i> Otras',
+  Aliado: "Aliados",
+  Apoyo: "Talismanes y armas",
+  Oro: "Oros y monumentos",
+  Otro: "Otras",
 };
 const DECK_SUPPORT_TYPES = new Set(["Talismán", "Arma", "Tótem"]);
 // Orden de "más pro" a "más básica" acordado con el dueño (24-08-2026): las
@@ -2727,7 +2969,7 @@ function rarityCompare(a, b) {
   return rarityRankByName(a) - rarityRankByName(b) || a.localeCompare(b, "es");
 }
 function deckZoneOf(card) {
-  if (card.type === "Oro") return "Oro";
+  if (card.type === "Oro" || card.type === "Monumento") return "Oro";
   if (card.type === "Aliado") return "Aliado";
   return DECK_SUPPORT_TYPES.has(card.type) ? "Apoyo" : "Otro";
 }
@@ -2766,13 +3008,19 @@ function renderDeckContents(deck) {
     banner.innerHTML = bannerHtml;
   }
 
+  renderDeckKpis(deck);
+  updateActiveDeckListRow(deck);
+
   if (entries.length === 0) {
     cont.innerHTML = `<p class="muted">Mazo vacío. Busca una carta arriba para añadirla, o usa el botón “+” en la Colección.</p>`;
+    state.deckFichaNavList = [];
+    renderDeckFicha();
     renderDeckSummary(deck); renderDeckStrategy(deck);
     return;
   }
 
   let html = "";
+  const navList = []; // orden visual de cid, para ← → en la ficha
   for (const key of ["Aliado", "Apoyo", "Oro", "Otro"]) {
     const zoneCards = groups[key];
     // El "espacio de carta" de Aliados faltantes se muestra siempre que el
@@ -2790,69 +3038,84 @@ function renderDeckContents(deck) {
         default: return displayName(a.card).localeCompare(displayName(b.card), "es");
       }
     });
-    html += `<div class="dist-zone">
-      <div class="dist-zone-title">${DECK_ZONE_TITLES[key]} <span class="muted">(${zoneQty})</span></div>
-      <div class="cards-grid dist-grid">${zoneCards.map(({ card, cid, q }) => deckCardTileHtml(card, cid, q)).join("")}`;
+    for (const x of zoneCards) navList.push(x.cid);
+    html += `<div class="deck-group">
+      <div class="deck-group-head"><span class="dgh-name">${escapeHtml(DECK_ZONE_TITLES[key])}</span><span class="dgh-count">${zoneQty} cartas</span><span class="dgh-rule"></span></div>
+      <div class="deck-group-grid">${zoneCards.map(({ card, cid, q }) => deckCardRowHtml(card, cid, q, deck)).join("")}`;
     if (showAllyGap) {
       const need = RACIAL_MIN_ALLIES - allyTotal;
-      html += deckGapTileHtml(`Faltan ${need} Aliado${need === 1 ? "" : "s"}`, `Mínimo ${RACIAL_MIN_ALLIES} en el formato Racial Edición`);
+      html += deckGapRowHtml(`Faltan ${need} Aliado${need === 1 ? "" : "s"}`, `Mínimo ${RACIAL_MIN_ALLIES} en el formato Racial Edición`);
     }
     html += `</div></div>`;
   }
   if (total < MYL_DECK_SIZE) {
     const need = MYL_DECK_SIZE - total;
-    html += `<div class="dist-zone">
-      <div class="dist-zone-title"><i class="ph ph-plus"></i> Por completar <span class="muted">(${need})</span></div>
-      <div class="cards-grid dist-grid">${deckGapTileHtml(`Faltan ${need} carta${need === 1 ? "" : "s"}`, `El Mazo Castillo estándar usa ${MYL_DECK_SIZE} — busca arriba para completarlo`)}</div>
+    html += `<div class="deck-group">
+      <div class="deck-group-head"><span class="dgh-name">Por completar</span><span class="dgh-count">${need} cartas</span><span class="dgh-rule"></span></div>
+      <div class="deck-group-grid">${deckGapRowHtml(`Faltan ${need} carta${need === 1 ? "" : "s"}`, `El Mazo Castillo estándar usa ${MYL_DECK_SIZE} — busca arriba para completarlo`)}</div>
     </div>`;
   }
   if (!html) html = `<p class="muted">Ninguna carta del mazo coincide con la búsqueda de la barra superior.</p>`;
   cont.innerHTML = html;
-  cont.querySelectorAll(".dist-card[data-cid]").forEach((tile) => {
-    const cid = tile.dataset.cid;
-    tile.querySelectorAll("[data-d]").forEach((b) => {
-      b.onclick = () => { store.deckAdd(deck.id, cid, b.dataset.d === "plus" ? 1 : -1); renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount(); };
-    });
+  state.deckFichaNavList = navList;
+  cont.querySelectorAll(".deck-card-row[data-cid]").forEach((row) => {
+    row.classList.toggle("selected", row.dataset.cid === state.deckSelectedCardId);
+    row.addEventListener("click", () => selectDeckCard(row.dataset.cid, navList));
   });
+  if (state.deckSelectedCardId && !navList.includes(state.deckSelectedCardId)) {
+    state.deckSelectedCardId = null;
+  }
+  renderDeckFicha();
   renderDeckSummary(deck);
   renderDeckStrategy(deck);
 }
+// Actualiza solo la fila de este mazo en "Mis mazos" (conteo + estado) sin
+// re-renderizar toda la lista — se llama en cada cambio de cantidad para
+// que el estado se vea al instante sin perder el scroll de la lista.
+function updateActiveDeckListRow(deck) {
+  const row = $(`.deck-item[data-deck-id="${escapeAttr(deck.id)}"]`);
+  if (!row) return;
+  const st = deckStatusInfo(deck);
+  const countEl = row.querySelector(".d-count");
+  if (countEl) countEl.textContent = store.deckCount(deck.id);
+  const statusEl = row.querySelector(".deck-item-status");
+  if (statusEl) {
+    statusEl.className = `deck-item-status ${st.cls}`;
+    statusEl.innerHTML = `<i class="ph ${st.icon}"></i> ${escapeHtml(st.text)}`;
+  }
+}
 
-function deckCardTileHtml(card, cid, q) {
+// Fila de una carta del mazo (miniatura 26×36 + nombre/metadato + cantidad),
+// ver spec de la vista Mazos: un clic selecciona la carta y actualiza la
+// ficha fija de la derecha, no abre modal ni suma/resta acá — eso ahora vive
+// en el stepper "En este mazo" de la ficha (ver selectDeckCard/renderDeckFicha).
+function deckCardRowHtml(card, cid, q, deck) {
   const dName = displayName(card);
   const own = store.getQty(cid);
+  const missing = own < q;
   const banWarn = banlistWarning(card, q);
   const img = card.image
-    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
-    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div></div>`;
-  return `<div class="card dist-card${banWarn ? " has-ban" : ""}" data-cid="${escapeAttr(cid)}">
-    <div class="card-img">
-      <span class="badge-num">×${q}</span>
-      ${banWarn ? `<span class="ban-icon" title="${escapeAttr(banWarn)}"><i class="ph ph-prohibit"></i></span>` : ""}
-      ${img}
+    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:''}))" />`
+    : `<div class="placeholder"></div>`;
+  return `<div class="deck-card-row${missing ? " missing" : ""}${banWarn ? " has-ban" : ""}" data-cid="${escapeAttr(cid)}">
+    <div class="dcr-thumb">${img}</div>
+    <div class="dcr-main">
+      <div class="dcr-name">${escapeHtml(dName)}</div>
+      <div class="dcr-meta">×${q} · tienes ${own}</div>
     </div>
-    <div class="card-body">
-      <div class="card-name">${escapeHtml(dName)}</div>
-      ${own < q ? `<div class="card-warn lack">Faltan ${q - own} en tu colección</div>` : ""}
-      ${banWarn ? `<div class="card-warn ban"><i class="ph ph-prohibit"></i> ${escapeHtml(banWarn)}</div>` : ""}
-      <div class="qty-row">
-        <button class="qty-btn" data-d="minus">−</button>
-        <span class="qty-num">${q}</span>
-        <button class="qty-btn" data-d="plus">+</button>
-      </div>
-    </div>
+    ${banWarn ? `<i class="ph ph-prohibit dcr-warn" title="${escapeAttr(banWarn)}"></i>` : ""}
+    <div class="dcr-qty">×${q}</div>
   </div>`;
 }
 
 // "Espacio de carta" punteado que marca un hueco del mazo (faltan Aliados
-// para el mínimo del formato, o cartas para llegar a las 50) — mismo tamaño
-// que una carta real para que se note al mirar la cuadrícula.
-function deckGapTileHtml(title, sub) {
-  return `<div class="card dist-card dist-gap">
-    <div class="card-img gap-img"><span class="gap-icon"><i class="ph ph-plus"></i></span></div>
-    <div class="card-body">
-      <div class="card-name">${escapeHtml(title)}</div>
-      <div class="card-meta">${escapeHtml(sub)}</div>
+// para el mínimo del formato, o cartas para llegar a las 50).
+function deckGapRowHtml(title, sub) {
+  return `<div class="deck-gap-row">
+    <div class="dcr-thumb"><i class="ph ph-plus"></i></div>
+    <div class="dcr-main">
+      <div class="dcr-name">${escapeHtml(title)}</div>
+      <div class="dcr-meta">${escapeHtml(sub)}</div>
     </div>
   </div>`;
 }
@@ -3034,51 +3297,146 @@ function statsScopeLabel() {
 function renderStats() {
   const scope = $("#stats-scope")?.value || "all";
   const fmt = $("#stats-format")?.value || "";
-  const base = fmt ? state.cards.filter((c) => c.format === fmt) : state.cards;
+  const ed = $("#stats-edition")?.value || "";
+  let base = fmt ? state.cards.filter((c) => c.format === fmt) : state.cards;
+  if (ed) base = base.filter((c) => c.edition === ed);
 
   const owned = base.filter((c) => store.getQty(c.id) > 0);
   const ownedCopies = base.reduce((s, c) => s + store.getQty(c.id), 0);
+  const repeatedCopies = base.reduce((s, c) => s + Math.max(0, store.getQty(c.id) - 1), 0);
   const pct = base.length ? Math.round((owned.length / base.length) * 100) : 0;
 
-  $("#stats-cards").innerHTML = `
-    ${statCard(owned.length, "Cartas únicas")}
-    ${statCard(ownedCopies, "Copias totales")}
-    ${statCard(base.length, "Cartas en catálogo")}
-    ${statCard(pct + "%", "Colección completa")}
-    ${statCard(store.getDecks().length, "Mazos guardados")}`;
+  // Anillo de progreso (circunferencia r=46 → 2π·46 ≈ 289)
+  const CIRC = 2 * Math.PI * 46;
+  const ring = $("#progress-ring-fill");
+  if (ring) ring.setAttribute("stroke-dasharray", `${(CIRC * (pct / 100)).toFixed(1)} ${CIRC.toFixed(1)}`);
+  const pctEl = $("#progress-ring-pct"); if (pctEl) pctEl.textContent = pct + "%";
+  const subEl = $("#progress-ring-sub"); if (subEl) subEl.textContent = `${owned.length.toLocaleString("es-CL")} de ${base.length.toLocaleString("es-CL")} cartas`;
 
-  // Gráficos (carga perezosa de Chart.js)
-  renderCharts({ cards: state.cards, getQty: store.getQty, scope, format: fmt })
-    .catch((e) => console.warn("charts:", e));
+  const scopeLbl = scope === "owned" ? "Solo las que tengo" : scope === "missing" ? "Solo las que me faltan" : "Todo el catálogo";
+  const edCount = new Set(base.map((c) => c.edition)).size;
+  const ctxEl = $("#stats-context"); if (ctxEl) ctxEl.textContent = `${scopeLbl} · ${edCount} edición${edCount === 1 ? "" : "es"}`;
 
-  // Progreso por edición (respeta el formato elegido)
+  // Progreso por edición (respeta formato/edición elegidos)
   const byEd = {};
   for (const c of base) {
     const e = (byEd[c.edition] ||= { name: c.editionName, total: 0, owned: 0 });
     e.total++;
     if (store.getQty(c.id) > 0) e.owned++;
   }
-  const rows = Object.values(byEd)
+  const editionsComplete = Object.values(byEd).filter((e) => e.total > 0 && e.owned === e.total).length;
+  const ownCards = base.filter((c) => c.userCustom).length;
+  const ownEditions = store.getCustomEditions().length;
+  const repeatedCards = base.filter((c) => store.getQty(c.id) > 1).length;
+
+  // Valor estimado: precio propio o de referencia, solo de lo que se posee
+  // (mismo criterio que "Valor potencial" de Cambio y Ventas).
+  let estValue = 0, pricedCopies = 0;
+  for (const c of owned) {
+    const q = store.getQty(c.id);
+    const unit = store.getMyPrice(c.id) ?? marketRefPrice(c.id);
+    if (unit != null) { estValue += unit * q; pricedCopies += q; }
+  }
+
+  $("#stats-cards").innerHTML = [
+    statCard3("Cartas distintas", owned.length.toLocaleString("es-CL"), `de ${base.length.toLocaleString("es-CL")} del catálogo`),
+    statCard3("Copias totales", ownedCopies.toLocaleString("es-CL"), `${repeatedCopies.toLocaleString("es-CL")} repetidas`),
+    statCard3("Ediciones completas", editionsComplete, `de ${edCount} edición${edCount === 1 ? "" : "es"}`, "highlight"),
+    statCard3("Cartas propias", ownCards, ownEditions ? `${ownEditions} edición${ownEditions === 1 ? "" : "es"} creada${ownEditions === 1 ? "" : "s"} por ti` : "agregadas a mano"),
+    statCard3("Repetidas", repeatedCards, "cartas con 2+ copias"),
+    statCard3("Valor estimado", pricedCopies ? fmtCLP(estValue) : "—", "según precios de referencia"),
+  ].join("");
+
+  // Curva de coste + Por tipo: barras CSS (sin Chart.js) de lo que tienes.
+  // El selector "Alcance" no las afecta — el título ya dice "cartas que
+  // tienes", así que siempre muestran la colección, nunca el catálogo
+  // completo ni lo que falta (mostrar miles de cartas del catálogo bajo esa
+  // leyenda sería confuso).
+  renderCostCurveBars(owned);
+  renderTypeBars(owned);
+
+  const rows = Object.entries(byEd)
+    .map(([slug, e]) => ({ slug, ...e }))
     .filter((e) => e.total > 0)
     .sort((a, b) => b.owned / b.total - a.owned / a.total || b.total - a.total);
   $("#stats-editions").innerHTML = rows
     .map((e) => {
       const p = Math.round((e.owned / e.total) * 100);
-      return `<div class="ep-row">
-        <span>${escapeHtml(e.name || "—")}</span>
-        <span class="ep-bar"><span class="ep-fill" style="width:${p}%"></span></span>
-        <span class="muted">${e.owned}/${e.total} (${p}%)</span>
+      const high = p >= 70;
+      return `<div class="ep-row" data-edition="${escapeAttr(e.slug)}">
+        <div class="ep-info"><div class="ep-name">${escapeHtml(e.name || "—")}</div><div class="ep-meta">${e.owned} de ${e.total}</div></div>
+        <span class="ep-bar"><span class="ep-fill${high ? " high" : ""}" style="width:${p}%"></span></span>
+        <span class="ep-pct${high ? " high" : ""}">${p}%</span>
       </div>`;
     })
     .join("") || `<p class="muted">Sin datos.</p>`;
+  $$("#stats-editions .ep-row").forEach((row) => { row.onclick = () => jumpToAlbumEdition(row.dataset.edition); });
+}
+function renderCostCurveBars(cards) {
+  const box = $("#cost-curve-bars");
+  if (!box) return;
+  const costMap = new Map();
+  for (const c of cards) {
+    if (c.cost == null) continue;
+    const k = c.cost >= 11 ? "11+" : String(c.cost);
+    costMap.set(k, (costMap.get(k) || 0) + 1);
+  }
+  const keys = [...Array(11).keys()].map(String).concat("11+").filter((k) => costMap.has(k));
+  if (!keys.length) { box.innerHTML = `<p class="muted">Sin datos.</p>`; return; }
+  const max = Math.max(1, ...keys.map((k) => costMap.get(k)));
+  box.innerHTML = keys.map((k) => {
+    const v = costMap.get(k);
+    const h = Math.max(2, Math.round((v / max) * 100));
+    return `<div class="ccb-col">
+      <span class="ccb-val">${v}</span>
+      <div class="ccb-bar${v === max ? " max" : ""}" style="height:${h}%"></div>
+      <span class="ccb-lbl">${k}</span>
+    </div>`;
+  }).join("");
+}
+function renderTypeBars(cards) {
+  const box = $("#type-bars");
+  if (!box) return;
+  const m = new Map();
+  for (const c of cards) {
+    if (!c.type || c.type === "—") continue;
+    m.set(c.type, (m.get(c.type) || 0) + 1);
+  }
+  const entries = [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
+  if (!entries.length) { box.innerHTML = `<p class="muted">Sin datos.</p>`; return; }
+  const max = Math.max(1, ...entries.map((e) => e[1]));
+  box.innerHTML = entries.map(([t, v], i) => {
+    const w = Math.max(2, Math.round((v / max) * 100));
+    return `<div class="tb-row">
+      <div class="tb-top"><span class="tb-name">${escapeHtml(t)}</span><span class="tb-val">${v}</span></div>
+      <div class="tb-track"><div class="tb-fill${i === 0 ? " top" : ""}" style="width:${w}%"></div></div>
+    </div>`;
+  }).join("");
+}
+// Clic en una fila de "Progreso por edición" → la vista Álbum, a la
+// colección que sigue esa edición (crea una de un solo click si no existe
+// ninguna todavía, igual que el gestor de colecciones ya permite).
+function jumpToAlbumEdition(slug) {
+  if (!slug) return;
+  let col = store.getCollections().find((c) => c.editions.includes(slug));
+  if (!col) col = store.createCollection(state.editionName[slug] || slug, [slug]);
+  store.setSetting("activeCollectionId", col.id);
+  switchView("colecciones");
 }
 function statCard(num, lbl) {
   return `<div class="stat-card"><div class="num">${num}</div><div class="lbl">${lbl}</div></div>`;
 }
+// Variante de 3 líneas (etiqueta arriba, cifra, subtexto abajo) — fila de
+// KPI de Mazos y Estadísticas. `cls` agrega modificadores como "highlight"
+// o "clickable".
+function statCard3(label, num, sub, cls = "") {
+  return `<div class="stat-card${cls ? " " + cls : ""}"><div class="lbl-top">${escapeHtml(label)}</div><div class="num">${num}</div><div class="lbl">${escapeHtml(sub)}</div></div>`;
+}
 
 function statsExportPDF() {
-  const scope = $("#stats-scope").value, fmt = $("#stats-format").value;
+  const scope = $("#stats-scope").value, fmt = $("#stats-format").value, ed = $("#stats-edition").value;
   let cards = fmt ? state.cards.filter((c) => c.format === fmt) : state.cards.slice();
+  if (ed) cards = cards.filter((c) => c.edition === ed);
   if (scope === "owned") cards = cards.filter((c) => store.getQty(c.id) > 0);
   else if (scope === "missing") cards = cards.filter((c) => store.getQty(c.id) === 0);
   if (cards.length > 1500 && !confirm(`Son ${cards.length} cartas. El PDF puede ser grande. ¿Continuar?`)) return;
@@ -3506,7 +3864,12 @@ function bindEvents() {
   $("#modal-prev").addEventListener("click", () => modalNavStep(-1));
   $("#modal-next").addEventListener("click", () => modalNavStep(1));
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); closeCollectionModal(); closeTradeModal(); return; }
+    if (e.key === "Escape") {
+      closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); closeCollectionModal(); closeTradeModal();
+      if (state.selectedCardId) { state.selectedCardId = null; $$("#cards-grid .card").forEach((el) => el.classList.remove("selected")); renderFicha(); }
+      if (state.deckSelectedCardId) { state.deckSelectedCardId = null; $$("#deck-contents .deck-card-row").forEach((el) => el.classList.remove("selected")); renderDeckFicha(); }
+      return;
+    }
     const tag = document.activeElement?.tagName;
     const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
     if (!$("#modal").classList.contains("hidden")) {
@@ -3514,18 +3877,32 @@ function bindEvents() {
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); modalNavStep(e.key === "ArrowLeft" ? -1 : 1); }
       return;
     }
-    // Atajos de teclado de la ficha fija (Catálogo): ← → recorre, ↑ ↓ suma/
-    // resta una copia, 0–9 fija la cantidad, Espacio abre el detalle.
-    if (state.view !== "coleccion" || typing || !state.selectedCardId) return;
-    if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); fichaNavStep(e.key === "ArrowLeft" ? -1 : 1); }
-    else if (e.key === "ArrowUp" || e.key === "ArrowDown") { e.preventDefault(); fichaChangeQty(e.key === "ArrowUp" ? 1 : -1); }
-    else if (e.key === " ") { e.preventDefault(); openModal(cardById(state.selectedCardId), state.fichaNavList || state.filtered); }
-    else if (/^[0-9]$/.test(e.key)) { e.preventDefault(); fichaSetQty(Number(e.key)); }
+    if (typing) return;
+    // Atajos de teclado de la ficha fija del Catálogo: ← → recorre, ↑ ↓
+    // suma/resta una copia, 0–9 fija la cantidad, Espacio abre el detalle.
+    if (state.view === "coleccion" && state.selectedCardId) {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); fichaNavStep(e.key === "ArrowLeft" ? -1 : 1); }
+      else if (e.key === "ArrowUp" || e.key === "ArrowDown") { e.preventDefault(); fichaChangeQty(e.key === "ArrowUp" ? 1 : -1); }
+      else if (e.key === " ") { e.preventDefault(); openModal(cardById(state.selectedCardId), state.fichaNavList || state.filtered); }
+      else if (/^[0-9]$/.test(e.key)) { e.preventDefault(); fichaSetQty(Number(e.key)); }
+    }
+    // Mismos atajos para la ficha fija de Mazos, pero ↑↓/0-9 fijan la
+    // cantidad EN EL MAZO (no el inventario) — ver deckFichaChangeQty/Set.
+    else if (state.view === "mazos" && state.deckSelectedCardId) {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); deckFichaNavStep(e.key === "ArrowLeft" ? -1 : 1); }
+      else if (e.key === "ArrowUp" || e.key === "ArrowDown") { e.preventDefault(); deckFichaChangeQty(e.key === "ArrowUp" ? 1 : -1); }
+      else if (e.key === " ") { e.preventDefault(); $("#deck-ficha-expand")?.click(); }
+      else if (/^[0-9]$/.test(e.key)) { e.preventDefault(); deckFichaSetQty(Number(e.key)); }
+    }
   });
   $("#ficha-prev").addEventListener("click", () => fichaNavStep(-1));
   $("#ficha-next").addEventListener("click", () => fichaNavStep(1));
   $("#ficha-minus").addEventListener("click", () => fichaChangeQty(-1));
   $("#ficha-plus").addEventListener("click", () => fichaChangeQty(1));
+  $("#deck-ficha-prev").addEventListener("click", () => deckFichaNavStep(-1));
+  $("#deck-ficha-next").addEventListener("click", () => deckFichaNavStep(1));
+  $("#deck-ficha-minus").addEventListener("click", () => deckFichaChangeQty(-1));
+  $("#deck-ficha-plus").addEventListener("click", () => deckFichaChangeQty(1));
   $("#orphan-note").addEventListener("click", openOrphanModal);
   $("#orphan-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeOrphanModal(); });
   $$("[data-close-orphan]").forEach((el) => el.addEventListener("click", closeOrphanModal));
@@ -3534,7 +3911,12 @@ function bindEvents() {
   // Exportar / importar
   const dd = $(".dropdown");
   $("#btn-export").addEventListener("click", () => dd.classList.toggle("open"));
-  document.addEventListener("click", (e) => { if (!dd.contains(e.target)) dd.classList.remove("open"); });
+  // Cierra cualquier .dropdown abierto (Catálogo o el de Exportar de Mazos,
+  // que se re-crea cada vez que se renderiza el detalle del mazo) al hacer
+  // click fuera de él.
+  document.addEventListener("click", (e) => {
+    $$(".dropdown.open").forEach((el) => { if (!el.contains(e.target)) el.classList.remove("open"); });
+  });
   $$(".dropdown-menu button").forEach((b) =>
     b.addEventListener("click", () => { exportCollection(b.dataset.export); dd.classList.remove("open"); })
   );
@@ -3555,7 +3937,9 @@ function bindEvents() {
   bindTradeEvents();
 
   // Estadísticas
-  ["#stats-scope", "#stats-format"].forEach((s) => $(s).addEventListener("change", renderStats));
+  $("#stats-scope").addEventListener("change", renderStats);
+  $("#stats-edition").addEventListener("change", renderStats);
+  $("#stats-format").addEventListener("change", () => { refreshStatsEditionOptions(); renderStats(); });
   $("#stats-export-pdf").addEventListener("click", statsExportPDF);
 
   // Datos / sincronización

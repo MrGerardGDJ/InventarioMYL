@@ -378,6 +378,111 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (72ª iteración) — Rediseño completo de Mazos y Estadísticas según spec del handoff (pantallas 2e/2f)
+
+El dueño mandó dos capturas del canvas de diseño original (Mazos y
+Estadísticas, ya con datos de ejemplo) pidiendo que esas dos vistas se vieran
+así, y a mitad de la implementación adjuntó además un documento de
+especificación muy detallado (tokens, layout exacto, fórmulas de cada KPI,
+comportamiento) para las dos pantallas. Se implementó siguiendo ese
+documento, adaptando las cifras que no existían en el modelo de datos actual
+a datos reales de la app (ver notas al final).
+
+- **Mazos — «Mis mazos» (lista izquierda, 224px)**: cada fila pasa de una
+  línea con badge Principal/Secundario a dos líneas: nombre + conteo total
+  arriba, estado abajo con ícono — **en borrador** (menos de 50 cartas en
+  total), **faltan N copias** (50 cartas pero no todas las copias en tu
+  colección), o **completo**. El botón eliminar ahora solo aparece al pasar
+  el mouse. "+ Nuevo mazo" pasa a contorno de acento (`.btn.primary`).
+- **Mazos — cabecera**: kicker `FORMATO · N CARTAS` (formato inferido de las
+  cartas del mazo, ya que un mazo no guarda uno propio), título grande con
+  el nombre editable (ahora se ve como texto plano, con fondo solo al
+  pasar el mouse o enfocar — no como un campo de formulario), línea de
+  contexto con `Creado en {mes}` (nuevo `deck.createdAt`, con migración
+  silenciosa: los mazos viejos sin esa fecha simplemente no muestran esa
+  parte) y `última vez editado hace N días`. Los tres botones de exportar
+  (Excel/Imagen/Texto) se agrupan en un dropdown "Exportar"; se suma
+  "Añadir cartas" que enfoca el buscador de la pestaña Cartas.
+- **Mazos — fila de 4 KPI** (arriba, visible sin importar la pestaña activa):
+  Cartas del mazo (con el desglose aliados/talismanes/oros), Armado (copias
+  que ya tienes de las que pide el mazo, %), Te faltan (destacada con fondo
+  de acento cuando hay faltantes; el subtexto "N en tus repetidas" cruza las
+  copias que faltan con lo que ya marcaste para cambio de esa misma carta,
+  `Math.min(faltante, store.getTradeQty)`), Coste medio (de los Aliados,
+  ya existía en `computeDeckStrategy`).
+- **Mazos — composición**: las tarjetas de imagen (`deckCardTileHtml`) se
+  reemplazan por filas tipo lista (`deckCardRowHtml`): miniatura 26×36,
+  nombre + "×N · tienes M", cantidad a la derecha. Ya no tienen +/- propio
+  — la cantidad se edita desde la ficha (ver abajo). Fila en gris/acento si
+  falta esa copia. Los grupos se renombran: "Apoyo" → **Talismanes y
+  armas**, y Monumento se pasa del grupo "Otro" al de Oro → **Oros y
+  monumentos** (`deckZoneOf`).
+- **Mazos — ficha fija nueva** (columna derecha, 318px): hasta ahora Mazos
+  solo tenía el modal de detalle; se construyó una ficha fija paralela a la
+  del Catálogo (mismo componente CSS `.ficha-panel`, HTML e ids propios
+  `#deck-ficha-*`, estado `state.deckSelectedCardId`/`deckFichaNavList`
+  independiente de `state.selectedCardId` del Catálogo). Clic en una fila
+  la selecciona; el stepper "En este mazo" edita la cantidad EN EL MAZO
+  (`store.deckSetQty`, función nueva) en vez del inventario; los metadatos
+  muestran Copias que tienes / En otros mazos / Repetidas libres
+  (`store.getAvailableQty`) / Precio ref.; las acciones son Quitar del mazo,
+  En catálogo (cambia a la vista Catálogo, limpia filtros, busca la carta
+  por nombre y la deja seleccionada en su propia ficha — `jumpToCatalogCard`)
+  y Ofrecer. `← → ↑ ↓ 0-9 Espacio Esc` funcionan igual que en el Catálogo,
+  pero solo cuando `state.view === "mazos"`.
+- **Estadísticas — cabecera**: pasa de "Mostrar"/"Formato" con etiquetas a
+  tres selects sin etiqueta (`Todo el catálogo` con tinte de acento fijo,
+  `Formato: todos`, `Edición: todas` — filtro nuevo, reutiliza
+  `fillEditionSelect` que ya usaba el Catálogo) + Exportar PDF.
+- **Estadísticas — anillo de progreso + 6 KPI**: la tarjeta de progreso
+  ahora es un anillo SVG (`stroke-dasharray` calculado sobre una
+  circunferencia de r=46) con degradado de fondo, junto a 6 tarjetas:
+  Cartas distintas, Copias totales, Ediciones completas (destacada),
+  Cartas propias (`card.userCustom` + `store.getCustomEditions().length`,
+  dato real que antes no se mostraba en ningún lado), Repetidas, y Valor
+  estimado (mismo cálculo que "Valor potencial" de Cambio y Ventas, pero
+  sobre toda la colección poseída, no solo lo ofrecido).
+- **Estadísticas — gráficos**: los 6 `<canvas>` de Chart.js (Progreso,
+  Por formato, Por tipo, Top razas, Curva de coste, Por rareza) se
+  reemplazan por 2 gráficos de barras CSS puras (sin librería externa):
+  Curva de coste y Por tipo, ambos siempre sobre **lo que tienes**
+  (independiente del selector "Alcance" — mostrar miles de cartas del
+  catálogo bajo el título "cartas que tienes" habría sido confuso; se
+  probó así y se corrigió antes de este commit). `js/charts.js` sigue
+  existiendo tal cual para los 3 gráficos propios de la pestaña
+  Estadística de cada mazo (no tocados, el handoff no los menciona).
+- **Estadísticas — Progreso por edición**: pasa de una lista de una
+  columna a una grilla de 2 columnas con barras más finas; ≥70% se ve en
+  degradado de acento. Clic en una fila lleva a esa edición en Álbum
+  (`jumpToAlbumEdition`: busca una colección que ya la siga, o crea una de
+  un clic si no existe ninguna).
+- **Bug real corregido de paso**: `.ficha-nav-btn`/`.ficha-step-btn` ya se
+  habían arreglado en la 71ª — esta vez el mismo componente se reutilizó
+  íntegro para la ficha de Mazos, así que hereda el arreglo automáticamente.
+- **`.stat-card` se unifica en toda la app**: pasa de número en acento-300
+  a 28px, a número en color de texto normal a 22px (con `.highlight` para
+  la tarjeta destacada) — mismo look en Cambios, Estadísticas y las dos
+  filas de KPI de Mazos. Nueva variante `statCard3()` (etiqueta arriba,
+  cifra, subtexto abajo) para las tarjetas de 3 líneas de estas dos vistas,
+  sin tocar `statCard()` (2 líneas) que siguen usando Cambios y la pestaña
+  Estadística del mazo.
+- **Adaptaciones honestas** (el mockup traía datos de ejemplo, no todos con
+  equivalente real en la app): "legal en Primer Bloque" del KPI Coste medio
+  se cambió por "de tus Aliados" (la app no valida legalidad de mazo por
+  formato); "Marcadas este mes +18%" se reemplazó por "Repetidas" (no hay
+  historial de cambios de cantidad con fecha para calcular una tendencia
+  mensual); "de 12 ediciones seguidas" se cambió por el conteo real de
+  ediciones dentro del filtro activo (no existe un concepto de "edición
+  seguida" separado de las colecciones de Álbum).
+- Verificado con Playwright de punta a punta: creación/eliminación de
+  mazos, cambio entre las 3 pestañas del mazo, selección de carta en la
+  ficha nueva, quitar carta del mazo desde la ficha, salto a Álbum desde
+  Estadísticas, vista móvil (390px, todo se apila y las tarjetas de KPI
+  pasan a 2 columnas). 0 `pageerror` en todas las pruebas. Se revisó
+  también Catálogo y Cambio y Ventas para confirmar que los cambios
+  compartidos (`.stat-card`, `FMT_NAMES`, quitar `renderCharts` del import)
+  no rompieron nada.
+
 ### 2026-09-16 (71ª iteración) — Rediseña Estadísticas al estilo Nocturne, reemplaza el panel lateral de Cambio y Ventas por una barra de estadísticas arriba de la lista, corrige botones de la ficha sin estilo
 
 El dueño mandó 3 capturas anotadas: el panel lateral de Cambio y Ventas

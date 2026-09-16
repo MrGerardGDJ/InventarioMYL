@@ -120,7 +120,7 @@ export function createDeck(name) {
   // Sufijo aleatorio: Date.now() solo no basta si se crean dos mazos en el
   // mismo milisegundo (ej. un script) — mismo criterio que addCustomCard.
   const id = "d" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 7);
-  const deck = { id, name: name || "Mazo nuevo", cards: {}, status: "principal", updatedAt: Date.now() };
+  const deck = { id, name: name || "Mazo nuevo", cards: {}, status: "principal", createdAt: Date.now(), updatedAt: Date.now() };
   decks.push(deck);
   write(KEYS.decks, decks);
   notify();
@@ -154,6 +154,23 @@ export function deckCount(deckId) {
   const d = getDeck(deckId);
   if (!d) return 0;
   return Object.values(d.cards).reduce((a, b) => a + b, 0);
+}
+// Edición directa (valor absoluto, no delta) de la cantidad de una carta EN
+// UN MAZO — misma semántica que store.setQty para el inventario, usada por
+// el stepper de la ficha fija de Mazos.
+export function deckSetQty(deckId, cardId, qty) {
+  const d = getDeck(deckId);
+  if (!d) return;
+  const n = Math.max(0, Math.floor(Number(qty) || 0));
+  if (n === 0) delete d.cards[cardId];
+  else d.cards[cardId] = n;
+  d.updatedAt = Date.now();
+  write(KEYS.decks, decks);
+  notify();
+}
+// Otros mazos (distintos de deckId) que también usan esta carta.
+export function decksUsingCard(cardId, excludeDeckId) {
+  return decks.filter((d) => d.id !== excludeDeckId && (d.cards[cardId] || 0) > 0);
 }
 export function replaceDecks(arr, origin = "local") {
   if (!Array.isArray(arr)) return;
