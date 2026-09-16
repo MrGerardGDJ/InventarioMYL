@@ -378,6 +378,46 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (87ª iteración) — El orden por defecto en toda la app pasa a ser "Número (ascendente)"
+
+El dueño pidió que el orden por defecto sea siempre por número de carta
+ascendente, en cualquier parte de la app. Los 3 selectores de orden que
+existen (Catálogo, Cambio y Ventas, Mazos) ya tenían cada uno su propia
+lógica de comparación — Catálogo ya traía "Número (ascendente)" como
+opción (`cardNum(a) - cardNum(b) || editionOrd(a) - editionOrd(b) || nombre`,
+para que el empate entre ediciones distintas con el mismo número no quede
+al azar), pero no era la opción por defecto en ninguno de los 3, y Cambio
+y Ventas / Mazos ni siquiera tenían una opción de número.
+
+- **Catálogo** (`index.html`, `#f-sort`): se reordenaron las `<option>`
+  para que "Número (ascendente)" quede primera — el `<select>` sin
+  `selected` explícito toma la primera opción por defecto, y el botón
+  "Limpiar"/reseteo de filtros ya usaba `selectedIndex = 0`, así que
+  bastó con el reorden (no hizo falta tocar JS acá).
+- **Cambio y Ventas** (`index.html` + `js/app.js`): `#trade-sort` no tenía
+  ninguna opción de número — se agregó "Número (ascendente/descendente)"
+  como primeras opciones, y `tradeSortComparator()` suma el caso `number`
+  con el mismo criterio que ya usa Catálogo (reusa `cardNum`/`editionOrd`).
+- **Mazos** (`js/app.js`): `#deck-sort` tampoco tenía opción de número — se
+  agregó igual que en Cambio y Ventas, y el switch de orden dentro de cada
+  zona (Aliados/Talismanes y armas/Oros y monumentos/Otras) en
+  `renderDeckContents()` suma los casos `number`/`number_desc`. El default
+  ahí es un ajuste (`store.getSetting("deckSort") || "number"`, antes
+  `|| "name"`) — solo cambia para quien nunca tocó el selector; si alguien
+  ya lo dejó en otra opción a propósito, esa preferencia guardada se
+  respeta igual que antes.
+- La vista Colecciones (Álbum) no se tocó: ya ordenaba sus cartas por
+  número de fábrica (`collectionCards()` → `compareEditionCards`), sin
+  selector propio — ya cumplía lo pedido.
+
+Verificado con Playwright: recién cargada la app (sin tocar ningún
+selector), Catálogo/Cambio y Ventas/Mazos muestran "number" seleccionado
+en sus 3 selectores; filtrando Catálogo por "El Reto" las cartas salen
+#1, #2, #3… en orden; con dos cartas de esa edición sembradas fuera de
+orden (edid 012 y 003) en inventario/ofrecidas/mazo, tanto la lista de
+Cambio y Ventas como la composición del mazo las muestran #003 antes que
+#012. 0 `pageerror`.
+
 ### 2026-09-16 (86ª iteración) — La ficha del Catálogo no recoloreaba al pasar de 0 a 1 copia desde su propio stepper
 
 El dueño reportó (con captura) que al subir la cantidad de una carta desde
