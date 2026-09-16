@@ -5,34 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Inventario MyL — Mitos y Leyendas</title>
   <meta name="description" content="Inventario, búsqueda, filtros y mazos para las cartas del juego Mitos y Leyendas (MyL)." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/phosphor/regular.css" />
+  <link rel="stylesheet" href="./assets/phosphor/fill.css" />
   <link rel="stylesheet" href="./css/styles.css" />
   <link rel="icon" href="./assets/logo.jpg" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <img class="logo" src="./assets/logo.jpg" alt="Mitos y Leyendas" width="29" height="40" style="height:40px;width:auto" />
-      <div>
-        <h1>Inventario MyL</h1>
-        <p class="tagline">Mitos y Leyendas — colección y mazos</p>
+  <div class="app-shell">
+    <aside class="rail" id="sidebar-nav">
+      <img class="rail-logo" src="./assets/logo.jpg" alt="Mitos y Leyendas" />
+      <nav class="rail-nav">
+        <button class="tab active" data-view="coleccion" title="Catálogo"><i class="ph-fill ph-squares-four"></i><span class="rail-label">Catálogo</span></button>
+        <button class="tab" data-view="colecciones" title="Colecciones"><i class="ph ph-books"></i><span class="rail-label">Álbum</span></button>
+        <button class="tab" data-view="cambios" title="Cambio y Ventas"><i class="ph ph-arrows-left-right"></i><span class="rail-label">Cambios</span></button>
+        <button class="tab" data-view="mazos" title="Mazos"><i class="ph ph-stack"></i><span class="rail-label">Mazos</span></button>
+        <button class="tab" data-view="stats" title="Estadísticas"><i class="ph ph-chart-bar"></i><span class="rail-label">Datos</span></button>
+      </nav>
+      <div class="rail-bottom">
+        <span id="sync-chip" class="sync-chip" title="Estado de guardado"></span>
+        <button id="open-sync" class="rail-icon-btn" title="Datos y sincronización"><i class="ph ph-cloud-check"></i></button>
+        <button id="theme-toggle" class="rail-icon-btn" title="Cambiar tema"><i class="ph ph-moon"></i></button>
+        <button id="rail-collapse" class="rail-icon-btn" title="Colapsar menú"><i class="ph ph-caret-line-left"></i></button>
       </div>
-    </div>
-    <div class="search-wrap">
-      <input id="search" type="search" placeholder="Buscar carta por nombre o habilidad…" autocomplete="off" />
-    </div>
-    <nav class="tabs">
-      <button class="tab active" data-view="coleccion">Catálogo</button>
-      <button class="tab" data-view="colecciones">Colecciones</button>
-      <button class="tab" data-view="cambios">Cambio y Ventas</button>
-      <button class="tab" data-view="mazos">Mazos</button>
-      <button class="tab" data-view="stats">Estadísticas</button>
-    </nav>
-    <span id="sync-chip" class="sync-chip" title="Estado de guardado"></span>
-    <button id="open-sync" class="icon-btn" title="Datos y sincronización">☁️</button>
-    <button id="theme-toggle" class="icon-btn" title="Cambiar tema">🌙</button>
-  </header>
+    </aside>
+    <div class="app-body">
+      <header class="topbar">
+        <div class="search-wrap">
+          <i class="ph ph-magnifying-glass search-icon"></i>
+          <input id="search" type="search" placeholder="Buscar carta por nombre o habilidad…" autocomplete="off" />
+        </div>
+      </header>
 
-  <main>
+      <main>
     <!-- ===== VISTA COLECCIÓN ===== -->
     <section id="view-coleccion" class="view active">
       <aside class="filters">
@@ -227,7 +234,9 @@
         <div id="stats-editions" class="edition-progress"></div>
       </div>
     </section>
-  </main>
+      </main>
+    </div>
+  </div>
 
   <!-- Modal detalle de carta -->
   <div id="modal" class="modal hidden">
