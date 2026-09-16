@@ -378,6 +378,50 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (60ª iteración) — Corrige 72 rarezas más de Leyendas PE 4.0, confirmadas contra foto física
+
+- Continuación directa de la 59ª: el dueño pidió corregir todo lo que
+  se pudiera confirmar de la auditoría de rareza contra el wiki (ver
+  el artefacto "Auditoría de Rareza" generado en esa iteración —
+  169 ediciones revisadas, 65 verificables, 5.800 cartas cotejadas).
+- De las 97 discrepancias en cartas cargadas a mano (principalmente
+  Leyendas - Primera Era 4.0), **las 96 cartas distintas involucradas
+  ya tenían foto física guardada** en `data/custom-images/`, así que
+  se revisó el código impreso de cada una una por una (ej.
+  "LPE4-17/320 UR") en vez de confiar ciegamente en el wiki — el
+  mismo criterio que ya se usó con Tzitzimime/Ciudad de los Césares:
+  la foto manda, no la fuente externa.
+- **72 corregidas**: el código impreso confirmó el valor del wiki y no
+  el que tenía el catálogo. Todas dentro de Leyendas - Primera Era 4.0
+  (rango edid 017-351), un solo campo (`rarity`) por carta, sin tocar
+  coste/fuerza/habilidad en esta pasada.
+- **2 casos donde el wiki estaba mal, no el catálogo**: "Serpiente
+  Emplumada" (edid 236) y "Peri Pillán" (edid 242) — el wiki decía
+  Real, pero el código impreso en la foto dice claramente "C"
+  (Cortesano), que es justo lo que ya tenía el catálogo. No se tocaron.
+- **6 cartas con la imagen equivocada en disco** (no es un error de
+  rareza — la foto guardada es literalmente de OTRA carta, mismo
+  patrón que el caso Rapto de Idunn/Asaltar Santuario de la 49ª
+  iteración, que sigue resuelto): "Horóscopo Chino" (071, la foto es
+  de la carta #015 del mismo nombre), "Ocelote del Templo" (086, foto
+  de la #011 del mismo nombre), "Knarr" (091, foto de un código fuera
+  de rango 325/320), "Los Cinco Anillos" (096, foto de un código
+  326/320), "Kuyén" (186, foto con código "CRPE4" de otro producto), y
+  "Expulsión" de Mundos Perdidos - Horda Esteparia (foto con código
+  "MPAT" — Mundos Perdidos Tombstone, edición distinta). Pendiente
+  encontrar la foto correcta de cada una.
+- **11 cartas del "Set Clásico" (SCLPE4-*) sin poder verificar**: esas
+  fotos no imprimen la letra de rareza en el código (solo
+  "SCLPE4-8/80", sin sufijo), a diferencia de la numeración principal
+  — no hay cómo confirmar por esta vía. Quedan con el dato que ya
+  tenían.
+- **2 cartas con código ilegible en la foto** ("Mary Bradbury" #118,
+  tapado por un adorno del borde; "Hamsa" #151, zona muy oscura):
+  tampoco se tocaron.
+- Aplicado directo en `data/custom-cards.json`, verificado que el
+  cambio es exactamente 72 líneas de `rarity` (`git diff --stat`), sin
+  tocar ningún otro campo.
+
 ### 2026-09-16 (59ª iteración) — Corrige "Dragón Rojo" (Leyendas PE 4.0 #109): rareza, coste, fuerza, raza, habilidad y sabor
 
 - El dueño reportó que "Dragón Rojo" de Leyendas - Primera Era 4.0
