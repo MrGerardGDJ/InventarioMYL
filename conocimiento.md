@@ -378,6 +378,43 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (68ª iteración) — Rediseño Nocturne: corrige tipografía inconsistente, tarjetas más chicas, filtros del Catálogo como chips horizontales
+
+- El dueño mandó capturas comparando el Catálogo ya desplegado contra
+  la pantalla `1a` (Vitrina) del handoff de diseño y marcó tres cosas:
+  la tipografía no es la misma en todos los elementos, las tarjetas de
+  la grilla deberían ser más chicas para que se vea armónica, y la
+  barra de filtros lateral no funciona — debería ser una fila de chips
+  horizontales como en `1a`, no un panel vertical que come 260px de
+  ancho todo el tiempo.
+- **Tipografía**: `<select>`, `<input>`, `<textarea>` y `<button>` no
+  heredan `font-family` del body por defecto en la mayoría de los
+  navegadores (usan la fuente del sistema aunque `--font: Inter` esté
+  bien definido en `:root`) — se agregó `font-family: inherit` a esos
+  elementos globalmente. Esto es lo que hacía que los `<select>` de
+  filtros, formularios y modales se vieran con una tipografía
+  distinta al resto de la app.
+- **Tarjetas más chicas**: `.cards-grid` bajó de `minmax(148px,1fr)` a
+  `minmax(122px,1fr)` (gap 13→11px) — caben más columnas y la grilla
+  se ve más densa, más parecida a la referencia.
+- **Filtros del Catálogo como chips**: se sacó el `<aside class="filters">`
+  vertical de `#view-coleccion` (index.html) — Formato/Edición/Raza/
+  Tipo/Rareza pasan a `<select class="chip-select">` compactos (alto
+  29px, radio 99px) en una fila horizontal (`.filter-chip-row`) arriba
+  de la grilla, junto a las píldoras de inventario que ya existían y
+  el filtro de Coste máximo (ahora un chip con el slider adentro).
+  Los placeholders de cada `<select>` pasaron de "Todas"/"Todos" al
+  nombre de la categoría ("Formato", "Edición"...) para que el chip
+  sin seleccionar muestre de qué filtro se trata. Solo se cambió el
+  Catálogo — Colecciones/Cambio y Ventas/Mazos siguen con su panel
+  lateral de siempre hasta que les toque su propia pasada de rediseño.
+  Al quitar los 260px del panel, la grilla y la Ficha fija ganaron
+  todo ese espacio.
+- Verificado con Playwright: filtro aplicado y "Limpiar" funcionan
+  igual que antes, selección de carta actualiza la ficha, chips se
+  acomodan en varias líneas en móvil (390px) sin romperse. 0
+  `pageerror`.
+
 ### 2026-09-16 (67ª iteración) — Cambio y Ventas: filtros combinables por edición/raza/tipo + orden ascendente/descendente
 
 - Este es el pedido FUNCIONAL original del dueño (de antes del handoff

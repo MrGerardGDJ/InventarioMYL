@@ -230,7 +230,7 @@ function populateFilters() {
 function refreshEditionOptions() {
   const sel = $("#f-edition");
   const prev = sel.value;
-  fillEditionSelect(sel, $("#f-format").value, "Todas");
+  fillEditionSelect(sel, $("#f-format").value, "Edición");
   if ([...sel.options].some((o) => o.value === prev)) sel.value = prev;
 }
 
