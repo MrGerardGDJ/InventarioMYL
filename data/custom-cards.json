@@ -1221,12 +1221,12 @@
    "edid": "071",
    "type": "Oro",
    "race": "—",
-   "rarity": "Real",
+   "rarity": "Mega Real",
    "cost": null,
    "strength": null,
    "ability": "Si este Oro está en tu Reserva de Oros, puedes desterrarlo para buscar un Oro en tu Cementerio y ponerlo en tu Reserva de Oros.",
    "flavour": "El Zodiaco Chino es un esquema de clasificación tradicional que asigna un animal y sus supuestos atributos a cada año en un ciclo repetido de doce años.",
-   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_71_horoscopo_chino.webp",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_71_horoscopo_chino.jpg",
    "custom": true
   },
   {
@@ -1476,12 +1476,12 @@
    "edid": "086",
    "type": "Oro",
    "race": "—",
-   "rarity": "Real",
+   "rarity": "Mega Real",
    "cost": null,
    "strength": null,
    "ability": "Cuando este Oro sea utilizado para pagar el coste de un Aliado de Raza Bestia, ese Aliado entra en juego Alimentado.",
    "flavour": "El felino simbolizaba la lucha por imponer el conocimiento y superar los defectos de los hombres.",
-   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_86_ocelote_del_templo.webp",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_86_ocelote_del_templo.jpg",
    "custom": true
   },
   {
@@ -1496,9 +1496,9 @@
    "rarity": "Mega Real",
    "cost": null,
    "strength": null,
-   "ability": "",
+   "ability": "Cuando este Oro entra en juego, puedes robar 1 carta de tu Mazo Castillo. Luego, descarta 1 carta de tu Mano.",
    "flavour": "El Imperio Chibcha es un lugar de tesoros de oro y toda clase de piedras preciosas, un lugar perdido en alguna parte de Cundirumarca, el país del Cóndor.",
-   "image": "",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_87_el_dorado.jpg",
    "custom": true
   },
   {
@@ -1561,12 +1561,12 @@
    "edid": "091",
    "type": "Oro",
    "race": "—",
-   "rarity": "Sin Frecuencia",
+   "rarity": "Mega Real",
    "cost": null,
    "strength": null,
-   "ability": "",
+   "ability": "En tu Fase de Vigilia, una vez por turno, puedes pagar este Oro y barajar una carta de tu Mano para robar una carta.",
    "flavour": "Navega por los gélidos mares llevando la prosperidad o la muerte. Tras los mares viaja implacable.",
-   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_91_knarr.webp",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_91_knarr.jpg",
    "custom": true
   },
   {
@@ -1646,12 +1646,12 @@
    "edid": "096",
    "type": "Oro",
    "race": "—",
-   "rarity": "Real",
+   "rarity": "Mega Real",
    "cost": null,
    "strength": null,
    "ability": "Si este Oro está en tu Reserva de Oros, y tienes 3 o menos cartas en tu mano, puedes desterrarlo para robar 2 cartas.",
    "flavour": "El Go-rin no sho es mucho más que un tratado sobre Kenjutsu. Miyamoto Musashi creó un testamento de estrategia, ética y filosofía único en su tiempo.",
-   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_96_los_cinco_anillos.webp",
+   "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_96_los_cinco_anillos.jpg",
    "custom": true
   },
   {

@@ -378,6 +378,94 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (79ª iteración) — Auditoría de imágenes mal emparejadas en Leyendas PE 4.0 (por el bug de nombres duplicados)
+
+El dueño reportó con captura que "Ocelote del Templo" (edid 086) y "El
+Dorado" (edid 087) no mostraban el arte correcto para ese número impreso.
+Leyendas - Primera Era 4.0 es justo la edición que la skill
+`registrar-nueva-edicion` marca como el caso de mayor riesgo del proyecto:
+tiene ~24 nombres duplicados entre variantes de rareza de la misma carta
+(ej. "Ocelote del Templo" existe como carta normal Y como una de las 3
+"Secreta Exclusiva" de LPE23), así que un emparejamiento de imagen hecho
+por nombre en vez de por código exacto puede cruzar el arte de una
+variante con los datos de otra.
+
+**Método**: se corrió de nuevo `scripts/match_mylserena_sitemap.py
+--code-filter lpe4` (401 páginas de producto, 0 sin código detectado) y se
+cruzó cada resultado por `(prefijo, número)` exacto contra `edid`/
+`specialId` — nunca por nombre — contra las ~305 cartas de la edición que
+usan imagen de mylserena.cl. Como filtro barato antes de mirar cada carta
+una por una, se comparó primero el tamaño de archivo entre la imagen
+guardada y la recién descargada; toda diferencia grande se verificó
+visualmente leyendo el código impreso en la fotografía antes de tocar
+nada (una diferencia de tamaño sola NO es prueba de error — "Dragón
+Blanco", edid 044, tiene una diferencia grande de puro cambio de calidad
+de escaneo, y se dejó intacta tras confirmar visualmente que el arte era
+el correcto).
+
+**5 cartas confirmadas con arte incorrecto y corregidas** (`data/custom-cards.json`
++ `data/custom-images/mylserena/`, extensión `.webp`→`.jpg` real según
+`Content-Type`, no según la URL):
+
+- **Ocelote del Templo** (086, Oro): `rarity` "Real"→"Mega Real" (el
+  código impreso "LPE4-86/320 MR" no coincidía con la rareza guardada,
+  señal de que también los datos —no solo la imagen— venían de la carta
+  equivocada) + imagen nueva.
+- **El Dorado** (087, Oro, Mega Real): tenía `image: ""` (vacío) y
+  `ability: ""` (vacío) — ambos completados desde la foto verificada
+  ("LPE4-87/320 MR"); la rareza ya estaba correcta.
+- **Horóscopo Chino** (071, Oro): `rarity` "Real"→"Mega Real" + imagen
+  nueva ("LPE4-71/320 MR").
+- **Knarr** (091, Oro): `rarity` "Sin Frecuencia" (valor anómalo, no es
+  una rareza válida del juego) →"Mega Real", `ability` vacío→texto
+  verificado, + imagen nueva ("LPE4-91/320 MR").
+- **Los Cinco Anillos** (096, Oro): `rarity` "Real"→"Mega Real" + imagen
+  nueva ("LPE4-96/320 MR"). Ojo: existe una carta homónima distinta de la
+  edición LPE 2023 (`112-325`, corregida en la 74ª iteración) — son dos
+  cartas separadas, cada una con su propio `id` e `image`, no se tocaron
+  entre sí.
+
+Las 5 se verificaron con Playwright leyendo `.ficha-card-sub` de cada una
+en el Catálogo tras seleccionarlas por búsqueda — las 5 muestran
+`Leyendas - Primera Era 4.0 · nº 0XX · Mega Real`, coincidiendo con el
+código impreso en la imagen nueva. 0 `pageerror`.
+
+**Falsa alarma autodetectada y revertida (sc_20/sc_21/sc_22)**: el
+resultado crudo del sitemap sugería que "Titán Licántropo" (SC-20),
+"Hombre Lobo" (SC-21) y "Guevadan" (SC-22) tenían sus imágenes cruzadas
+entre sí (el título de la página de mylserena.cl para cada SKU no
+coincidía con el nombre esperado). Se llegó a descargar, renombrar y
+sobrescribir los 3 archivos, y a editar la imagen de `sc_22` en
+`custom-cards.json`, **sin verificar primero qué contenía realmente el
+archivo ya commiteado** — un incumplimiento directo de la regla "nunca
+adivinar" de la skill, porque se actuó sobre una señal indirecta (el
+título de la tienda) sin confirmar el estado real de nuestros propios
+datos antes. `git status`/`git diff --stat` tras el reemplazo mostró
+**cero cambios reales** para `sc_20` y `sc_21` (el archivo "nuevo" era
+byte-idéntico al ya commiteado), lo que disparó la revisión con `git show
+HEAD:<ruta>` — las 3 imágenes originales ya eran correctas; el desorden
+estaba únicamente en los metadatos de la propia página de mylserena.cl
+para ese SKU (su `description` JSON-LD no coincidía con la foto subida en
+esa página), un error del lado de la tienda, no de este repo. Se revirtió
+`sc_22` con `git checkout HEAD --` sobre el `.webp`, se borró el `.jpg`
+creado por error, y se restauró la extensión `.webp` en
+`custom-cards.json`. Lección para la próxima auditoría de este tipo:
+confirmar primero el contenido real del archivo propio (`git show
+HEAD:<ruta>` o inspección directa) antes de tratar una discrepancia de
+título de tienda como prueba de un error propio.
+
+**Fuera de alcance de esta pasada, dejado sin resolver a propósito**: 13
+cartas de la sub-serie "Promocional" (edid 330–342 y 352) no tuvieron
+ningún resultado en el cruce `--code-filter lpe4` del sitemap — esa tienda
+aparentemente no vende esos números de impresión promocional bajo ese
+esquema. Ya tenían alguna imagen asignada (no vacía) y no se tocaron ni se
+verificaron de forma independiente en esta pasada. Del resto de la
+edición (~267 cartas de mylserena.cl que no forman parte de un grupo de
+nombre duplicado y no salieron marcadas por el filtro de diferencia de
+tamaño), tampoco se revisaron una por una — quedan como posible trabajo
+futuro si aparece un reporte puntual, siguiendo el mismo método de esta
+entrada.
+
 ### 2026-09-16 (78ª iteración) — El set "SCLPE4" nunca es foil, tenga la rareza que tenga
 
 El dueño precisó la regla de foil: las cartas con código "SCLPE" (el set
