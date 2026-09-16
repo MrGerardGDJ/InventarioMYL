@@ -2253,7 +2253,16 @@ function declaresFoil(card) {
     v.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().includes("foil")
   );
 }
+// El set "SCLPE" (Leyendas PE 4.0, data/custom-cards.json, specialId
+// "SCLPE4-NN") tiene relieve pero NO brilla como el foil real — reportado
+// por el dueño 16-09-2026. Nunca es foil, sin importar su rareza (pisa
+// incluso a Real/Mega Real/Ultra Real/Secreta, que por rareza sí lo
+// serían).
+function isNonFoilPrint(card) {
+  return typeof card.specialId === "string" && /^sclpe/i.test(card.specialId);
+}
 function hasFoil(card) {
+  if (isNonFoilPrint(card)) return false;
   if (declaresFoil(card)) return true;
   return !FOIL_OPT_IN.has(raritySlug(card.rarity));
 }

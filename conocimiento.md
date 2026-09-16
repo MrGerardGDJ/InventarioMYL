@@ -378,6 +378,23 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (78ª iteración) — El set "SCLPE4" nunca es foil, tenga la rareza que tenga
+
+El dueño precisó la regla de foil: las cartas con código "SCLPE" (el set
+Leyendas - Primera Era 4.0 en `data/custom-cards.json`, `specialId`
+"SCLPE4-NN") tienen relieve pero no brillan como el foil real — así que
+nunca deberían mostrar la capa de foil, sin importar su rareza. Son 80
+cartas y varias son Real/Mega Real/Ultra Real (rarezas que por defecto
+siempre son foil), así que esto pisa esa regla general.
+
+- **`js/app.js`**: nueva `isNonFoilPrint(card)` — `true` si
+  `card.specialId` empieza con "SCLPE" (case-insensitive). `hasFoil()` la
+  consulta primero, antes que `declaresFoil()` y que la rareza: si es un
+  print SCLPE, nunca es foil, ni por Premium ni por rareza alta.
+- Verificado con Playwright: "Lautaro" (Real, `SCLPE4-41`, corregido en la
+  77ª) ya no muestra la capa de foil pese a ser Real; una carta Real
+  cualquiera sin ese código la sigue mostrando. 0 `pageerror`.
+
 ### 2026-09-16 (77ª iteración) — Corrige la rareza de Shuar y Lautaro (Leyendas PE 4.0, set SCLPE4)
 
 El dueño mandó capturas del modal de detalle mostrando el aro holográfico
