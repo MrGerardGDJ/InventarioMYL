@@ -13,12 +13,18 @@ async function getLogoData() {
     const img = await new Promise((res, rej) => {
       const i = new Image();
       i.onload = () => res(i); i.onerror = rej;
-      i.src = "./assets/logo.jpg";
+      i.src = "./assets/myl-logo.png";
     });
     const c = document.createElement("canvas");
     c.width = img.naturalWidth; c.height = img.naturalHeight;
-    c.getContext("2d").drawImage(img, 0, 0);
-    _logoData = c.toDataURL("image/jpeg", 0.85);
+    const ctx = c.getContext("2d");
+    // El logo nuevo tiene fondo transparente; el PDF/Excel exportado es
+    // blanco, así que se rellena blanco antes de dibujar (si no, toDataURL
+    // en JPEG convierte la transparencia en negro).
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, 0, 0);
+    _logoData = c.toDataURL("image/jpeg", 0.9);
   } catch { _logoData = ""; }
   return _logoData;
 }
