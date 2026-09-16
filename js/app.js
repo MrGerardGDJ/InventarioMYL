@@ -2290,6 +2290,10 @@ function declaresFoil(card) {
   if (FOIL_CORRECTIONS[card.id]) return true;
   if (card.foil === true) return true;
   if (typeof card.specialId === "string" && /premium/i.test(card.specialId)) return true;
+  // Todas las ediciones "Mundos Perdidos" son foil, sin importar la rareza
+  // (confirmado por el dueño 16-09-2026) — pisa el default no-foil de
+  // Vasallo/Cortesano igual que el caso "Premium" de arriba.
+  if (typeof card.edition === "string" && card.edition.startsWith("mundos_perdidos")) return true;
   const fields = [card.foil, card.finish, card.variant, card.acabado, card.version];
   return fields.some((v) =>
     typeof v === "string" &&

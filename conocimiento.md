@@ -378,6 +378,60 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (84ª iteración) — Todas las ediciones "Mundos Perdidos" son foil, y corrige 17 rarezas mal cargadas contra el wiki
+
+El dueño pidió dos cosas relacionadas: (1) que todas las cartas de las 11
+ediciones "Mundos Perdidos" tengan el efecto foil, sin importar su rareza,
+y (2) revisar esas mismas ediciones porque hay cartas "Real" cargadas como
+"Cortesano" o "Vasallo".
+
+- **Foil por edición** (`js/app.js`, `declaresFoil()`): nuevo caso
+  `card.edition.startsWith("mundos_perdidos")` → foil siempre, mismo lugar
+  y prioridad que el caso "Premium" de Lootbox (75ª/76ª iteración) — pisa
+  el default no-foil de Vasallo/Cortesano. No afecta el corte de SCLPE4
+  (edición distinta, sin choque de prefijos).
+- **Auditoría de rareza contra el wiki**: en vez de asumir "todo debería
+  ser Real" (varias Mundos Perdidos SÍ tienen Cortesano/Vasallo legítimos
+  por diseño — ej. Apu Illa, Sif, Hydra, 47 Ronin, Sko'yo, Kornos/Sedna —
+  y convertirlas habría sido un error nuevo), se descargó la columna
+  "Frecuencia" de la página wiki de cada una de las 11 ediciones
+  ("Lista de cartas de Mundos Perdidos - <edición>", vía la API de
+  MediaWiki, mismo mecanismo que usa la skill `importar-edicion-myl-wiki`)
+  y se cruzó carta por carta contra nuestros datos (220 cartas, cruce por
+  nombre normalizado — 0 filas del wiki quedaron sin encontrar su
+  contraparte). Encontró **17 discrepancias reales** en 4 ediciones (las
+  otras 7 ya estaban correctas):
+  - **13 cartas "Cortesano"→"Real"** (dato mal cargado, el wiki las marca
+    Real igual que a sus vecinas numeradas): Tituba, Rugaru, Sarah Good,
+    Canción Coyote, Mosquete Puritano, Colina del Ahorcado (Horrores de
+    Salem); Guirivilo, Guardián del Sol, Huáscar, Lanza Astral, Melimoyu
+    (Ciudad de los Césares); Sacar la Espada, Barnstokk (La Saga de
+    Volsung).
+  - **3 cartas "Real"→"Promocional"**: Mary Bradbury (Horrores de Salem,
+    MPS 19/18), Pájaro Inti (Ciudad de los Césares, MPC 19/18), Volsung
+    (La Saga de Volsung, MPV 19/18) — el mismo bug de "la carta Promocional
+    final numerada como si fuera una carta normal más" ya documentado el
+    04-08-2026 para otras 8 ediciones Mundos Perdidos, que a estas 3 no les
+    había llegado la corrección en su momento.
+  - **1 carta "Ultra Real"→"Real"**: Expulsión (Horda Esteparia, MPAT
+    19/18) — "Ultra Real" no es una rareza que el wiki registre para esta
+    carta. (Sigue pendiente, sin tocar en esta pasada, la imagen de esta
+    misma carta — ya señalada como posible mezcla con otro código el
+    09-08-2026, "Pendiente encontrar la foto correcta".)
+  - Las 3 primeras ediciones (Horrores de Salem, Ciudad de los Césares, La
+    Saga de Volsung) vienen de TOR (`data/cards.json`): las 16 correcciones
+    se agregaron a `RARITY_CORRECTIONS` en `scraper/corrections.js` (para
+    que sobrevivan al próximo scrapeo semanal) y se aplicaron también al
+    `data/cards.json` ya commiteado. Expulsión es `custom` (Horda
+    Esteparia, `data/custom-cards.json`): edición directa.
+  - Re-verificado tras el fix: 0 discrepancias restantes contra el wiki en
+    las 220 cartas de las 11 ediciones.
+
+Verificado con Playwright: Guirivilo (ahora Real) y Apu Illa (Cortesano
+legítimo, sin tocar) ambas muestran el foil activo por ser de Mundos
+Perdidos; Mary Bradbury, Volsung y Expulsión muestran su rareza corregida
+en la ficha. 0 `pageerror`.
+
 ### 2026-09-16 (83ª iteración) — El filtro Tipo mostraba Talismán/Tótem duplicados (con y sin tilde) — dato legacy de cartas manuales viejas
 
 El dueño reportó (con captura del sitio publicado) que el filtro "Tipo" del
