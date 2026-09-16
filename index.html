@@ -142,6 +142,42 @@
         <div id="grid-empty" class="empty hidden">No hay cartas que coincidan con los filtros.</div>
         <button id="load-more" class="btn load-more hidden">Cargar más</button>
       </div>
+
+      <aside id="ficha-panel" class="ficha-panel">
+        <div class="ficha-empty">Elige una carta de la grilla para ver su ficha.</div>
+        <div id="ficha-content" class="ficha-content hidden">
+          <div class="ficha-head">
+            <span class="ficha-kicker">Carta elegida</span>
+            <div class="ficha-nav">
+              <button id="ficha-prev" class="ficha-nav-btn" title="Anterior (←)"><i class="ph ph-caret-left"></i></button>
+              <button id="ficha-next" class="ficha-nav-btn" title="Siguiente (→)"><i class="ph ph-caret-right"></i></button>
+              <button id="ficha-expand" class="ficha-nav-btn" title="Ver detalle (Espacio)"><i class="ph ph-arrows-out"></i></button>
+            </div>
+          </div>
+          <div id="ficha-art" class="ficha-art"></div>
+          <div class="ficha-qty-row">
+            <span>Copias que tienes</span>
+            <div class="ficha-stepper">
+              <button id="ficha-minus" class="ficha-step-btn" title="Restar (↓)"><i class="ph ph-minus"></i></button>
+              <span id="ficha-qty" class="ficha-qty-num">0</span>
+              <button id="ficha-plus" class="ficha-step-btn primary" title="Sumar (↑)"><i class="ph ph-plus"></i></button>
+            </div>
+          </div>
+          <div class="ficha-ability">
+            <div class="ficha-kicker">Habilidad</div>
+            <div id="ficha-ability-text"></div>
+          </div>
+          <div id="ficha-meta" class="ficha-meta-grid"></div>
+          <div class="ficha-actions">
+            <button id="ficha-add-deck" class="ficha-btn outline"><i class="ph ph-stack-plus"></i>Añadir al mazo activo</button>
+            <div class="ficha-actions-row">
+              <button id="ficha-offer" class="ficha-btn"><i class="ph ph-arrows-left-right"></i>Ofrecer</button>
+              <button id="ficha-sell" class="ficha-btn"><i class="ph ph-tag"></i>Vender</button>
+            </div>
+          </div>
+          <div class="ficha-hints"><span>← → recorrer</span><span>0–9 copias</span></div>
+        </div>
+      </aside>
     </section>
 
     <!-- ===== VISTA COLECCIONES ===== -->

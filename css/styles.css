@@ -202,89 +202,184 @@ main { padding: 0; }
 }
 .dropdown-menu button:hover { background: var(--bg-3); }
 
-/* ===== Cards grid ===== */
+/* ===== Cards grid — tarjeta "arte primero" (Nocturne) =====
+   El arte de la carta es el protagonista: nombre/tipo/rareza se leen
+   superpuestos sobre la imagen (velo de degradado abajo para legibilidad),
+   coste/fuerza/número como píldoras sobre la esquina, y la cantidad como
+   badge de acento arriba a la derecha cuando qty>0. Debajo, una franja
+   compacta con la edición y el control de cantidad (input editable, no
+   solo +/-). Regla de posesión global: lo que no tienes se ve sin color
+   (grayscale) en toda la app — grilla, ficha, mazos, álbum. */
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 13px;
 }
 .card {
   background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px rgba(233, 233, 237, 0.09);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.12s ease, border-color 0.12s ease;
+  transition: box-shadow 0.12s ease, transform 0.12s ease;
 }
-.card.owned { border-color: var(--accent); }
-.card:hover { transform: translateY(-3px); border-color: var(--accent-2); }
+.card.owned { box-shadow: 0 0 0 1px rgba(181, 171, 252, 0.32); }
+.card:hover { box-shadow: 0 0 0 1px var(--accent-2), 0 10px 24px rgba(0, 0, 0, 0.5); }
+.card.selected { box-shadow: 0 0 0 2px var(--accent), 0 10px 26px rgba(0, 0, 0, 0.5); }
 .card-img {
   aspect-ratio: 63 / 88;
-  background: var(--bg-3);
+  background: linear-gradient(155deg, #4a4176, #23253a 60%, var(--bg-2));
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; position: relative; overflow: hidden;
 }
-.card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.card-img .placeholder { text-align: center; padding: 10px; color: var(--muted); font-size: 12px; }
-.card-img .placeholder .ph-name { color: var(--text); font-weight: 700; font-size: 14px; margin-bottom: 6px; }
-.badge-cost {
-  position: absolute; top: 6px; right: 6px;
-  background: rgba(0,0,0,0.7); color: #fff; border-radius: 50%;
-  width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 700;
+.card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: filter 0.45s ease; }
+.card-img .placeholder {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(48deg, rgba(233, 233, 237, 0.06) 0 6px, transparent 6px 13px);
+  transition: filter 0.45s ease;
 }
-.badge-str {
-  position: absolute; top: 6px; left: 6px;
-  background: var(--danger); color: #fff; border-radius: 6px;
-  padding: 2px 7px; font-size: 12px; font-weight: 700;
+.card:not(.owned) .card-img img,
+.card:not(.owned) .card-img .placeholder { filter: grayscale(1) brightness(0.68); }
+.card:not(.owned):hover .card-img img,
+.card:not(.owned):hover .card-img .placeholder { filter: grayscale(0.5) brightness(0.8); }
+.card-veil {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(transparent 46%, rgba(12, 13, 24, 0.9));
 }
+.badge-cost, .badge-str {
+  position: absolute; top: 7px; z-index: 2;
+  height: 20px; padding: 0 6px; border-radius: 6px;
+  background: rgba(12, 13, 24, 0.75); color: var(--text);
+  display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.badge-cost { right: 7px; }
+.badge-cost i { color: var(--accent-2); font-size: 11px; }
+.badge-str { left: 7px; }
+.badge-str i { color: var(--accent-2); font-size: 11px; }
 .badge-num {
-  position: absolute; bottom: 6px; left: 6px;
-  background: rgba(0,0,0,0.7); color: #fff; border-radius: 6px;
-  padding: 2px 7px; font-size: 11px; font-weight: 700; z-index: 2;
+  position: absolute; bottom: auto; top: 7px; left: 7px;
+  background: rgba(12, 13, 24, 0.7); color: var(--text-70);
+  border-radius: 5px; padding: 2px 6px; font: 9.5px var(--font-mono); z-index: 2;
 }
+.badge-str ~ .badge-num, .badge-cost ~ .badge-num { top: 32px; }
 /* Identificador de carta especial/promocional (Promo, P-001…) */
-.badge-num.special { background: var(--accent); color: var(--on-accent); }
-.card-body { padding: 8px 10px; flex: 1; display: flex; flex-direction: column; gap: 2px; }
-.card-name { font-size: 13.5px; font-weight: 700; line-height: 1.2; }
-.card-meta { font-size: 11px; color: var(--muted); }
+.badge-num.special { background: var(--accent); color: var(--on-accent); font-weight: 700; }
+.badge-qty {
+  position: absolute; top: 7px; right: 7px; z-index: 2;
+  min-width: 20px; height: 20px; padding: 0 5px; border-radius: 6px;
+  background: var(--accent); color: var(--on-accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+/* Si ya hay una píldora de coste en esa esquina, el badge de cantidad baja
+   una fila para no superponerse. */
+.badge-cost ~ .badge-qty { top: 31px; }
+.card-overlay-text {
+  position: absolute; left: 9px; right: 9px; bottom: 8px; z-index: 2;
+}
+.card-name { font-size: 13px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-type-rarity { display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 10.5px; color: var(--text-70); }
+.card-type-rarity .dot { opacity: 0.5; }
+.card-body { padding: 7px 9px 9px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.card-meta { font-size: 10.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .qty-row {
-  display: flex; align-items: center; gap: 6px; margin-top: 8px;
-  border-top: 1px solid var(--border); padding-top: 8px;
+  display: flex; align-items: center; gap: 6px; margin-top: 2px;
 }
 .qty-btn {
-  width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border);
-  background: var(--bg-3); color: var(--text); font-size: 16px; line-height: 1;
+  width: 24px; height: 24px; border-radius: 7px; border: none;
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+  background: transparent; color: var(--text); font-size: 15px; line-height: 1;
   display: flex; align-items: center; justify-content: center;
 }
-.qty-btn:hover { border-color: var(--accent); }
-.qty-num { flex: 1; text-align: center; font-weight: 700; font-size: 14px; }
-.qty-num.zero { color: var(--muted); }
-.qty-num.dup { color: var(--accent); }
-.deck-add { font-size: 11px; padding: 4px 6px; }
+.qty-btn:hover { background: rgba(233, 233, 237, 0.07); }
+.qty-num-input {
+  flex: 1; width: 0; min-width: 0; text-align: center; font: 600 13px var(--font);
+  font-variant-numeric: tabular-nums; background: transparent; color: var(--text);
+  border: none; border-radius: 6px; padding: 3px 0;
+  -moz-appearance: textfield;
+}
+.qty-num-input::-webkit-inner-spin-button, .qty-num-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.qty-num-input:focus { outline: none; box-shadow: inset 0 0 0 1px var(--accent); }
+.qty-num-input.zero { color: var(--muted); }
+.qty-num-input.dup { color: var(--accent-2); }
+.deck-add { font-size: 11px; padding: 4px 6px; box-shadow: inset 0 0 0 1px var(--border-strong); background: transparent; color: var(--text); border: none; border-radius: 7px; }
+.deck-add:hover { background: rgba(233, 233, 237, 0.07); }
 
-/* ===== Colecciones (cuaderno de colección digital) =====
-   Efecto "carta bloqueada": mientras la cantidad es 0 la carta se ve en
-   blanco y negro y oscurecida (grayscale + brightness por CSS, sin tocar la
-   imagen original). Cuando el usuario marca que la tiene, app.js agrega la
-   clase .owned a la tarjeta y la imagen recupera el color con una transición
-   suave. Se aplica tanto a la <img> real como al .placeholder que la
-   reemplaza si la imagen no carga. */
-.collection-grid .card .card-img img,
-.collection-grid .card .card-img .placeholder {
-  transition: filter 0.45s ease; /* desbloqueo animado B/N → color */
+/* ===== Ficha fija (Catálogo) =====
+   Panel a la derecha (318px) con la carta elegida en la grilla — ver
+   selectCard/renderFicha en app.js. */
+.ficha-panel {
+  width: 318px; flex: 0 0 318px;
+  background: var(--rail);
+  box-shadow: -1px 0 0 var(--border);
+  overflow-y: auto;
+  padding: 18px;
+  position: sticky; top: 56px; height: calc(100vh - 56px);
+  display: flex; flex-direction: column;
 }
-.collection-grid .card:not(.owned) .card-img img,
-.collection-grid .card:not(.owned) .card-img .placeholder {
-  filter: grayscale(1) brightness(0.5);
+.ficha-empty { margin: auto; text-align: center; color: var(--muted); font-size: 13px; padding: 0 12px; }
+.ficha-content { display: flex; flex-direction: column; gap: 14px; }
+.ficha-content.hidden { display: none; }
+.ficha-head { display: flex; align-items: center; gap: 8px; }
+.ficha-kicker {
+  font: 9.5px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
 }
-/* Al pasar el mouse se "asoma" un poco el color, como vista previa */
-.collection-grid .card:not(.owned):hover .card-img img,
-.collection-grid .card:not(.owned):hover .card-img .placeholder {
-  filter: grayscale(0.5) brightness(0.75);
+.ficha-nav { margin-left: auto; display: flex; gap: 5px; }
+.ficha-nav-btn {
+  width: 28px; height: 28px; border-radius: 7px; border: none;
+  box-shadow: inset 0 0 0 1px var(--border-strong); color: var(--text-70);
+  display: grid; place-items: center; font-size: 14px;
 }
-.collection-grid .card:not(.owned) .card-name { color: var(--muted); }
+.ficha-nav-btn:hover { background: rgba(233, 233, 237, 0.07); }
+.ficha-nav-btn:disabled { opacity: 0.35; }
+.ficha-art {
+  position: relative; aspect-ratio: 63 / 88; border-radius: 10px; overflow: hidden;
+  background: linear-gradient(155deg, #4a4176, #23253a 60%, var(--rail));
+  box-shadow: 0 0 0 1px rgba(181, 171, 252, 0.35), 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+.ficha-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ficha-art:not(.owned) img { filter: grayscale(1) brightness(0.68); }
+.ficha-overlay-text { left: 14px; right: 14px; bottom: 14px; }
+.ficha-card-name { font: 500 20px var(--font); letter-spacing: -0.01em; }
+.ficha-card-sub { font-size: 11.5px; color: var(--text-70); margin-top: 3px; }
+.ficha-qty-row {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  border-radius: 10px; background: var(--bg-3); box-shadow: inset 0 0 0 1px rgba(145, 132, 217, 0.28);
+  font-size: 12px; color: var(--text-70);
+}
+.ficha-stepper { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+.ficha-step-btn {
+  width: 30px; height: 30px; border-radius: 8px; border: none;
+  box-shadow: inset 0 0 0 1px var(--border-strong); color: var(--text-70);
+  display: grid; place-items: center; font-size: 14px;
+}
+.ficha-step-btn:hover { background: rgba(233, 233, 237, 0.08); }
+.ficha-step-btn.primary { background: var(--accent); color: var(--on-accent); box-shadow: none; }
+.ficha-step-btn.primary:hover { background: var(--accent-2); }
+.ficha-qty-num { min-width: 30px; text-align: center; font: 500 19px var(--font); font-variant-numeric: tabular-nums; }
+.ficha-ability { display: flex; flex-direction: column; gap: 7px; }
+#ficha-ability-text { font-size: 12.5px; line-height: 1.6; color: var(--text); text-wrap: pretty; }
+.ficha-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ficha-meta-item { padding: 9px 11px; border-radius: 9px; background: var(--bg-3); display: flex; flex-direction: column; gap: 3px; }
+.ficha-meta-k { font-size: 10.5px; color: var(--muted); }
+.ficha-meta-v { font-size: 13px; font-weight: 500; }
+.ficha-meta-v.warn { color: var(--danger); }
+.ficha-actions { display: flex; flex-direction: column; gap: 7px; }
+.ficha-btn {
+  height: 36px; border-radius: 8px; border: none; font-size: 13px;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  box-shadow: inset 0 0 0 1px var(--border-strong); color: var(--text-70); background: transparent;
+}
+.ficha-btn:hover { background: rgba(233, 233, 237, 0.07); }
+.ficha-btn.outline { box-shadow: inset 0 0 0 1px var(--accent); color: var(--accent); height: 36px; }
+.ficha-btn.outline:hover { background: var(--accent-tint-soft); }
+.ficha-actions-row { display: flex; gap: 7px; }
+.ficha-actions-row .ficha-btn { flex: 1; height: 34px; }
+.ficha-hints { margin-top: auto; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-45); }
+@media (max-width: 1100px) { .ficha-panel { display: none; } }
+
 /* Títulos de las secciones dentro de una colección (promocionales / numeradas) */
 .col-section-title {
   margin: 20px 0 10px; font-size: 15px; color: var(--accent-2);
