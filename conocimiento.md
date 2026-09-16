@@ -378,6 +378,37 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-16 (86ª iteración) — La ficha del Catálogo no recoloreaba al pasar de 0 a 1 copia desde su propio stepper
+
+El dueño reportó (con captura) que al subir la cantidad de una carta desde
+0 a 1 usando el botón "+" de la ficha fija (panel derecho del Catálogo),
+el arte se quedaba en blanco y negro — no pasaba a color hasta seleccionar
+otra carta y volver. Pidió que fuera instantáneo, con una transición sutil
+(mismo efecto que ya existe en las tarjetas de la grilla).
+
+- **`js/app.js`**: `updateFichaQty(qty)` solo actualizaba el número de
+  copias (`#ficha-qty`), nunca tocaba la clase `.owned` de `#ficha-art`
+  (la que determina blanco y negro vs. color) — esa clase solo se ponía
+  en `renderFicha()`, el render completo que corre al *seleccionar* una
+  carta, no al cambiar su cantidad. Como el stepper de la ficha
+  (`fichaChangeQty`) y el input de cantidad de la grilla (cuando la carta
+  está seleccionada) pasan por `reflectQtyOnCardEl()` → `updateFichaQty()`
+  para refrescar la ficha sin un render completo, el color nunca se
+  actualizaba por esa vía. Se agregó el toggle de `.owned` dentro de
+  `updateFichaQty()`, mismo criterio que ya usa `reflectQtyOnCardEl()`
+  para la tarjeta de la grilla.
+- **`css/styles.css`**: `.ficha-art img` no tenía `transition` (la tarjeta
+  de la grilla sí, `filter 0.45s ease`) — sin eso el cambio de blanco y
+  negro a color habría sido un salto brusco en vez de la transición sutil
+  pedida. Se agregó la misma transición.
+
+Verificado con Playwright: seleccionar una carta en 0 copias → `#ficha-art`
+sin `.owned`; click en el "+" de la ficha → `.owned` aparece al instante
+(antes se quedaba sin cambios); click en "−" vuelve a quitarlo; editar la
+cantidad desde el input de la grilla mientras esa carta sigue seleccionada
+también actualiza la ficha. `transition-property: filter` confirmado en el
+`<img>`. 0 `pageerror`.
+
 ### 2026-09-16 (85ª iteración) — Agrega las 6 ediciones "Colección 20 años" (reimpresiones 1:1 de El Reto, Ira del Nahual, Espíritu de Dragón, Espada Sagrada, Dominios de Ra y Helénica)
 
 El dueño reportó que tiene físicamente 6 cajas "Colección Completa 20 Años"

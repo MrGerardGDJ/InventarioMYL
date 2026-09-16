@@ -702,6 +702,8 @@ function fichaNavStep(delta) {
 function updateFichaQty(qty) {
   const el = $("#ficha-qty");
   if (el) el.textContent = qty;
+  const art = $("#ficha-art");
+  if (art) art.classList.toggle("owned", qty > 0);
 }
 function fichaChangeQty(delta) {
   const card = cardById(state.selectedCardId);
