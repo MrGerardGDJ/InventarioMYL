@@ -378,6 +378,65 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-17 (89ª iteración) — Corrige de nuevo la regla de aura/foil de los Oro: la condición es OR, no AND, y barre el resto del catálogo
+
+La 88ª iteración (ayer) dejó la regla de "Oro liso" mal construida: usaba
+`!habilidad && rarity==="Oro"` (un AND que exige AMBAS condiciones a la
+vez) tanto para el aro dorado como para bloquear el foil. El dueño corrigió
+esto hoy: la condición real es un OR — un Oro pierde el foil si le falta
+la habilidad **o** si le falta una rareza real, no solo cuando le faltan
+las dos a la vez. Además aclaró la excepción: Promocional, Secreta,
+Premium, Juego Organizado, Torneo Premier, etc. siempre muestran su propio
+color de rareza y sí son foil, aunque sean de tipo Oro.
+
+- **`js/app.js`**: reescrita la lógica de Oro desde cero, con dos
+  funciones nuevas:
+  - `hasRealRarity(card)`: falso solo para el cajón de sastre real de
+    TOR — `rarity` vacío, `"Oro"`, `"—"` o `"Sin Frecuencia"` (antes solo
+    se reconocía `"Oro"` exacto, dejando pasar `"—"`/`"Sin Frecuencia"` sin
+    tratamiento). Promocional y Secreta SÍ cuentan como rareza real acá:
+    son marcas legítimas, no placeholders.
+  - `isSpecialOro(card)`: verdadero si `hasRealRarity()`, o si
+    `declaresFoil()` ya lo marca (Premium, Mundos Perdidos, foil
+    explícito…), o si la edición matchea `juego_organizado`/`torneo`
+    (no hay ningún Oro liso en esas ediciones hoy, pero queda cubierto
+    si aparece uno).
+  - `isPlainOro(card)` ahora es simplemente `type === "Oro" &&
+    !isSpecialOro(card)` — ni la habilidad ni la rareza se miran por
+    separado, solo si el Oro tiene ALGUNA señal de ser especial. Un Oro
+    liso siempre tiene el aro dorado y nunca es foil, tenga o no tenga
+    texto de habilidad — eso ya no decide nada. Un Oro con rareza real
+    (Real, Mega Real, Vasallo…) sigue coloreado por esa rareza y sigue las
+    reglas de foil normales, tenga o no tenga habilidad tampoco.
+- **Barrido del resto del catálogo** (pedido explícito: "revisa si hay más
+  cartas con rareza Oro mal coloradas"): se simuló la lógica nueva contra
+  las 2262 cartas Oro de todo el catálogo (`data/cards.json` +
+  `data/custom-cards.json`) y se comparó contra la lógica de ayer.
+  Encontró bugs reales más allá de los ya corregidos:
+  - **252 cartas cambian de aro**: 244 ya tenían una rareza real
+    (Promocional×72, Vasallo×60, Real×49, Cortesano×8, Mega Real×7, Ultra
+    Real×7, Secreta×4) pero el AND de ayer las forzaba a dorado igual por
+    no tener habilidad — ahora muestran su color correcto. Las otras 8 son
+    Oro **con** habilidad pero con rareza `"—"`/`"Sin Frecuencia"` (ej.
+    "Grimorio Arcano", "Yasakani" de Leyendas PE 4.0, "Drakkar" de Promo 20
+    Años) que antes caían al degradado genérico por no estar cubiertas por
+    el chequeo `rarity==="Oro"` exacto de ayer — ahora correctamente
+    doradas.
+  - **158 cartas pierden el foil que no debían tener**: todas Oro sin
+    rareza real (82 `"Oro"`, 56 `"—"`, 20 `"Sin Frecuencia"`), 86 de ellas
+    CON habilidad — el caso que ayer se dejó pasar por el AND (ej.
+    "Agave", "El Cráneo De Cristal", "Popol Voh", "Buda Dorado").
+  - **0 cartas ganan foil que no tenían** — el barrido confirma que el
+    cambio es estrictamente más preciso, no más permisivo: ninguna carta
+    Promocional/Secreta/con rareza real pierde su foil.
+- Verificado con Playwright: "Lira" (sin habilidad, sin rareza) sigue
+  dorada y sin foil; "Yasakani" (con habilidad, sin rareza) ahora dorada Y
+  sin foil (el bug de ayer); "El Dorado" (con habilidad, Mega Real) sigue
+  con su aro plateado y su foil; "Oro Inicial Axis Mundi" (sin habilidad,
+  Promocional) ahora muestra el aro morado de Promocional (antes dorado) y
+  sigue con foil; "Grimorio Arcano" (con habilidad, rareza "—") ahora
+  dorada y sin foil (bug nuevo encontrado en el barrido). 0 `pageerror`.
+
 ### 2026-09-16 (88ª iteración) — 2 ediciones "Colección 20 años" más (Mundo Gótico, Ragnarok) + corrige aura y foil de los Oro sin rareza real
 
 El dueño pidió agregar 2 ediciones "Colección 20 años" que faltaban de la
