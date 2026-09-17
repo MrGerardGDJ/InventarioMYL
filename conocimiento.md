@@ -378,6 +378,21 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-17 (90ª iteración) — "Colección 20 años: La Cofradía"
+
+El dueño pidió sumar la novena edición "Colección 20 años" que faltaba:
+La Cofradía. Mismo método que las 8 anteriores — el wiki ("La Cofradía
+Colección Completa 20 Años", myl.fandom.com) confirma "Las 170 cartas de
+la edición La Cofradía", que coincide exacto con las 170 cartas que ya
+teníamos para el slug `cofradia` (`data/cards.json`, TOR). Se clonaron las
+170 hacia `coleccion_20_anos_cofradia` en `data/custom-cards.json` (mismo
+patrón de `id`/`image` que las demás) y se agregó la entrada en
+`data/editions.json`, junto a la edición original.
+
+Verificado con Playwright: "Colección 20 años: La Cofradía" aparece en el
+filtro de Edición con 170 cartas; la primera carta ("Anchimallen") muestra
+el `editionName` correcto en la ficha. 0 `pageerror`.
+
 ### 2026-09-17 (89ª iteración) — Corrige de nuevo la regla de aura/foil de los Oro: la condición es OR, no AND, y barre el resto del catálogo
 
 La 88ª iteración (ayer) dejó la regla de "Oro liso" mal construida: usaba
