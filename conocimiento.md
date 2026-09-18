@@ -378,6 +378,63 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-18 (92ª iteración) — Corrige 3 bugs del PDF de Colecciones detectados en un PDF real: orden alfabético en vez de numérico, texto superpuesto entre cartas y fondo blanco en vez de Nocturne
+
+El dueño bajó un PDF real (edición Lootbox PE 2024, cartas
+"PROMOCIONAL PE24 NN") y encontró tres problemas que la verificación de la
+91ª iteración no había cubierto porque usó una colección sin cartas con
+`specialId` largo:
+
+- **Orden alfabético en vez de numérico ascendente**: las cartas
+  "PROMOCIONAL PE24 NN" no tienen `edid` numérico, así que `cardNum(c)`
+  devuelve `Infinity` para todas ellas por igual — el comparador de
+  `exportCollectionAsPDF` (`js/app.js`) quedaba empatado en ese criterio y
+  cerraba el desempate por `a.name.localeCompare(b.name)`, es decir,
+  alfabético por nombre de carta en vez de por el número que sí traen en su
+  `specialId`. Corregido agregando un desempate por `specialId` (mismo
+  criterio `localeCompare(..., "es", { numeric: true, sensitivity: "base" })`
+  que ya usa `compareEditionCards()` para el resto de la app) antes del
+  desempate final por nombre.
+- **Texto superpuesto ("transpuesto") entre cartas vecinas**: en
+  `exportCollectionPDF()` (`js/exporters.js`) la etiqueta de identificación
+  (`ident`, ej. "PROMOCIONAL PE24 08") se dibujaba sin pasar por
+  `truncateText()` — solo el nombre de la carta se truncaba. Con
+  identificadores largos como los de esta edición, el texto se salía del
+  ancho de la celda e invadía visualmente la celda vecina. Corregido
+  envolviendo también `ident` en `truncateText(doc, ident, cellW0)`. El
+  dueño aclaró explícitamente que no le importa si esto deja menos cartas
+  por fila con tal de que se vea bien — en la práctica no hizo falta
+  reducir la grilla, truncar alcanzó.
+- **Fondo blanco en vez del Nocturne de la app**: el PDF nunca había
+  pintado el fondo de página — jsPDF por defecto es blanco, y solo la franja
+  del encabezado (66pt) tenía color. Corregido reconstruyendo toda la
+  paleta de `exportCollectionPDF()` a partir de los valores reales de
+  `css/styles.css :root` (`--bg #161826`, `--bg-2 #1c1e2c`,
+  `--bg-3 #232532`, `--text #e9e9ed`, `--muted`, `--accent-2 #b5abfc`,
+  `--danger #e5484d`, etc.), y pintando el fondo de página completo
+  (`doc.rect(0,0,W,H,"F")` con ese color) antes de dibujar el encabezado en
+  cada página. Se actualizaron también los banners de edición/rareza, el
+  color del texto de identificación/nombre (antes oscuro pensado para fondo
+  blanco), la sombra de las miniaturas (antes gris `[15,17,23]` a 0.3 de
+  opacidad, casi invisible sobre fondo oscuro — ahora negro puro a 0.45) y
+  el relleno de respaldo del recorte de esquinas redondeadas en
+  `renderCardThumb()` (antes blanco sólido, ahora `--bg-2`, para que no
+  queden bordes blancos alrededor de las esquinas redondeadas sobre el
+  nuevo fondo oscuro).
+
+Verificado con Playwright (colección de prueba con la edición
+`lootbox_pe_2024` completa —85 cartas—, elegida justamente porque tiene las
+cartas "PROMOCIONAL PE24 NN" con `specialId` largo del reporte original;
+imágenes de `api.myl.cl` y de `static.wikia.nocookie.net` interceptadas con
+un fixture local) + PyMuPDF para extraer el texto de cada página y
+renderizarlas a PNG: el orden dentro de cada grupo de `specialId` queda
+ascendente ("PROMO CONMEM... 01" → "06", "LBPE24 - 01/21" → "21/21",
+"PREMIUM PE 01" → "16"), todas las etiquetas largas salen truncadas con "…"
+y sin invadir la celda vecina, y las 4 páginas del PDF muestran el fondo
+Nocturne (`#161826`) con banners y barra de progreso en `--accent-2`,
+insignias "FALTA" en rojo bien visibles, esquinas redondeadas con sombra
+visible y sin artefactos blancos alrededor. 0 `pageerror`.
+
 ### 2026-09-18 (91ª iteración) — Rediseña el PDF visual de Colecciones: seccionado por Edición → Rareza → Número, corrige la ambigüedad del blanco y negro, esquinas redondeadas y sombra
 
 El dueño reportó que usuarios expertos leían al revés el tratamiento

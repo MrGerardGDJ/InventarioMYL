@@ -2019,6 +2019,12 @@ function exportCollectionAsPDF(col) {
     editionOrd(a) - editionOrd(b) ||
     rarityRank(a) - rarityRank(b) ||
     cardNum(a) - cardNum(b) ||
+    // Las cartas especiales/promocionales no tienen edid (cardNum queda
+    // empatado en Infinity para todas) — sin esto el PDF las dejaba en
+    // orden alfabético por nombre en vez de por el número que traen en su
+    // specialId (ej. "PROMOCIONAL PE24 08" antes que "... 10"). Mismo
+    // criterio "numeric" que ya usa compareEditionCards.
+    (a.specialId || "").localeCompare(b.specialId || "", "es", { numeric: true, sensitivity: "base" }) ||
     a.name.localeCompare(b.name, "es")
   );
   showToast("Generando PDF… 0%", 60000);

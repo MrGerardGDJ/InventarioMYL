@@ -283,8 +283,9 @@ async function loadImageEl(url) {
 
 // Dibuja la miniatura de una carta en un canvas fuera de pantalla y
 // devuelve su dataURL, ya recortada a esquinas redondeadas (mismo look que
-// .card-img de la app) — el fondo del recorte se rellena blanco (no
-// transparente) para poder seguir exportando JPEG liviano en vez de PNG.
+// .card-img de la app) — el fondo del recorte se rellena con --bg-2 (el
+// mismo tono Nocturne que usa el resto del PDF, no blanco ni transparente)
+// para poder seguir exportando JPEG liviano en vez de PNG.
 // Si `dim` es true, aplica blanco y negro + oscurecido a nivel de píxel
 // (equivalente a filter: grayscale(1) brightness(0.5) que usa la vista
 // Colecciones) para que el PDF se vea igual que la app.
@@ -302,7 +303,7 @@ function renderCardThumb(img, dim, w, h, label) {
   c.width = w; c.height = h;
   const ctx = c.getContext("2d");
   const radius = Math.round(w * 0.07);
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = "#1c1e2c"; // --bg-2 (Nocturne) — mismo fondo que el resto del PDF, no blanco
   ctx.fillRect(0, 0, w, h);
   ctx.save();
   roundedRectPath(ctx, 0, 0, w, h, radius);
@@ -435,7 +436,18 @@ export async function exportCollectionPDF(collection, cards, getQty, displayName
   await loadScript(CDN.jspdf);
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
-  const GOLD = [201, 161, 59];
+  // Paleta Nocturne (ver :root en css/styles.css) — el PDF ya no sale sobre
+  // blanco, usa los mismos tonos oscuros que el resto de la app.
+  const PAGE_BG = [22, 24, 38];     // --bg
+  const HEADER_BG = [16, 18, 32];   // --bg-deep
+  const BANNER_BG = [35, 37, 50];   // --bg-3
+  const TRACK_BG = [28, 30, 44];    // --bg-2 (fondo de la barra de progreso vacía)
+  const ACCENT = [181, 171, 252];   // --accent-2 (más claro que --accent para que el texto se lea bien sobre fondo oscuro)
+  const TEXT = [233, 233, 237];     // --text
+  const TEXT_DIM = [172, 172, 179]; // --text-70 mezclado sobre --bg-2, para texto secundario
+  const MUTED = [150, 152, 164];    // --muted mezclado, para las cartas que faltan
+  const MUTED_DIM = [110, 112, 124]; // aún más apagado, para el nombre de las que faltan
+  const DIVIDER = [64, 67, 84];     // --border-strong mezclado, línea sutil de los encabezados de rareza
   const RED = [196, 60, 68];
   const W = doc.internal.pageSize.getWidth();
   const H = doc.internal.pageSize.getHeight();
@@ -485,34 +497,35 @@ export async function exportCollectionPDF(collection, cards, getQty, displayName
   });
 
   function drawHeader(pageNum) {
-    doc.setFillColor(15, 17, 23); doc.rect(0, 0, W, headerH, "F");
-    doc.setTextColor(...GOLD); doc.setFont("helvetica", "bold"); doc.setFontSize(16);
+    doc.setFillColor(...PAGE_BG); doc.rect(0, 0, W, H, "F");
+    doc.setFillColor(...HEADER_BG); doc.rect(0, 0, W, headerH, "F");
+    doc.setTextColor(...ACCENT); doc.setFont("helvetica", "bold"); doc.setFontSize(16);
     doc.text(collection.name, marginX, 26);
-    doc.setTextColor(200); doc.setFont("helvetica", "normal"); doc.setFontSize(9.5);
+    doc.setTextColor(...TEXT_DIM); doc.setFont("helvetica", "normal"); doc.setFontSize(9.5);
     doc.text(
       `${ownedCount}/${cards.length} cartas (${pct}%)  ·  ${FILTER_MODE_LABEL[filterMode] || FILTER_MODE_LABEL.all}  ·  ` +
       `${new Date().toLocaleDateString("es-CL")}  ·  Página ${pageNum}/${totalPages}`,
       marginX, 44
     );
     const barX = marginX, barY = 52, barW = 220, barH = 6;
-    doc.setFillColor(43, 48, 64); doc.roundedRect(barX, barY, barW, barH, 3, 3, "F");
-    if (pct > 0) { doc.setFillColor(...GOLD); doc.roundedRect(barX, barY, Math.max(6, barW * pct / 100), barH, 3, 3, "F"); }
+    doc.setFillColor(...TRACK_BG); doc.roundedRect(barX, barY, barW, barH, 3, 3, "F");
+    if (pct > 0) { doc.setFillColor(...ACCENT); doc.roundedRect(barX, barY, Math.max(6, barW * pct / 100), barH, 3, 3, "F"); }
   }
 
   function drawEditionBanner(y, label) {
-    doc.setFillColor(31, 35, 48);
+    doc.setFillColor(...BANNER_BG);
     doc.roundedRect(startX, y, gridW, 20, 4, 4, "F");
-    doc.setTextColor(...GOLD); doc.setFont("helvetica", "bold"); doc.setFontSize(11);
+    doc.setTextColor(...ACCENT); doc.setFont("helvetica", "bold"); doc.setFontSize(11);
     doc.text(truncateText(doc, label, gridW - 16), startX + 8, y + 14);
   }
 
   function drawRarityBanner(y, label) {
     const text = String(label).toUpperCase();
     doc.setFont("helvetica", "bold"); doc.setFontSize(8.5);
-    doc.setTextColor(100, 105, 120);
+    doc.setTextColor(...MUTED);
     doc.text(text, startX, y + 9);
     const tw = doc.getTextWidth(text);
-    doc.setDrawColor(225, 227, 233); doc.setLineWidth(0.6);
+    doc.setDrawColor(...DIVIDER); doc.setLineWidth(0.6);
     doc.line(startX + tw + 8, y + 6.5, startX + gridW, y + 6.5);
   }
 
@@ -522,9 +535,9 @@ export async function exportCollectionPDF(collection, cards, getQty, displayName
   function drawCardShadow(x, y) {
     try {
       doc.saveGraphicsState();
-      doc.setGState(new doc.GState({ opacity: 0.3 }));
-      doc.setFillColor(15, 17, 23);
-      doc.roundedRect(x + 1.6, y + 2.4, cellW0, cellH0, 5, 5, "F");
+      doc.setGState(new doc.GState({ opacity: 0.45 }));
+      doc.setFillColor(0, 0, 0);
+      doc.roundedRect(x + 1.8, y + 2.6, cellW0, cellH0, 5, 5, "F");
       doc.restoreGraphicsState();
     } catch { /* jsPDF sin soporte de GState en este navegador: se omite la sombra */ }
   }
@@ -557,10 +570,10 @@ export async function exportCollectionPDF(collection, cards, getQty, displayName
     const ident = c.specialId || (num != null ? "#" + num : "");
     const labelDim = mixed && !owned;
     doc.setFont("helvetica", "bold"); doc.setFontSize(7);
-    doc.setTextColor(...(labelDim ? [150, 150, 150] : [40, 40, 40]));
-    doc.text(ident, op.x, op.y + cellH0 + 9);
+    doc.setTextColor(...(labelDim ? MUTED : TEXT));
+    doc.text(truncateText(doc, ident, cellW0), op.x, op.y + cellH0 + 9);
     doc.setFont("helvetica", "normal"); doc.setFontSize(6.5);
-    doc.setTextColor(...(labelDim ? [170, 170, 170] : [70, 70, 70]));
+    doc.setTextColor(...(labelDim ? MUTED_DIM : TEXT_DIM));
     const name = displayName ? displayName(c) : c.name;
     doc.text(truncateText(doc, name, cellW0), op.x, op.y + cellH0 + 18);
   }
