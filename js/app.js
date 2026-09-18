@@ -1998,15 +1998,31 @@ function renderCollectionDetail() {
   renderCollectionGrid(col);
 }
 
-// Genera el PDF de una colección: grilla de miniaturas tal como se ve en
-// pantalla (blanco y negro las que faltan), útil para llevar a una jornada
-// de intercambio y detectar de un vistazo qué falta. Descarga cientos de
-// imágenes en algunas ediciones, así que muestra progreso — puede tardar.
+// Genera el PDF de una colección: grilla de miniaturas seccionada por
+// Edición y luego por Rareza/Frecuencia, cartas ascendentes por número
+// dentro de cada sección — útil para llevar a una jornada de intercambio y
+// detectar de un vistazo qué falta. Respeta el filtro "Mostrar" de la
+// pantalla (Todas/Solo las que faltan/Solo las que tengo): si el filtro ya
+// deja solo un estado (todas faltan, o todas se tienen), el PDF sale a
+// todo color — el tratamiento blanco y negro solo tiene sentido cuando se
+// mezclan ambos estados, y aun así ahora se acompaña de una cinta "FALTA"
+// (ver exportCollectionPDF) porque varios dueños de colecciones físicas
+// leían el blanco y negro al revés. Descarga cientos de imágenes en
+// algunas ediciones, así que muestra progreso — puede tardar.
 function exportCollectionAsPDF(col) {
-  const cards = collectionCards(col); // especiales primero, luego numeradas — mismo orden que en pantalla
-  if (!cards.length) { showToast("Esta colección no tiene cartas todavía"); return; }
+  let cards = collectionCards(col);
+  const filterMode = state.colFilter || "all";
+  if (filterMode === "missing") cards = cards.filter((c) => store.getQty(c.id) === 0);
+  else if (filterMode === "owned") cards = cards.filter((c) => store.getQty(c.id) > 0);
+  if (!cards.length) { showToast("No hay cartas con este filtro para exportar"); return; }
+  cards = [...cards].sort((a, b) =>
+    editionOrd(a) - editionOrd(b) ||
+    rarityRank(a) - rarityRank(b) ||
+    cardNum(a) - cardNum(b) ||
+    a.name.localeCompare(b.name, "es")
+  );
   showToast("Generando PDF… 0%", 60000);
-  exportCollectionPDF(col, cards, store.getQty, displayName, (done, total) => {
+  exportCollectionPDF(col, cards, store.getQty, displayName, filterMode, (done, total) => {
     showToast(`Generando PDF… ${Math.round((done / total) * 100)}%`, 60000);
   })
     .then(() => showToast("PDF descargado ✓"))
