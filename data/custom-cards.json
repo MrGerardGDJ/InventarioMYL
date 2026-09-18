@@ -12765,7 +12765,7 @@
    "strength": 3,
    "ability": "Imbloqueable. Cuando entre o salga del juego, puedes elegir entre que tu oponente bote una carta o desterrar una carta del Cementerio oponente.",
    "flavour": "En las tierras profundas de Ardenas, habitaba una criatura oscura, dominada por magia arcana y poseída por una insaciable sed de violencia.",
-   "image": "",
+   "image": "./data/custom-images/pandorastore/lootbox_pe_2025_lbpe25_02_21_draco_encantado.webp",
    "custom": true,
    "specialId": "LBPE25 - 02/21"
   },
