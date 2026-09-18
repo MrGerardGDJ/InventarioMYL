@@ -378,6 +378,82 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-18 (91ª iteración) — Rediseña el PDF visual de Colecciones: seccionado por Edición → Rareza → Número, corrige la ambigüedad del blanco y negro, esquinas redondeadas y sombra
+
+El dueño reportó que usuarios expertos leían al revés el tratamiento
+blanco y negro del PDF de Colecciones (creían que las cartas EN BLANCO Y
+NEGRO eran las que SÍ tenían), pidió que el orden fuera Edición → Rareza/
+Frecuencia → Número ascendente con secciones para cada nivel (relevante
+ahora que una colección puede agrupar varias ediciones), y pidió esquinas
+redondeadas + una sombra sutil en las miniaturas, que hoy se veían como
+rectángulos planos a los bordes.
+
+- **Ambigüedad del blanco y negro**: en vez de abandonar el tratamiento
+  (ya es consistente con el resto de la app), se le suma una señal
+  explícita que no depende de leer bien el color — una etiqueta roja
+  "FALTA" superpuesta en la esquina de cada carta que no se tiene, SOLO
+  cuando el PDF mezcla ambos estados. Si el filtro "Mostrar" de la pantalla
+  de Colecciones ya deja un solo estado (Solo las que faltan / Solo las
+  que tengo), el PDF sale directo a todo color — el blanco y negro no
+  aporta nada cuando todas las cartas comparten el mismo estado, y antes
+  el PDF ignoraba ese filtro por completo (`exportCollectionAsPDF` en
+  `js/app.js` ahora sí lo aplica sobre `collectionCards(col)` antes de
+  exportar, igual que ya hacía `renderCollectionGrid` en pantalla).
+- **Orden Edición → Rareza → Número**: `exportCollectionAsPDF` ordena las
+  cartas con `editionOrd(a)-editionOrd(b) || rarityRank(a)-rarityRank(b) ||
+  cardNum(a)-cardNum(b) || nombre` (reusa las funciones que ya existían
+  para el resto de los selectores de orden de la app, ver 87ª iteración) y
+  se lo pasa ya ordenado a `exportCollectionPDF`. La función nueva
+  `planCollectionLayout()` en `js/exporters.js` recorre ese orden y detecta
+  los cambios de edición/rareza para intercalar un banner de edición
+  (fondo oscuro, igual que el resto de la identidad visual) y uno de
+  rareza (línea con texto en mayúscula) antes de cada grupo — calculando
+  antes de dibujar nada en qué página cae cada elemento, así el "Página
+  X/Y" del encabezado es exacto desde la primera página sin una pasada
+  aparte.
+  - **Bug real encontrado con la propia verificación** (Playwright + PyMuPDF
+    para renderizar las páginas a imagen y revisarlas): cuando una sección
+    de rareza terminaba con una fila incompleta (no llenaba todas las
+    columnas) y la siguiente sección arrancaba, el encabezado nuevo se
+    dibujaba ENCIMA de esa fila a medias en vez de debajo — nunca se
+    avanzaba la coordenada Y para "cerrar" la fila abierta. Corregido:
+    `planCollectionLayout()` ahora cierra cualquier fila a medias
+    (`y += rowH`) antes de abrir la siguiente sección.
+- **Esquinas redondeadas + sombra**: `renderCardThumb()` ahora recorta el
+  canvas a un rectángulo con esquinas redondeadas (`ctx.clip()` con un path
+  manual de `arcTo`, radio ~7% del ancho) antes de dibujar la carta, con
+  fondo blanco de respaldo para poder seguir exportando JPEG liviano en
+  vez de PNG con transparencia. La sombra se dibuja aparte, directo en el
+  PDF (no en la miniatura): un rectángulo redondeado gris oscuro,
+  levemente desplazado, con opacidad reducida vía `doc.GState` (con
+  try/catch por si el navegador no lo soporta — se omite la sombra sin
+  romper el resto del PDF).
+
+**Nota operativa** (no afecta al dueño, documentado por si se repite): a
+mitad de esta iteración el checkout local quedó desincronizado de `origin`
+(`git log` mostraba un commit de mucho antes en esta misma sesión) después
+de un reinicio del entorno — la primera versión de este cambio se escribió
+sin darse cuenta encima de esa copia vieja, y `rarityRank is not defined`
+en la consola del navegador durante la verificación fue la señal de que
+algo no calzaba. Se comparó `git log` local contra `git log
+origin/claude/card-collections-filters-9tcflz`, se confirmó que origin
+tenía todo el trabajo real de la sesión y el local no, se guardó el diff
+suelto en un patch por las dudas, y se hizo `git reset --hard` al commit
+real de origin antes de rehacer el cambio ya sobre la base correcta.
+Lección: si una función que se sabe que existe tira "not defined", lo
+primero es comparar `git log` local contra `origin`, no asumir un typo
+propio.
+
+Verificado con Playwright (localStorage sembrado con una colección de 2
+ediciones Mundos Perdidos, mitad de las cartas marcadas como propias, imágenes
+interceptadas con un fixture local para no depender de la red) + PyMuPDF
+para renderizar cada página a PNG y revisar el layout a simple vista: el
+PDF con filtro "Todas" muestra banners de edición y rareza sin superposición,
+en el orden correcto (Promocional antes que Real, Real antes que Cortesano/
+Vasallo), con "FALTA" solo en las cartas sin poseer y esquinas/sombra
+visibles; el PDF con filtro "Solo las que faltan" sale a todo color, sin
+ninguna etiqueta "FALTA" (redundante ahí). 0 `pageerror` en ambos.
+
 ### 2026-09-17 (90ª iteración) — "Colección 20 años: La Cofradía"
 
 El dueño pidió sumar la novena edición "Colección 20 años" que faltaba:
