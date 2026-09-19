@@ -108,6 +108,7 @@
           <button id="orphan-note" class="orphan-note hidden"></button>
           <div class="spacer"></div>
           <div class="actions">
+            <button id="btn-inventariar" class="btn accent"><i class="ph ph-check-square-offset"></i> Inventariar</button>
             <button id="btn-add-card" class="btn">➕ Carta manual</button>
             <button id="btn-editions" class="btn">Ediciones</button>
             <button id="btn-import" class="btn">Importar</button>
@@ -187,6 +188,48 @@
           <p class="muted">Crea una colección con <b>+ Nueva colección</b>: eliges una edición y verás todas sus cartas ordenadas por número, marcando tu progreso.</p>
         </div>
       </div>
+    </section>
+
+    <!-- ===== MODO INVENTARIAR ===== -->
+    <section id="view-inventariar" class="view inv-view">
+      <div class="inv-head">
+        <button id="inv-exit" class="btn"><i class="ph ph-x"></i> Salir del modo</button>
+        <div class="inv-head-info">
+          <span class="ficha-kicker">Inventariando</span>
+          <div class="inv-edition-name" id="inv-edition-name"></div>
+        </div>
+        <div class="inv-progress">
+          <div class="inv-progress-bar"><div class="inv-progress-fill" id="inv-progress-fill"></div></div>
+          <div class="inv-progress-text"><span id="inv-progress-text"></span> · <span id="inv-session-text"></span></div>
+        </div>
+        <label class="inv-toggle">
+          <input type="checkbox" id="inv-only-unmarked" />
+          <span>Solo sin marcar</span>
+        </label>
+      </div>
+      <div class="inv-body">
+        <div class="inv-stage">
+          <div class="inv-neighbor" id="inv-prev-card"></div>
+          <div class="inv-current" id="inv-current-card"></div>
+          <div class="inv-neighbor" id="inv-next-card"></div>
+        </div>
+        <div class="inv-side">
+          <div class="ficha-kicker">¿Cuántas tienes?</div>
+          <div class="inv-stepper">
+            <button id="inv-minus" class="inv-step-btn">−</button>
+            <div class="inv-qty-box" id="inv-qty-box">0</div>
+            <button id="inv-plus" class="inv-step-btn plus">+</button>
+          </div>
+          <div class="inv-shortcuts">
+            <span><b>0–9</b> cantidad</span>
+            <span><b>↑ ↓</b> +1 / −1</span>
+            <span><b>→ ←</b> avanzar</span>
+            <span><b>Esc</b> salir</span>
+          </div>
+          <button id="inv-next-btn" class="btn accent full">Siguiente <i class="ph ph-arrow-right"></i></button>
+        </div>
+      </div>
+      <div class="inv-strip" id="inv-strip"></div>
     </section>
 
     <!-- ===== VISTA CAMBIO Y VENTAS ===== -->

@@ -682,6 +682,131 @@ function bindFichaEvents() {
   });
 }
 
+/* ===================== Modo inventariar (pantalla 2a) =====================
+   Vista a pantalla completa para recorrer una lista de cartas (una edición
+   filtrada del Catálogo, o una Colección) marcando cantidades rápido, con
+   teclado. No es un destino del rail: entra por enterInventoryMode() desde
+   el botón "Inventariar" del Catálogo o de una Colección, y sale
+   restaurando la vista que estaba activa antes. */
+let inv = null; // { cards, index, session: Set<cardId> }
+
+function enterInventoryMode(cards, label) {
+  if (!cards || !cards.length) { showToast("No hay cartas para inventariar"); return; }
+  inv = { cards, index: 0, session: new Set() };
+  $("#inv-edition-name").textContent = label || "";
+  $("#inv-only-unmarked").checked = false;
+  $$(".view").forEach((v) => v.classList.remove("active"));
+  $("#view-inventariar").classList.add("active");
+  renderInventoryCard();
+  renderInventoryStrip();
+}
+
+function exitInventoryMode() {
+  inv = null;
+  $("#view-inventariar").classList.remove("active");
+  $("#view-" + state.view).classList.add("active");
+}
+
+function invCardArtHtml(card) {
+  const dName = displayName(card);
+  return card.image
+    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
+    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div></div>`;
+}
+
+function renderInventoryCard() {
+  const { cards, index } = inv;
+  const card = cards[index];
+  const qty = store.getQty(card.id);
+
+  $("#inv-prev-card").innerHTML = index > 0 ? invCardArtHtml(cards[index - 1]) : "";
+  $("#inv-next-card").innerHTML = index < cards.length - 1 ? invCardArtHtml(cards[index + 1]) : "";
+  $("#inv-current-card").innerHTML = `
+    ${invCardArtHtml(card)}
+    <div class="v-veil"></div>
+    <span class="v-num">${cardLabel(card)}</span>
+    <div class="v-info">
+      <div class="v-name">${escapeHtml(displayName(card))}</div>
+      <div class="v-meta">${escapeHtml(card.type)} · ${escapeHtml(card.rarity || "")}</div>
+    </div>`;
+  $("#inv-qty-box").textContent = qty;
+
+  const pct = Math.round(((index + 1) / cards.length) * 100);
+  $("#inv-progress-fill").style.width = pct + "%";
+  $("#inv-progress-text").textContent = `Carta ${index + 1} de ${cards.length}`;
+  $("#inv-session-text").textContent = `${inv.session.size} marcada${inv.session.size === 1 ? "" : "s"} en esta sesión`;
+  $("#inv-next-btn").disabled = index >= cards.length - 1;
+}
+
+function renderInventoryStrip() {
+  const strip = $("#inv-strip");
+  strip.innerHTML = inv.cards.map((c, i) => {
+    const qty = store.getQty(c.id);
+    return `<div class="inv-thumb${qty > 0 ? " owned" : ""}${i === inv.index ? " current" : ""}" data-i="${i}" title="${escapeAttr(displayName(c))}">
+      ${invCardArtHtml(c)}
+      ${qty > 0 ? `<span class="inv-thumb-badge">${qty}</span>` : ""}
+    </div>`;
+  }).join("");
+  strip.querySelectorAll("[data-i]").forEach((el) => el.addEventListener("click", () => invGoTo(Number(el.dataset.i))));
+  const current = strip.querySelector(".inv-thumb.current");
+  if (current) current.scrollIntoView({ inline: "center", block: "nearest" });
+}
+
+function invGoTo(i) {
+  if (!inv || i < 0 || i >= inv.cards.length) return;
+  inv.index = i;
+  renderInventoryCard();
+  renderInventoryStrip();
+}
+
+function invSetQty(qty) {
+  const card = inv.cards[inv.index];
+  const prevQty = store.getQty(card.id);
+  store.setQty(card.id, qty);
+  if (qty !== prevQty) inv.session.add(card.id);
+  renderInventoryCard();
+  const thumb = $(`.inv-thumb[data-i="${inv.index}"]`);
+  if (thumb) {
+    thumb.classList.toggle("owned", qty > 0);
+    let badge = thumb.querySelector(".inv-thumb-badge");
+    if (qty > 0) {
+      if (!badge) { badge = document.createElement("span"); badge.className = "inv-thumb-badge"; thumb.appendChild(badge); }
+      badge.textContent = qty;
+    } else if (badge) badge.remove();
+  }
+  if ($("#inv-only-unmarked").checked && qty !== prevQty) invAdvance();
+}
+
+function invAdvance() {
+  if (inv.index < inv.cards.length - 1) invGoTo(inv.index + 1);
+}
+
+function bindInventoryEvents() {
+  $("#btn-inventariar").addEventListener("click", () => enterInventoryMode(state.filtered, inventoryLabelFor(state.filtered)));
+  $("#inv-exit").addEventListener("click", exitInventoryMode);
+  $("#inv-minus").addEventListener("click", () => invSetQty(Math.max(0, store.getQty(inv.cards[inv.index].id) - 1)));
+  $("#inv-plus").addEventListener("click", () => invSetQty(store.getQty(inv.cards[inv.index].id) + 1));
+  $("#inv-next-btn").addEventListener("click", invAdvance);
+  document.addEventListener("keydown", (e) => {
+    if (!inv) return;
+    const tag = document.activeElement?.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    if (e.key === "Escape") { e.preventDefault(); exitInventoryMode(); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); invGoTo(inv.index + 1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); invGoTo(inv.index - 1); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); invSetQty(store.getQty(inv.cards[inv.index].id) + 1); }
+    else if (e.key === "ArrowDown") { e.preventDefault(); invSetQty(Math.max(0, store.getQty(inv.cards[inv.index].id) - 1)); }
+    else if (/^[0-9]$/.test(e.key)) { e.preventDefault(); invSetQty(Number(e.key)); }
+  });
+}
+
+// Etiqueta de la cabecera del modo inventariar: el nombre de la edición si
+// todas las cartas de la lista son de la misma, o un genérico si no.
+function inventoryLabelFor(cards) {
+  const eds = new Set(cards.map((c) => c.editionName || c.edition));
+  return eds.size === 1 ? [...eds][0] : `${cards.length} cartas`;
+}
+
 // Reparte el total que tienes de una carta en 3 baldes que SIEMPRE suman el
 // total (para poder mostrar "dónde están tus cartas" sin que los números
 // dejen copias sin contar): colección (las que nunca marcaste para cambio),
@@ -1787,6 +1912,7 @@ function renderCollectionDetail() {
       <h2><input id="col-name-edit" value="${escapeAttr(col.name)}" /></h2>
       <span class="tag" title="${escapeAttr(collectionEditionNames(col).join(", "))}">${escapeHtml(collectionEditionLabel(col))}</span>
       <div class="spacer"></div>
+      <button class="btn accent" id="col-inventariar" title="Recorrer esta colección carta por carta"><i class="ph ph-check-square-offset"></i> Inventariar</button>
       <button class="btn small" id="col-edit-editions" title="Agregar o quitar ediciones de esta colección">✏️ Editar ediciones</button>
       <button class="btn small" id="col-export-pdf" title="PDF con la grilla de cartas, tal como se ve acá — para llevar a una jornada de intercambio">📄 Exportar PDF</button>
       <label class="field inline"><span>Mostrar</span>
@@ -1813,6 +1939,7 @@ function renderCollectionDetail() {
   filterSel.onchange = (e) => { state.colFilter = e.target.value; renderCollectionGrid(col); };
   $("#col-export-pdf").onclick = () => exportCollectionAsPDF(col);
   $("#col-edit-editions").onclick = () => openCollectionModal(col);
+  $("#col-inventariar").onclick = () => enterInventoryMode(collectionCards(col), collectionEditionLabel(col));
   renderCollectionGrid(col);
 }
 
@@ -3246,6 +3373,9 @@ function bindEvents() {
   // Ficha fija del Catálogo
   bindFichaEvents();
 
+  // Modo inventariar
+  bindInventoryEvents();
+
   // Buscador global: filtra el Catálogo y también la vista activa
   // (dentro de una colección, del mazo abierto, o de Cambio y Ventas)
   const debounced = debounce(() => {
@@ -3286,6 +3416,7 @@ function bindEvents() {
   $("#modal-prev").addEventListener("click", () => modalNavStep(-1));
   $("#modal-next").addEventListener("click", () => modalNavStep(1));
   document.addEventListener("keydown", (e) => {
+    if (inv) return; // el modo inventariar tiene sus propios atajos (bindInventoryEvents)
     const modalOpen = !$("#modal").classList.contains("hidden");
     if (e.key === "Escape") {
       const hadModal = modalOpen;

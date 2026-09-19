@@ -193,6 +193,14 @@ main { padding: 0; }
 .btn:hover { border-color: var(--color-accent); }
 .btn.full { width: 100%; margin-top: 10px; }
 .btn.primary { background: var(--color-accent); color: #1b1300; border-color: var(--color-accent); }
+/* Acción primaria "contorno de acento" del handoff (Inventariar, Añadir
+   cartas, Nueva colección…): fondo transparente, nunca relleno. */
+.btn.accent {
+  background: transparent; color: var(--color-accent); border: none;
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn.accent:hover { background: var(--color-accent-tint-soft); }
 
 .dropdown { position: relative; }
 .dropdown-menu {
@@ -795,6 +803,83 @@ main { padding: 0; }
 .ficha-actions-row { display: flex; gap: 8px; }
 .ficha-actions-row .btn { flex: 1; }
 .ficha-foot { font-size: 11px; text-align: center; }
+
+/* ===== Modo inventariar (pantalla 2a) =====
+   Vista a pantalla completa para recorrer una edición/colección marcando
+   cantidades rápido. No es un destino del rail: se entra desde el botón
+   "Inventariar" del Catálogo o de una Colección (enterInventoryMode) y se
+   sale con "Salir del modo"/Esc, restaurando la vista de antes. */
+.inv-view {
+  display: none;
+  background: radial-gradient(circle at 50% 34%, rgba(90, 80, 150, .30), transparent 62%), var(--color-bg);
+  min-height: 100vh;
+}
+.inv-view.active { display: flex; flex-direction: column; }
+.inv-head {
+  height: 60px; flex: none; display: flex; align-items: center; gap: 22px;
+  padding: 0 26px; border-bottom: 1px solid var(--color-border);
+}
+.inv-head-info { display: flex; flex-direction: column; gap: 2px; }
+.inv-edition-name { font-size: 15px; font-weight: 500; }
+.inv-progress { flex: 1; max-width: 360px; display: flex; flex-direction: column; gap: 5px; }
+.inv-progress-bar { height: 4px; border-radius: 2px; background: var(--color-surface-2); overflow: hidden; }
+.inv-progress-fill { display: block; height: 100%; background: linear-gradient(90deg, var(--color-accent-700), var(--color-accent-400)); }
+.inv-progress-text { font-size: 11px; color: var(--color-text-55); }
+.inv-toggle { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--color-text-70); cursor: pointer; margin-left: auto; }
+.inv-body { flex: 1; display: flex; align-items: center; justify-content: center; gap: 40px; padding: 26px; }
+.inv-stage { display: flex; align-items: center; gap: 22px; }
+.inv-neighbor {
+  width: 150px; aspect-ratio: 63/88; border-radius: 10px; overflow: hidden;
+  opacity: .32; filter: blur(1px); background: var(--color-surface-2);
+}
+.inv-neighbor img, .inv-neighbor .placeholder { width: 100%; height: 100%; object-fit: cover; }
+.inv-current {
+  width: 326px; aspect-ratio: 63/88; border-radius: 13px; overflow: hidden; position: relative;
+  background: var(--color-surface-2);
+  box-shadow: 0 0 0 1px rgba(181, 171, 252, .4), 0 24px 60px rgba(0, 0, 0, .6);
+}
+.inv-current img, .inv-current .placeholder { width: 100%; height: 100%; object-fit: cover; }
+.inv-current .v-veil { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(transparent 55%, rgba(12, 13, 24, .85)); }
+.inv-current .v-info { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 14px; }
+.inv-current .v-name { font-size: 16px; font-weight: 500; }
+.inv-current .v-meta { font-size: 11.5px; color: var(--color-text-70); margin-top: 2px; }
+.inv-current .v-num {
+  position: absolute; top: 8px; left: 8px; background: rgba(12, 13, 24, .7); color: var(--color-text);
+  font-family: var(--font-mono); font-size: 10px; padding: 3px 7px; border-radius: 5px;
+}
+.inv-side { width: 268px; flex: none; display: flex; flex-direction: column; gap: 16px; }
+.inv-stepper { display: flex; align-items: center; gap: 12px; }
+.inv-step-btn {
+  width: 46px; height: 46px; border-radius: 10px; border: none; cursor: pointer;
+  background: transparent; color: var(--color-text); font-size: 20px;
+  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+}
+.inv-step-btn.plus { background: var(--color-accent); color: #161826; box-shadow: none; }
+.inv-qty-box {
+  width: 74px; height: 60px; border-radius: 10px; flex: none;
+  background: var(--color-accent-tint); box-shadow: inset 0 0 0 1px var(--color-accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; font-weight: 500; color: var(--color-accent-300); font-variant-numeric: tabular-nums;
+}
+.inv-shortcuts { display: flex; flex-direction: column; gap: 7px; font-size: 12px; color: var(--color-text-55); }
+.inv-shortcuts b {
+  display: inline-block; min-width: 20px; text-align: center; margin-right: 6px;
+  font-family: var(--font-mono); font-size: 10.5px; padding: 2px 6px; border-radius: 5px;
+  background: var(--color-surface-2); color: var(--color-text-70); font-weight: 400;
+}
+.inv-strip { flex: none; display: flex; gap: 8px; padding: 14px 26px 20px; overflow-x: auto; }
+.inv-thumb {
+  flex: none; width: 44px; aspect-ratio: 63/88; border-radius: 5px; overflow: hidden; position: relative;
+  background: var(--color-surface-2); cursor: pointer; box-shadow: inset 0 0 0 1px var(--color-border);
+}
+.inv-thumb.current { box-shadow: 0 0 0 2px var(--color-accent); }
+.inv-thumb img, .inv-thumb .placeholder { width: 100%; height: 100%; object-fit: cover; }
+.inv-thumb:not(.owned) img { filter: grayscale(1) brightness(.68); }
+.inv-thumb .inv-thumb-badge {
+  position: absolute; bottom: 2px; right: 2px; min-width: 13px; height: 13px; padding: 0 2px;
+  border-radius: 4px; background: var(--color-accent); color: #161826;
+  font-size: 8.5px; font-weight: 600; line-height: 13px; text-align: center;
+}
 
 @media (max-width: 760px) {
   .sync-form { grid-template-columns: 1fr; }
