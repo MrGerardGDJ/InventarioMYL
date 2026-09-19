@@ -3154,19 +3154,6 @@ function bindEvents() {
 
   // Gestor de ediciones personalizadas
   bindEditionEvents();
-
-  // Tema
-  $("#theme-toggle").addEventListener("click", toggleTheme);
-}
-
-function toggleTheme() {
-  const cur = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
-  applyTheme(cur);
-  store.setSetting("theme", cur);
-}
-function applyTheme(theme) {
-  document.documentElement.setAttribute("data-theme", theme);
-  $("#theme-toggle").textContent = theme === "light" ? "☀️" : "🌙";
 }
 
 function debounce(fn, ms) {
@@ -3176,7 +3163,6 @@ function debounce(fn, ms) {
 
 /* ===================== Init ===================== */
 async function init() {
-  applyTheme(store.getSetting("theme") || "dark");
   bindEvents();
   store.onChange(onStoreChange);
   await loadData();

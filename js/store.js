@@ -437,6 +437,6 @@ export function applySnapshot(snap) {
 }
 
 /* ===== Preferencias ===== */
-let settings = read(KEYS.settings, { theme: "dark", activeDeckId: null });
+let settings = read(KEYS.settings, { activeDeckId: null });
 export function getSetting(k) { return settings[k]; }
 export function setSetting(k, v) { settings[k] = v; write(KEYS.settings, settings); }
