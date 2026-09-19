@@ -378,6 +378,63 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-19 (38ª iteración) — Rediseño "Vitrina": marco holográfico, foil, Mazos y Estadísticas
+
+Cuarto bloque grande del rediseño (ver 35ª iteración para el contexto del bundle y las
+11 fases). Cubre las fases 8, 9 y 10.
+
+- **Bug real corregido de paso** (arrastrado desde la fase 1, encontrado al tocar Mazos):
+  el input del nombre del mazo y el placeholder "Sin imagen" del modal tenían estilos
+  inline con tokens viejos (`var(--bg-3)`, `var(--border)`, `var(--text)`, `var(--muted)`)
+  que ya no existen en `css/styles.css` desde el re-theme de la fase 1 — quedaban sin
+  efecto silenciosamente (una variable CSS indefinida no rompe nada, solo no aplica el
+  estilo). Corregido a los tokens `--color-*` actuales.
+- **Marco holográfico de rareza** (`marco-holografico-rareza.md`): aro de 1px que gira
+  (12s lineal) con halo difuminado, coloreado por `raritySlug(card.rarity)` (normalizador
+  nuevo, no existía ninguno — se contrastó contra los valores reales de
+  `data/cards.json`/`data/custom-cards.json` antes de escribir el mapa: ninguna carta real
+  usa "Secreta jade", así que esa rampa nunca se ve hoy, cae al degradado de acento por
+  defecto igual que "Oro"/"Legendaria"/"Milenaria", tampoco en la tabla del documento).
+  Aplicado en la ficha del Catálogo (el wrapper `.holo`/`.holo-art` ya estaba preparado
+  desde la fase 3 con `data-rarity=""` a propósito) y en el modal (tuvo que envolver la
+  imagen, antes suelta). No se aplicó a la carta del modo inventariar (el documento la
+  marca opcional) ni a miniaturas de ninguna grilla (prohibido explícitamente).
+- **Foil holográfico** (`foil-holografico.md`): retícula diagonal + velo tornasol en
+  `mix-blend-mode:overlay`, `hasFoil()`/`declaresFoil()` nuevos reutilizando
+  `raritySlug()`. Real y superiores lo llevan siempre; Vasallo/Cortesano solo si la carta
+  declara foil en alguna propiedad — el modelo de datos actual no tiene ese campo, así que
+  hoy ningún Vasallo/Cortesano lo muestra (comportamiento correcto, no una carencia).
+  Aplicado en ficha, modal y carta grande del modo inventariar (opacidad .6 ahí, sí la
+  pide el documento para esa pieza, a diferencia del aro).
+- **Mazos** (§3): cabecera con kicker + 4 KPI nuevos (`deckKpis()`: Cartas del mazo,
+  Armado, Te faltan —destacada—, Coste medio de los Aliados) y lista lateral reestilizada
+  con una segunda línea de estado (completo/faltan N copias). No se tocó la composición
+  central ni se agregó la ficha lateral de 318px que describe el documento — reusar la
+  ficha del Catálogo en este contexto exigía tocar el sistema de sub-pestañas
+  Cartas/Estadística/Estrategia (que el documento ni siquiera contempla, describe un
+  modelo más simple que la app real) sin arriesgar esa lógica ya probada.
+- **Estadísticas** (§4): el doughnut "Progreso de la colección" se reemplaza por el
+  cintillo con anillo SVG (círculo r=46, circunferencia ≈289) que pide el documento; los
+  5 gráficos restantes se conservan en Chart.js (el propio documento lo permite
+  explícitamente) solo con la paleta morada y tipografía Inter. Los 5 stat-cards viejos
+  pasan a 6 nuevos (Cartas distintas, Copias totales, Ediciones completas —nuevo—, Cartas
+  propias, Mazos guardados, Valor estimado —nuevo, precio referencial × cantidad—).
+  Progreso por edición pasa de columna única a grilla de 2 columnas.
+  - **Nota de verificación** (no es un bug del código): la primera corrida de Playwright
+    mostró los gráficos vacíos con errores de red — resultaron ser
+    `static.wikia.nocookie.net` sin mockear y `fonts.googleapis.com`/el `.woff2` de
+    Phosphor chocando contra `ERR_TOO_MANY_RETRIES`, el mismo cuello de botella de la
+    sandbox que ya documentó la 91ª iteración. Repitiendo la prueba con esos dominios
+    mockeados, los 5 gráficos renderizan con píxeles reales — confirmado que no era una
+    regresión real.
+
+Verificado con Playwright en cada commit (0 `pageerror`): `data-rarity` correcto en ficha
+y modal filtrando por "Real", animación detenida con `prefers-reduced-motion:reduce`;
+capa `.foil` visible en "Real" y oculta en "Vasallo" sin declarar, clics intactos
+(`pointer-events:none`); mazo de prueba con KPIs correctos y estado "faltan N copias" en
+la lista; 6 KPIs de Estadísticas con las cifras esperadas, anillo con `stroke-dasharray`
+correcto, grilla de 2 columnas confirmada.
+
 ### 2026-09-19 (37ª iteración) — Rediseño "Vitrina": Colecciones/Álbum y KPIs de Cambio y Ventas
 
 Tercer bloque grande del rediseño (ver 35ª iteración para el contexto del bundle y las
