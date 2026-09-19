@@ -2,11 +2,15 @@
 import { loadScript, CDN } from "./cdn.js";
 
 const charts = {}; // id -> instancia Chart
+// Paleta categórica Nocturne: empieza en el acento del sistema y se abre a
+// tonos que conviven bien con el morado (--color-accent #9184d9) sin
+// competir con él en los gráficos de una sola serie (ver ACCENT_SOLO).
 const PALETTE = [
-  "#c9a13b", "#d9b85a", "#5b8def", "#46a758", "#e5484d", "#9b5de5",
+  "#9184d9", "#b5abfc", "#5b8def", "#46a758", "#e5484d", "#f2c14e",
   "#f59e0b", "#14b8a6", "#ec4899", "#64748b", "#84cc16", "#06b6d4",
-  "#a855f7", "#ef4444", "#22c55e", "#eab308",
+  "#5d5294", "#ef4444", "#22c55e", "#eab308",
 ];
+const ACCENT_SOLO = ["#b5abfc", "#9184d9", "#5d5294"]; // razas, coste, rareza
 
 function cssVar(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -44,8 +48,8 @@ const FMT_NAMES = { PE: "Primera Era", PB: "Primer Bloque", SB: "Segundo Bloque"
 
 function setChartDefaults() {
   const Chart = window.Chart;
-  Chart.defaults.color = cssVar("--muted") || "#9aa1b2";
-  Chart.defaults.font.family = "Segoe UI, system-ui, sans-serif";
+  Chart.defaults.color = cssVar("--color-text-55") || "rgba(233,233,237,.55)";
+  Chart.defaults.font.family = cssVar("--font-body") || "Inter, system-ui, sans-serif";
   Chart.defaults.plugins.legend.labels.boxWidth = 12;
 }
 
@@ -69,17 +73,8 @@ export async function renderCharts({ cards, getQty, scope = "all", format = "" }
     plugins: { legend: { position: legend } },
   });
 
-  // 1) Progreso (poseídas vs faltantes) sobre el conjunto base
-  const owned = base.filter((c) => getQty(c.id) > 0).length;
-  const missing = base.length - owned;
-  draw("chart-progress", {
-    type: "doughnut",
-    data: {
-      labels: ["Poseídas", "Faltantes"],
-      datasets: [{ data: [owned, missing], backgroundColor: ["#46a758", "#2b3040"], borderWidth: 0 }],
-    },
-    options: { ...baseOpts("bottom"), cutout: "62%" },
-  });
+  // El progreso poseídas/faltantes ahora lo muestra el anillo SVG del
+  // cintillo (ver renderStats() en app.js) — antes era este doughnut.
 
   // 2) Por formato
   const byFmt = countBy(set, (c) => c.format);
@@ -98,7 +93,7 @@ export async function renderCharts({ cards, getQty, scope = "all", format = "" }
     type: "bar",
     data: {
       labels: byRace.map((e) => e[0]),
-      datasets: [{ label: "Cartas", data: byRace.map((e) => e[1]), backgroundColor: "#c9a13b", borderRadius: 4 }],
+      datasets: [{ label: "Cartas", data: byRace.map((e) => e[1]), backgroundColor: ACCENT_SOLO[0], borderRadius: 4 }],
     },
     options: { ...baseOpts(), indexAxis: "y", plugins: { legend: { display: false } } },
   });
@@ -115,7 +110,7 @@ export async function renderCharts({ cards, getQty, scope = "all", format = "" }
     type: "bar",
     data: {
       labels: costKeys,
-      datasets: [{ label: "Cartas", data: costKeys.map((k) => costMap.get(k) || 0), backgroundColor: "#5b8def", borderRadius: 4 }],
+      datasets: [{ label: "Cartas", data: costKeys.map((k) => costMap.get(k) || 0), backgroundColor: ACCENT_SOLO[1], borderRadius: 4 }],
     },
     options: { ...baseOpts(), plugins: { legend: { display: false } } },
   });
@@ -137,7 +132,7 @@ export async function renderCharts({ cards, getQty, scope = "all", format = "" }
     type: "bar",
     data: {
       labels: byRarity.map((e) => e[0]),
-      datasets: [{ label: "Cartas", data: byRarity.map((e) => e[1]), backgroundColor: "#9b5de5", borderRadius: 4 }],
+      datasets: [{ label: "Cartas", data: byRarity.map((e) => e[1]), backgroundColor: ACCENT_SOLO[2], borderRadius: 4 }],
     },
     options: { ...baseOpts(), plugins: { legend: { display: false } } },
   });
@@ -162,7 +157,7 @@ export async function renderDeckCharts(strategy) {
     type: "bar",
     data: {
       labels: costKeys,
-      datasets: [{ label: "Aliados", data: costKeys.map((k) => strategy.curve[k] || 0), backgroundColor: "#5b8def", borderRadius: 4 }],
+      datasets: [{ label: "Aliados", data: costKeys.map((k) => strategy.curve[k] || 0), backgroundColor: ACCENT_SOLO[1], borderRadius: 4 }],
     },
     options: { ...baseOpts(), plugins: { legend: { display: false } } },
   });
@@ -184,7 +179,7 @@ export async function renderDeckCharts(strategy) {
     type: "bar",
     data: {
       labels: raceEntries.map((e) => e[0]),
-      datasets: [{ label: "Aliados", data: raceEntries.map((e) => e[1]), backgroundColor: "#c9a13b", borderRadius: 4 }],
+      datasets: [{ label: "Aliados", data: raceEntries.map((e) => e[1]), backgroundColor: ACCENT_SOLO[0], borderRadius: 4 }],
     },
     options: { ...baseOpts(), indexAxis: "y", plugins: { legend: { display: false } } },
   });

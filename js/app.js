@@ -3096,28 +3096,45 @@ function renderStats() {
   const ownedCopies = base.reduce((s, c) => s + store.getQty(c.id), 0);
   const pct = base.length ? Math.round((owned.length / base.length) * 100) : 0;
 
-  $("#stats-cards").innerHTML = `
-    ${statCard(owned.length, "Cartas únicas")}
-    ${statCard(ownedCopies, "Copias totales")}
-    ${statCard(base.length, "Cartas en catálogo")}
-    ${statCard(pct + "%", "Colección completa")}
-    ${statCard(store.getDecks().length, "Mazos guardados")}`;
-
-  // Gráficos (carga perezosa de Chart.js)
-  renderCharts({ cards: state.cards, getQty: store.getQty, scope, format: fmt })
-    .catch((e) => console.warn("charts:", e));
-
-  // Progreso por edición (respeta el formato elegido)
+  // Progreso por edición (respeta el formato elegido) — se calcula antes de
+  // los 6 KPI porque "Ediciones completas" sale de esta misma lista.
   const byEd = {};
   for (const c of base) {
     const e = (byEd[c.edition] ||= { name: c.editionName, total: 0, owned: 0 });
     e.total++;
     if (store.getQty(c.id) > 0) e.owned++;
   }
-  const rows = Object.values(byEd)
+  const edRows = Object.values(byEd)
     .filter((e) => e.total > 0)
     .sort((a, b) => b.owned / b.total - a.owned / a.total || b.total - a.total);
-  $("#stats-editions").innerHTML = rows
+  const edicionesCompletas = edRows.filter((e) => e.owned === e.total).length;
+
+  const cartasPropias = base.filter((c) => c.userCustom && store.getQty(c.id) > 0).length;
+  const valorEstimado = owned.reduce((sum, c) => {
+    const price = cardPriceInfo(c.id);
+    const unit = price ? price.mylserena ?? price.mesaredonda : null;
+    return sum + (unit != null ? unit * store.getQty(c.id) : 0);
+  }, 0);
+
+  // Cintillo + anillo SVG (círculo r=46 → circunferencia ≈ 289)
+  const CIRC = 2 * Math.PI * 46;
+  $("#stats-ring-fill").setAttribute("stroke-dasharray", `${(pct / 100) * CIRC} ${CIRC}`);
+  $("#stats-ring-num").textContent = pct + "%";
+  $("#stats-ring-count").textContent = `${owned.length.toLocaleString("es-CL")} de ${base.length.toLocaleString("es-CL")} cartas`;
+
+  $("#stats-cards").innerHTML = `
+    ${statCard(owned.length, `Cartas distintas · de ${base.length} del catálogo`)}
+    ${statCard(ownedCopies, "Copias totales")}
+    ${statCard(edicionesCompletas, `Ediciones completas · de ${edRows.length} seguidas`, true)}
+    ${statCard(cartasPropias, "Cartas propias")}
+    ${statCard(store.getDecks().length, "Mazos guardados")}
+    ${statCard(valorEstimado ? fmtCLP(valorEstimado) : "—", "Valor estimado")}`;
+
+  // Gráficos (carga perezosa de Chart.js)
+  renderCharts({ cards: state.cards, getQty: store.getQty, scope, format: fmt })
+    .catch((e) => console.warn("charts:", e));
+
+  $("#stats-editions").innerHTML = edRows
     .map((e) => {
       const p = Math.round((e.owned / e.total) * 100);
       return `<div class="ep-row">
@@ -3128,8 +3145,8 @@ function renderStats() {
     })
     .join("") || `<p class="muted">Sin datos.</p>`;
 }
-function statCard(num, lbl) {
-  return `<div class="stat-card"><div class="num">${num}</div><div class="lbl">${lbl}</div></div>`;
+function statCard(num, lbl, hi = false) {
+  return `<div class="stat-card${hi ? " hi" : ""}"><div class="num">${num}</div><div class="lbl">${lbl}</div></div>`;
 }
 
 function statsExportPDF() {

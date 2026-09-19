@@ -273,27 +273,39 @@
     <!-- ===== VISTA ESTADÍSTICAS ===== -->
     <section id="view-stats" class="view">
       <div class="content stats-content">
-        <div class="stats-toolbar">
-          <label class="field inline">
-            <span>Mostrar</span>
+        <div class="stats-toolbar filter-chips">
+          <label class="chip-select"><i class="ph ph-caret-down"></i>
             <select id="stats-scope">
               <option value="all">Todo el catálogo</option>
               <option value="owned">Solo las que tengo</option>
               <option value="missing">Solo las que me faltan</option>
             </select>
           </label>
-          <label class="field inline">
-            <span>Formato</span>
-            <select id="stats-format"><option value="">Todos</option></select>
+          <label class="chip-select"><i class="ph ph-caret-down"></i>
+            <select id="stats-format"><option value="">Formato: todos</option></select>
           </label>
           <div class="spacer"></div>
-          <button id="stats-export-pdf" class="btn">📄 Exportar PDF</button>
+          <button id="stats-export-pdf" class="btn"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
         </div>
 
-        <div id="stats-cards" class="stats-grid"></div>
+        <div class="stats-hero">
+          <div class="stats-ring-card">
+            <svg class="stats-ring" viewBox="0 0 112 112" width="112" height="112">
+              <circle cx="56" cy="56" r="46" stroke-width="11" fill="none" stroke="rgba(233,233,237,.14)" />
+              <circle id="stats-ring-fill" cx="56" cy="56" r="46" stroke-width="11" fill="none"
+                stroke="var(--color-accent-400)" stroke-linecap="round"
+                transform="rotate(-90 56 56)" stroke-dasharray="0 289" />
+            </svg>
+            <div class="stats-ring-info">
+              <span class="ficha-kicker">Progreso total</span>
+              <div class="stats-ring-num" id="stats-ring-num">0%</div>
+              <div class="muted" id="stats-ring-count"></div>
+            </div>
+          </div>
+          <div id="stats-cards" class="stats-grid"></div>
+        </div>
 
         <div class="charts-grid">
-          <div class="chart-card"><h4>Progreso de la colección</h4><div class="chart-wrap"><canvas id="chart-progress"></canvas></div></div>
           <div class="chart-card"><h4>Por formato</h4><div class="chart-wrap"><canvas id="chart-format"></canvas></div></div>
           <div class="chart-card"><h4>Por tipo</h4><div class="chart-wrap"><canvas id="chart-type"></canvas></div></div>
           <div class="chart-card"><h4>Top razas</h4><div class="chart-wrap"><canvas id="chart-race"></canvas></div></div>
