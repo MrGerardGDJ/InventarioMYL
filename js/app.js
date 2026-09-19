@@ -782,25 +782,34 @@ function openModal(card, navList, navIndex) {
   const img = card.image
     ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(card.name)}" />`
     : `<div class="placeholder" style="color:var(--muted);padding:20px;text-align:center">Sin imagen</div>`;
-  const tag = (t) => `<span class="tag">${escapeHtml(t)}</span>`;
+  const tag = (t, cls = "") => `<span class="tag ${cls}">${escapeHtml(t)}</span>`;
+  const repetidas = Math.max(0, qty - 1);
+  const price = cardPriceInfo(card.id);
+  const priceParts = price ? [price.mylserena, price.mesaredonda].filter((v) => v != null) : [];
+  const priceLabel = priceParts.length ? priceParts.map(fmtCLP).join(" / ") : "—";
   box.innerHTML = `
     <button class="modal-close" data-close>×</button>
     <div class="card-detail">
       <div class="cd-image" ${card.image ? 'data-zoom="1"' : ""}>
         ${img}
         ${card.image ? '<span class="cd-zoom-hint">🔍 Ampliar</span>' : ""}
-      </div>
-      <div class="cd-body">
-        <h2 id="cd-name">${escapeHtml(displayName(card))}</h2>
-        <div class="m-tags">
-          ${tag(card.editionName || "")}${tag(card.race)}${tag(card.type)}${tag(card.rarity)}
-          ${card.cost != null ? tag("Coste " + card.cost) : ""}${card.strength != null ? tag("Fuerza " + card.strength) : ""}
-        </div>
-        <div class="qty-row" style="border:none;padding:0;margin:14px 0">
+        <div class="qty-row">
           <button class="qty-btn" data-m="minus">−</button>
           <span class="qty-num ${qty === 0 ? "zero" : ""}" data-role="mqty">${qty}</span>
           <button class="qty-btn" data-m="plus">+</button>
           <button class="btn small" data-add-deck>🃏 Añadir a mazo</button>
+        </div>
+      </div>
+      <div class="cd-body">
+        <h2 id="cd-name">${escapeHtml(displayName(card))}</h2>
+        <div class="m-tags">
+          ${tag(card.editionName || "")}${tag(card.race)}${tag(card.type, "tag-type")}${tag(card.rarity)}
+        </div>
+        <div class="cd-stats">
+          <div class="cd-stat"><span><i class="ph ph-coin"></i>Coste</span><b>${card.cost ?? "—"}</b></div>
+          <div class="cd-stat"><span><i class="ph ph-sword"></i>Fuerza</span><b>${card.strength ?? "—"}</b></div>
+          <div class="cd-stat"><span>Repetidas</span><b>${repetidas}</b></div>
+          <div class="cd-stat"><span>Precio ref.</span><b>${priceLabel}</b></div>
         </div>
         <div class="trade-ctl">
           <span class="muted">Disponible:</span>
@@ -824,8 +833,10 @@ function openModal(card, navList, navIndex) {
 
   renderDeckHint(box.querySelector('[data-role="deckhint"]'), card.id);
   box.querySelector("[data-close]").onclick = closeModal;
+  // El zoom se ata solo a la imagen/su hint (no a todo .cd-image, que desde
+  // que suma la fila de copias también contendría los botones +/−).
   const zoomEl = box.querySelector("[data-zoom]");
-  if (zoomEl) zoomEl.onclick = () => openZoom(card.image, card.name);
+  if (zoomEl) zoomEl.querySelectorAll("img, .cd-zoom-hint").forEach((n) => (n.onclick = () => openZoom(card.image, card.name)));
   box.querySelector("[data-add-deck]").onclick = () => addToDeckQuick(card);
   const editBtn = box.querySelector("[data-edit-card]");
   if (editBtn) editBtn.onclick = () => { closeModal(); openCardForm(card); };
