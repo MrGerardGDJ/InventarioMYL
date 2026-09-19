@@ -521,6 +521,28 @@ function cardEl(card, navList) {
   return el;
 }
 
+// Normaliza card.rarity al slug que usan las rampas .holo[data-rarity] de
+// marco-holografico-rareza.md. "" (no listada) cae al degradado de acento
+// por defecto que ya define .holo en css/styles.css.
+const RARITY_SLUG = {
+  "vasallo": "vasallo",
+  "cortesano": "cortesano",
+  "real": "real",
+  "mega real": "mega-real",
+  "ultra real": "ultra-real",
+  "secreta": "secreta",
+  "secreta jade": "secreta-jade",
+};
+function raritySlug(rarity) {
+  if (!rarity) return "";
+  const key = String(rarity)
+    .toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return RARITY_SLUG[key] || "";
+}
+
 /* ===================== Ficha fija (panel derecho del Catálogo) =====================
    Panel de 318px que muestra la carta elegida en la grilla sin abrir el
    modal (ver README del handoff, pantalla 3a). Un clic en una tarjeta la
@@ -594,7 +616,7 @@ function renderFicha(card) {
     ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" />`
     : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div></div>`;
   $("#ficha-art").innerHTML = `
-    <div class="holo" data-rarity="">
+    <div class="holo" data-rarity="${raritySlug(card.rarity)}">
       <div class="holo-art">
         ${img}
         <div class="v-veil"></div>
@@ -916,7 +938,9 @@ function openModal(card, navList, navIndex) {
     <button class="modal-close" data-close>×</button>
     <div class="card-detail">
       <div class="cd-image" ${card.image ? 'data-zoom="1"' : ""}>
-        ${img}
+        <div class="holo" data-rarity="${raritySlug(card.rarity)}">
+          <div class="holo-art">${img}</div>
+        </div>
         ${card.image ? '<span class="cd-zoom-hint">🔍 Ampliar</span>' : ""}
         <div class="qty-row">
           <button class="qty-btn" data-m="minus">−</button>
