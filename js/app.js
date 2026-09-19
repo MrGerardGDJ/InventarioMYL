@@ -1789,7 +1789,10 @@ function collectionStats(col) {
     numberedTotal += Math.max(edNumbered, Number(ce?.expectedTotal) || 0);
   }
   const total = specials + numberedTotal;
-  return { total, owned, pct: total ? Math.round((owned / total) * 100) : 0 };
+  // "Repetidas": copias más allá de la primera, sumadas en toda la colección
+  // (mismo criterio qty-1 por carta que usa la ficha fija del Catálogo).
+  const repetidas = cards.reduce((sum, c) => sum + Math.max(0, store.getQty(c.id) - 1), 0);
+  return { total, owned, pct: total ? Math.round((owned / total) * 100) : 0, repetidas };
 }
 
 // Texto corto para mostrar una lista de nombres de edición (1-2 = unidos con
@@ -1827,7 +1830,7 @@ function renderCollectionsView() {
     row.draggable = true;
     row.innerHTML = `
       <div class="col-top">
-        <span class="col-drag-handle" title="Arrastra para reordenar">⠿</span>
+        <span class="col-drag-handle" title="Arrastra para reordenar"><i class="ph ph-dots-six-vertical"></i></span>
         <span class="d-name">${escapeHtml(col.name)}</span>
         <button class="qty-btn" data-move-up title="Subir">▲</button>
         <button class="qty-btn" data-move-down title="Bajar">▼</button>
@@ -1907,25 +1910,30 @@ function renderCollectionDetail() {
     return;
   }
   const s = collectionStats(col);
+  const chips = [
+    ["all", "Todas"], ["missing", "Las que me faltan"], ["dup", "Repetidas"],
+  ];
+  const colFilter = state.colFilter || "all";
   wrap.innerHTML = `
+    <div class="ficha-kicker">${escapeHtml(collectionEditionLabel(col))}</div>
     <div class="col-head">
       <h2><input id="col-name-edit" value="${escapeAttr(col.name)}" /></h2>
-      <span class="tag" title="${escapeAttr(collectionEditionNames(col).join(", "))}">${escapeHtml(collectionEditionLabel(col))}</span>
       <div class="spacer"></div>
       <button class="btn accent" id="col-inventariar" title="Recorrer esta colección carta por carta"><i class="ph ph-check-square-offset"></i> Inventariar</button>
       <button class="btn small" id="col-edit-editions" title="Agregar o quitar ediciones de esta colección">✏️ Editar ediciones</button>
       <button class="btn small" id="col-export-pdf" title="PDF con la grilla de cartas, tal como se ve acá — para llevar a una jornada de intercambio">📄 Exportar PDF</button>
-      <label class="field inline"><span>Mostrar</span>
-        <select id="col-filter">
-          <option value="all">Todas las cartas</option>
-          <option value="missing">Solo las que faltan</option>
-          <option value="owned">Solo las que tengo</option>
-        </select>
-      </label>
     </div>
+    <p class="muted" id="col-context" style="margin:2px 0 14px">${s.owned} de ${s.total} · te faltan ${s.total - s.owned} · ${s.repetidas} repetidas</p>
     <div class="col-progress-big">
       <span class="ep-bar"><span class="ep-fill" id="col-fill" style="width:${s.pct}%"></span></span>
-      <span class="muted" id="col-progress-text">${s.owned}/${s.total} cartas (${s.pct}%)</span>
+      <span id="col-progress-text">${s.pct}%</span>
+    </div>
+    <div class="filter-chips" id="col-filter-chips">
+      ${chips.map(([v, label]) => `<button class="btn small${v === colFilter ? " accent" : ""}" data-col-filter="${v}">${escapeHtml(label)}</button>`).join("")}
+    </div>
+    <div class="col-legend">
+      <span><i class="sq-owned"></i>La tienes</span>
+      <span><i class="sq-missing"></i>Te falta</span>
     </div>
     <div id="collection-grid"></div>
     <div id="col-empty" class="empty hidden">No hay cartas con este filtro.</div>`;
@@ -1934,9 +1942,13 @@ function renderCollectionDetail() {
     store.renameCollection(col.id, e.target.value.trim() || "Colección");
     renderCollectionsView();
   };
-  const filterSel = $("#col-filter");
-  filterSel.value = state.colFilter || "all";
-  filterSel.onchange = (e) => { state.colFilter = e.target.value; renderCollectionGrid(col); };
+  $$("#col-filter-chips [data-col-filter]").forEach((btn) => {
+    btn.onclick = () => {
+      state.colFilter = btn.dataset.colFilter;
+      $$("#col-filter-chips [data-col-filter]").forEach((b) => b.classList.toggle("accent", b === btn));
+      renderCollectionGrid(col);
+    };
+  });
   $("#col-export-pdf").onclick = () => exportCollectionAsPDF(col);
   $("#col-edit-editions").onclick = () => openCollectionModal(col);
   $("#col-inventariar").onclick = () => enterInventoryMode(collectionCards(col), collectionEditionLabel(col));
@@ -1970,6 +1982,7 @@ function renderCollectionGrid(col) {
   const f = state.colFilter || "all";
   if (f === "missing") cards = cards.filter((c) => store.getQty(c.id) === 0);
   else if (f === "owned") cards = cards.filter((c) => store.getQty(c.id) > 0);
+  else if (f === "dup") cards = cards.filter((c) => store.getQty(c.id) > 1);
   // El buscador global de la barra superior también filtra dentro de la colección
   const query = normText($("#search").value.trim());
   if (query) cards = cards.filter((c) => c.searchText.includes(query));
@@ -2025,7 +2038,9 @@ function updateCollectionProgress() {
   const fill = $("#col-fill");
   if (fill) fill.style.width = s.pct + "%";
   const txt = $("#col-progress-text");
-  if (txt) txt.textContent = `${s.owned}/${s.total} cartas (${s.pct}%)`;
+  if (txt) txt.textContent = `${s.pct}%`;
+  const ctx = $("#col-context");
+  if (ctx) ctx.textContent = `${s.owned} de ${s.total} · te faltan ${s.total - s.owned} · ${s.repetidas} repetidas`;
   const row = document.querySelector(`.col-item[data-col-id="${CSS.escape(col.id)}"]`);
   if (row) {
     row.querySelector(".ep-fill").style.width = s.pct + "%";
@@ -2164,9 +2179,32 @@ function cardById(id) {
 }
 
 function renderTradeView() {
+  renderTradeKpis();
   renderTradeList();
   renderTradeLog();
   renderSaleLog();
+}
+
+// Fila de 4 KPI (README del handoff, 2d): Repetidas cuenta copias más allá
+// de la primera en TODO el catálogo (mismo criterio qty-1 de la ficha y de
+// Colecciones), no solo las ofrecidas — es la señal de "cuánto te sobra".
+function renderTradeKpis() {
+  const wrap = $("#trade-kpis");
+  if (!wrap) return;
+  const repetidas = state.cards.reduce((sum, c) => sum + Math.max(0, store.getQty(c.id) - 1), 0);
+  const entries = Object.entries(store.getTradeList());
+  const ofrecidas = entries.reduce((a, [, n]) => a + n, 0);
+  const cambiosHechos = store.getTradeLog().length;
+  const thisYear = new Date().getFullYear();
+  const vendidoEsteAnio = store.getSaleLog()
+    .filter((e) => e.price != null && new Date(e.date).getFullYear() === thisYear)
+    .reduce((sum, e) => sum + e.price * e.qty, 0);
+  wrap.innerHTML = [
+    ["Repetidas", repetidas, false],
+    ["Ofrecidas", ofrecidas, true],
+    ["Cambios hechos", cambiosHechos, false],
+    ["Vendido este año", fmtCLP(vendidoEsteAnio), false],
+  ].map(([lbl, num, hi]) => `<div class="stat-card${hi ? " hi" : ""}"><div class="num">${num}</div><div class="lbl">${escapeHtml(lbl)}</div></div>`).join("");
 }
 
 // Formatea un precio en pesos chilenos ($1.234)

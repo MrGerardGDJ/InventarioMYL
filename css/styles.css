@@ -345,13 +345,21 @@ main { padding: 0; }
 .collection-grid .card:not(.owned):hover .card-img .placeholder {
   filter: grayscale(0.5) brightness(0.75);
 }
-.collection-grid .card:not(.owned) .card-name { color: var(--color-text-55); }
+.collection-grid .card:not(.owned) .v-name { color: var(--color-text-55); }
 /* Títulos de las secciones dentro de una colección (promocionales / numeradas) */
 .col-section-title {
   margin: 20px 0 10px; font-size: 15px; color: var(--color-accent-400);
   border-bottom: 1px solid var(--color-border-strong); padding-bottom: 6px;
 }
 .col-section-title:first-child { margin-top: 0; }
+/* Grilla de 9 columnas, tarjeta compacta (README del handoff, 2c) */
+.collection-grid.cards-grid { grid-template-columns: repeat(9, 1fr); gap: 11px; }
+.collection-grid .v-num { font-size: 8.5px; padding: 1px 5px; }
+.collection-grid .v-name { font-size: 9.5px; }
+.collection-grid .v-meta { display: none; }
+.collection-grid .v-qty { min-width: 16px; height: 16px; line-height: 16px; font-size: 10px; }
+@media (max-width: 1300px) { .collection-grid.cards-grid { grid-template-columns: repeat(6, 1fr); } }
+@media (max-width: 900px) { .collection-grid.cards-grid { grid-template-columns: repeat(4, 1fr); } }
 
 /* Selector de ediciones (checkboxes) al crear/editar una colección */
 .col-edition-list {
@@ -371,35 +379,51 @@ main { padding: 0; }
 .col-edition-item input { flex: none; }
 .col-edition-empty { color: var(--color-text-55); font-size: 13px; padding: 8px 4px; }
 
-/* Lista lateral de colecciones */
+/* Lista lateral de colecciones (pantalla 2c del handoff) — el aside
+   .filters de esta vista puntual se angosta a 230px, ver #view-colecciones
+   .filters más abajo. Reordenable por arrastre (ya funcionaba, solo se
+   reestiló): fila elevada mientras se arrastra, línea de destino de 2px. */
+#view-colecciones .filters { width: 230px; flex: 0 0 230px; }
 .col-item {
-  border: 1px solid var(--color-border-strong); border-radius: 8px;
-  background: var(--color-surface-2); padding: 10px 11px; font-size: 13px;
+  border-radius: 9px; background: transparent; box-shadow: inset 0 0 0 1px var(--color-border);
+  padding: 9px 10px; font-size: 13px; cursor: grab; transition: transform .12s ease, box-shadow .12s ease;
 }
-.col-item.active { border-color: var(--color-accent); }
-.col-item.dragging { opacity: 0.4; }
-.col-item.drag-over { border-color: var(--color-accent); box-shadow: 0 0 0 2px var(--color-accent) inset; }
+.col-item.active { background: var(--color-accent-tint-soft); box-shadow: inset 0 0 0 1px rgba(145, 132, 217, .42); }
+.col-item.dragging {
+  transform: translateY(-2px) rotate(-.6deg); background: var(--color-surface-2);
+  box-shadow: inset 0 0 0 1px rgba(145, 132, 217, .5), 0 10px 24px rgba(0, 0, 0, .55);
+}
+.col-item.dragging .col-drag-handle { color: var(--color-accent-400); }
+.col-item.drag-over { box-shadow: inset 0 2px 0 var(--color-accent); }
 .col-item .col-top { display: flex; align-items: center; gap: 6px; }
-.col-item .col-drag-handle { cursor: grab; color: var(--color-text-55); font-size: 14px; line-height: 1; }
+.col-item .col-drag-handle { cursor: grab; color: rgba(233, 233, 237, .32); font-size: 16px; line-height: 1; }
 .col-item .col-top [data-move-up],
 .col-item .col-top [data-move-down] { width: 20px; height: 20px; font-size: 11px; }
-.col-item .d-name { font-weight: 600; cursor: pointer; flex: 1; }
+.col-item .d-name { font-weight: 500; font-size: 13px; cursor: pointer; flex: 1; }
+.col-item.active .d-name { color: var(--color-text); }
 .col-item .col-ed {
-  font-size: 11px; margin: 2px 0 6px;
+  font-size: 10.5px; margin: 2px 0 6px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.col-item .ep-bar { display: block; height: 8px; }
-.col-item .col-nums { font-size: 11px; margin-top: 4px; }
+.col-item .ep-bar { display: block; height: 3px; }
+.col-item .col-nums { font-size: 10.5px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.col-item.active .col-nums { color: var(--color-accent-300); }
 
 /* Detalle de colección */
 .col-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .col-head h2 input {
-  background: var(--color-surface-2); border: 1px solid var(--color-border-strong); color: var(--color-text);
-  border-radius: 8px; padding: 6px 10px; font-size: 18px; font-weight: 700;
+  background: transparent; border: none; color: var(--color-text);
+  border-radius: 8px; padding: 4px 0; font-size: 26px; font-weight: 500; letter-spacing: -.02em;
 }
 .col-head .spacer { flex: 1; }
-.col-progress-big { display: flex; align-items: center; gap: 12px; margin: 14px 0 18px; }
-.col-progress-big .ep-bar { flex: 1; height: 16px; }
+.col-progress-big { display: flex; align-items: center; gap: 14px; margin: 14px 0 18px; }
+.col-progress-big .ep-bar { flex: 1; height: 6px; }
+.col-progress-big #col-progress-text { font-size: 24px; font-weight: 500; color: var(--color-accent-300); font-variant-numeric: tabular-nums; }
+.col-legend { display: flex; gap: 16px; font-size: 11.5px; color: var(--color-text-55); margin: -8px 0 16px; }
+.col-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.col-legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+.col-legend .sq-owned { background: var(--color-accent-400); }
+.col-legend .sq-missing { background: rgba(233, 233, 237, .2); }
 
 /* ===== Cambio y Ventas =====
    Grilla de cartas ofrecidas (reusa .cards-grid/.card del Catálogo, ver
@@ -661,9 +685,12 @@ main { padding: 0; }
 /* ===== Stats ===== */
 .stats-content { max-width: 1000px; margin: 0 auto; }
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 8px 0 24px; }
-.stat-card { background: var(--color-surface); border: 1px solid var(--color-border-strong); border-radius: var(--radius); padding: 16px; text-align: center; }
-.stat-card .num { font-size: 28px; font-weight: 800; color: var(--color-accent-400); }
-.stat-card .lbl { font-size: 12px; color: var(--color-text-55); margin-top: 4px; }
+.stat-card { background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border); border-radius: 11px; padding: 13px 15px; text-align: left; }
+.stat-card .num { font-size: 22px; font-weight: 500; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.stat-card .lbl { font-size: 11px; color: var(--color-text-55); margin-top: 2px; }
+/* Destacada (ver README del handoff): Ofrecidas en Cambios, "Te faltan" en Mazos, etc. */
+.stat-card.hi { background: var(--color-accent-tint-soft); box-shadow: inset 0 0 0 1px rgba(145, 132, 217, .32); }
+.stat-card.hi .num { color: var(--color-accent-300); }
 .edition-progress { display: flex; flex-direction: column; gap: 8px; }
 .ep-row { display: grid; grid-template-columns: 220px 1fr 90px; gap: 10px; align-items: center; font-size: 13px; }
 .ep-bar { background: var(--color-surface-2); border-radius: 6px; height: 14px; overflow: hidden; }
