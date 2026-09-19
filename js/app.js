@@ -583,6 +583,10 @@ function selectCard(card, navList) {
   const el = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
   if (el) el.classList.add("selected");
   renderFicha(card);
+  // En móvil la ficha es una hoja inferior (ver movil.md): .open la sube.
+  // Sin efecto en escritorio, donde .ficha es un panel fijo siempre visible.
+  $("#card-ficha").classList.add("open");
+  $("#ficha-veil").classList.add("open");
 }
 
 function deselectCard() {
@@ -596,6 +600,8 @@ function deselectCard() {
   }
   $("#ficha-body").classList.add("hidden");
   $("#ficha-empty").classList.remove("hidden");
+  $("#card-ficha").classList.remove("open");
+  $("#ficha-veil").classList.remove("open");
 }
 
 function fichaNavStep(delta) {
@@ -691,6 +697,10 @@ function fichaSelectedCard() {
 }
 
 function bindFichaEvents() {
+  // Hoja inferior en móvil: tocar el velo o arrastrar la manilla hacia
+  // abajo la cierra (equivalente a deselectCard). Sin efecto en escritorio.
+  $("#ficha-veil").addEventListener("click", deselectCard);
+  $("#card-ficha").querySelector(".ficha-handle").addEventListener("click", deselectCard);
   $("#ficha-prev").addEventListener("click", () => fichaNavStep(-1));
   $("#ficha-next").addEventListener("click", () => fichaNavStep(+1));
   $("#ficha-expand").addEventListener("click", () => {

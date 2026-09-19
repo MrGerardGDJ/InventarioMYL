@@ -1019,10 +1019,89 @@ main { padding: 0; }
   font-size: 8.5px; font-weight: 600; line-height: 13px; text-align: center;
 }
 
+/* ===== Barra inferior de pestañas (móvil) =====
+   Reusa .rail-item (mismo data-view, mismo switchView()/bindEvents() de
+   app.js) — no hace falta JS aparte, solo mostrarla/ocultarla por CSS. */
+.tabbar {
+  display: none;
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  grid-template-columns: repeat(5, 1fr);
+  height: 70px; padding-bottom: 14px;
+  background: var(--color-rail);
+  box-shadow: 0 -1px 0 rgba(233, 233, 237, .08);
+}
+.tabbar-item.rail-item { width: auto; height: auto; border-radius: 0; }
+
+/* ===== Ficha → hoja inferior (móvil) ===== */
+.ficha-veil {
+  display: none;
+  position: fixed; inset: 0; z-index: 39;
+  background: linear-gradient(rgba(10, 11, 20, .55), rgba(10, 11, 20, .88));
+  opacity: 0; pointer-events: none; transition: opacity .2s ease;
+}
+.ficha-veil.open { opacity: 1; pointer-events: auto; }
+.ficha-handle { display: none; }
+
 @media (max-width: 760px) {
   .sync-form { grid-template-columns: 1fr; }
   .view.active { flex-direction: column; }
-  .filters { width: 100%; flex: none; position: static; height: auto; border-right: none; border-bottom: 1px solid var(--color-border-strong); }
   .brand .tagline { display: none; }
-  .ep-row { grid-template-columns: 130px 1fr 70px; }
+
+  /* 1) La barra de pestañas reemplaza al rail */
+  .app { grid-template-columns: 1fr; }
+  .rail { display: none; }
+  .tabbar { display: grid; }
+  .app-content { padding-bottom: 84px; } /* aire para la tabbar fija */
+
+  /* 2) Cabecera compacta + chips desplazables */
+  .content-header { padding: 2px 20px 12px; gap: 10px; }
+  .brand h1 { font-size: 20px; }
+  #search { font-size: 13px; padding: 8px 10px; }
+  .filter-chips {
+    flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .filter-chips::-webkit-scrollbar { display: none; }
+  .chip-select, .chip-range { flex: none; }
+
+  /* .filters: sigue existiendo en Colecciones/Cambios/Mazos (no rediseñadas
+     a chip en esta fase) — pasa de columna lateral a bloque apilado */
+  .filters { width: 100%; flex: none; position: static; height: auto; border-right: none; border-bottom: 1px solid var(--color-border-strong); }
+
+  /* 3) Catálogo: grilla de 3 columnas. Sin hover en táctil, así que el
+     stepper +/− de la tarjeta no tiene forma de aparecer — correcto según
+     el documento: marcar copias se hace en la hoja inferior (la ficha). */
+  #view-coleccion #cards-grid { grid-template-columns: repeat(3, 1fr); gap: 9px; }
+
+  /* Ficha: de panel fijo de 318px a hoja que sube desde abajo */
+  .ficha-veil { display: block; }
+  .ficha {
+    position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 40;
+    width: auto; height: auto; max-height: 82vh;
+    border-radius: 26px 26px 0 0;
+    box-shadow: 0 -1px 0 rgba(233, 233, 237, .12), 0 -22px 60px rgba(0, 0, 0, .65);
+    padding: 10px 20px 22px;
+    transform: translateY(100%);
+    transition: transform .25s ease;
+  }
+  .ficha.open { transform: translateY(0); }
+  .ficha-handle {
+    display: block; width: 38px; height: 4px; border-radius: 2px;
+    background: rgba(233, 233, 237, .22); margin: 0 auto 10px;
+  }
+  .ficha-foot { display: none; } /* atajos de teclado: no aplican en móvil */
+
+  /* 4) Colecciones: la grilla de la edición ya baja a 4 columnas desde la
+     fase 6 (ver @media 900px de .collection-grid); acá solo la lista */
+  .col-item { cursor: default; } /* el long-press reemplaza al cursor:grab de escritorio */
+
+  /* 5) Mazos: composición en una sola columna */
+  .dist-grid { grid-template-columns: 1fr; }
+
+  /* 6) Estadísticas: cintillo apilado y anillo más chico, KPI 2×2×2 */
+  .stats-ring-card { width: 100%; flex: 0 0 auto; }
+  .stats-ring { width: 98px; height: 98px; }
+  .stats-hero .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .edition-progress { grid-template-columns: 1fr; }
+  .ep-row .ep-bar { width: 64px; }
 }

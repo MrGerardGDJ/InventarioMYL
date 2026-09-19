@@ -138,7 +138,9 @@
         <button id="load-more" class="btn load-more hidden">Cargar más</button>
       </div>
 
+      <div class="ficha-veil" id="ficha-veil"></div>
       <aside class="ficha" id="card-ficha">
+        <div class="ficha-handle"></div>
         <div class="ficha-empty" id="ficha-empty">
           <p class="muted">Elegí una carta de la grilla para verla acá.</p>
         </div>
@@ -319,6 +321,25 @@
     </section>
   </main>
     </div>
+    <!-- Barra inferior de pestañas (móvil, ≤760px): reusa .rail-item, ver
+         switchView()/bindEvents() en app.js — no hace falta JS aparte. -->
+    <nav class="tabbar">
+      <button class="rail-item tabbar-item" data-view="coleccion">
+        <i class="ph-fill ph-squares-four"></i><span>Catálogo</span>
+      </button>
+      <button class="rail-item tabbar-item" data-view="colecciones">
+        <i class="ph ph-books"></i><span>Álbum</span>
+      </button>
+      <button class="rail-item tabbar-item" data-view="mazos">
+        <i class="ph ph-stack"></i><span>Mazos</span>
+      </button>
+      <button class="rail-item tabbar-item" data-view="cambios">
+        <i class="ph ph-arrows-left-right"></i><span>Cambios</span>
+      </button>
+      <button class="rail-item tabbar-item" data-view="stats">
+        <i class="ph ph-chart-bar"></i><span>Datos</span>
+      </button>
+    </nav>
   </div>
 
   <!-- Modal detalle de carta -->
