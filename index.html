@@ -14,27 +14,46 @@
   <link rel="icon" href="./assets/logo.jpg" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <img class="logo" src="./assets/logo.jpg" alt="Mitos y Leyendas" width="29" height="40" style="height:40px;width:auto" />
-      <div>
-        <h1>Inventario MyL</h1>
-        <p class="tagline">Mitos y Leyendas — colección y mazos</p>
+  <div class="app">
+    <nav class="rail">
+      <div class="rail-logo"><img src="./assets/logo.jpg" alt="Mitos y Leyendas" /></div>
+      <div class="rail-nav">
+        <button class="rail-item active" data-view="coleccion" title="Catálogo">
+          <i class="ph-fill ph-squares-four"></i><span>Catálogo</span>
+        </button>
+        <button class="rail-item" data-view="colecciones" title="Álbum">
+          <i class="ph ph-books"></i><span>Álbum</span>
+        </button>
+        <button class="rail-item" data-view="mazos" title="Mazos">
+          <i class="ph ph-stack"></i><span>Mazos</span>
+        </button>
+        <button class="rail-item" data-view="cambios" title="Cambio y Ventas">
+          <i class="ph ph-arrows-left-right"></i><span>Cambios</span>
+        </button>
+        <button class="rail-item" data-view="stats" title="Estadísticas">
+          <i class="ph ph-chart-bar"></i><span>Datos</span>
+        </button>
+        <button class="rail-item" id="rail-add-card" title="Agregar carta manual">
+          <i class="ph ph-plus-circle"></i><span>Cartas</span>
+        </button>
       </div>
-    </div>
-    <div class="search-wrap">
-      <input id="search" type="search" placeholder="Buscar carta por nombre o habilidad…" autocomplete="off" />
-    </div>
-    <nav class="tabs">
-      <button class="tab active" data-view="coleccion">Catálogo</button>
-      <button class="tab" data-view="colecciones">Colecciones</button>
-      <button class="tab" data-view="cambios">Cambio y Ventas</button>
-      <button class="tab" data-view="mazos">Mazos</button>
-      <button class="tab" data-view="stats">Estadísticas</button>
+      <div class="rail-foot">
+        <button id="open-sync" class="rail-avatar" title="Datos y sincronización">
+          <img src="./assets/logo.jpg" alt="" />
+        </button>
+      </div>
     </nav>
-    <span id="sync-chip" class="sync-chip" title="Estado de guardado"></span>
-    <button id="open-sync" class="icon-btn" title="Datos y sincronización">☁️</button>
-  </header>
+    <div class="app-content">
+      <header class="content-header">
+        <div class="brand">
+          <h1>Inventario MyL</h1>
+          <p class="tagline">Mitos y Leyendas — colección y mazos</p>
+        </div>
+        <div class="search-wrap">
+          <input id="search" type="search" placeholder="Buscar carta por nombre o habilidad…" autocomplete="off" />
+        </div>
+        <span id="sync-chip" class="sync-chip" title="Estado de guardado"></span>
+      </header>
 
   <main>
     <!-- ===== VISTA COLECCIÓN ===== -->
@@ -228,6 +247,8 @@
       </div>
     </section>
   </main>
+    </div>
+  </div>
 
   <!-- Modal detalle de carta -->
   <div id="modal" class="modal hidden">

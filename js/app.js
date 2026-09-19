@@ -3054,7 +3054,7 @@ function bindSyncEvents() {
 /* ===================== Navegación / eventos ===================== */
 function switchView(view) {
   state.view = view;
-  $$(".tab").forEach((t) => t.classList.toggle("active", t.dataset.view === view));
+  $$(".rail-item[data-view]").forEach((t) => t.classList.toggle("active", t.dataset.view === view));
   $$(".view").forEach((v) => v.classList.toggle("active", v.id === "view-" + view));
   if (view === "colecciones") renderCollectionsView();
   if (view === "cambios") renderTradeView();
@@ -3063,8 +3063,9 @@ function switchView(view) {
 }
 
 function bindEvents() {
-  // Tabs
-  $$(".tab").forEach((t) => t.addEventListener("click", () => switchView(t.dataset.view)));
+  // Rail de navegación
+  $$(".rail-item[data-view]").forEach((t) => t.addEventListener("click", () => switchView(t.dataset.view)));
+  $("#rail-add-card").addEventListener("click", () => openCardForm(null));
 
   // Buscador global: filtra el Catálogo y también la vista activa
   // (dentro de una colección, del mazo abierto, o de Cambio y Ventas)
