@@ -378,6 +378,69 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-19 (39ª iteración) — Rediseño "Vitrina": Móvil — cierre de las 11 fases
+
+Quinto y último bloque grande del rediseño (ver 35ª iteración para el contexto completo
+del bundle). Cubre la fase 11, el pedido original con el que arrancó toda esta tarea
+("generarme las vistas para móvil de lo que tenemos actualmente" → se descubrió que la
+base de escritorio que el móvil daba por sentada no existía todavía, y de ahí salieron
+las 10 fases previas).
+
+Un solo breakpoint `@media (max-width:760px)`, en el orden que sugiere `movil.md`:
+
+1. **Barra inferior de pestañas**: reemplaza al rail reusando la misma clase `.rail-item`
+   (mismo `data-view`) en los botones de la tabbar — `switchView()`/`bindEvents()` no
+   necesitaron ningún cambio, rail y tabbar quedan sincronizados solos.
+2. **Cabecera compacta**: título/buscador más chicos; `.filter-chips` pasa a fila
+   horizontal con scroll sin barra visible.
+3. **Catálogo a 3 columnas + hoja inferior**: la ficha fija de 318px se convierte en hoja
+   (`position:fixed` + `transform:translateY(100%/0)` según la clase `.open`, que agregan/
+   quitan `selectCard()`/`deselectCard()` sin tocar su lógica interna), con velo nuevo
+   (`#ficha-veil`) que la cierra al tocarlo y manilla clickeable. Sin `:hover` en táctil,
+   el stepper de la tarjeta no tiene forma de aparecer — correcto, marcar copias se hace
+   en la hoja.
+4. **Colecciones a 4 columnas**: ya se había resuelto sin saberlo en la fase 6 (breakpoint
+   `900px` de `.collection-grid`, que cubre 760px de sobra). El "long press para
+   reordenar" que pide el documento no se implementó con gestos nuevos — ya existían los
+   botones ▲/▼ como alternativa accesible al drag-and-drop nativo (que tampoco funciona
+   bien táctil), construidos en una iteración anterior con ese propósito explícito.
+5. **Mazos a una columna** en la composición.
+6. **Estadísticas**: anillo a 98px, cintillo apilado, KPI 2×2, progreso por edición a una
+   columna.
+
+**Alcance no implementado, documentado a propósito**: gestos táctiles (deslizar la ficha
+para cerrarla o pasar de carta) y el colapso del buscador a un ícono expandible de la
+cabecera. Ninguno de los dos bloquea las seis vistas que pide el documento — quedan como
+mejora futura si se pide específicamente.
+
+**Nota de verificación** (del entorno de prueba, no del código): la primera corrida con
+viewport 390×844 y los flags `isMobile`/`hasTouch` de Playwright midió
+`window.innerWidth = 497` en vez de 390 — un desajuste de escalado de esa combinación de
+flags en el Chromium de esta sandbox. Repitiendo la misma prueba con un resize de viewport
+normal (sin esos dos flags), `innerWidth` midió 390 exacto y todo pasó limpio. Queda
+registrado por si se repite en otra sesión: ante un layout "roto" en un test móvil,
+comparar `window.innerWidth` contra el viewport pedido antes de asumir un bug del CSS.
+
+Verificado con Playwright: recorrido completo de las 5 vistas de escritorio + selección de
+carta + modal + entrar y salir del modo inventariar desde una Colección, y el mismo
+recorrido corto en viewport 390×844 (tabbar, hoja inferior de la ficha abriéndose de
+verdad). 0 `pageerror` en toda la corrida.
+
+## Cierre del rediseño "Vitrina" (iteraciones 35ª–39ª)
+
+Las 11 fases del plan quedaron completas: Fundamentos (tokens/tipografía/iconos) → Rail →
+Catálogo con ficha fija → Modal de detalle → Modo inventariar → Colecciones/Álbum →
+Cambio y Ventas → Marco holográfico de rareza → Foil → Mazos y Estadísticas → Móvil.
+21 commits en `claude/myl-card-inventory-app-hx8z9d`, ninguno mergeado a `main` todavía
+(rama de trabajo grande, se espera confirmación antes de mergear dado el tamaño del
+cambio). Alcances deliberadamente reducidos respecto al handoff original, todos
+documentados en su iteración correspondiente: sin conmutador grilla/tabla en el Catálogo,
+sin ficha lateral de 318px reusada en Mazos, sin reestructurar Cambios a dos columnas de
+352px, sin gestos táctiles en la hoja inferior — en los cuatro casos porque el documento
+describía una funcionalidad nueva no especificada en detalle o porque tocar la estructura
+existente (sub-pestañas de un mazo, historial de Cambios) no valía el riesgo frente a la
+ganancia visual.
+
 ### 2026-09-19 (38ª iteración) — Rediseño "Vitrina": marco holográfico, foil, Mazos y Estadísticas
 
 Cuarto bloque grande del rediseño (ver 35ª iteración para el contexto del bundle y las
