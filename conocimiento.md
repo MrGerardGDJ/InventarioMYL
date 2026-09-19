@@ -378,6 +378,61 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-19 (35ª iteración) — Rediseño "Vitrina" (Nocturne): Fundamentos + Rail de navegación
+
+El dueño trajo un bundle de 5 documentos de handoff generados por una herramienta externa
+de diseño ("Nocturne design system": `design_handoff_inventario_vitrina/README.md`,
+`marco-holografico-rareza.md`, `foil-holografico.md`, `mazos-y-estadisticas.md`, `movil.md`)
+pidiendo primero solo el móvil. Al revisar el repo se confirmó que la base de escritorio que
+el móvil da por sentada (rail lateral, ficha fija, modo inventariar, tarjeta de catálogo
+nueva, modal rediseñado, colecciones) no existía todavía en esta rama — seguía con la
+topbar/tabs originales, paleta dorada, sin Phosphor ni Inter. El dueño confirmó ejecutar el
+bundle completo de punta a punta, con un plan de 11 fases (ver
+`/root/.claude/plans/delegated-whistling-kitten.md` de la sesión, o el resumen de fases más
+abajo), avisando al cierre de cada bloque grande en vez de fase por fase.
+
+Este es el primer bloque (Fundamentos + Rail):
+
+- **Bundle de diseño**: se copió `design_handoff_inventario_vitrina/` completo al repo
+  como documentación de referencia (el prototipo `Inventario MyL.dc.html` es solo
+  referencia visual, no código a copiar).
+- **Tokens Nocturne**: se reescribió el bloque `:root` de `css/styles.css` con la paleta
+  morada completa del README (`--color-bg #161826`, `--color-surface`, `--color-rail`,
+  `--color-accent #9184d9`, etc.), reemplazando la paleta dorada anterior
+  (`--bg #0f1117`, `--accent #c9a13b`) en los ~40 usos existentes del archivo — es un
+  re-theme real, no un simple rename. `--danger`/`--ok`/`--radius`/`--shadow` se conservan
+  tal cual por ahora (el handoff no define equivalentes; se revisan cuando cada vista que
+  los usa se rediseñe en una fase posterior).
+- **Tema claro eliminado**: `#theme-toggle`, `applyTheme()`/`toggleTheme()` en `js/app.js`
+  y el bloque `[data-theme="light"]` de `css/styles.css` se quitaron — Nocturne es un
+  sistema solo oscuro y ningún documento del handoff define una variante clara (decisión
+  confirmada con el dueño).
+- **Tipografía e iconos**: Inter (Google Fonts) y Phosphor Icons (`@phosphor-icons/web@2.1.1`,
+  hojas regular/fill, vía CDN) cargados en `index.html`. `font-variant-numeric: tabular-nums`
+  en clases de cifra/contador (`.qty-num`, `.stat-card .num`, badges, etc.).
+- **Rail de navegación**: la topbar horizontal (logo + buscador + tabs + iconos) se
+  reemplaza por el rail vertical de 68px del handoff — logo arriba, 6 destinos (Catálogo,
+  Álbum, Mazos, Cambios, Datos, Cartas) con iconos Phosphor y estado activo en tinte de
+  acento, avatar/botón de sincronización al pie. El buscador y el chip de sync (con su
+  texto informativo completo — "☁ Cambios sin subir — toca Guardar", etc. — que no cabía en
+  un ícono chico del rail) pasan a una cabecera de contenido `sticky` arriba de cada vista.
+  - `switchView()`/`bindEvents()` en `app.js` pasan de seleccionar `.tab` (una clase que sin
+    querer también matcheaba las sub-pestañas Cartas/Estadística/Estrategia del detalle de
+    un mazo, `renderDeckDetail()`) a `.rail-item[data-view]`, corrigiendo ese cruce de
+    selector de paso.
+  - El destino "Cartas" del rail (`#rail-add-card`) abre el formulario de carta manual
+    existente (`openCardForm(null)`), mismo flujo que el botón "➕ Carta manual" del
+    catálogo, que se mantiene como acceso secundario.
+- Verificado con Playwright en cada commit: 0 `pageerror`, captura de pantalla del catálogo
+  confirmando visualmente fondo/acento Nocturne e iconos Phosphor cargando bien, navegación
+  por las 5 vistas del rail (todas quedan `active` y visibles), buscador global sigue
+  filtrando, y el modal de carta manual se abre desde el rail.
+
+Resumen de las 11 fases totales del rediseño (las siguientes 9 quedan pendientes, se
+documentan a medida que se completa cada bloque grande): Fundamentos ✓ → Rail ✓ → Catálogo
+con ficha fija → Modal de detalle → Modo inventariar → Colecciones/Álbum → Cambio y ventas →
+Marco holográfico de rareza → Foil holográfico → Mazos y Estadísticas → Móvil (las 6 vistas).
+
 ### 2026-08-18 (34ª iteración) — El buscador global ahora también filtra Cambio y Ventas
 - El dueño notó que el buscador de la barra superior ya filtraba
   Catálogo, Colecciones y el mazo abierto, pero no hacía nada en
