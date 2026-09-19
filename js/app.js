@@ -543,6 +543,26 @@ function raritySlug(rarity) {
   return RARITY_SLUG[key] || "";
 }
 
+// Foil holográfico (foil-holografico.md): todas las rarezas lo llevan por
+// defecto, salvo Vasallo/Cortesano — esas dos solo si la carta lo declara
+// en alguna propiedad (foil/finish/variant/acabado/version conteniendo
+// "foil"). Hoy el modelo de datos no tiene ninguno de esos campos, así que
+// en la práctica todo Vasallo/Cortesano sale sin foil — es el
+// comportamiento correcto y esperado, no una carencia de esta fase.
+const FOIL_OPT_IN = new Set(["vasallo", "cortesano"]);
+function declaresFoil(card) {
+  if (card.foil === true) return true;
+  const fields = [card.foil, card.finish, card.variant, card.acabado, card.version];
+  return fields.some((v) =>
+    typeof v === "string" &&
+    v.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().includes("foil")
+  );
+}
+function hasFoil(card) {
+  if (declaresFoil(card)) return true;
+  return !FOIL_OPT_IN.has(raritySlug(card.rarity));
+}
+
 /* ===================== Ficha fija (panel derecho del Catálogo) =====================
    Panel de 318px que muestra la carta elegida en la grilla sin abrir el
    modal (ver README del handoff, pantalla 3a). Un clic en una tarjeta la
@@ -620,6 +640,7 @@ function renderFicha(card) {
       <div class="holo-art">
         ${img}
         <div class="v-veil"></div>
+        <div class="foil" ${hasFoil(card) ? "" : "hidden"}></div>
         <div class="ficha-art-badges">
           ${card.cost != null ? `<span class="ficha-pill"><i class="ph ph-coin"></i>${card.cost}</span>` : ""}
           ${card.strength != null ? `<span class="ficha-pill"><i class="ph ph-sword"></i>${card.strength}</span>` : ""}
@@ -746,6 +767,7 @@ function renderInventoryCard() {
   $("#inv-current-card").innerHTML = `
     ${invCardArtHtml(card)}
     <div class="v-veil"></div>
+    <div class="foil inv-foil" ${hasFoil(card) ? "" : "hidden"}></div>
     <span class="v-num">${cardLabel(card)}</span>
     <div class="v-info">
       <div class="v-name">${escapeHtml(displayName(card))}</div>
@@ -939,7 +961,7 @@ function openModal(card, navList, navIndex) {
     <div class="card-detail">
       <div class="cd-image" ${card.image ? 'data-zoom="1"' : ""}>
         <div class="holo" data-rarity="${raritySlug(card.rarity)}">
-          <div class="holo-art">${img}</div>
+          <div class="holo-art">${img}<div class="foil" ${hasFoil(card) ? "" : "hidden"}></div></div>
         </div>
         ${card.image ? '<span class="cd-zoom-hint">🔍 Ampliar</span>' : ""}
         <div class="qty-row">
