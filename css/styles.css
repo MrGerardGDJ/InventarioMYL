@@ -606,13 +606,17 @@ main { padding: 0; }
 /* ===== Decks ===== */
 .deck-list { display: flex; flex-direction: column; gap: 6px; }
 .deck-item {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 9px 11px; border: 1px solid var(--color-border-strong); border-radius: 8px;
-  background: var(--color-surface-2); font-size: 13px;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+  padding: 10px 11px; border-radius: 9px; background: transparent;
+  box-shadow: inset 0 0 0 1px var(--color-border); font-size: 13px;
 }
-.deck-item.active { border-color: var(--color-accent); }
-.deck-item .d-name { font-weight: 600; cursor: pointer; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.deck-item .d-count { color: var(--color-text-55); font-size: 12px; margin: 0 8px; }
+.deck-item:hover { background: rgba(233, 233, 237, .05); }
+.deck-item.active { background: var(--color-accent-tint-soft); box-shadow: inset 0 0 0 1px rgba(145, 132, 217, .42); }
+.deck-item .d-name { font-weight: 500; cursor: pointer; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.deck-item .d-count { color: var(--color-text-55); font-size: 12px; margin: 0 8px; font-variant-numeric: tabular-nums; }
+.deck-item .d-status { flex: 0 0 100%; font-size: 10.5px; color: var(--color-text-55); display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+.deck-item .d-status i { font-size: 12px; }
+.deck-item .d-status.complete { color: var(--color-accent-400); }
 .deck-status-badge {
   border: 1px solid var(--color-border-strong); border-radius: 20px; padding: 2px 9px;
   font-size: 10.5px; font-weight: 700; white-space: nowrap; cursor: pointer;

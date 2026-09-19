@@ -950,7 +950,7 @@ function openModal(card, navList, navIndex) {
   const box = $("#modal-box");
   const img = card.image
     ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(card.name)}" />`
-    : `<div class="placeholder" style="color:var(--muted);padding:20px;text-align:center">Sin imagen</div>`;
+    : `<div class="placeholder" style="color:var(--color-text-55);padding:20px;text-align:center">Sin imagen</div>`;
   const tag = (t, cls = "") => `<span class="tag ${cls}">${escapeHtml(t)}</span>`;
   const repetidas = Math.max(0, qty - 1);
   const price = cardPriceInfo(card.id);
@@ -2622,6 +2622,25 @@ function switchDeckTab(tab) {
   $$("#deck-detail .deck-tab-panel").forEach((p) => p.classList.toggle("hidden", p.id !== `deck-tab-${tab}`));
 }
 
+// Los 4 KPI de la cabecera del mazo (README del handoff, 3.3): cartas
+// totales, cuántas están "armadas" (min entre lo pedido y lo que tienes),
+// copias que faltan y coste medio de los Aliados. No cruza "te faltan"
+// contra las cartas marcadas para cambio (el documento lo sugiere; se
+// deja para no acoplar esta cabecera al módulo de Cambios).
+function deckKpis(deck) {
+  const entries = Object.entries(deck.cards);
+  let total = 0, armado = 0, faltanCopias = 0, faltanCartas = 0, allyQty = 0, allyCostSum = 0;
+  for (const [cid, q] of entries) {
+    total += q;
+    const owned = store.getQty(cid);
+    armado += Math.min(owned, q);
+    if (owned < q) { faltanCartas++; faltanCopias += q - owned; }
+    const card = cardById(cid);
+    if (card && card.type === "Aliado") { allyQty += q; allyCostSum += (card.cost || 0) * q; }
+  }
+  return { total, armado, faltanCopias, faltanCartas, avgCost: allyQty ? allyCostSum / allyQty : 0 };
+}
+
 function renderDecksView() {
   const list = $("#deck-list");
   const decks = store.getDecks();
@@ -2634,11 +2653,18 @@ function renderDecksView() {
     const row = document.createElement("div");
     row.className = "deck-item" + (d.id === activeId ? " active" : "");
     row.dataset.deckId = d.id;
+    const k = deckKpis(d);
+    const complete = k.total > 0 && k.faltanCopias === 0;
     row.innerHTML = `
       <span class="d-name">${escapeHtml(d.name)}</span>
       ${deckStatusBadgeHtml(d)}
       <span class="d-count">${store.deckCount(d.id)}</span>
-      <button class="qty-btn" data-del title="Eliminar">🗑</button>`;
+      <button class="qty-btn" data-del title="Eliminar">🗑</button>
+      <span class="d-status${complete ? " complete" : ""}">
+        ${k.total === 0 ? "" : complete
+          ? '<i class="ph-fill ph-check-circle"></i>completo'
+          : `<i class="ph ph-warning-circle"></i>faltan ${k.faltanCopias} copia${k.faltanCopias === 1 ? "" : "s"}`}
+      </span>`;
     row.querySelector(".d-name").onclick = () => { store.setSetting("activeDeckId", d.id); renderDecksView(); renderDeckDetail(); };
     row.querySelector("[data-status]").onclick = (e) => {
       e.stopPropagation();
@@ -2665,12 +2691,14 @@ function renderDeckDetail() {
     wrap.innerHTML = `<p class="muted">Selecciona o crea un mazo para empezar a construirlo. Desde la vista <b>Colección</b> puedes añadir cartas al mazo activo con el botón 🃏＋, o buscarlas aquí abajo.</p>`;
     return;
   }
+  const k = deckKpis(deck);
   wrap.innerHTML = `
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <h2><input id="deck-name" value="${escapeAttr(deck.name)}" style="background:var(--bg-3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font-size:18px;font-weight:700" /></h2>
+    <div class="ficha-kicker">Mazo · ${k.total} carta${k.total === 1 ? "" : "s"}</div>
+    <div class="col-head">
+      <h2><input id="deck-name" value="${escapeAttr(deck.name)}" /></h2>
       ${deckStatusBadgeHtml(deck)}
       <span class="muted" id="deck-total"></span>
-      <div class="spacer" style="flex:1"></div>
+      <div class="spacer"></div>
       <button class="btn small" id="deck-xlsx">📊 Excel</button>
       <button class="btn small" id="deck-img">🖼️ Imagen</button>
       <button class="btn small" id="deck-txt">📋 Texto</button>
@@ -2679,6 +2707,12 @@ function renderDeckDetail() {
     <p class="muted deck-status-note">${deck.status === "secundario"
       ? "📝 Mazo Secundario: es un plan/experimento — no reserva copias de tus cartas ni compite con tus otros mazos."
       : "🧩 Mazo Principal: compite por copias con tus otros mazos Principal (si comparten una carta, la disponibilidad se reparte entre ellos)."}</p>
+    <div class="stats-grid" id="deck-kpis">
+      <div class="stat-card"><div class="num">${k.total}</div><div class="lbl">Cartas del mazo</div></div>
+      <div class="stat-card"><div class="num">${k.armado} de ${k.total}</div><div class="lbl">Armado${k.total ? ` · ${Math.round((k.armado / k.total) * 100)}% con lo que tienes` : ""}</div></div>
+      <div class="stat-card hi"><div class="num">${k.faltanCopias} copia${k.faltanCopias === 1 ? "" : "s"}</div><div class="lbl">Te faltan${k.faltanCartas ? ` · de ${k.faltanCartas} cartas` : ""}</div></div>
+      <div class="stat-card"><div class="num">${k.avgCost.toFixed(1).replace(".", ",")}</div><div class="lbl">Coste medio (Aliados)</div></div>
+    </div>
     <div class="tabs deck-tabs">
       <button class="tab" data-deck-tab="cartas">🗂️ Cartas</button>
       <button class="tab" data-deck-tab="estadistica">📊 Estadística</button>
