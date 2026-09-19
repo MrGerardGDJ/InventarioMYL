@@ -378,6 +378,39 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-19 (37ª iteración) — Rediseño "Vitrina": Colecciones/Álbum y KPIs de Cambio y Ventas
+
+Tercer bloque grande del rediseño (ver 35ª iteración para el contexto del bundle y las
+11 fases). Cubre las fases 6 y 7.
+
+- **Colecciones/Álbum (2c)**: lista lateral angostada a 230px (`#view-colecciones
+  .filters`), filas `.col-item` reestilizadas — el drag-and-drop ya funcionaba
+  (`renderCollectionsView`, iteración anterior a este rediseño), solo cambia el look:
+  fila elevada con rotación leve al arrastrar, línea de destino, manija Phosphor
+  (`ph-dots-six-vertical`) en vez de "⠿". Detalle: kicker de formato, nombre a 26px sin
+  caja de input visible, línea de contexto "N de M · te faltan X · Y repetidas"
+  (`collectionStats()` suma un nuevo campo `repetidas` = Σ `max(0, qty-1)` de toda la
+  colección), barra de 6px con el porcentaje grande al lado, chips
+  Todas/Las que me faltan/Repetidas reemplazando el `<select>` "Mostrar" (nuevo filtro
+  `"dup"` en `renderCollectionGrid()`, antes solo existían `missing`/`owned`), leyenda
+  "la tienes/te falta" con cuadrados, y la grilla de la edición a 9 columnas con tarjeta
+  compacta (número 8.5px, nombre 9.5px, sin línea de tipo·rareza, badge 16px) vía CSS
+  scoped a `.collection-grid` — sigue siendo la misma `cardEl()` del Catálogo (fase 3).
+- **Cambio y Ventas (2d)**: fila de 4 KPI arriba (Repetidas de TODO el catálogo, no solo
+  lo ofrecido; Ofrecidas destacada con tinte de acento; Cambios hechos; Vendido este año)
+  reutilizando `.stat-card`, que de paso se re-estiliza a la paleta Nocturne — beneficia
+  también a Estadísticas (fase 10, todavía sin rediseñar) de antemano.
+  - **Decisión de alcance explícita**: no se restructuró a las dos columnas
+    Ofrecidas/Historial de 352px que describe el handoff. La lista+buscador+dos
+    historiales apilados ya funcionaban bien y habían heredado la paleta nueva sola
+    desde la fase de fundamentos (confirmado visualmente); reestructurar una vista que
+    funciona por una ganancia visual menor no valía el riesgo en este punto.
+
+Verificado con Playwright (0 `pageerror` en ambas): Colecciones con datos reales de
+Tombstone — grilla de 9 columnas confirmada por `getComputedStyle`, 3 chips, filtro
+"Repetidas" funcional; Cambio y Ventas con 3 cartas ×3 copias y 2 ofrecidas → KPIs
+correctos (6 repetidas, 2 ofrecidas, tarjeta destacada con la clase `.hi`).
+
 ### 2026-09-19 (36ª iteración) — Rediseño "Vitrina": Catálogo con ficha fija, Modal de detalle y Modo inventariar
 
 Segundo bloque grande del rediseño (ver 35ª iteración para el contexto completo del
