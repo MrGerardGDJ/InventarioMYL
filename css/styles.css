@@ -153,6 +153,34 @@ main { padding: 0; }
 .filters hr { border: none; border-top: 1px solid var(--color-border-strong); margin: 14px 0; }
 .link-btn { background: none; border: none; color: var(--color-accent-400); font-size: 12px; }
 
+/* Chips de filtro del Catálogo (ver README del handoff): reemplazan la
+   .filters lateral de 260px solo en #view-coleccion — las demás vistas
+   (Colecciones, Cambios, Mazos) siguen con su aside .filters de siempre
+   hasta que se rediseñen en su propia fase. */
+.filter-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-bottom: 14px; }
+.chip-select {
+  position: relative; display: inline-flex; align-items: center;
+  height: 29px; border-radius: 99px;
+  background: transparent; box-shadow: inset 0 0 0 1px var(--color-border-strong);
+}
+.chip-select i {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 11px; color: var(--color-text-55); pointer-events: none;
+}
+.chip-select select {
+  appearance: none; border: none; background: transparent; color: var(--color-text);
+  font-size: 12.5px; font-family: inherit; padding: 0 24px 0 12px; height: 100%;
+  border-radius: 99px; cursor: pointer; max-width: 190px;
+}
+.chip-select:hover { box-shadow: inset 0 0 0 1px var(--color-accent-400); }
+.chip-range {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 29px; padding: 0 12px; border-radius: 99px;
+  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+  font-size: 12.5px; color: var(--color-text-70);
+}
+.chip-range input[type="range"] { width: 90px; }
+
 .content { flex: 1; padding: 16px 20px; min-width: 0; }
 .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
 .toolbar .spacer { flex: 1; }

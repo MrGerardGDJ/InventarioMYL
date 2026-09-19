@@ -230,7 +230,7 @@ function populateFilters() {
 function refreshEditionOptions() {
   const sel = $("#f-edition");
   const prev = sel.value;
-  fillEditionSelect(sel, $("#f-format").value, "Todas");
+  fillEditionSelect(sel, $("#f-format").value, "Edición: todas");
   if ([...sel.options].some((o) => o.value === prev)) sel.value = prev;
 }
 
@@ -541,6 +541,19 @@ function selectCard(card, navList) {
   const el = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
   if (el) el.classList.add("selected");
   renderFicha(card);
+}
+
+function deselectCard() {
+  const prevId = state.selectedCardId;
+  state.selectedCardId = null;
+  fichaNavList = null;
+  fichaNavIndex = -1;
+  if (prevId) {
+    const prevEl = document.querySelector(`.card[data-id="${CSS.escape(prevId)}"]`);
+    if (prevEl) prevEl.classList.remove("selected");
+  }
+  $("#ficha-body").classList.add("hidden");
+  $("#ficha-empty").classList.remove("hidden");
 }
 
 function fichaNavStep(delta) {
@@ -3262,13 +3275,35 @@ function bindEvents() {
   $("#modal-prev").addEventListener("click", () => modalNavStep(-1));
   $("#modal-next").addEventListener("click", () => modalNavStep(1));
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") { closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); closeCollectionModal(); closeTradeModal(); return; }
-    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-    if ($("#modal").classList.contains("hidden")) return;
+    const modalOpen = !$("#modal").classList.contains("hidden");
+    if (e.key === "Escape") {
+      const hadModal = modalOpen;
+      closeModal(); closeDeckModal(); closeSyncModal(); closeCardForm(); closeOrphanModal(); closeCollectionModal(); closeTradeModal();
+      if (!hadModal && state.selectedCardId) deselectCard();
+      return;
+    }
     const tag = document.activeElement?.tagName;
     if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-    e.preventDefault();
-    modalNavStep(e.key === "ArrowLeft" ? -1 : 1);
+    if (modalOpen) {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); modalNavStep(e.key === "ArrowLeft" ? -1 : 1); }
+      return;
+    }
+    // Atajos de la ficha fija: solo en el Catálogo, con una carta elegida
+    if (state.view !== "coleccion" || !state.selectedCardId) return;
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); fichaNavStep(e.key === "ArrowLeft" ? -1 : 1); }
+    else if (e.key === "ArrowUp" || e.key === "ArrowDown") { e.preventDefault(); $(e.key === "ArrowUp" ? "#ficha-plus" : "#ficha-minus").click(); }
+    else if (e.key === " ") { e.preventDefault(); $("#ficha-expand").click(); }
+    else if (/^[0-9]$/.test(e.key)) {
+      e.preventDefault();
+      const card = fichaSelectedCard();
+      if (!card) return;
+      store.setQty(card.id, Number(e.key));
+      const gridEl = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+      if (gridEl) { gridEl.classList.toggle("owned", Number(e.key) > 0); const q = gridEl.querySelector('[data-role="qty"]'); if (q) { q.textContent = e.key; q.classList.toggle("zero", e.key === "0"); } }
+      updateResultCount();
+      if (state.view === "colecciones") updateCollectionProgress();
+      refreshFichaQty(card.id);
+    }
   });
   $("#orphan-note").addEventListener("click", openOrphanModal);
   $("#orphan-modal").addEventListener("click", (e) => { if (e.target.classList.contains("modal-backdrop")) closeOrphanModal(); });
