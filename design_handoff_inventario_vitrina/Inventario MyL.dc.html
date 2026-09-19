@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/nocturne-31654735-2309-4bf4-9587-ce1ef4e8fa97/styles.css">
+<script src="_ds/nocturne-31654735-2309-4bf4-9587-ce1ef4e8fa97/_ds_bundle.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<style>
+body{margin:0;background:#101220;color:#e9e9ed;font-family:Inter,system-ui,sans-serif}
+.dv-turn{padding:44px 48px 40px;border-bottom:1px solid rgba(233,233,237,.10)}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#9184d9;color:#161826;border-radius:4px;text-decoration:none}
+.dv-tname{font:500 13px/1.2 Inter,system-ui,sans-serif;color:#e9e9ed}
+.dv-opts{display:flex;flex-wrap:wrap;gap:38px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:11px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(145,132,217,.18);color:#d2cefd;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11.5px/1.3 Inter,system-ui,sans-serif;color:rgba(233,233,237,.6)}
+.dv-opt:target .dv-oid{background:#9184d9;color:#161826}
+.dv-pair{display:flex;gap:18px;align-items:flex-start}
+.dv-note{max-width:760px;margin:0 0 24px;font:13px/1.65 Inter,system-ui,sans-serif;color:rgba(233,233,237,.7);text-wrap:pretty}
+.dv-next{margin:26px 0 0;font:12px/1.6 Inter,system-ui,sans-serif;color:rgba(233,233,237,.5)}
+.sc{scrollbar-width:none;-ms-overflow-style:none}
+.sc::-webkit-scrollbar{width:0;height:0;display:none}
+a{color:#9184d9;text-decoration:none}a:hover{color:#b5abfc}
+@property --holo-a{syntax:"<angle>";inherits:true;initial-value:0deg}
+@keyframes holo-spin{to{--holo-a:360deg}}
+@keyframes foil-slide{from{background-position:0 0,0 0,0 0,0% 100%}to{background-position:0 0,0 0,0 0,100% 0%}}
+</style></helmet>
+
+<section class="dv-turn" id="t3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname">Catálogo Vitrina con la ficha fija a la derecha</span></div>
+<p class="dv-note">El arte de <a href="#1a">1a</a> con el panel de ficha de <a href="#1b">1b</a>: la grilla baja a cinco columnas para dejarle sitio, la carta elegida queda marcada con el borde de acento y la ficha se actualiza al recorrer la grilla — el modal de <a href="#2b">2b</a> queda solo para cuando quieres la carta a pantalla grande.</p>
+<div class="dv-opts">
+
+<div class="dv-opt" id="3b"><div class="dv-olabel"><a class="dv-oid" href="#3b">3b</a>Aura por rareza — el marco de la ficha en sus siete variantes</div>
+<div style="width:1280px;border-radius:12px;background:#161826;box-shadow:0 0 0 1px #3f424d,0 18px 44px rgba(0,0,0,.6);padding:30px 34px 34px;display:flex;flex-direction:column;gap:20px">
+<div>
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.13em;text-transform:uppercase;color:#9184d9">Marco holográfico</div>
+<div style="font:500 24px Inter;letter-spacing:-.02em;margin-top:7px">El aura sale de la rareza</div>
+<div style="font-size:12.5px;color:rgba(233,233,237,.55);margin-top:5px;max-width:640px;text-wrap:pretty">Mismo aro de 1px y mismo giro de 12s en todas; solo cambia la rampa de color, así la rareza se reconoce de lejos sin leer nada.</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:16px">
+<sc-for list="{{ auras }}" as="a" hint-placeholder-count="7">
+<div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+<div style="width:100%;position:relative;padding:1px;border-radius:11px;background:{{ a.ring }};animation:holo-spin 12s linear infinite;box-shadow:0 12px 30px rgba(0,0,0,.5)" style-before="content:'';position:absolute;inset:-5px;border-radius:16px;background:inherit;filter:blur(9px);opacity:.3">
+<div style="position:relative;z-index:1;aspect-ratio:63/88;border-radius:10px;overflow:hidden;background:{{ a.art }}">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 7px,transparent 7px 15px)"></div>
+<sc-if value="{{ a.premium }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.72;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.75) 0 1px,transparent 1px 9px),repeating-linear-gradient(-45deg,rgba(255,255,255,.55) 0 1px,transparent 1px 9px),repeating-linear-gradient(45deg,rgba(255,255,255,.28) 0 2px,transparent 2px 4.5px),linear-gradient(45deg,#8ad9ff,#c9a6ff 18%,#ffd1a8 34%,#fff3a8 50%,#a8ffd0 66%,#a8d8ff 82%,#d9b3ff);background-size:18px 18px,18px 18px,9px 9px,260% 260%;animation:foil-slide 9s ease-in-out infinite alternate"></div>
+</sc-if>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 58%,rgba(12,13,24,.92))"></div>
+<div style="position:absolute;left:10px;right:10px;bottom:10px;font:500 12px Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.carta }}</div>
+</div>
+</div>
+<div style="text-align:center">
+<div style="font:500 13px Inter">{{ a.n }}</div>
+<div style="font-size:11px;color:rgba(233,233,237,.55);margin-top:3px">{{ a.desc }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="3a"><div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a>Catálogo + ficha · 1280×820</div>
+<div style="width:1280px;height:820px;border-radius:12px;overflow:hidden;background:#161826;box-shadow:0 0 0 1px #3f424d,0 18px 44px rgba(0,0,0,.6);display:flex">
+<div style="width:68px;flex:none;background:#191b2a;box-shadow:1px 0 0 rgba(233,233,237,.07);display:flex;flex-direction:column;align-items:center;padding:16px 0 18px;gap:6px">
+<img src="https://blog.myl.cl/wp-content/uploads/2020/06/logo_online-1.png" alt="Mitos y Leyendas" style="width:58px;height:46px;object-fit:contain;margin-bottom:10px">
+<sc-for list="{{ rail }}" as="r" hint-placeholder-count="6">
+<div style="width:44px;height:42px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:{{ r.c }};background:{{ r.bg }}" style-hover="background:rgba(233,233,237,.06)"><i class="ph {{ r.ic }}" style="font-size:19px"></i><span style="font-size:8px">{{ r.n }}</span></div>
+</sc-for>
+<div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;align-items:center">
+<div style="width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:rgba(233,233,237,.55);cursor:pointer" style-hover="background:rgba(233,233,237,.06)"><i class="ph ph-cloud-check" style="font-size:18px"></i></div>
+<div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(150deg,#423a6a,#292b31);box-shadow:0 0 0 1px #5d5294"></div>
+</div>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:none;padding:20px 22px 0;display:flex;align-items:flex-start;gap:16px">
+<div style="min-width:0">
+<div style="font:500 24px Inter;letter-spacing:-.02em">Catálogo</div>
+<div style="font-size:12.5px;color:rgba(233,233,237,.55);margin-top:4px">Espada Sagrada · 180 cartas · tienes 149</div>
+</div>
+<div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+<div style="width:210px;height:34px;border-radius:8px;background:#232532;box-shadow:inset 0 0 0 1px rgba(233,233,237,.12);display:flex;align-items:center;gap:9px;padding:0 11px;color:rgba(233,233,237,.5)"><i class="ph ph-magnifying-glass" style="font-size:15px"></i><span style="font-size:12.5px">Nombre o habilidad…</span></div>
+<div style="display:flex;height:34px;border-radius:8px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(233,233,237,.14)">
+<div style="width:36px;display:grid;place-items:center;background:rgba(145,132,217,.16);color:#d2cefd;cursor:pointer"><i class="ph-fill ph-squares-four" style="font-size:16px"></i></div>
+<div style="width:36px;display:grid;place-items:center;color:rgba(233,233,237,.5);cursor:pointer" style-hover="background:rgba(233,233,237,.06)"><i class="ph ph-rows" style="font-size:16px"></i></div>
+</div>
+<div style="height:34px;padding:0 13px;border-radius:8px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph ph-check-square-offset" style="font-size:15px"></i>Inventariar</div>
+</div>
+</div>
+<div style="flex:none;padding:14px 22px 0;display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+<sc-for list="{{ chips }}" as="c" hint-placeholder-count="7">
+<div style="height:29px;padding:0 11px;border-radius:99px;display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;color:{{ c.c }};background:{{ c.bg }};box-shadow:inset 0 0 0 1px {{ c.b }}" style-hover="background:rgba(233,233,237,.07)">{{ c.n }}<i class="ph {{ c.ic }}" style="font-size:12px;opacity:.7"></i></div>
+</sc-for>
+</div>
+<div style="flex:none;margin:14px 22px 0;padding:11px 14px;border-radius:11px;background:linear-gradient(120deg,#262a60,#1c1e3a 62%,#1d1f33);position:relative;overflow:hidden;display:flex;align-items:center;gap:16px">
+<div style="position:absolute;right:-60px;top:-70px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(110,116,196,.4),transparent 70%)"></div>
+<div style="position:relative;font:500 14px Inter">Espada Sagrada</div>
+<div style="position:relative;flex:1;min-width:0;max-width:320px;height:5px;border-radius:3px;background:rgba(233,233,237,.12);overflow:hidden"><div style="width:83%;height:100%;background:linear-gradient(90deg,#5d5294,#b5abfc)"></div></div>
+<div style="position:relative;font-size:11.5px;color:rgba(233,233,237,.65)">149 de 180 · faltan 31</div>
+<div style="position:relative;margin-left:auto;font:500 22px Inter;color:#d2cefd;letter-spacing:-.02em">83%</div>
+</div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;padding:16px 22px 22px">
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:13px">
+<sc-for list="{{ vitrinaSel }}" as="v" hint-placeholder-count="15">
+<div style="display:flex;flex-direction:column;gap:7px;cursor:pointer">
+<div style="position:relative;aspect-ratio:63/88;border-radius:8px;overflow:hidden;background:{{ v.g }};box-shadow:{{ v.sh }};filter:{{ v.f }}" style-hover="box-shadow:0 0 0 1px #b5abfc,0 10px 24px rgba(0,0,0,.5)">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 6px,transparent 6px 13px)"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 46%,rgba(12,13,24,.9))"></div>
+<div style="position:absolute;top:8px;left:8px;padding:2px 6px;border-radius:5px;background:rgba(12,13,24,.7);font:9.5px ui-monospace,Menlo,monospace;color:rgba(233,233,237,.8)">{{ v.num }}</div>
+<sc-if value="{{ v.qty }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;top:7px;right:7px;min-width:20px;height:20px;padding:0 5px;border-radius:6px;background:#9184d9;color:#161826;font:600 11px Inter;display:grid;place-items:center">{{ v.qty }}</div></sc-if>
+<div style="position:absolute;left:9px;right:9px;bottom:8px">
+<div style="font:500 13px Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ v.n }}</div>
+<div style="display:flex;align-items:center;gap:6px;margin-top:3px;font-size:10.5px;color:rgba(233,233,237,.6)"><span>{{ v.tipo }}</span><span style="opacity:.4">·</span><span>{{ v.rareza }}</span></div>
+</div>
+<div style="position:absolute;top:8px;left:8px;right:8px;bottom:8px;display:flex;align-items:center;justify-content:center;gap:9px;opacity:0;background:rgba(12,13,24,.55);border-radius:6px;transition:opacity .14s" style-hover="opacity:1">
+<div style="width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:rgba(12,13,24,.8);box-shadow:inset 0 0 0 1px rgba(233,233,237,.22);color:#e9e9ed"><i class="ph ph-minus" style="font-size:15px"></i></div>
+<div style="width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:#9184d9;color:#161826"><i class="ph ph-plus" style="font-size:15px"></i></div>
+</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+<div class="sc" style="width:318px;flex:none;box-shadow:-1px 0 0 rgba(233,233,237,.07);background:#191b2a;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:rgba(233,233,237,.5)">Carta elegida</span>
+<div style="margin-left:auto;display:flex;gap:5px">
+<div style="width:28px;height:28px;border-radius:7px;display:grid;place-items:center;color:rgba(233,233,237,.6);box-shadow:inset 0 0 0 1px rgba(233,233,237,.13);cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-caret-left" style="font-size:14px"></i></div>
+<div style="width:28px;height:28px;border-radius:7px;display:grid;place-items:center;color:rgba(233,233,237,.6);box-shadow:inset 0 0 0 1px rgba(233,233,237,.13);cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-caret-right" style="font-size:14px"></i></div>
+<div style="width:28px;height:28px;border-radius:7px;display:grid;place-items:center;color:rgba(233,233,237,.6);box-shadow:inset 0 0 0 1px rgba(233,233,237,.13);cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-arrows-out" style="font-size:14px"></i></div>
+</div>
+</div>
+<div style="position:relative;padding:1px;border-radius:11px;background:conic-gradient(from var(--holo-a),#8a5f18 0%,#f2c14e 14%,#ffe98f 28%,#d9f26a 42%,#ffe98f 56%,#f2c14e 72%,#8a5f18 100%);animation:holo-spin 12s linear infinite;box-shadow:0 12px 30px rgba(0,0,0,.5)" style-before="content:'';position:absolute;inset:-5px;border-radius:16px;background:conic-gradient(from var(--holo-a),#8a5f18 0%,#f2c14e 14%,#ffe98f 28%,#d9f26a 42%,#ffe98f 56%,#f2c14e 72%,#8a5f18 100%);filter:blur(9px);opacity:.3">
+<div style="position:relative;z-index:1;aspect-ratio:63/88;border-radius:10px;overflow:hidden;background:linear-gradient(155deg,#4a4176,#23253a 60%,#191b2a)">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 7px,transparent 7px 15px)"></div>
+<div style="position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.72;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.75) 0 1px,transparent 1px 9px),repeating-linear-gradient(-45deg,rgba(255,255,255,.55) 0 1px,transparent 1px 9px),repeating-linear-gradient(45deg,rgba(255,255,255,.28) 0 2px,transparent 2px 4.5px),linear-gradient(45deg,#8ad9ff,#c9a6ff 18%,#ffd1a8 34%,#fff3a8 50%,#a8ffd0 66%,#a8d8ff 82%,#d9b3ff);background-size:18px 18px,18px 18px,9px 9px,260% 260%;animation:foil-slide 9s ease-in-out infinite alternate"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 52%,rgba(12,13,24,.92))"></div>
+<div style="position:absolute;top:10px;left:10px;display:flex;gap:5px">
+<div style="height:22px;padding:0 8px;border-radius:6px;background:rgba(12,13,24,.72);display:flex;align-items:center;gap:5px;font-size:11px"><i class="ph ph-coin" style="font-size:12px;color:#b5abfc"></i>5</div>
+<div style="height:22px;padding:0 8px;border-radius:6px;background:rgba(12,13,24,.72);display:flex;align-items:center;gap:5px;font-size:11px"><i class="ph ph-sword" style="font-size:12px;color:#b5abfc"></i>4</div>
+</div>
+<div style="position:absolute;left:14px;right:14px;bottom:14px">
+<div style="font:500 20px Inter;letter-spacing:-.01em">Merlín</div>
+<div style="font-size:11.5px;color:rgba(233,233,237,.65);margin-top:3px">Espada Sagrada · nº 042 · Real</div>
+</div>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:#232532;box-shadow:inset 0 0 0 1px rgba(145,132,217,.28)">
+<span style="font-size:12px;color:rgba(233,233,237,.7);flex:1">Copias que tienes</span>
+<div style="display:flex;align-items:center;gap:4px">
+<div style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.8);cursor:pointer" style-hover="background:rgba(233,233,237,.08)"><i class="ph ph-minus" style="font-size:14px"></i></div>
+<span style="min-width:30px;text-align:center;font:500 19px Inter;font-variant-numeric:tabular-nums">3</span>
+<div style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:#9184d9;color:#161826;cursor:pointer" style-hover="background:#b5abfc"><i class="ph ph-plus" style="font-size:14px"></i></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:rgba(233,233,237,.5)">Habilidad</div>
+<div style="font-size:12.5px;line-height:1.6;color:rgba(233,233,237,.82);text-wrap:pretty">Al entrar en juego, roba una carta. Mientras Merlín esté en tu zona de aliados, tus talismanes cuestan un oro menos.</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<sc-for list="{{ fichaMeta }}" as="m" hint-placeholder-count="4">
+<div style="padding:9px 11px;border-radius:9px;background:#232532;display:flex;flex-direction:column;gap:3px">
+<span style="font-size:10.5px;color:rgba(233,233,237,.5)">{{ m.k }}</span>
+<span style="font-size:13px;font-weight:500;color:{{ m.c }}">{{ m.v }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<div style="height:36px;border-radius:8px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;font-size:13px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph ph-stack-plus" style="font-size:16px"></i>Añadir al mazo activo</div>
+<div style="display:flex;gap:7px">
+<div style="flex:1;height:34px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.78);font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-arrows-left-right" style="font-size:14px"></i>Ofrecer</div>
+<div style="flex:1;height:34px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.78);font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-tag" style="font-size:14px"></i>Vender</div>
+</div>
+</div>
+<div style="margin-top:auto;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:rgba(233,233,237,.45)"><span>← → recorrer</span><span>0–9 copias</span></div>
+</div>
+</div>
+</div>
+
+</div>
+</section>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">La línea Vitrina, completa — inventariar, ficha, colecciones, cambios, mazos y datos</span></div>
+<p class="dv-note">Todo en el lenguaje de <a href="#1a">1a</a>: la misma barra de iconos a la izquierda, el arte como protagonista, lo que no tienes sin color y la cantidad siempre a un toque. El modo inventariar (<a href="#2a">2a</a>) es la única pantalla que se queda con el foco completo: una carta a la vez, el teclado manda.</p>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2a"><div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Modo inventariar — una carta a la vez, 0–9 marca copias</div>
+<div class="dv-pair">
+<div style="width:1280px;height:820px;border-radius:12px;overflow:hidden;background:#161826;box-shadow:0 0 0 1px #3f424d,0 18px 44px rgba(0,0,0,.6);display:flex;flex-direction:column;position:relative">
+<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 34%,rgba(90,80,150,.30),transparent 62%)"></div>
+<div style="position:relative;flex:none;height:60px;display:flex;align-items:center;gap:20px;padding:0 26px">
+<div style="height:34px;padding:0 13px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.78);display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-x" style="font-size:15px"></i>Salir del modo</div>
+<div style="min-width:0">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.13em;text-transform:uppercase;color:#9184d9">Inventariando</div>
+<div style="font:500 14px Inter;margin-top:3px">Espada Sagrada · Primer Bloque</div>
+</div>
+<div style="flex:1;max-width:360px;display:flex;flex-direction:column;gap:6px">
+<div style="height:4px;border-radius:2px;background:rgba(233,233,237,.12);overflow:hidden"><div style="width:23%;height:100%;background:linear-gradient(90deg,#5d5294,#b5abfc)"></div></div>
+<div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(233,233,237,.6)"><span>carta 42 de 180</span><span>19 marcadas en esta sesión</span></div>
+</div>
+<div style="margin-left:auto;display:flex;align-items:center;gap:9px">
+<div style="height:32px;padding:0 11px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.14);color:rgba(233,233,237,.7);font-size:12px;display:flex;align-items:center;gap:6px">Solo sin marcar<i class="ph ph-toggle-right" style="font-size:17px;color:#b5abfc"></i></div>
+<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(233,233,237,.55)"><i class="ph ph-cloud-check" style="font-size:16px;color:#b5abfc"></i>Guardado</div>
+</div>
+</div>
+<div style="position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;gap:30px;padding:0 36px">
+<div style="width:150px;flex:none;aspect-ratio:63/88;border-radius:9px;background:linear-gradient(155deg,#43406e,#212336 62%,#191b2a);box-shadow:0 0 0 1px rgba(233,233,237,.08);opacity:.32;filter:blur(1px)"></div>
+<div style="flex:none;display:flex;gap:30px;align-items:center">
+<div style="position:relative;width:326px;aspect-ratio:63/88;border-radius:13px;overflow:hidden;background:linear-gradient(155deg,#4a4176,#23253a 60%,#191b2a);box-shadow:0 0 0 1px rgba(181,171,252,.4),0 24px 60px rgba(0,0,0,.6)">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 8px,transparent 8px 17px)"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 50%,rgba(12,13,24,.92))"></div>
+<div style="position:absolute;top:13px;left:13px;padding:3px 8px;border-radius:6px;background:rgba(12,13,24,.72);font:10px ui-monospace,Menlo,monospace;color:rgba(233,233,237,.85)">nº 042</div>
+<div style="position:absolute;top:13px;right:13px;display:flex;gap:5px">
+<div style="height:24px;padding:0 9px;border-radius:6px;background:rgba(12,13,24,.72);display:flex;align-items:center;gap:5px;font-size:11.5px"><i class="ph ph-coin" style="font-size:13px;color:#b5abfc"></i>5</div>
+<div style="height:24px;padding:0 9px;border-radius:6px;background:rgba(12,13,24,.72);display:flex;align-items:center;gap:5px;font-size:11.5px"><i class="ph ph-sword" style="font-size:13px;color:#b5abfc"></i>4</div>
+</div>
+<div style="position:absolute;left:18px;right:18px;bottom:18px">
+<div style="font:500 28px Inter;letter-spacing:-.02em">Merlín</div>
+<div style="font-size:12.5px;color:rgba(233,233,237,.7);margin-top:4px">Aliado · Sabio · Real</div>
+</div>
+</div>
+<div style="width:268px;flex:none;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.11em;text-transform:uppercase;color:rgba(233,233,237,.55)">¿Cuántas tienes?</div>
+<div style="display:flex;align-items:center;gap:10px">
+<div style="width:46px;height:46px;border-radius:10px;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(233,233,237,.18);color:rgba(233,233,237,.8);cursor:pointer" style-hover="background:rgba(233,233,237,.08)"><i class="ph ph-minus" style="font-size:19px"></i></div>
+<div style="width:74px;height:60px;border-radius:11px;background:rgba(145,132,217,.12);box-shadow:inset 0 0 0 1px rgba(145,132,217,.45);display:grid;place-items:center;font:500 32px Inter;font-variant-numeric:tabular-nums;color:#d2cefd">3</div>
+<div style="width:46px;height:46px;border-radius:10px;display:grid;place-items:center;background:#9184d9;color:#161826;cursor:pointer" style-hover="background:#b5abfc"><i class="ph ph-plus" style="font-size:19px"></i></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.11em;text-transform:uppercase;color:rgba(233,233,237,.55)">Atajos</div>
+<sc-for list="{{ atajos }}" as="a" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:rgba(233,233,237,.75)">
+<span style="min-width:52px;text-align:center;padding:3px 7px;border-radius:6px;background:#232532;box-shadow:inset 0 0 0 1px rgba(233,233,237,.13);font:10.5px ui-monospace,Menlo,monospace;color:#e9e9ed">{{ a.k }}</span>{{ a.v }}
+</div>
+</sc-for>
+</div>
+<div style="display:flex;gap:8px">
+<div style="flex:1;height:38px;border-radius:8px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;font-size:13px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph ph-arrow-right" style="font-size:16px"></i>Siguiente</div>
+<div style="width:38px;height:38px;border-radius:8px;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.7);cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-arrows-left-right" style="font-size:16px"></i></div>
+</div>
+</div>
+</div>
+<div style="width:150px;flex:none;aspect-ratio:63/88;border-radius:9px;background:linear-gradient(155deg,#6a5340,#2a2426 62%,#191b2a);box-shadow:0 0 0 1px rgba(233,233,237,.08);opacity:.32;filter:blur(1px)"></div>
+</div>
+<div style="position:relative;flex:none;padding:0 26px 22px;display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;align-items:center;gap:9px"><span style="font-size:11.5px;color:rgba(233,233,237,.55)">Recorrido de la edición</span><div style="flex:1;height:1px;background:linear-gradient(to right,rgba(233,233,237,.12),transparent)"></div></div>
+<div class="sc" style="display:flex;gap:7px;overflow-x:auto;padding-bottom:2px">
+<sc-for list="{{ filmstrip }}" as="s" hint-placeholder-count="18">
+<div style="flex:none;width:44px;aspect-ratio:63/88;border-radius:5px;position:relative;overflow:hidden;background:{{ s.g }};box-shadow:{{ s.sh }};filter:{{ s.f }};cursor:pointer">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.07) 0 4px,transparent 4px 9px)"></div>
+<sc-if value="{{ s.qty }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;bottom:3px;right:3px;min-width:14px;height:14px;padding:0 3px;border-radius:4px;background:#9184d9;color:#161826;font:600 8.5px Inter;display:grid;place-items:center">{{ s.qty }}</div></sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+
+<div style="width:390px;height:844px;border-radius:38px;overflow:hidden;position:relative;background:#161826;box-shadow:0 0 0 1px #9397ab,0 16px 40px rgba(0,0,0,.65);display:flex;flex-direction:column">
+<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 32%,rgba(90,80,150,.3),transparent 62%)"></div>
+<div style="position:relative;height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font:500 12px Inter;color:rgba(233,233,237,.55)"><span>9:41</span><span style="display:flex;gap:5px;align-items:center"><i class="ph ph-cell-signal-full" style="font-size:13px"></i><i class="ph ph-wifi-high" style="font-size:13px"></i><i class="ph ph-battery-full" style="font-size:14px"></i></span></div>
+<div style="position:relative;flex:none;padding:2px 20px 14px;display:flex;align-items:center;gap:12px">
+<div style="width:34px;height:34px;flex:none;border-radius:8px;display:grid;place-items:center;color:rgba(233,233,237,.75);box-shadow:inset 0 0 0 1px rgba(233,233,237,.15)"><i class="ph ph-x" style="font-size:16px"></i></div>
+<div style="flex:1;min-width:0"><div style="font:500 14px Inter">Espada Sagrada</div><div style="font-size:11px;color:rgba(233,233,237,.55);margin-top:2px">carta 42 de 180 · 19 marcadas</div></div>
+<div style="font:500 15px Inter;color:#d2cefd">23%</div>
+</div>
+<div style="position:relative;flex:none;margin:0 20px;height:4px;border-radius:2px;background:rgba(233,233,237,.12);overflow:hidden"><div style="width:23%;height:100%;background:linear-gradient(90deg,#5d5294,#b5abfc)"></div></div>
+<div style="position:relative;flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:14px 26px">
+<div style="position:relative;width:240px;aspect-ratio:63/88;border-radius:12px;overflow:hidden;background:linear-gradient(155deg,#4a4176,#23253a 60%,#191b2a);box-shadow:0 0 0 1px rgba(181,171,252,.4),0 20px 46px rgba(0,0,0,.6)">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 7px,transparent 7px 15px)"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 52%,rgba(12,13,24,.92))"></div>
+<div style="position:absolute;top:11px;left:11px;padding:2px 7px;border-radius:5px;background:rgba(12,13,24,.72);font:9.5px ui-monospace,Menlo,monospace;color:rgba(233,233,237,.85)">nº 042</div>
+<div style="position:absolute;left:14px;right:14px;bottom:14px"><div style="font:500 22px Inter;letter-spacing:-.02em">Merlín</div><div style="font-size:11.5px;color:rgba(233,233,237,.7);margin-top:3px">Aliado · Sabio · Real</div></div>
+</div>
+<div style="display:flex;align-items:center;gap:12px">
+<div style="width:52px;height:52px;border-radius:12px;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(233,233,237,.18);color:rgba(233,233,237,.8)"><i class="ph ph-minus" style="font-size:21px"></i></div>
+<div style="width:86px;height:66px;border-radius:12px;background:rgba(145,132,217,.12);box-shadow:inset 0 0 0 1px rgba(145,132,217,.45);display:grid;place-items:center;font:500 34px Inter;font-variant-numeric:tabular-nums;color:#d2cefd">3</div>
+<div style="width:52px;height:52px;border-radius:12px;display:grid;place-items:center;background:#9184d9;color:#161826"><i class="ph ph-plus" style="font-size:21px"></i></div>
+</div>
+<div style="font-size:11.5px;color:rgba(233,233,237,.5)">Desliza para pasar a la siguiente</div>
+</div>
+<div style="position:relative;flex:none;padding:0 20px 20px;display:flex;flex-direction:column;gap:12px">
+<div class="sc" style="display:flex;gap:6px;overflow-x:auto">
+<sc-for list="{{ filmstripMovil }}" as="s" hint-placeholder-count="10">
+<div style="flex:none;width:38px;aspect-ratio:63/88;border-radius:5px;position:relative;overflow:hidden;background:{{ s.g }};box-shadow:{{ s.sh }};filter:{{ s.f }}">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.07) 0 4px,transparent 4px 9px)"></div>
+</div>
+</sc-for>
+</div>
+<div style="height:46px;border-radius:9px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;font:500 14px Inter;display:flex;align-items:center;justify-content:center;gap:8px">Siguiente<i class="ph ph-arrow-right" style="font-size:17px"></i></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="2b"><div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>Detalle de carta — sobre el catálogo, sin perder el lugar</div>
+<div class="dv-pair">
+<div style="width:1280px;height:820px;border-radius:12px;overflow:hidden;background:#161826;box-shadow:0 0 0 1px #3f424d,0 18px 44px rgba(0,0,0,.6);position:relative">
+<div style="position:absolute;inset:0;display:flex">
+<div style="width:68px;flex:none;background:#191b2a"></div>
+<div style="flex:1;padding:26px;display:grid;grid-template-columns:repeat(6,1fr);gap:14px;align-content:start">
+<sc-for list="{{ vitrina }}" as="v" hint-placeholder-count="12">
+<div style="aspect-ratio:63/88;border-radius:8px;background:{{ v.g }};box-shadow:{{ v.sh }};filter:{{ v.f }}"></div>
+</sc-for>
+</div>
+</div>
+<div style="position:absolute;inset:0;background:rgba(10,11,20,.72)"></div>
+<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:928px;border-radius:14px;background:#1c1e2c;box-shadow:0 0 0 1px rgba(233,233,237,.10),0 28px 70px rgba(0,0,0,.7);display:flex;overflow:hidden">
+<div style="width:356px;flex:none;padding:24px;background:#191b2a;display:flex;flex-direction:column;gap:16px">
+<div style="position:relative;aspect-ratio:63/88;border-radius:11px;overflow:hidden;background:linear-gradient(155deg,#4a4176,#23253a 60%,#191b2a);box-shadow:0 0 0 1px rgba(181,171,252,.35),0 16px 36px rgba(0,0,0,.5)">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 8px,transparent 8px 17px)"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 56%,rgba(12,13,24,.9))"></div>
+<div style="position:absolute;left:16px;right:16px;bottom:16px;font:500 24px Inter;letter-spacing:-.02em">Merlín</div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:10px;background:#232532;box-shadow:inset 0 0 0 1px rgba(145,132,217,.28)">
+<span style="font-size:12.5px;color:rgba(233,233,237,.72);flex:1">Copias que tienes</span>
+<div style="display:flex;align-items:center;gap:5px">
+<div style="width:32px;height:32px;border-radius:8px;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.8);cursor:pointer" style-hover="background:rgba(233,233,237,.08)"><i class="ph ph-minus" style="font-size:15px"></i></div>
+<span style="min-width:32px;text-align:center;font:500 20px Inter;font-variant-numeric:tabular-nums">3</span>
+<div style="width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:#9184d9;color:#161826;cursor:pointer" style-hover="background:#b5abfc"><i class="ph ph-plus" style="font-size:15px"></i></div>
+</div>
+</div>
+</div>
+<div style="flex:1;min-width:0;padding:24px 26px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;align-items:flex-start;gap:16px">
+<div style="min-width:0">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.13em;text-transform:uppercase;color:#9184d9">Espada Sagrada · nº 042</div>
+<div style="font:500 30px Inter;letter-spacing:-.025em;margin-top:7px">Merlín</div>
+<div style="display:flex;align-items:center;gap:8px;margin-top:9px">
+<sc-for list="{{ fichaTags }}" as="t" hint-placeholder-count="4">
+<span style="padding:3px 9px;border-radius:6px;font-size:11.5px;background:{{ t.bg }};color:{{ t.c }};box-shadow:{{ t.sh }}">{{ t.n }}</span>
+</sc-for>
+</div>
+</div>
+<div style="margin-left:auto;display:flex;gap:6px">
+<div style="width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:rgba(233,233,237,.6);box-shadow:inset 0 0 0 1px rgba(233,233,237,.13);cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-caret-left" style="font-size:15px"></i></div>
+<div style="width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:rgba(233,233,237,.6);box-shadow:inset 0 0 0 1px rgba(233,233,237,.13);cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-caret-right" style="font-size:15px"></i></div>
+<div style="width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:rgba(233,233,237,.6);cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-x" style="font-size:16px"></i></div>
+</div>
+</div>
+<div style="display:flex;gap:10px">
+<sc-for list="{{ fichaStats }}" as="s" hint-placeholder-count="4">
+<div style="flex:1;padding:12px 13px;border-radius:10px;background:#232532;display:flex;flex-direction:column;gap:5px">
+<span style="font-size:10.5px;color:rgba(233,233,237,.5)">{{ s.k }}</span>
+<span style="display:flex;align-items:center;gap:7px;font:500 19px Inter;color:{{ s.c }}"><i class="ph {{ s.ic }}" style="font-size:17px;opacity:.85"></i>{{ s.v }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.11em;text-transform:uppercase;color:rgba(233,233,237,.5)">Habilidad</div>
+<div style="font-size:13.5px;line-height:1.65;color:rgba(233,233,237,.85);text-wrap:pretty">Al entrar en juego, roba una carta. Mientras Merlín esté en tu zona de aliados, tus talismanes cuestan un oro menos.</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.11em;text-transform:uppercase;color:rgba(233,233,237,.5)">Historia</div>
+<div style="font-size:12.5px;line-height:1.6;color:rgba(233,233,237,.62);font-style:italic;text-wrap:pretty">«El bosque guarda nombres que ningún rey aprendió a pronunciar.»</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
+<sc-for list="{{ fichaMeta }}" as="m" hint-placeholder-count="4">
+<div style="padding:10px 12px;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.10);display:flex;flex-direction:column;gap:3px">
+<span style="font-size:10.5px;color:rgba(233,233,237,.5)">{{ m.k }}</span>
+<span style="font-size:13px;font-weight:500;color:{{ m.c }}">{{ m.v }}</span>
+</div>
+</sc-for>
+</div>
+<div style="margin-top:auto;display:flex;gap:8px">
+<div style="flex:1;height:40px;border-radius:8px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;font-size:13.5px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph ph-stack-plus" style="font-size:17px"></i>Añadir al mazo activo</div>
+<div style="height:40px;padding:0 15px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.8);font-size:13px;display:flex;align-items:center;gap:7px;cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-arrows-left-right" style="font-size:16px"></i>Ofrecer</div>
+<div style="height:40px;padding:0 15px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.8);font-size:13px;display:flex;align-items:center;gap:7px;cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-tag" style="font-size:16px"></i>Vender</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="width:390px;height:844px;border-radius:38px;overflow:hidden;position:relative;background:#161826;box-shadow:0 0 0 1px #9397ab,0 16px 40px rgba(0,0,0,.65);display:flex;flex-direction:column">
+<div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font:500 12px Inter;color:rgba(233,233,237,.55)"><span>9:41</span><span style="display:flex;gap:5px;align-items:center"><i class="ph ph-cell-signal-full" style="font-size:13px"></i><i class="ph ph-wifi-high" style="font-size:13px"></i><i class="ph ph-battery-full" style="font-size:14px"></i></span></div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto">
+<div style="position:relative;padding:8px 20px 0">
+<div style="position:relative;aspect-ratio:63/88;border-radius:12px;overflow:hidden;background:linear-gradient(155deg,#4a4176,#23253a 60%,#191b2a);box-shadow:0 0 0 1px rgba(181,171,252,.35)">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 8px,transparent 8px 17px)"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 58%,rgba(12,13,24,.92))"></div>
+<div style="position:absolute;top:12px;left:12px;width:34px;height:34px;border-radius:9px;background:rgba(12,13,24,.7);display:grid;place-items:center;color:#e9e9ed"><i class="ph ph-arrow-left" style="font-size:17px"></i></div>
+<div style="position:absolute;left:16px;right:16px;bottom:16px"><div style="font:500 26px Inter;letter-spacing:-.02em">Merlín</div><div style="font-size:12px;color:rgba(233,233,237,.7);margin-top:4px">Espada Sagrada · nº 042</div></div>
+</div>
+</div>
+<div style="padding:16px 20px 20px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:10px;padding:12px 13px;border-radius:11px;background:#232532;box-shadow:inset 0 0 0 1px rgba(145,132,217,.28)">
+<span style="font-size:12.5px;color:rgba(233,233,237,.72);flex:1">Copias que tienes</span>
+<div style="display:flex;align-items:center;gap:6px">
+<div style="width:36px;height:36px;border-radius:9px;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.8)"><i class="ph ph-minus" style="font-size:16px"></i></div>
+<span style="min-width:30px;text-align:center;font:500 21px Inter">3</span>
+<div style="width:36px;height:36px;border-radius:9px;display:grid;place-items:center;background:#9184d9;color:#161826"><i class="ph ph-plus" style="font-size:16px"></i></div>
+</div>
+</div>
+<div style="display:flex;gap:8px">
+<sc-for list="{{ fichaStats }}" as="s" hint-placeholder-count="4">
+<div style="flex:1;padding:10px;border-radius:10px;background:#232532;display:flex;flex-direction:column;gap:4px">
+<span style="font-size:9.5px;color:rgba(233,233,237,.5)">{{ s.k }}</span>
+<span style="font:500 15px Inter;color:{{ s.c }}">{{ s.v }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.11em;text-transform:uppercase;color:rgba(233,233,237,.5)">Habilidad</div>
+<div style="font-size:13px;line-height:1.65;color:rgba(233,233,237,.85);text-wrap:pretty">Al entrar en juego, roba una carta. Mientras Merlín esté en tu zona de aliados, tus talismanes cuestan un oro menos.</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="height:44px;border-radius:9px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;font:500 14px Inter;display:flex;align-items:center;justify-content:center;gap:8px"><i class="ph ph-stack-plus" style="font-size:17px"></i>Añadir al mazo activo</div>
+<div style="display:flex;gap:8px">
+<div style="flex:1;height:40px;border-radius:9px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.8);font-size:13px;display:flex;align-items:center;justify-content:center;gap:7px"><i class="ph ph-arrows-left-right" style="font-size:15px"></i>Ofrecer</div>
+<div style="flex:1;height:40px;border-radius:9px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.8);font-size:13px;display:flex;align-items:center;justify-content:center;gap:7px"><i class="ph ph-tag" style="font-size:15px"></i>Vender</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="2c"><div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>Colecciones — una edición completa, carta por carta</div>
+<div style="width:1280px;height:820px;border-radius:12px;overflow:hidden;background:#161826;box-shadow:0 0 0 1px #3f424d,0 18px 44px rgba(0,0,0,.6);display:flex">
+<div style="width:68px;flex:none;background:#191b2a;box-shadow:1px 0 0 rgba(233,233,237,.07);display:flex;flex-direction:column;align-items:center;padding:16px 0 18px;gap:6px">
+<img src="https://blog.myl.cl/wp-content/uploads/2020/06/logo_online-1.png" alt="Mitos y Leyendas" style="width:58px;height:46px;object-fit:contain;margin-bottom:10px">
+<sc-for list="{{ railAlbum }}" as="r" hint-placeholder-count="6">
+<div style="width:44px;height:42px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:{{ r.c }};background:{{ r.bg }}" style-hover="background:rgba(233,233,237,.06)"><i class="ph {{ r.ic }}" style="font-size:19px"></i><span style="font-size:8px">{{ r.n }}</span></div>
+</sc-for>
+</div>
+<div style="width:230px;flex:none;box-shadow:1px 0 0 rgba(233,233,237,.07);display:flex;flex-direction:column;padding:20px 16px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:5px"><span style="font:500 15px Inter">Mis colecciones</span><span style="font-size:11.5px;color:rgba(233,233,237,.5)">12</span></div>
+<div style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:rgba(233,233,237,.45);margin-bottom:11px"><i class="ph ph-dots-six-vertical" style="font-size:13px"></i>Arrastra para cambiar el orden</div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px">
+<sc-for list="{{ colecciones }}" as="c" hint-placeholder-count="7">
+<sc-if value="{{ c.dropAntes }}" hint-placeholder-val="{{ false }}"><div style="height:2px;border-radius:1px;background:#9184d9;box-shadow:0 0 8px rgba(145,132,217,.7);margin:1px 0"></div></sc-if>
+<div style="padding:10px 9px 10px 4px;border-radius:9px;cursor:grab;background:{{ c.bg }};box-shadow:{{ c.sh }};transform:{{ c.lift }};display:flex;align-items:flex-start;gap:4px" style-hover="background:rgba(233,233,237,.05)">
+<div style="width:16px;flex:none;align-self:center;display:grid;place-items:center;color:{{ c.gripC }}"><i class="ph ph-dots-six-vertical" style="font-size:14px"></i></div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px">
+<div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:13px;font-weight:500;color:{{ c.nc }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1">{{ c.n }}</span><span style="font:10px ui-monospace,Menlo,monospace;color:{{ c.pc }}">{{ c.p }}</span></div>
+<div style="height:3px;border-radius:2px;background:rgba(233,233,237,.1);overflow:hidden"><div style="width:{{ c.w }};height:100%;background:{{ c.bar }}"></div></div>
+<span style="font-size:10.5px;color:rgba(233,233,237,.45)">{{ c.meta }}</span>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="margin-top:12px;height:36px;border-radius:8px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;font-size:13px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph ph-plus" style="font-size:15px"></i>Nueva colección</div>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:none;padding:22px 26px 0;display:flex;align-items:flex-start;gap:20px">
+<div style="min-width:0">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.13em;text-transform:uppercase;color:#9184d9">Primer Bloque</div>
+<div style="font:500 26px Inter;letter-spacing:-.02em;margin-top:6px">Espada Sagrada</div>
+<div style="font-size:12.5px;color:rgba(233,233,237,.55);margin-top:5px">149 de 180 · te faltan 31 · 22 repetidas</div>
+</div>
+<div style="margin-left:auto;display:flex;align-items:center;gap:9px">
+<div style="height:34px;padding:0 13px;border-radius:8px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph ph-check-square-offset" style="font-size:15px"></i>Inventariar</div>
+<div style="height:34px;padding:0 13px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.15);color:rgba(233,233,237,.75);display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer" style-hover="background:rgba(233,233,237,.06)"><i class="ph ph-file-pdf" style="font-size:15px"></i>Exportar PDF</div>
+</div>
+</div>
+<div style="flex:none;margin:18px 26px 0;display:flex;align-items:center;gap:20px">
+<div style="flex:1;height:6px;border-radius:3px;background:rgba(233,233,237,.1);overflow:hidden"><div style="width:83%;height:100%;background:linear-gradient(90deg,#5d5294,#b5abfc)"></div></div>
+<span style="font:500 24px Inter;color:#d2cefd;letter-spacing:-.02em">83%</span>
+</div>
+<div style="flex:none;padding:16px 26px 0;display:flex;align-items:center;gap:7px">
+<sc-for list="{{ colFiltros }}" as="f" hint-placeholder-count="4">
+<div style="height:29px;padding:0 11px;border-radius:99px;display:flex;align-items:center;font-size:12px;cursor:pointer;color:{{ f.c }};background:{{ f.bg }};box-shadow:inset 0 0 0 1px {{ f.b }}">{{ f.n }}</div>
+</sc-for>
+<div style="margin-left:auto;display:flex;align-items:center;gap:14px;font-size:11.5px;color:rgba(233,233,237,.5)">
+<span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:3px;background:#9184d9"></span>la tienes</span>
+<span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:3px;background:rgba(233,233,237,.18)"></span>te falta</span>
+</div>
+</div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;padding:16px 26px 24px">
+<div style="display:grid;grid-template-columns:repeat(9,1fr);gap:11px">
+<sc-for list="{{ album }}" as="a" hint-placeholder-count="27">
+<div style="display:flex;flex-direction:column;gap:5px;cursor:pointer">
+<div style="position:relative;aspect-ratio:63/88;border-radius:7px;overflow:hidden;background:{{ a.g }};box-shadow:{{ a.sh }};filter:{{ a.f }}" style-hover="box-shadow:0 0 0 1px #b5abfc">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 5px,transparent 5px 11px)"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 58%,rgba(12,13,24,.88))"></div>
+<div style="position:absolute;top:5px;left:5px;font:8.5px ui-monospace,Menlo,monospace;color:rgba(233,233,237,.7)">{{ a.num }}</div>
+<sc-if value="{{ a.qty }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;top:4px;right:4px;min-width:16px;height:16px;padding:0 4px;border-radius:4px;background:#9184d9;color:#161826;font:600 9.5px Inter;display:grid;place-items:center">{{ a.qty }}</div></sc-if>
+<div style="position:absolute;left:5px;right:5px;bottom:5px;font:500 9.5px Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.n }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="2d"><div class="dv-olabel"><a class="dv-oid" href="#2d">2d</a>Cambio y ventas — tus repetidas, con su valor y su registro</div>
+<div class="dv-pair">
+<div style="width:1280px;height:820px;border-radius:12px;overflow:hidden;background:#161826;box-shadow:0 0 0 1px #3f424d,0 18px 44px rgba(0,0,0,.6);display:flex">
+<div style="width:68px;flex:none;background:#191b2a;box-shadow:1px 0 0 rgba(233,233,237,.07);display:flex;flex-direction:column;align-items:center;padding:16px 0 18px;gap:6px">
+<img src="https://blog.myl.cl/wp-content/uploads/2020/06/logo_online-1.png" alt="Mitos y Leyendas" style="width:58px;height:46px;object-fit:contain;margin-bottom:10px">
+<sc-for list="{{ railCambios }}" as="r" hint-placeholder-count="6">
+<div style="width:44px;height:42px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:{{ r.c }};background:{{ r.bg }}" style-hover="background:rgba(233,233,237,.06)"><i class="ph {{ r.ic }}" style="font-size:19px"></i><span style="font-size:8px">{{ r.n }}</span></div>
+</sc-for>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:none;padding:22px 26px 0;display:flex;align-items:flex-start;gap:20px">
+<div>
+<div style="font:500 26px Inter;letter-spacing:-.02em">Cambio y ventas</div>
+<div style="font-size:12.5px;color:rgba(233,233,237,.55);margin-top:5px">214 repetidas · 38 ofrecidas · valor de referencia $186.400</div>
+</div>
+<div style="margin-left:auto;display:flex;align-items:center;gap:9px">
+<div style="width:270px;height:34px;border-radius:8px;background:#232532;box-shadow:inset 0 0 0 1px rgba(233,233,237,.12);display:flex;align-items:center;gap:9px;padding:0 11px;color:rgba(233,233,237,.5)"><i class="ph ph-magnifying-glass" style="font-size:15px"></i><span style="font-size:12.5px">Ofrecer una carta que tengas…</span></div>
+<div style="height:34px;padding:0 13px;border-radius:8px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph ph-plus" style="font-size:15px"></i>Registrar movimiento</div>
+</div>
+</div>
+<div style="flex:none;padding:18px 26px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:11px">
+<sc-for list="{{ cambioKpis }}" as="k" hint-placeholder-count="4">
+<div style="padding:13px 15px;border-radius:11px;background:{{ k.bg }};box-shadow:{{ k.sh }};display:flex;flex-direction:column;gap:6px">
+<span style="font-size:11px;color:rgba(233,233,237,.55)">{{ k.k }}</span>
+<span style="font:500 22px Inter;letter-spacing:-.02em;color:{{ k.c }}">{{ k.v }}</span>
+<span style="font-size:11px;color:rgba(233,233,237,.5)">{{ k.sub }}</span>
+</div>
+</sc-for>
+</div>
+<div style="flex:1;min-height:0;display:flex;gap:22px;padding:20px 26px 24px">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:center;gap:9px"><span style="font:500 15px Inter">Ofrecidas</span><div style="flex:1;height:1px;background:linear-gradient(to right,rgba(233,233,237,.13),transparent)"></div><span style="font:10px ui-monospace,Menlo,monospace;color:rgba(233,233,237,.5)">38</span></div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:9px">
+<sc-for list="{{ ofrecidas }}" as="o" hint-placeholder-count="6">
+<div style="padding:11px 13px;border-radius:11px;background:#1c1e2c;box-shadow:inset 0 0 0 1px rgba(233,233,237,.07);display:flex;align-items:center;gap:13px;cursor:pointer" style-hover="box-shadow:inset 0 0 0 1px rgba(145,132,217,.45)">
+<div style="position:relative;width:42px;flex:none;aspect-ratio:63/88;border-radius:5px;overflow:hidden;background:{{ o.g }};box-shadow:0 0 0 1px rgba(233,233,237,.1)"><div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.07) 0 4px,transparent 4px 9px)"></div></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:center;gap:8px"><span style="font:500 14px Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.n }}</span><span style="flex:none;padding:2px 7px;border-radius:5px;font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:{{ o.tbg }};color:{{ o.tc }}">{{ o.t }}</span></div>
+<div style="font-size:11.5px;color:rgba(233,233,237,.55);margin-top:3px">{{ o.meta }}</div>
+</div>
+<div style="text-align:right;flex:none"><div style="font:500 15px Inter">{{ o.precio }}</div><div style="font-size:10.5px;color:rgba(233,233,237,.5);margin-top:2px">{{ o.ref }}</div></div>
+<div style="flex:none;display:flex;gap:4px">
+<div style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:#b5abfc;cursor:pointer" style-hover="background:rgba(145,132,217,.16)"><i class="ph ph-arrows-left-right" style="font-size:15px"></i></div>
+<div style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:rgba(233,233,237,.65);cursor:pointer" style-hover="background:rgba(233,233,237,.09)"><i class="ph ph-tag" style="font-size:15px"></i></div>
+<div style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:rgba(233,233,237,.5);cursor:pointer" style-hover="background:rgba(233,233,237,.09)"><i class="ph ph-dots-three" style="font-size:15px"></i></div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="width:352px;flex:none;display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:center;gap:9px"><span style="font:500 15px Inter">Historial</span><div style="flex:1;height:1px;background:linear-gradient(to right,rgba(233,233,237,.13),transparent)"></div></div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ historial }}" as="h" hint-placeholder-count="8">
+<div style="padding:11px 0;display:flex;gap:12px;box-shadow:inset 0 -1px 0 rgba(233,233,237,.06)">
+<div style="width:28px;height:28px;flex:none;border-radius:8px;display:grid;place-items:center;background:{{ h.ibg }};color:{{ h.ic2 }}"><i class="ph {{ h.ic }}" style="font-size:15px"></i></div>
+<div style="flex:1;min-width:0">
+<div style="font-size:13px;color:#e9e9ed;text-wrap:pretty">{{ h.t }}</div>
+<div style="font-size:11px;color:rgba(233,233,237,.5);margin-top:3px">{{ h.fecha }}</div>
+</div>
+<div style="flex:none;font:500 13px Inter;color:{{ h.vc }}">{{ h.v }}</div>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="width:390px;height:844px;border-radius:38px;overflow:hidden;position:relative;background:#161826;box-shadow:0 0 0 1px #9397ab,0 16px 40px rgba(0,0,0,.65);display:flex;flex-direction:column">
+<div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font:500 12px Inter;color:rgba(233,233,237,.55)"><span>9:41</span><span style="display:flex;gap:5px;align-items:center"><i class="ph ph-cell-signal-full" style="font-size:13px"></i><i class="ph ph-wifi-high" style="font-size:13px"></i><i class="ph ph-battery-full" style="font-size:14px"></i></span></div>
+<div style="flex:none;padding:2px 20px 12px">
+<div style="font:500 23px Inter;letter-spacing:-.02em">Cambio y ventas</div>
+<div style="font-size:11.5px;color:rgba(233,233,237,.55);margin-top:3px">38 ofrecidas · $186.400 de referencia</div>
+</div>
+<div style="flex:none;padding:0 20px 12px;display:flex;gap:7px">
+<sc-for list="{{ cambioSeg }}" as="s" hint-placeholder-count="3">
+<div style="flex:1;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12.5px;color:{{ s.c }};background:{{ s.bg }};box-shadow:inset 0 0 0 1px {{ s.b }}">{{ s.n }}</div>
+</sc-for>
+</div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;padding:0 20px 18px;display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ ofrecidas }}" as="o" hint-placeholder-count="6">
+<div style="padding:11px;border-radius:11px;background:#1c1e2c;display:flex;align-items:center;gap:11px">
+<div style="position:relative;width:38px;flex:none;aspect-ratio:63/88;border-radius:5px;overflow:hidden;background:{{ o.g }};box-shadow:0 0 0 1px rgba(233,233,237,.1)"><div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.07) 0 4px,transparent 4px 9px)"></div></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:center;gap:7px"><span style="font:500 13.5px Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.n }}</span><span style="flex:none;padding:2px 6px;border-radius:5px;font-size:9px;letter-spacing:.04em;text-transform:uppercase;background:{{ o.tbg }};color:{{ o.tc }}">{{ o.t }}</span></div>
+<div style="font-size:11px;color:rgba(233,233,237,.55);margin-top:3px">{{ o.meta }}</div>
+</div>
+<div style="text-align:right;flex:none"><div style="font:500 14px Inter">{{ o.precio }}</div><div style="font-size:10px;color:rgba(233,233,237,.5);margin-top:2px">{{ o.ref }}</div></div>
+</div>
+</sc-for>
+</div>
+<div style="flex:none;padding:10px 20px 12px;background:#191b2a;box-shadow:0 -1px 0 rgba(233,233,237,.08)"><div style="height:44px;border-radius:9px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;font:500 14px Inter;display:flex;align-items:center;justify-content:center;gap:8px"><i class="ph ph-plus" style="font-size:17px"></i>Registrar movimiento</div></div>
+<div style="flex:none;height:70px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding-bottom:14px;background:#191b2a">
+<sc-for list="{{ tabsCambios }}" as="t" hint-placeholder-count="5">
+<div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ t.c }}"><i class="ph {{ t.ic }}" style="font-size:21px"></i><span style="font-size:9.5px">{{ t.n }}</span></div>
+</sc-for>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="2e"><div class="dv-olabel"><a class="dv-oid" href="#2e">2e</a>Mazos — qué copias te faltan para armarlo</div>
+<div style="width:1280px;height:820px;border-radius:12px;overflow:hidden;background:#161826;box-shadow:0 0 0 1px #3f424d,0 18px 44px rgba(0,0,0,.6);display:flex">
+<div style="width:68px;flex:none;background:#191b2a;box-shadow:1px 0 0 rgba(233,233,237,.07);display:flex;flex-direction:column;align-items:center;padding:16px 0 18px;gap:6px">
+<img src="https://blog.myl.cl/wp-content/uploads/2020/06/logo_online-1.png" alt="Mitos y Leyendas" style="width:58px;height:46px;object-fit:contain;margin-bottom:10px">
+<sc-for list="{{ railMazos }}" as="r" hint-placeholder-count="6">
+<div style="width:44px;height:42px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:{{ r.c }};background:{{ r.bg }}" style-hover="background:rgba(233,233,237,.06)"><i class="ph {{ r.ic }}" style="font-size:19px"></i><span style="font-size:8px">{{ r.n }}</span></div>
+</sc-for>
+</div>
+<div style="width:224px;flex:none;box-shadow:1px 0 0 rgba(233,233,237,.07);display:flex;flex-direction:column;padding:20px 16px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px"><span style="font:500 15px Inter">Mis mazos</span><span style="font-size:11.5px;color:rgba(233,233,237,.5)">6</span></div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px">
+<sc-for list="{{ mazos }}" as="m" hint-placeholder-count="6">
+<div style="padding:10px 11px;border-radius:9px;cursor:pointer;background:{{ m.bg }};box-shadow:{{ m.sh }};display:flex;flex-direction:column;gap:5px" style-hover="background:rgba(233,233,237,.05)">
+<div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:13px;font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ m.nc }}">{{ m.n }}</span><span style="font:10px ui-monospace,Menlo,monospace;color:rgba(233,233,237,.5)">{{ m.total }}</span></div>
+<div style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:{{ m.fc }}"><i class="ph {{ m.fic }}" style="font-size:12px"></i>{{ m.falta }}</div>
+</div>
+</sc-for>
+</div>
+<div style="margin-top:12px;height:36px;border-radius:8px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;font-size:13px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph ph-plus" style="font-size:15px"></i>Nuevo mazo</div>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:none;padding:22px 26px 0;display:flex;align-items:flex-start;gap:18px">
+<div>
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.13em;text-transform:uppercase;color:#9184d9">Primer Bloque · 50 cartas</div>
+<div style="font:500 26px Inter;letter-spacing:-.02em;margin-top:6px">Sabios de Camelot</div>
+<div style="font-size:12.5px;color:rgba(233,233,237,.55);margin-top:5px">Creado en marzo · última vez jugado hace 5 días</div>
+</div>
+<div style="margin-left:auto;display:flex;gap:8px">
+<div style="height:34px;padding:0 13px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.15);color:rgba(233,233,237,.75);display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer" style-hover="background:rgba(233,233,237,.06)"><i class="ph ph-export" style="font-size:15px"></i>Exportar</div>
+<div style="height:34px;padding:0 13px;border-radius:8px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph ph-magnifying-glass" style="font-size:15px"></i>Añadir cartas</div>
+</div>
+</div>
+<div style="flex:none;padding:18px 26px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:11px">
+<sc-for list="{{ mazoKpis }}" as="k" hint-placeholder-count="4">
+<div style="padding:13px 15px;border-radius:11px;background:{{ k.bg }};box-shadow:{{ k.sh }};display:flex;flex-direction:column;gap:6px">
+<span style="font-size:11px;color:rgba(233,233,237,.55)">{{ k.k }}</span>
+<span style="font:500 22px Inter;letter-spacing:-.02em;color:{{ k.c }}">{{ k.v }}</span>
+<span style="font-size:11px;color:rgba(233,233,237,.5)">{{ k.sub }}</span>
+</div>
+</sc-for>
+</div>
+<div style="flex:1;min-height:0;display:flex;gap:20px;padding:18px 26px 24px">
+<div class="sc" style="flex:1;min-width:0;overflow-y:auto;display:flex;flex-direction:column;gap:18px">
+<sc-for list="{{ mazoGrupos }}" as="g" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:9px"><span style="font:500 14px Inter">{{ g.n }}</span><span style="font:10px ui-monospace,Menlo,monospace;color:rgba(233,233,237,.5)">{{ g.c }}</span><div style="flex:1;height:1px;background:linear-gradient(to right,rgba(233,233,237,.12),transparent)"></div></div>
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+<sc-for list="{{ g.cartas }}" as="c" hint-placeholder-count="6">
+<div style="padding:8px 10px;border-radius:9px;background:#1c1e2c;display:flex;align-items:center;gap:10px;box-shadow:{{ c.sh }}">
+<div style="width:26px;height:36px;flex:none;border-radius:4px;background:{{ c.g }};box-shadow:0 0 0 1px rgba(233,233,237,.1);filter:{{ c.f }}"></div>
+<div style="flex:1;min-width:0"><div style="font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.n }}</div><div style="font-size:10.5px;color:{{ c.mc }};margin-top:2px">{{ c.meta }}</div></div>
+<span style="flex:none;font:500 13px Inter;font-variant-numeric:tabular-nums;color:{{ c.qc }}">{{ c.qty }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+<div class="sc" style="width:318px;flex:none;overflow-y:auto;border-radius:12px;background:#191b2a;box-shadow:inset 0 0 0 1px rgba(233,233,237,.07);padding:16px;display:flex;flex-direction:column;gap:13px">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:rgba(233,233,237,.5)">Carta elegida</span>
+<div style="margin-left:auto;display:flex;gap:5px">
+<div style="width:28px;height:28px;border-radius:7px;display:grid;place-items:center;color:rgba(233,233,237,.6);box-shadow:inset 0 0 0 1px rgba(233,233,237,.13);cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-caret-left" style="font-size:14px"></i></div>
+<div style="width:28px;height:28px;border-radius:7px;display:grid;place-items:center;color:rgba(233,233,237,.6);box-shadow:inset 0 0 0 1px rgba(233,233,237,.13);cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-caret-right" style="font-size:14px"></i></div>
+<div style="width:28px;height:28px;border-radius:7px;display:grid;place-items:center;color:rgba(233,233,237,.6);box-shadow:inset 0 0 0 1px rgba(233,233,237,.13);cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-arrows-out" style="font-size:14px"></i></div>
+</div>
+</div>
+<div style="position:relative;padding:1px;border-radius:11px;background:conic-gradient(from var(--holo-a),#5c1019 0%,#8d1b24 14%,#c0392b 28%,#ef8b7f 42%,#c0392b 56%,#8d1b24 72%,#5c1019 100%);animation:holo-spin 12s linear infinite;box-shadow:0 12px 30px rgba(0,0,0,.5)" style-before="content:'';position:absolute;inset:-5px;border-radius:16px;background:conic-gradient(from var(--holo-a),#5c1019 0%,#8d1b24 14%,#c0392b 28%,#ef8b7f 42%,#c0392b 56%,#8d1b24 72%,#5c1019 100%);filter:blur(9px);opacity:.3">
+<div style="position:relative;z-index:1;aspect-ratio:63/88;border-radius:10px;overflow:hidden;background:linear-gradient(155deg,#3b4b6e,#1f2534 62%,#191b2a)">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 7px,transparent 7px 15px)"></div>
+<div style="position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.72;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.75) 0 1px,transparent 1px 9px),repeating-linear-gradient(-45deg,rgba(255,255,255,.55) 0 1px,transparent 1px 9px),repeating-linear-gradient(45deg,rgba(255,255,255,.28) 0 2px,transparent 2px 4.5px),linear-gradient(45deg,#8ad9ff,#c9a6ff 18%,#ffd1a8 34%,#fff3a8 50%,#a8ffd0 66%,#a8d8ff 82%,#d9b3ff);background-size:18px 18px,18px 18px,9px 9px,260% 260%;animation:foil-slide 9s ease-in-out infinite alternate"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 52%,rgba(12,13,24,.92))"></div>
+<div style="position:absolute;top:10px;left:10px;display:flex;gap:5px">
+<div style="height:22px;padding:0 8px;border-radius:6px;background:rgba(12,13,24,.72);display:flex;align-items:center;gap:5px;font-size:11px"><i class="ph ph-coin" style="font-size:12px;color:#b5abfc"></i>4</div>
+<div style="height:22px;padding:0 8px;border-radius:6px;background:rgba(12,13,24,.72);display:flex;align-items:center;gap:5px;font-size:11px"><i class="ph ph-sword" style="font-size:12px;color:#b5abfc"></i>5</div>
+</div>
+<div style="position:absolute;left:14px;right:14px;bottom:14px">
+<div style="font:500 20px Inter;letter-spacing:-.01em">Lancelot</div>
+<div style="font-size:11.5px;color:rgba(233,233,237,.65);margin-top:3px">Espada Sagrada · nº 046 · Cortesano</div>
+</div>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:#232532;box-shadow:inset 0 0 0 1px rgba(145,132,217,.28)">
+<span style="font-size:12px;color:rgba(233,233,237,.7);flex:1">En este mazo</span>
+<div style="display:flex;align-items:center;gap:4px">
+<div style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.8);cursor:pointer" style-hover="background:rgba(233,233,237,.08)"><i class="ph ph-minus" style="font-size:14px"></i></div>
+<span style="min-width:30px;text-align:center;font:500 19px Inter;font-variant-numeric:tabular-nums">3</span>
+<div style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:#9184d9;color:#161826;cursor:pointer" style-hover="background:#b5abfc"><i class="ph ph-plus" style="font-size:14px"></i></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:rgba(233,233,237,.5)">Habilidad</div>
+<div style="font-size:12.5px;line-height:1.6;color:rgba(233,233,237,.82);text-wrap:pretty">Si Lancelot ataca solo, gana dos puntos de fuerza hasta el final del turno.</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<sc-for list="{{ fichaMazoMeta }}" as="m" hint-placeholder-count="4">
+<div style="padding:9px 11px;border-radius:9px;background:#232532;display:flex;flex-direction:column;gap:3px">
+<span style="font-size:10.5px;color:rgba(233,233,237,.5)">{{ m.k }}</span>
+<span style="font-size:13px;font-weight:500;color:{{ m.c }}">{{ m.v }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<div style="height:36px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.78);font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-minus-circle" style="font-size:16px"></i>Quitar del mazo</div>
+<div style="display:flex;gap:7px">
+<div style="flex:1;height:34px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.78);font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-squares-four" style="font-size:14px"></i>En catálogo</div>
+<div style="flex:1;height:34px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.78);font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-arrows-left-right" style="font-size:14px"></i>Ofrecer</div>
+</div>
+</div>
+<div style="margin-top:auto;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:rgba(233,233,237,.45)"><span>← → recorrer</span><span>0–9 copias</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="2f"><div class="dv-olabel"><a class="dv-oid" href="#2f">2f</a>Estadísticas — el avance leído de un golpe</div>
+<div style="width:1280px;height:820px;border-radius:12px;overflow:hidden;background:#161826;box-shadow:0 0 0 1px #3f424d,0 18px 44px rgba(0,0,0,.6);display:flex">
+<div style="width:68px;flex:none;background:#191b2a;box-shadow:1px 0 0 rgba(233,233,237,.07);display:flex;flex-direction:column;align-items:center;padding:16px 0 18px;gap:6px">
+<img src="https://blog.myl.cl/wp-content/uploads/2020/06/logo_online-1.png" alt="Mitos y Leyendas" style="width:58px;height:46px;object-fit:contain;margin-bottom:10px">
+<sc-for list="{{ railDatos }}" as="r" hint-placeholder-count="6">
+<div style="width:44px;height:42px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:{{ r.c }};background:{{ r.bg }}" style-hover="background:rgba(233,233,237,.06)"><i class="ph {{ r.ic }}" style="font-size:19px"></i><span style="font-size:8px">{{ r.n }}</span></div>
+</sc-for>
+</div>
+<div class="sc" style="flex:1;min-width:0;overflow-y:auto;padding:22px 26px 26px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;align-items:flex-start;gap:20px">
+<div><div style="font:500 26px Inter;letter-spacing:-.02em">Estadísticas</div><div style="font-size:12.5px;color:rgba(233,233,237,.55);margin-top:5px">Todo el catálogo · 12 ediciones seguidas</div></div>
+<div style="margin-left:auto;display:flex;gap:8px">
+<sc-for list="{{ statsFiltros }}" as="f" hint-placeholder-count="3">
+<div style="height:34px;padding:0 12px;border-radius:8px;display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer;color:{{ f.c }};background:{{ f.bg }};box-shadow:inset 0 0 0 1px {{ f.b }}" style-hover="background:rgba(233,233,237,.06)">{{ f.n }}<i class="ph ph-caret-down" style="font-size:12px;opacity:.6"></i></div>
+</sc-for>
+<div style="height:34px;padding:0 13px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.15);color:rgba(233,233,237,.75);display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer" style-hover="background:rgba(233,233,237,.06)"><i class="ph ph-file-pdf" style="font-size:15px"></i>Exportar PDF</div>
+</div>
+</div>
+<div style="display:flex;gap:14px;align-items:stretch">
+<div style="flex:none;width:340px;padding:20px;border-radius:12px;background:linear-gradient(130deg,#262a60,#1c1e3a 65%,#1d1f33);position:relative;overflow:hidden;display:flex;align-items:center;gap:20px">
+<div style="position:absolute;right:-70px;top:-60px;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(110,116,196,.4),transparent 70%)"></div>
+<svg width="112" height="112" viewBox="0 0 112 112" style="position:relative;flex:none">
+<circle cx="56" cy="56" r="46" fill="none" stroke="rgba(233,233,237,.14)" stroke-width="11"></circle>
+<circle cx="56" cy="56" r="46" fill="none" stroke="#b5abfc" stroke-width="11" stroke-linecap="round" stroke-dasharray="126 289" transform="rotate(-90 56 56)"></circle>
+</svg>
+<div style="position:relative">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:#b5abfc">Progreso total</div>
+<div style="font:500 38px Inter;letter-spacing:-.03em;margin-top:6px;line-height:1">43,5%</div>
+<div style="font-size:12px;color:rgba(233,233,237,.7);margin-top:6px">1.876 de 4.312 cartas</div>
+</div>
+</div>
+<div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:11px">
+<sc-for list="{{ statsKpis }}" as="k" hint-placeholder-count="6">
+<div style="padding:13px 15px;border-radius:11px;background:#1c1e2c;box-shadow:inset 0 0 0 1px rgba(233,233,237,.07);display:flex;flex-direction:column;gap:5px;justify-content:center">
+<span style="font-size:11px;color:rgba(233,233,237,.55)">{{ k.k }}</span>
+<span style="font:500 21px Inter;letter-spacing:-.02em;color:{{ k.c }}">{{ k.v }}</span>
+<span style="font-size:10.5px;color:rgba(233,233,237,.45)">{{ k.sub }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:14px">
+<div style="padding:18px;border-radius:12px;background:#1c1e2c;box-shadow:inset 0 0 0 1px rgba(233,233,237,.07);display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:baseline;gap:9px"><span style="font:500 14px Inter">Curva de coste</span><span style="font-size:11px;color:rgba(233,233,237,.5)">cartas que tienes</span></div>
+<div style="height:150px;display:flex;align-items:flex-end;gap:10px">
+<sc-for list="{{ curva }}" as="c" hint-placeholder-count="9">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%;justify-content:flex-end">
+<span style="font:10px ui-monospace,Menlo,monospace;color:rgba(233,233,237,.6)">{{ c.v }}</span>
+<div style="width:100%;height:{{ c.h }};border-radius:5px 5px 2px 2px;background:{{ c.bar }}"></div>
+<span style="font-size:11px;color:rgba(233,233,237,.55)">{{ c.k }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="padding:18px;border-radius:12px;background:#1c1e2c;box-shadow:inset 0 0 0 1px rgba(233,233,237,.07);display:flex;flex-direction:column;gap:13px">
+<span style="font:500 14px Inter">Por tipo</span>
+<sc-for list="{{ porTipo }}" as="t" hint-placeholder-count="6">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:rgba(233,233,237,.8)">{{ t.k }}</span><span style="color:rgba(233,233,237,.55);font-variant-numeric:tabular-nums">{{ t.v }}</span></div>
+<div style="height:4px;border-radius:2px;background:rgba(233,233,237,.09);overflow:hidden"><div style="width:{{ t.w }};height:100%;background:{{ t.bar }}"></div></div>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:center;gap:9px"><span style="font:500 15px Inter">Progreso por edición</span><div style="flex:1;height:1px;background:linear-gradient(to right,rgba(233,233,237,.13),transparent)"></div></div>
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:9px">
+<sc-for list="{{ progresoEd }}" as="e" hint-placeholder-count="8">
+<div style="padding:11px 13px;border-radius:10px;background:#1c1e2c;box-shadow:inset 0 0 0 1px rgba(233,233,237,.06);display:flex;align-items:center;gap:13px">
+<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.n }}</div><div style="font-size:10.5px;color:rgba(233,233,237,.5);margin-top:3px">{{ e.meta }}</div></div>
+<div style="width:120px;flex:none;height:4px;border-radius:2px;background:rgba(233,233,237,.1);overflow:hidden"><div style="width:{{ e.w }};height:100%;background:{{ e.bar }}"></div></div>
+<span style="flex:none;min-width:38px;text-align:right;font:500 13px Inter;font-variant-numeric:tabular-nums;color:{{ e.pc }}">{{ e.p }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Puedo seguir con: carga de cartas propias y ediciones manuales · respaldo y sincronización · el estado vacío de la primera vez.</p>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Catálogo — tres direcciones · escritorio 1280×820 + móvil 390×844</span></div>
+<p class="dv-note">Las tres parten del catálogo con filtros y todas alternan grilla/tabla, pero cada una decide algo distinto sobre qué merece el espacio: el arte de las cartas (<a href="#1a">1a</a>), la ficha y la velocidad de teclado (<a href="#1b">1b</a>), o el avance por edición (<a href="#1c">1c</a>). En las tres, lo que no tienes se ve sin color; la cantidad se marca sin abrir nada.</p>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Vitrina — el arte manda, los datos aparecen al acercarse</div>
+<div class="dv-pair">
+<div style="width:1280px;height:820px;border-radius:12px;overflow:hidden;background:#161826;box-shadow:0 0 0 1px #3f424d,0 18px 44px rgba(0,0,0,.6);display:flex">
+<div style="width:68px;flex:none;background:#191b2a;box-shadow:1px 0 0 rgba(233,233,237,.07);display:flex;flex-direction:column;align-items:center;padding:16px 0 18px;gap:6px">
+<img src="https://blog.myl.cl/wp-content/uploads/2020/06/logo_online-1.png" alt="Mitos y Leyendas" style="width:58px;height:46px;object-fit:contain;margin-bottom:10px">
+<sc-for list="{{ rail }}" as="r" hint-placeholder-count="6">
+<div style="width:44px;height:42px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:{{ r.c }};background:{{ r.bg }}" style-hover="background:rgba(233,233,237,.06)">
+<i class="ph {{ r.ic }}" style="font-size:19px"></i><span style="font-size:8px;letter-spacing:.02em">{{ r.n }}</span>
+</div>
+</sc-for>
+<div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;align-items:center">
+<div style="width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:rgba(233,233,237,.55);cursor:pointer" style-hover="background:rgba(233,233,237,.06)"><i class="ph ph-cloud-check" style="font-size:18px"></i></div>
+<div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(150deg,#423a6a,#292b31);box-shadow:0 0 0 1px #5d5294"></div>
+</div>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:none;padding:20px 26px 0;display:flex;align-items:flex-start;gap:20px">
+<div style="min-width:0">
+<div style="font:500 26px Inter;letter-spacing:-.02em">Catálogo</div>
+<div style="font-size:12.5px;color:rgba(233,233,237,.55);margin-top:4px">4.312 cartas · tienes 1.876 · 214 repetidas</div>
+</div>
+<div style="margin-left:auto;display:flex;align-items:center;gap:9px">
+<div style="width:268px;height:36px;border-radius:8px;background:#232532;box-shadow:inset 0 0 0 1px rgba(233,233,237,.12);display:flex;align-items:center;gap:9px;padding:0 12px;color:rgba(233,233,237,.5)"><i class="ph ph-magnifying-glass" style="font-size:16px"></i><span style="font-size:13px">Nombre o habilidad…</span></div>
+<div style="display:flex;height:36px;border-radius:8px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(233,233,237,.14)">
+<div style="width:38px;display:grid;place-items:center;background:rgba(145,132,217,.16);color:#d2cefd;cursor:pointer"><i class="ph-fill ph-squares-four" style="font-size:16px"></i></div>
+<div style="width:38px;display:grid;place-items:center;color:rgba(233,233,237,.55);cursor:pointer" style-hover="background:rgba(233,233,237,.06)"><i class="ph ph-rows" style="font-size:16px"></i></div>
+</div>
+<div style="height:36px;padding:0 14px;border-radius:8px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph ph-check-square-offset" style="font-size:16px"></i>Inventariar</div>
+</div>
+</div>
+<div style="flex:none;padding:16px 26px 0;display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+<sc-for list="{{ chips }}" as="c" hint-placeholder-count="7">
+<div style="height:30px;padding:0 11px;border-radius:99px;display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;color:{{ c.c }};background:{{ c.bg }};box-shadow:inset 0 0 0 1px {{ c.b }}" style-hover="background:rgba(233,233,237,.07)">
+{{ c.n }}<i class="ph {{ c.ic }}" style="font-size:12px;opacity:.7"></i>
+</div>
+</sc-for>
+<div style="margin-left:auto;display:flex;align-items:center;gap:12px">
+<span style="font-size:12px;color:rgba(233,233,237,.5)">180 cartas</span>
+<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(233,233,237,.7);cursor:pointer"><i class="ph ph-arrows-down-up" style="font-size:14px"></i>Número</div>
+</div>
+</div>
+<div style="flex:none;margin:16px 26px 0;padding:13px 16px;border-radius:11px;background:linear-gradient(120deg,#262a60,#1c1e3a 62%,#1d1f33);position:relative;overflow:hidden;display:flex;align-items:center;gap:18px">
+<div style="position:absolute;right:-60px;top:-70px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(110,116,196,.4),transparent 70%)"></div>
+<div style="position:relative;min-width:0">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.13em;text-transform:uppercase;color:#b5abfc">Edición activa</div>
+<div style="font:500 17px Inter;margin-top:4px">Espada Sagrada · Primer Bloque</div>
+</div>
+<div style="position:relative;flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;max-width:420px">
+<div style="height:5px;border-radius:3px;background:rgba(233,233,237,.12);overflow:hidden"><div style="width:83%;height:100%;background:linear-gradient(90deg,#5d5294,#b5abfc)"></div></div>
+<div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(233,233,237,.6)"><span>149 de 180</span><span>te faltan 31</span></div>
+</div>
+<div style="position:relative;margin-left:auto;font:500 30px Inter;color:#d2cefd;letter-spacing:-.02em">83%</div>
+</div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;padding:18px 26px 26px">
+<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:14px">
+<sc-for list="{{ vitrina }}" as="v" hint-placeholder-count="12">
+<div style="display:flex;flex-direction:column;gap:7px;cursor:pointer">
+<div style="position:relative;aspect-ratio:63/88;border-radius:8px;overflow:hidden;background:{{ v.g }};box-shadow:{{ v.sh }};filter:{{ v.f }}" style-hover="box-shadow:0 0 0 1px #b5abfc,0 10px 24px rgba(0,0,0,.5)">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 6px,transparent 6px 13px)"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 46%,rgba(12,13,24,.9))"></div>
+<div style="position:absolute;top:8px;left:8px;padding:2px 6px;border-radius:5px;background:rgba(12,13,24,.7);font:9.5px ui-monospace,Menlo,monospace;color:rgba(233,233,237,.8)">{{ v.num }}</div>
+<sc-if value="{{ v.qty }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;top:7px;right:7px;min-width:20px;height:20px;padding:0 5px;border-radius:6px;background:#9184d9;color:#161826;font:600 11px Inter;display:grid;place-items:center">{{ v.qty }}</div></sc-if>
+<div style="position:absolute;left:9px;right:9px;bottom:8px">
+<div style="font:500 13px Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ v.n }}</div>
+<div style="display:flex;align-items:center;gap:6px;margin-top:3px;font-size:10.5px;color:rgba(233,233,237,.6)"><span>{{ v.tipo }}</span><span style="opacity:.4">·</span><span>{{ v.rareza }}</span></div>
+</div>
+<div style="position:absolute;top:8px;left:8px;right:8px;bottom:8px;display:flex;align-items:center;justify-content:center;gap:9px;opacity:0;background:rgba(12,13,24,.55);border-radius:6px;transition:opacity .14s" style-hover="opacity:1">
+<div style="width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:rgba(12,13,24,.8);box-shadow:inset 0 0 0 1px rgba(233,233,237,.22);color:#e9e9ed"><i class="ph ph-minus" style="font-size:15px"></i></div>
+<div style="width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:#9184d9;color:#161826"><i class="ph ph-plus" style="font-size:15px"></i></div>
+</div>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="margin-top:20px;display:flex;justify-content:center"><div style="height:34px;padding:0 18px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.7);font-size:12.5px;display:flex;align-items:center;cursor:pointer" style-hover="background:rgba(233,233,237,.06)">Cargar más</div></div>
+</div>
+</div>
+</div>
+
+<div style="width:390px;height:844px;border-radius:38px;overflow:hidden;position:relative;background:#161826;box-shadow:0 0 0 1px #9397ab,0 16px 40px rgba(0,0,0,.65);display:flex;flex-direction:column">
+<div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font:500 12px Inter;color:rgba(233,233,237,.55)"><span>9:41</span><span style="display:flex;gap:5px;align-items:center"><i class="ph ph-cell-signal-full" style="font-size:13px"></i><i class="ph ph-wifi-high" style="font-size:13px"></i><i class="ph ph-battery-full" style="font-size:14px"></i></span></div>
+<div style="flex:none;padding:2px 18px 12px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div><div style="font:500 23px Inter;letter-spacing:-.02em">Catálogo</div><div style="font-size:11.5px;color:rgba(233,233,237,.55);margin-top:2px">1.876 de 4.312 tuyas</div></div>
+<div style="display:flex;gap:6px">
+<div style="width:34px;height:34px;border-radius:8px;display:grid;place-items:center;color:rgba(233,233,237,.7);box-shadow:inset 0 0 0 1px rgba(233,233,237,.14)"><i class="ph ph-magnifying-glass" style="font-size:17px"></i></div>
+<div style="width:34px;height:34px;border-radius:8px;display:grid;place-items:center;color:#9184d9;box-shadow:inset 0 0 0 1px #9184d9"><i class="ph ph-sliders-horizontal" style="font-size:17px"></i></div>
+</div>
+</div>
+<div class="sc" style="display:flex;gap:7px;overflow-x:auto">
+<sc-for list="{{ chipsMovil }}" as="c" hint-placeholder-count="5">
+<div style="flex:none;height:29px;padding:0 11px;border-radius:99px;display:flex;align-items:center;font-size:12px;color:{{ c.c }};background:{{ c.bg }};box-shadow:inset 0 0 0 1px {{ c.b }}">{{ c.n }}</div>
+</sc-for>
+</div>
+</div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;padding:0 18px 18px">
+<div style="padding:13px 15px;border-radius:11px;background:linear-gradient(120deg,#262a60,#1d2040);margin-bottom:16px;display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font:500 15px Inter">Espada Sagrada</div><div style="font:500 17px Inter;color:#d2cefd">83%</div></div>
+<div style="height:5px;border-radius:3px;background:rgba(233,233,237,.12);overflow:hidden"><div style="width:83%;height:100%;background:linear-gradient(90deg,#5d5294,#b5abfc)"></div></div>
+<div style="font-size:11px;color:rgba(233,233,237,.6)">149 de 180 · te faltan 31</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:11px">
+<sc-for list="{{ vitrinaMovil }}" as="v" hint-placeholder-count="12">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="position:relative;aspect-ratio:63/88;border-radius:7px;overflow:hidden;background:{{ v.g }};box-shadow:{{ v.sh }};filter:{{ v.f }}">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 5px,transparent 5px 11px)"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 52%,rgba(12,13,24,.9))"></div>
+<sc-if value="{{ v.qty }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;top:5px;right:5px;min-width:18px;height:18px;padding:0 4px;border-radius:5px;background:#9184d9;color:#161826;font:600 10px Inter;display:grid;place-items:center">{{ v.qty }}</div></sc-if>
+<div style="position:absolute;left:6px;right:6px;bottom:6px;font:500 10.5px Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ v.n }}</div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;height:28px;border-radius:7px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.13);padding:0 3px">
+<div style="width:22px;height:22px;border-radius:5px;display:grid;place-items:center;color:rgba(233,233,237,.6)"><i class="ph ph-minus" style="font-size:12px"></i></div>
+<span style="font:500 11.5px Inter;color:{{ v.qc }}">{{ v.qlabel }}</span>
+<div style="width:22px;height:22px;border-radius:5px;display:grid;place-items:center;color:#b5abfc"><i class="ph ph-plus" style="font-size:12px"></i></div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="flex:none;height:74px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding-bottom:14px;background:#191b2a;box-shadow:0 -1px 0 rgba(233,233,237,.08)">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+<div style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ t.c }}"><i class="ph {{ t.ic }}" style="font-size:21px"></i><span style="font-size:9.5px">{{ t.n }}</span></div>
+</sc-for>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Mesa de trabajo — tabla densa y ficha siempre a la vista</div>
+<div class="dv-pair">
+<div style="width:1280px;height:820px;border-radius:12px;overflow:hidden;background:#161826;box-shadow:0 0 0 1px #3f424d,0 18px 44px rgba(0,0,0,.6);display:flex;flex-direction:column">
+<div style="height:54px;flex:none;display:flex;align-items:center;gap:18px;padding:0 22px;background:#191b2a;box-shadow:0 1px 0 rgba(233,233,237,.07)">
+<div style="display:flex;align-items:center;gap:9px"><img src="https://blog.myl.cl/wp-content/uploads/2020/06/logo_online-1.png" alt="Mitos y Leyendas" style="width:34px;height:26px;object-fit:contain"><span style="font:500 15px Inter;letter-spacing:-.01em">Inventario MyL</span></div>
+<div style="display:flex;gap:2px;margin-left:8px">
+<sc-for list="{{ topTabs }}" as="t" hint-placeholder-count="6">
+<div style="height:30px;padding:0 12px;border-radius:7px;display:flex;align-items:center;font-size:13px;cursor:pointer;color:{{ t.c }};background:{{ t.bg }}" style-hover="background:rgba(233,233,237,.06)">{{ t.n }}</div>
+</sc-for>
+</div>
+<div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(233,233,237,.55)"><i class="ph ph-cloud-check" style="font-size:16px;color:#b5abfc"></i>Guardado</div>
+<div style="width:28px;height:28px;border-radius:9px;background:linear-gradient(150deg,#423a6a,#292b31);box-shadow:0 0 0 1px #5d5294"></div>
+</div>
+</div>
+<div style="flex:1;min-height:0;display:flex">
+<div class="sc" style="width:206px;flex:none;padding:18px 16px;box-shadow:1px 0 0 rgba(233,233,237,.07);overflow-y:auto;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font:10px ui-monospace,Menlo,monospace;letter-spacing:.11em;text-transform:uppercase;color:rgba(233,233,237,.6)">Filtros</span><span style="font-size:11.5px;color:#9184d9;cursor:pointer">Limpiar</span></div>
+<sc-for list="{{ selects }}" as="s" hint-placeholder-count="6">
+<div style="display:flex;flex-direction:column;gap:5px">
+<span style="font-size:11px;color:rgba(233,233,237,.55)">{{ s.k }}</span>
+<div style="height:32px;border-radius:7px;background:#232532;box-shadow:inset 0 0 0 1px rgba(233,233,237,.12);display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:12.5px;color:{{ s.c }};cursor:pointer" style-hover="box-shadow:inset 0 0 0 1px rgba(145,132,217,.5)">{{ s.v }}<i class="ph ph-caret-down" style="font-size:12px;opacity:.6"></i></div>
+</div>
+</sc-for>
+<div style="display:flex;flex-direction:column;gap:7px">
+<div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(233,233,237,.55)"><span>Coste máximo</span><span style="color:#b5abfc">6</span></div>
+<div style="position:relative;height:4px;border-radius:2px;background:rgba(233,233,237,.12)"><div style="position:absolute;left:0;top:0;bottom:0;width:50%;background:#9184d9;border-radius:2px"></div><div style="position:absolute;left:50%;top:-5px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#e9e9ed"></div></div>
+</div>
+<div style="margin-top:4px;padding:12px;border-radius:10px;background:#232532;display:flex;flex-direction:column;gap:8px">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:rgba(233,233,237,.55)">Modo inventariar</div>
+<div style="font-size:11.5px;line-height:1.5;color:rgba(233,233,237,.72)">Recorre la edición con ↑↓ y marca copias con 0–9. Sin mouse.</div>
+<div style="height:30px;border-radius:7px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;font-size:12px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph ph-keyboard" style="font-size:14px"></i>Empezar</div>
+</div>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:none;padding:16px 20px 12px;display:flex;align-items:center;gap:12px">
+<div style="flex:1;max-width:320px;height:34px;border-radius:8px;background:#232532;box-shadow:inset 0 0 0 1px rgba(233,233,237,.12);display:flex;align-items:center;gap:9px;padding:0 11px;color:rgba(233,233,237,.5)"><i class="ph ph-magnifying-glass" style="font-size:15px"></i><span style="font-size:12.5px">Nombre o habilidad…</span></div>
+<span style="font-size:12px;color:rgba(233,233,237,.5)">180 cartas · 149 tuyas</span>
+<div style="margin-left:auto;display:flex;height:32px;border-radius:8px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(233,233,237,.14)">
+<div style="width:34px;display:grid;place-items:center;color:rgba(233,233,237,.55);cursor:pointer" style-hover="background:rgba(233,233,237,.06)"><i class="ph ph-squares-four" style="font-size:15px"></i></div>
+<div style="width:34px;display:grid;place-items:center;background:rgba(145,132,217,.16);color:#d2cefd;cursor:pointer"><i class="ph-fill ph-rows" style="font-size:15px"></i></div>
+</div>
+</div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;padding:0 20px 20px">
+<table style="width:100%;border-collapse:collapse;font-size:13px">
+<thead><tr>
+<sc-for list="{{ cols }}" as="c" hint-placeholder-count="8">
+<th style="text-align:{{ c.a }};font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:rgba(233,233,237,.5);padding:0 12px 9px;border-bottom:1px solid rgba(233,233,237,.12);white-space:nowrap;position:sticky;top:0;background:#161826">{{ c.n }}</th>
+</sc-for>
+</tr></thead>
+<tbody>
+<sc-for list="{{ filas }}" as="f" hint-placeholder-count="10">
+<tr style="background:{{ f.bg }};cursor:pointer" style-hover="background:rgba(233,233,237,.045)">
+<td style="padding:8px 12px;border-bottom:1px solid rgba(233,233,237,.06);font:10.5px ui-monospace,Menlo,monospace;color:rgba(233,233,237,.6);white-space:nowrap">{{ f.num }}</td>
+<td style="padding:8px 12px;border-bottom:1px solid rgba(233,233,237,.06)">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="width:26px;height:36px;flex:none;border-radius:4px;background:{{ f.g }};box-shadow:0 0 0 1px rgba(233,233,237,.1);filter:{{ f.fl }}"></div>
+<span style="font-weight:500;white-space:nowrap;color:{{ f.nc }}">{{ f.n }}</span>
+</div>
+</td>
+<td style="padding:8px 12px;border-bottom:1px solid rgba(233,233,237,.06);color:rgba(233,233,237,.7);white-space:nowrap">{{ f.tipo }}</td>
+<td style="padding:8px 12px;border-bottom:1px solid rgba(233,233,237,.06);color:rgba(233,233,237,.7)">{{ f.raza }}</td>
+<td style="padding:8px 12px;border-bottom:1px solid rgba(233,233,237,.06);text-align:center;font-variant-numeric:tabular-nums;color:rgba(233,233,237,.85)">{{ f.coste }}</td>
+<td style="padding:8px 12px;border-bottom:1px solid rgba(233,233,237,.06);text-align:center;font-variant-numeric:tabular-nums;color:rgba(233,233,237,.85)">{{ f.fuerza }}</td>
+<td style="padding:8px 12px;border-bottom:1px solid rgba(233,233,237,.06)"><span style="padding:2px 8px;border-radius:5px;font-size:11px;background:{{ f.rbg }};color:{{ f.rc }};white-space:nowrap">{{ f.rareza }}</span></td>
+<td style="padding:8px 12px;border-bottom:1px solid rgba(233,233,237,.06)">
+<div style="display:flex;align-items:center;justify-content:flex-end;gap:2px">
+<div style="width:24px;height:24px;border-radius:6px;display:grid;place-items:center;color:rgba(233,233,237,.5)" style-hover="background:rgba(233,233,237,.09);color:#e9e9ed"><i class="ph ph-minus" style="font-size:13px"></i></div>
+<span style="min-width:26px;text-align:center;font:500 13px Inter;font-variant-numeric:tabular-nums;color:{{ f.qc }}">{{ f.qty }}</span>
+<div style="width:24px;height:24px;border-radius:6px;display:grid;place-items:center;color:#b5abfc" style-hover="background:rgba(145,132,217,.16)"><i class="ph ph-plus" style="font-size:13px"></i></div>
+</div>
+</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sc" style="width:312px;flex:none;box-shadow:-1px 0 0 rgba(233,233,237,.07);background:#191b2a;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px">
+<div style="position:relative;aspect-ratio:63/88;border-radius:10px;overflow:hidden;background:linear-gradient(155deg,#4a4176,#23253a 60%,#191b2a);box-shadow:0 0 0 1px rgba(181,171,252,.35),0 12px 30px rgba(0,0,0,.5)">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 7px,transparent 7px 15px)"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 52%,rgba(12,13,24,.92))"></div>
+<div style="position:absolute;left:14px;right:14px;bottom:14px">
+<div style="font:500 20px Inter;letter-spacing:-.01em">Merlín</div>
+<div style="font-size:11.5px;color:rgba(233,233,237,.65);margin-top:3px">Espada Sagrada · nº 042 · Real</div>
+</div>
+<div style="position:absolute;top:10px;left:10px;display:flex;gap:5px">
+<div style="height:22px;padding:0 8px;border-radius:6px;background:rgba(12,13,24,.72);display:flex;align-items:center;gap:5px;font-size:11px"><i class="ph ph-coin" style="font-size:12px;color:#b5abfc"></i>5</div>
+<div style="height:22px;padding:0 8px;border-radius:6px;background:rgba(12,13,24,.72);display:flex;align-items:center;gap:5px;font-size:11px"><i class="ph ph-sword" style="font-size:12px;color:#b5abfc"></i>4</div>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:#232532;box-shadow:inset 0 0 0 1px rgba(145,132,217,.28)">
+<span style="font-size:12px;color:rgba(233,233,237,.7);flex:1">Copias que tienes</span>
+<div style="display:flex;align-items:center;gap:4px">
+<div style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.8);cursor:pointer" style-hover="background:rgba(233,233,237,.08)"><i class="ph ph-minus" style="font-size:14px"></i></div>
+<span style="min-width:30px;text-align:center;font:500 19px Inter;font-variant-numeric:tabular-nums">3</span>
+<div style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:#9184d9;color:#161826;cursor:pointer" style-hover="background:#b5abfc"><i class="ph ph-plus" style="font-size:14px"></i></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:rgba(233,233,237,.5)">Habilidad</div>
+<div style="font-size:12.5px;line-height:1.6;color:rgba(233,233,237,.82);text-wrap:pretty">Al entrar en juego, roba una carta. Mientras Merlín esté en tu zona de aliados, tus talismanes cuestan un oro menos.</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<sc-for list="{{ fichaMeta }}" as="m" hint-placeholder-count="4">
+<div style="padding:9px 11px;border-radius:9px;background:#232532;display:flex;flex-direction:column;gap:3px">
+<span style="font-size:10.5px;color:rgba(233,233,237,.5)">{{ m.k }}</span>
+<span style="font-size:13px;font-weight:500;color:{{ m.c }}">{{ m.v }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<div style="height:36px;border-radius:8px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;font-size:13px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph ph-stack-plus" style="font-size:16px"></i>Añadir al mazo activo</div>
+<div style="display:flex;gap:7px">
+<div style="flex:1;height:34px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.78);font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-arrows-left-right" style="font-size:14px"></i>Ofrecer</div>
+<div style="flex:1;height:34px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.16);color:rgba(233,233,237,.78);font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer" style-hover="background:rgba(233,233,237,.07)"><i class="ph ph-tag" style="font-size:14px"></i>Vender</div>
+</div>
+</div>
+<div style="margin-top:auto;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:rgba(233,233,237,.45)"><span>↑↓ moverse</span><span>0–9 copias</span><span>Espacio ficha</span></div>
+</div>
+</div>
+</div>
+
+<div style="width:390px;height:844px;border-radius:38px;overflow:hidden;position:relative;background:#161826;box-shadow:0 0 0 1px #9397ab,0 16px 40px rgba(0,0,0,.65);display:flex;flex-direction:column">
+<div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font:500 12px Inter;color:rgba(233,233,237,.55)"><span>9:41</span><span style="display:flex;gap:5px;align-items:center"><i class="ph ph-cell-signal-full" style="font-size:13px"></i><i class="ph ph-wifi-high" style="font-size:13px"></i><i class="ph ph-battery-full" style="font-size:14px"></i></span></div>
+<div style="flex:none;padding:2px 18px 10px;display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="flex:1;height:36px;border-radius:8px;background:#232532;box-shadow:inset 0 0 0 1px rgba(233,233,237,.12);display:flex;align-items:center;gap:9px;padding:0 11px;color:rgba(233,233,237,.5)"><i class="ph ph-magnifying-glass" style="font-size:16px"></i><span style="font-size:13px">Buscar carta…</span></div>
+<div style="width:36px;height:36px;flex:none;border-radius:8px;display:grid;place-items:center;color:#9184d9;box-shadow:inset 0 0 0 1px #9184d9"><i class="ph ph-sliders-horizontal" style="font-size:17px"></i></div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div style="font-size:12px;color:rgba(233,233,237,.55)">180 cartas · 149 tuyas</div>
+<div style="display:flex;height:28px;border-radius:7px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(233,233,237,.14)">
+<div style="width:30px;display:grid;place-items:center;color:rgba(233,233,237,.5)"><i class="ph ph-squares-four" style="font-size:14px"></i></div>
+<div style="width:30px;display:grid;place-items:center;background:rgba(145,132,217,.16);color:#d2cefd"><i class="ph-fill ph-rows" style="font-size:14px"></i></div>
+</div>
+</div>
+</div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;padding:0 14px 14px;display:flex;flex-direction:column;gap:7px">
+<sc-for list="{{ filasMovil }}" as="f" hint-placeholder-count="9">
+<div style="padding:9px 10px;border-radius:11px;background:{{ f.bg }};display:flex;align-items:center;gap:11px">
+<div style="width:34px;height:47px;flex:none;border-radius:5px;background:{{ f.g }};box-shadow:0 0 0 1px rgba(233,233,237,.1);filter:{{ f.fl }}"></div>
+<div style="flex:1;min-width:0">
+<div style="font:500 13.5px Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ f.nc }}">{{ f.n }}</div>
+<div style="font-size:11px;color:rgba(233,233,237,.5);margin-top:2px">{{ f.meta }}</div>
+</div>
+<div style="flex:none;display:flex;align-items:center;gap:3px">
+<div style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:rgba(233,233,237,.55);box-shadow:inset 0 0 0 1px rgba(233,233,237,.12)"><i class="ph ph-minus" style="font-size:13px"></i></div>
+<span style="min-width:24px;text-align:center;font:500 14px Inter;font-variant-numeric:tabular-nums;color:{{ f.qc }}">{{ f.qty }}</span>
+<div style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:#161826;background:#9184d9"><i class="ph ph-plus" style="font-size:13px"></i></div>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="flex:none;height:74px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding-bottom:14px;background:#191b2a;box-shadow:0 -1px 0 rgba(233,233,237,.08)">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+<div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ t.c }}"><i class="ph {{ t.ic }}" style="font-size:21px"></i><span style="font-size:9.5px">{{ t.n }}</span></div>
+</sc-for>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Álbum — el catálogo ordenado por lo que estás cerrando</div>
+<div class="dv-pair">
+<div style="width:1280px;height:820px;border-radius:12px;overflow:hidden;background:#161826;box-shadow:0 0 0 1px #3f424d,0 18px 44px rgba(0,0,0,.6);display:flex;flex-direction:column">
+<div style="flex:none;padding:26px 34px 0;display:flex;align-items:flex-end;gap:26px">
+<div style="min-width:0">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.13em;text-transform:uppercase;color:#9184d9">Tu colección</div>
+<div style="display:flex;align-items:baseline;gap:12px;margin-top:8px">
+<span style="font:500 44px Inter;letter-spacing:-.03em;line-height:1">43,5%</span>
+<span style="font-size:13px;color:rgba(233,233,237,.55)">1.876 de 4.312 cartas · 12 ediciones seguidas</span>
+</div>
+</div>
+<div style="margin-left:auto;display:flex;align-items:center;gap:9px">
+<div style="width:250px;height:36px;border-radius:8px;background:#232532;box-shadow:inset 0 0 0 1px rgba(233,233,237,.12);display:flex;align-items:center;gap:9px;padding:0 12px;color:rgba(233,233,237,.5)"><i class="ph ph-magnifying-glass" style="font-size:16px"></i><span style="font-size:13px">Buscar en todo…</span></div>
+<div style="height:36px;padding:0 13px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.15);color:rgba(233,233,237,.75);display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer" style-hover="background:rgba(233,233,237,.06)"><i class="ph ph-sliders-horizontal" style="font-size:15px"></i>Filtros</div>
+<div style="display:flex;height:36px;border-radius:8px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(233,233,237,.14)">
+<div style="width:36px;display:grid;place-items:center;background:rgba(145,132,217,.16);color:#d2cefd"><i class="ph-fill ph-squares-four" style="font-size:16px"></i></div>
+<div style="width:36px;display:grid;place-items:center;color:rgba(233,233,237,.5)" style-hover="background:rgba(233,233,237,.06)"><i class="ph ph-rows" style="font-size:16px"></i></div>
+</div>
+<div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(150deg,#423a6a,#292b31);box-shadow:0 0 0 1px #5d5294"></div>
+</div>
+</div>
+<div style="flex:none;padding:20px 34px 0;display:flex;gap:26px;align-items:center">
+<sc-for list="{{ albumTabs }}" as="t" hint-placeholder-count="6">
+<div style="padding-bottom:10px;font-size:13.5px;cursor:pointer;color:{{ t.c }};box-shadow:{{ t.sh }}" style-hover="color:#e9e9ed">{{ t.n }}</div>
+</sc-for>
+<div style="flex:1;height:1px;background:linear-gradient(to right,rgba(233,233,237,.12),transparent 85%);margin-bottom:10px"></div>
+</div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;padding:22px 34px 30px;display:flex;flex-direction:column;gap:26px">
+<sc-for list="{{ estantes }}" as="e" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:14px">
+<div style="min-width:0">
+<div style="display:flex;align-items:baseline;gap:9px"><span style="font:500 18px Inter;letter-spacing:-.01em">{{ e.n }}</span><span style="font:10px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:rgba(233,233,237,.45)">{{ e.fmt }}</span></div>
+<div style="font-size:11.5px;color:rgba(233,233,237,.55);margin-top:3px">{{ e.meta }}</div>
+</div>
+<div style="width:200px;flex:none;display:flex;align-items:center;gap:10px">
+<div style="flex:1;height:4px;border-radius:2px;background:rgba(233,233,237,.1);overflow:hidden"><div style="width:{{ e.w }};height:100%;background:{{ e.bar }}"></div></div>
+<span style="font:500 13px Inter;color:{{ e.pc }};font-variant-numeric:tabular-nums">{{ e.p }}</span>
+</div>
+<div style="margin-left:auto;display:flex;gap:7px">
+<div style="height:32px;padding:0 12px;border-radius:8px;box-shadow:inset 0 0 0 1px {{ e.ab }};color:{{ e.ac }};font-size:12.5px;display:flex;align-items:center;gap:6px;cursor:pointer" style-hover="background:rgba(145,132,217,.12)"><i class="ph {{ e.aic }}" style="font-size:14px"></i>{{ e.accion }}</div>
+<div style="width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:rgba(233,233,237,.55);box-shadow:inset 0 0 0 1px rgba(233,233,237,.14);cursor:pointer" style-hover="background:rgba(233,233,237,.06)"><i class="ph ph-arrow-right" style="font-size:15px"></i></div>
+</div>
+</div>
+<div class="sc" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px">
+<sc-for list="{{ e.cartas }}" as="c" hint-placeholder-count="10">
+<div style="flex:none;width:104px;display:flex;flex-direction:column;gap:6px;cursor:pointer">
+<div style="position:relative;aspect-ratio:63/88;border-radius:7px;overflow:hidden;background:{{ c.g }};box-shadow:{{ c.sh }};filter:{{ c.f }}" style-hover="box-shadow:0 0 0 1px #b5abfc">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 5px,transparent 5px 12px)"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 50%,rgba(12,13,24,.9))"></div>
+<div style="position:absolute;top:6px;left:6px;font:9px ui-monospace,Menlo,monospace;color:rgba(233,233,237,.7)">{{ c.num }}</div>
+<sc-if value="{{ c.qty }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;top:5px;right:5px;min-width:18px;height:18px;padding:0 4px;border-radius:5px;background:#9184d9;color:#161826;font:600 10px Inter;display:grid;place-items:center">{{ c.qty }}</div></sc-if>
+<div style="position:absolute;left:7px;right:7px;bottom:6px;font:500 11px Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.n }}</div>
+</div>
+</div>
+</sc-for>
+<div style="flex:none;width:104px;aspect-ratio:63/88;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:inset 0 0 0 1px rgba(233,233,237,.12);color:rgba(233,233,237,.5);cursor:pointer" style-hover="background:rgba(233,233,237,.05);color:#b5abfc"><i class="ph ph-arrow-right" style="font-size:18px"></i><span style="font-size:11px">Ver {{ e.resto }}</span></div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="width:390px;height:844px;border-radius:38px;overflow:hidden;position:relative;background:#161826;box-shadow:0 0 0 1px #9397ab,0 16px 40px rgba(0,0,0,.65);display:flex;flex-direction:column">
+<div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font:500 12px Inter;color:rgba(233,233,237,.55)"><span>9:41</span><span style="display:flex;gap:5px;align-items:center"><i class="ph ph-cell-signal-full" style="font-size:13px"></i><i class="ph ph-wifi-high" style="font-size:13px"></i><i class="ph ph-battery-full" style="font-size:14px"></i></span></div>
+<div style="flex:none;padding:4px 20px 14px">
+<div style="font:9.5px ui-monospace,Menlo,monospace;letter-spacing:.13em;text-transform:uppercase;color:#9184d9">Tu colección</div>
+<div style="display:flex;align-items:baseline;gap:10px;margin-top:7px"><span style="font:500 36px Inter;letter-spacing:-.03em;line-height:1">43,5%</span><span style="font-size:11.5px;color:rgba(233,233,237,.55)">1.876 de 4.312</span></div>
+</div>
+<div class="sc" style="flex:1;min-height:0;overflow-y:auto;padding:0 20px 18px;display:flex;flex-direction:column;gap:20px">
+<sc-for list="{{ estantesMovil }}" as="e" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="min-width:0;flex:1"><div style="font:500 15px Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.n }}</div><div style="font-size:11px;color:rgba(233,233,237,.55);margin-top:2px">{{ e.meta }}</div></div>
+<span style="font:500 14px Inter;color:{{ e.pc }}">{{ e.p }}</span>
+</div>
+<div style="height:4px;border-radius:2px;background:rgba(233,233,237,.1);overflow:hidden"><div style="width:{{ e.w }};height:100%;background:{{ e.bar }}"></div></div>
+<div class="sc" style="display:flex;gap:9px;overflow-x:auto">
+<sc-for list="{{ e.cartas }}" as="c" hint-placeholder-count="6">
+<div style="flex:none;width:82px;position:relative;aspect-ratio:63/88;border-radius:6px;overflow:hidden;background:{{ c.g }};box-shadow:{{ c.sh }};filter:{{ c.f }}">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(48deg,rgba(233,233,237,.06) 0 5px,transparent 5px 11px)"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(transparent 54%,rgba(12,13,24,.9))"></div>
+<sc-if value="{{ c.qty }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;top:4px;right:4px;min-width:16px;height:16px;padding:0 4px;border-radius:5px;background:#9184d9;color:#161826;font:600 9.5px Inter;display:grid;place-items:center">{{ c.qty }}</div></sc-if>
+<div style="position:absolute;left:5px;right:5px;bottom:5px;font:500 10px Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.n }}</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="flex:none;padding:12px 20px 12px;background:#191b2a;box-shadow:0 -1px 0 rgba(233,233,237,.08)">
+<div style="height:44px;border-radius:9px;box-shadow:inset 0 0 0 1px #9184d9;color:#9184d9;font:500 14px Inter;display:flex;align-items:center;justify-content:center;gap:8px"><i class="ph ph-check-square-offset" style="font-size:17px"></i>Inventariar Espada Sagrada</div>
+</div>
+<div style="flex:none;height:70px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding-bottom:14px;background:#191b2a">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+<div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ t.c }}"><i class="ph {{ t.ic }}" style="font-size:21px"></i><span style="font-size:9.5px">{{ t.n }}</span></div>
+</sc-for>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Dime qué dirección sigo (<a href="#1a">1a</a>, <a href="#1b">1b</a> o <a href="#1c">1c</a>) y diseño en ese lenguaje el resto: modo inventariar, detalle de carta, colecciones, cambio y ventas, mazos y estadísticas.</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:980}}">
+const G = {
+  a: 'linear-gradient(155deg,#4a4176,#23253a 62%,#191b2a)',
+  b: 'linear-gradient(155deg,#3b4b6e,#1f2534 62%,#191b2a)',
+  c: 'linear-gradient(155deg,#5d4f6e,#262232 62%,#191b2a)',
+  d: 'linear-gradient(155deg,#39554f,#1e2630 62%,#191b2a)',
+  e: 'linear-gradient(155deg,#6a5340,#2a2426 62%,#191b2a)',
+  f: 'linear-gradient(155deg,#43406e,#212336 62%,#191b2a)'
+};
+const own = '0 0 0 1px rgba(181,171,252,.32)';
+const miss = '0 0 0 1px rgba(233,233,237,.09)';
+
+const CARTAS = [
+  ['Merlín', 'Aliado', 'Real', '042', 3, G.a],
+  ['Excalibur', 'Arma', 'Real', '043', 1, G.e],
+  ['Rey Arturo', 'Aliado', 'Real', '044', 2, G.c],
+  ['Morgana', 'Aliado', 'Cortesano', '045', 0, G.f],
+  ['Lancelot', 'Aliado', 'Cortesano', '046', 4, G.b],
+  ['Mesa Redonda', 'Monumento', 'Real', '047', 0, G.d],
+  ['Ginebra', 'Aliado', 'Vasallo', '048', 1, G.c],
+  ['Grial Sagrado', 'Talismán', 'Real', '049', 0, G.e],
+  ['Mordred', 'Aliado', 'Cortesano', '050', 2, G.a],
+  ['Avalón', 'Monumento', 'Cortesano', '051', 1, G.d],
+  ['Percival', 'Aliado', 'Vasallo', '052', 3, G.b],
+  ['Bendición de Nimue', 'Talismán', 'Vasallo', '053', 0, G.f]
+];
+
+const RAREZA_T = {
+  Real: ['rgba(145,132,217,.16)', '#d2cefd'],
+  Cortesano: ['rgba(233,233,237,.08)', 'rgba(233,233,237,.8)'],
+  Vasallo: ['transparent', 'rgba(233,233,237,.55)']
+};
+
+function mapCard(c, i) {
+  const [n, tipo, rareza, num, qty, g] = c;
+  return {
+    n, tipo, rareza, num, g,
+    qty: qty ? String(qty) : '',
+    qlabel: qty ? String(qty) : '—',
+    qc: qty ? '#e9e9ed' : 'rgba(233,233,237,.4)',
+    sh: qty ? own : miss,
+    f: qty ? 'none' : 'grayscale(1) brightness(.72)'
+  };
+}
+
+class Component extends DCLogic {
+  renderVals() {
+    const vitrina = CARTAS.map(mapCard);
+    const tint = (on) => on ? 'rgba(145,132,217,.16)' : 'transparent';
+
+    const railFor = (activo) => [
+      { n: 'Catálogo', ic: 'ph-squares-four', k: 'cat' },
+      { n: 'Álbum', ic: 'ph-books', k: 'alb' },
+      { n: 'Mazos', ic: 'ph-stack', k: 'maz' },
+      { n: 'Cambios', ic: 'ph-arrows-left-right', k: 'cam' },
+      { n: 'Datos', ic: 'ph-chart-bar', k: 'dat' },
+      { n: 'Cartas', ic: 'ph-plus-circle', k: 'car' }
+    ].map(r => ({
+      n: r.n, ic: r.ic,
+      c: r.k === activo ? '#d2cefd' : 'rgba(233,233,237,.6)',
+      bg: r.k === activo ? 'rgba(145,132,217,.16)' : 'transparent'
+    }));
+
+    const gs = [G.a, G.b, G.c, G.d, G.e, G.f];
+    const strip = (count, seed) => Array.from({ length: count }, (_, i) => {
+      const has = (i + seed) % 3 !== 1;
+      return {
+        g: gs[(i + seed) % 6],
+        qty: has ? String(((i + seed) % 3) + 1) : '',
+        sh: has ? own : miss,
+        f: has ? 'none' : 'grayscale(1) brightness(.68)'
+      };
+    });
+
+    const albumCards = [
+      ['Merlín', 3], ['Excalibur', 1], ['Rey Arturo', 2], ['Morgana', 0], ['Lancelot', 4],
+      ['Mesa Redonda', 0], ['Ginebra', 1], ['Grial Sagrado', 0], ['Mordred', 2],
+      ['Avalón', 1], ['Percival', 3], ['Nimue', 0], ['Gawain', 2], ['Bedivere', 1],
+      ['Tristán', 0], ['Isolda', 1], ['Galahad', 2], ['Kay', 1], ['Uther', 0],
+      ['Igraine', 1], ['Dama del Lago', 0], ['Camelot', 2], ['Tizona', 1], ['Broceliande', 0],
+      ['Caliburn', 1], ['Vivien', 0], ['Balin', 2]
+    ].map(([n, qty], i) => ({
+      n, num: String(i + 40).padStart(3, '0'),
+      g: gs[i % 6],
+      qty: qty ? String(qty) : '',
+      sh: qty ? own : miss,
+      f: qty ? 'none' : 'grayscale(1) brightness(.68)'
+    }));
+
+    const ring = (a, b, c, d) => 'conic-gradient(from var(--holo-a),' + a + ' 0%,' + b + ' 14%,' + c + ' 28%,' + d + ' 42%,' + c + ' 56%,' + b + ' 72%,' + a + ' 100%)';
+
+    return {
+      auras: [
+        { n: 'Vasallo', desc: 'azul · celeste · cian', carta: 'Percival', art: G.b, ring: ring('#0f2d63', '#1f4fa3', '#4ea3ff', '#7ef0ff'), premium: false },
+        { n: 'Cortesano', desc: 'vino · rojo · rojo suave', carta: 'Lancelot', art: G.c, ring: ring('#5c1019', '#8d1b24', '#c0392b', '#ef8b7f'), premium: false },
+        { n: 'Real', desc: 'dorado · amarillo · limón · foil', carta: 'Merlín', art: G.a, ring: ring('#8a5f18', '#f2c14e', '#ffe98f', '#d9f26a'), premium: true },
+        { n: 'Mega Real', desc: 'aura blanca · foil', carta: 'Excalibur', art: G.e, ring: ring('#8d90a8', '#d7d9e6', '#ffffff', '#f2f3fa'), premium: true },
+        { n: 'Ultra Real', desc: 'grafeno · gris · gris claro · foil', carta: 'Rey Arturo', art: G.f, ring: ring('#20242c', '#4a4f5a', '#7d838f', '#a8adb8'), premium: true },
+        { n: 'Secreta', desc: 'morado · zafiro · foil', carta: 'Morgana', art: G.f, ring: ring('#2a1454', '#5b2bb0', '#8a5cf0', '#2f6dd8'), premium: true },
+        { n: 'Secreta jade', desc: 'verde · jade · esmeralda · foil', carta: 'Grial Sagrado', art: G.d, ring: ring('#08321f', '#126b45', '#1ea87a', '#6ff0bd'), premium: true }
+      ],
+      atajos: [
+        { k: '0 – 9', v: 'marca esa cantidad' },
+        { k: '↑ ↓', v: 'sumar o restar una' },
+        { k: '→ ←', v: 'carta siguiente / anterior' },
+        { k: 'Esc', v: 'salir del modo' }
+      ],
+      filmstrip: strip(22, 0),
+      filmstripMovil: strip(12, 1),
+      fichaTags: [
+        { n: 'Aliado', bg: 'rgba(145,132,217,.16)', c: '#d2cefd', sh: 'none' },
+        { n: 'Sabio', bg: 'transparent', c: 'rgba(233,233,237,.8)', sh: 'inset 0 0 0 1px rgba(233,233,237,.14)' },
+        { n: 'Real', bg: 'transparent', c: 'rgba(233,233,237,.8)', sh: 'inset 0 0 0 1px rgba(233,233,237,.14)' },
+        { n: 'Primer Bloque', bg: 'transparent', c: 'rgba(233,233,237,.6)', sh: 'inset 0 0 0 1px rgba(233,233,237,.14)' }
+      ],
+      fichaStats: [
+        { k: 'Coste', v: '5', ic: 'ph-coin', c: '#e9e9ed' },
+        { k: 'Fuerza', v: '4', ic: 'ph-sword', c: '#e9e9ed' },
+        { k: 'Repetidas', v: '2', ic: 'ph-copy', c: '#d2cefd' },
+        { k: 'Precio ref.', v: '$3.200', ic: 'ph-currency-circle-dollar', c: '#e9e9ed' }
+      ],
+      railAlbum: railFor('alb'),
+      railCambios: railFor('cam'),
+      railMazos: railFor('maz'),
+      railDatos: railFor('dat'),
+      colecciones: [
+        { n: 'Espada Sagrada', p: '83%', w: '83%', meta: '149 de 180 · faltan 31', activa: true },
+        { n: 'Helénica', p: '53%', w: '53%', meta: '96 de 180 · faltan 84' },
+        { n: 'Mundos Perdidos', p: '47%', w: '47%', meta: '169 de 360 · 2 ediciones' },
+        { n: 'Dominios de Ra', p: '17%', w: '17%', meta: '31 de 180 · faltan 149', arrastrando: true },
+        { n: 'Cruzadas', p: '64%', w: '64%', meta: '115 de 180 · faltan 65' },
+        { n: 'Imperio', p: '38%', w: '38%', meta: '68 de 180 · faltan 112' },
+        { n: 'Onyria (mía)', p: '71%', w: '71%', meta: '34 de 48 · edición propia' }
+      ].map(c => ({
+        n: c.n, p: c.p, w: c.w, meta: c.meta,
+        dropAntes: c.n === 'Helénica',
+        lift: c.arrastrando ? 'translateY(-2px) rotate(-.6deg)' : 'none',
+        gripC: c.arrastrando ? '#b5abfc' : 'rgba(233,233,237,.32)',
+        bg: c.arrastrando ? '#232532' : (c.activa ? 'rgba(145,132,217,.12)' : 'transparent'),
+        sh: c.arrastrando
+          ? 'inset 0 0 0 1px rgba(145,132,217,.5),0 10px 24px rgba(0,0,0,.55)'
+          : (c.activa ? 'inset 0 0 0 1px rgba(145,132,217,.42)' : 'none'),
+        nc: c.activa ? '#e9e9ed' : 'rgba(233,233,237,.82)',
+        pc: c.activa ? '#d2cefd' : 'rgba(233,233,237,.5)',
+        bar: c.activa ? 'linear-gradient(90deg,#5d5294,#b5abfc)' : 'rgba(233,233,237,.3)'
+      })),
+      colFiltros: [
+        { n: 'Todas', c: '#d2cefd', bg: 'rgba(145,132,217,.16)', b: 'rgba(145,132,217,.45)' },
+        { n: 'Las que me faltan', c: 'rgba(233,233,237,.72)', bg: 'transparent', b: 'rgba(233,233,237,.14)' },
+        { n: 'Repetidas', c: 'rgba(233,233,237,.72)', bg: 'transparent', b: 'rgba(233,233,237,.14)' },
+        { n: 'Por número', c: 'rgba(233,233,237,.72)', bg: 'transparent', b: 'rgba(233,233,237,.14)' }
+      ],
+      album: albumCards,
+      cambioKpis: [
+        { k: 'Repetidas', v: '214', sub: 'en 38 cartas distintas', c: '#e9e9ed', bg: '#1c1e2c', sh: 'inset 0 0 0 1px rgba(233,233,237,.07)' },
+        { k: 'Ofrecidas', v: '38', sub: '12 para cambio · 26 en venta', c: '#d2cefd', bg: 'rgba(145,132,217,.10)', sh: 'inset 0 0 0 1px rgba(145,132,217,.32)' },
+        { k: 'Cambios hechos', v: '27', sub: 'último hace 3 días', c: '#e9e9ed', bg: '#1c1e2c', sh: 'inset 0 0 0 1px rgba(233,233,237,.07)' },
+        { k: 'Vendido este año', v: '$92.400', sub: '19 ventas registradas', c: '#e9e9ed', bg: '#1c1e2c', sh: 'inset 0 0 0 1px rgba(233,233,237,.07)' }
+      ],
+      ofrecidas: [
+        ['Excalibur', 'venta', 'Espada Sagrada · nº 043 · tienes 3', '$8.500', 'ref. $7.900', G.e],
+        ['Zeus', 'cambio', 'Helénica · nº 001 · tienes 2', '—', 'ref. $12.000', G.b],
+        ['Cerbero', 'cambio', 'Helénica · nº 007 · tienes 3', '—', 'ref. $2.400', G.a],
+        ['Ramsés II', 'venta', 'Dominios de Ra · nº 001 · tienes 2', '$5.000', 'ref. $4.600', G.e],
+        ['Mordred', 'venta', 'Espada Sagrada · nº 050 · tienes 2', '$3.200', 'ref. $3.400', G.c],
+        ['Esfinge', 'cambio', 'Dominios de Ra · nº 004 · tienes 2', '—', 'ref. $1.900', G.d]
+      ].map(([n, t, meta, precio, ref, g]) => ({
+        n, meta, precio, ref, g, t,
+        tbg: t === 'cambio' ? 'rgba(145,132,217,.16)' : 'rgba(233,233,237,.08)',
+        tc: t === 'cambio' ? '#d2cefd' : 'rgba(233,233,237,.78)'
+      })),
+      historial: [
+        ['Cambiaste Cerbero por Atenea', '12 sep · Quillota', '+1 carta nueva', 'ph-arrows-left-right', 'cambio'],
+        ['Vendiste Mordred ×1', '9 sep', '+$3.200', 'ph-tag', 'venta'],
+        ['Cambiaste Avalón por Medusa', '2 sep · jornada', 'sin diferencia', 'ph-arrows-left-right', 'cambio'],
+        ['Vendiste Escarabajo Sagrado ×2', '28 ago', '+$2.800', 'ph-tag', 'venta'],
+        ['Cambiaste Kay por Percival', '21 ago', '+1 carta nueva', 'ph-arrows-left-right', 'cambio'],
+        ['Vendiste Tizona ×1', '14 ago', '+$6.100', 'ph-tag', 'venta'],
+        ['Cambiaste Balin por Osiris', '2 ago · La Serena', '+1 carta nueva', 'ph-arrows-left-right', 'cambio'],
+        ['Vendiste Ginebra ×1', '26 jul', '+$1.500', 'ph-tag', 'venta']
+      ].map(([t, fecha, v, ic, tipo]) => ({
+        t, fecha, v, ic,
+        ibg: tipo === 'cambio' ? 'rgba(145,132,217,.14)' : 'rgba(233,233,237,.07)',
+        ic2: tipo === 'cambio' ? '#b5abfc' : 'rgba(233,233,237,.7)',
+        vc: tipo === 'venta' ? '#d2cefd' : 'rgba(233,233,237,.65)'
+      })),
+      cambioSeg: [
+        { n: 'Ofrecidas', c: '#d2cefd', bg: 'rgba(145,132,217,.16)', b: 'rgba(145,132,217,.45)' },
+        { n: 'Cambios', c: 'rgba(233,233,237,.7)', bg: 'transparent', b: 'rgba(233,233,237,.14)' },
+        { n: 'Ventas', c: 'rgba(233,233,237,.7)', bg: 'transparent', b: 'rgba(233,233,237,.14)' }
+      ],
+      tabsCambios: [
+        { n: 'Catálogo', ic: 'ph-squares-four', c: 'rgba(233,233,237,.5)' },
+        { n: 'Álbum', ic: 'ph-books', c: 'rgba(233,233,237,.5)' },
+        { n: 'Mazos', ic: 'ph-stack', c: 'rgba(233,233,237,.5)' },
+        { n: 'Cambios', ic: 'ph-fill ph-arrows-left-right', c: '#d2cefd' },
+        { n: 'Datos', ic: 'ph-chart-bar', c: 'rgba(233,233,237,.5)' }
+      ],
+      mazos: [
+        { n: 'Sabios de Camelot', total: '50', falta: 'faltan 6 copias', activo: true },
+        { n: 'Olimpo agresivo', total: '50', falta: 'completo', ok: true },
+        { n: 'Faraones de control', total: '46', falta: 'faltan 14 copias' },
+        { n: 'Bestias PB', total: '50', falta: 'completo', ok: true },
+        { n: 'Prueba Nueva Era', total: '32', falta: 'en borrador' },
+        { n: 'Mazo de jornada', total: '50', falta: 'faltan 2 copias' }
+      ].map(m => ({
+        n: m.n, total: m.total, falta: m.falta,
+        bg: m.activo ? 'rgba(145,132,217,.12)' : 'transparent',
+        sh: m.activo ? 'inset 0 0 0 1px rgba(145,132,217,.42)' : 'none',
+        nc: m.activo ? '#e9e9ed' : 'rgba(233,233,237,.82)',
+        fc: m.ok ? '#b5abfc' : 'rgba(233,233,237,.5)',
+        fic: m.ok ? 'ph-check-circle' : 'ph-warning-circle'
+      })),
+      mazoGrupos: [
+        {
+          n: 'Aliados', c: '24 cartas',
+          cartas: [
+            ['Merlín', '×3 · tienes 3', 3, true], ['Lancelot', '×3 · tienes 4', 3, true],
+            ['Rey Arturo', '×2 · tienes 2', 2, true], ['Percival', '×3 · tienes 3', 3, true],
+            ['Morgana', '×2 · tienes 0', 2, false], ['Gawain', '×3 · tienes 2', 3, false]
+          ]
+        },
+        {
+          n: 'Talismanes y armas', c: '16 cartas',
+          cartas: [
+            ['Excalibur', '×1 · tienes 1', 1, true], ['Grial Sagrado', '×2 · tienes 0', 2, false],
+            ['Tizona', '×2 · tienes 2', 2, true], ['Bendición de Nimue', '×3 · tienes 3', 3, true]
+          ]
+        },
+        {
+          n: 'Oros y monumentos', c: '10 cartas',
+          cartas: [
+            ['Avalón', '×2 · tienes 2', 2, true], ['Mesa Redonda', '×1 · tienes 0', 1, false],
+            ['Camelot', '×2 · tienes 2', 2, true], ['Broceliande', '×2 · tienes 2', 2, true]
+          ]
+        }
+      ].map((g, gi) => ({
+        n: g.n, c: g.c,
+        cartas: g.cartas.map(([n, meta, qty, ok], i) => ({
+          n, meta, qty: '×' + qty,
+          g: gs[(i + gi) % 6],
+          f: ok ? 'none' : 'grayscale(1) brightness(.7)',
+          sh: gi === 0 && i === 1
+            ? 'inset 0 0 0 2px #9184d9'
+            : (ok ? 'none' : 'inset 0 0 0 1px rgba(145,132,217,.32)'),
+          mc: ok ? 'rgba(233,233,237,.5)' : '#d2cefd',
+          qc: ok ? '#e9e9ed' : '#d2cefd'
+        }))
+      })),
+      mazoKpis: [
+        { k: 'Cartas del mazo', v: '50', sub: '24 aliados · 16 talismanes · 10 oros', c: '#e9e9ed', bg: '#1c1e2c', sh: 'inset 0 0 0 1px rgba(233,233,237,.07)' },
+        { k: 'Armado', v: '44 de 50', sub: '88% con lo que tienes', c: '#e9e9ed', bg: '#1c1e2c', sh: 'inset 0 0 0 1px rgba(233,233,237,.07)' },
+        { k: 'Te faltan', v: '6 copias', sub: 'de 4 cartas · 2 en tus repetidas', c: '#d2cefd', bg: 'rgba(145,132,217,.10)', sh: 'inset 0 0 0 1px rgba(145,132,217,.32)' },
+        { k: 'Coste medio', v: '3,4', sub: 'legal en Primer Bloque', c: '#e9e9ed', bg: '#1c1e2c', sh: 'inset 0 0 0 1px rgba(233,233,237,.07)' }
+      ],
+      fichaMazoMeta: [
+        { k: 'Copias que tienes', v: '4', c: '#e9e9ed' },
+        { k: 'En otros mazos', v: '2 mazos', c: '#e9e9ed' },
+        { k: 'Repetidas libres', v: '1', c: '#d2cefd' },
+        { k: 'Precio ref.', v: '$2.600', c: '#e9e9ed' }
+      ],
+      mazoFaltan: [
+        { n: 'Morgana', meta: 'Espada Sagrada · nº 045', n2: '2 copias', g: G.f },
+        { n: 'Grial Sagrado', meta: 'Espada Sagrada · nº 049', n2: '2 copias', g: G.e },
+        { n: 'Gawain', meta: 'Espada Sagrada · nº 054', n2: '1 copia', g: G.b },
+        { n: 'Mesa Redonda', meta: 'Espada Sagrada · nº 047', n2: '1 copia', g: G.d }
+      ],
+      statsFiltros: [
+        { n: 'Todo el catálogo', c: '#d2cefd', bg: 'rgba(145,132,217,.14)', b: 'rgba(145,132,217,.42)' },
+        { n: 'Formato: todos', c: 'rgba(233,233,237,.75)', bg: 'transparent', b: 'rgba(233,233,237,.15)' },
+        { n: 'Edición: todas', c: 'rgba(233,233,237,.75)', bg: 'transparent', b: 'rgba(233,233,237,.15)' }
+      ],
+      statsKpis: [
+        { k: 'Cartas distintas', v: '1.876', sub: 'de 4.312 del catálogo', c: '#e9e9ed' },
+        { k: 'Copias totales', v: '2.418', sub: '214 repetidas', c: '#e9e9ed' },
+        { k: 'Ediciones completas', v: '3', sub: 'de 12 seguidas', c: '#d2cefd' },
+        { k: 'Cartas propias', v: '48', sub: '1 edición creada por ti', c: '#e9e9ed' },
+        { k: 'Marcadas este mes', v: '132', sub: '+18% que el mes pasado', c: '#e9e9ed' },
+        { k: 'Valor estimado', v: '$1,84M', sub: 'según precios de referencia', c: '#e9e9ed' }
+      ],
+      curva: [
+        ['0', 86, '38%'], ['1', 142, '62%'], ['2', 198, '86%'], ['3', 231, '100%'],
+        ['4', 186, '80%'], ['5', 148, '64%'], ['6', 96, '42%'], ['7', 54, '24%'], ['8+', 31, '14%']
+      ].map(([k, v, h], i) => ({
+        k, v: String(v), h,
+        bar: i === 3 ? 'linear-gradient(180deg,#b5abfc,#5d5294)' : 'linear-gradient(180deg,#4a4176,#2c2c46)'
+      })),
+      porTipo: [
+        ['Aliado', 812, '100%'], ['Talismán', 401, '49%'], ['Oro', 246, '30%'],
+        ['Arma', 189, '23%'], ['Tótem', 141, '17%'], ['Monumento', 87, '11%']
+      ].map(([k, v, w], i) => ({
+        k, v: String(v), w,
+        bar: i === 0 ? 'linear-gradient(90deg,#5d5294,#b5abfc)' : 'linear-gradient(90deg,#3f3a5c,#6c62a8)'
+      })),
+      progresoEd: [
+        ['Espada Sagrada', '149 de 180', '83%'], ['Cruzadas', '115 de 180', '64%'],
+        ['Helénica', '96 de 180', '53%'], ['Imperio', '68 de 180', '38%'],
+        ['Mundos Perdidos', '169 de 360', '47%'], ['Dominios de Ra', '31 de 180', '17%'],
+        ['Onyria (tuya)', '34 de 48', '71%'], ['Leyendas', '22 de 180', '12%']
+      ].map(([n, meta, p]) => {
+        const val = parseInt(p, 10);
+        return {
+          n, meta, p, w: p,
+          pc: val >= 70 ? '#d2cefd' : 'rgba(233,233,237,.75)',
+          bar: val >= 70 ? 'linear-gradient(90deg,#5d5294,#b5abfc)' : 'linear-gradient(90deg,#3f3a5c,#6c62a8)'
+        };
+      }),
+      rail: [
+        { n: 'Catálogo', ic: 'ph-squares-four', c: '#d2cefd', bg: 'rgba(145,132,217,.16)' },
+        { n: 'Álbum', ic: 'ph-books', c: 'rgba(233,233,237,.6)', bg: 'transparent' },
+        { n: 'Mazos', ic: 'ph-stack', c: 'rgba(233,233,237,.6)', bg: 'transparent' },
+        { n: 'Cambios', ic: 'ph-arrows-left-right', c: 'rgba(233,233,237,.6)', bg: 'transparent' },
+        { n: 'Datos', ic: 'ph-chart-bar', c: 'rgba(233,233,237,.6)', bg: 'transparent' },
+        { n: 'Cartas', ic: 'ph-plus-circle', c: 'rgba(233,233,237,.6)', bg: 'transparent' }
+      ],
+      chips: [
+        { n: 'Espada Sagrada', ic: 'ph-x', c: '#d2cefd', bg: 'rgba(145,132,217,.16)', b: 'rgba(145,132,217,.45)' },
+        { n: 'Las que tengo', ic: 'ph-x', c: '#d2cefd', bg: 'rgba(145,132,217,.16)', b: 'rgba(145,132,217,.45)' },
+        { n: 'Formato', ic: 'ph-caret-down', c: 'rgba(233,233,237,.72)', bg: 'transparent', b: 'rgba(233,233,237,.14)' },
+        { n: 'Raza', ic: 'ph-caret-down', c: 'rgba(233,233,237,.72)', bg: 'transparent', b: 'rgba(233,233,237,.14)' },
+        { n: 'Tipo', ic: 'ph-caret-down', c: 'rgba(233,233,237,.72)', bg: 'transparent', b: 'rgba(233,233,237,.14)' },
+        { n: 'Rareza', ic: 'ph-caret-down', c: 'rgba(233,233,237,.72)', bg: 'transparent', b: 'rgba(233,233,237,.14)' },
+        { n: 'Coste ≤ 6', ic: 'ph-caret-down', c: 'rgba(233,233,237,.72)', bg: 'transparent', b: 'rgba(233,233,237,.14)' }
+      ],
+      chipsMovil: [
+        { n: 'Espada Sagrada', c: '#d2cefd', bg: 'rgba(145,132,217,.16)', b: 'rgba(145,132,217,.45)' },
+        { n: 'Las que tengo', c: '#d2cefd', bg: 'rgba(145,132,217,.16)', b: 'rgba(145,132,217,.45)' },
+        { n: 'Tipo', c: 'rgba(233,233,237,.72)', bg: 'transparent', b: 'rgba(233,233,237,.14)' },
+        { n: 'Raza', c: 'rgba(233,233,237,.72)', bg: 'transparent', b: 'rgba(233,233,237,.14)' },
+        { n: 'Coste', c: 'rgba(233,233,237,.72)', bg: 'transparent', b: 'rgba(233,233,237,.14)' }
+      ],
+      vitrina,
+      vitrinaMovil: vitrina,
+      vitrinaSel: vitrina.concat(albumCards.slice(12, 15).map(a => ({
+        n: a.n, num: a.num, g: a.g, qty: a.qty, sh: a.sh, f: a.f,
+        tipo: 'Aliado', rareza: 'Cortesano'
+      }))).map((v, i) => i === 0
+        ? Object.assign({}, v, { sh: '0 0 0 2px #9184d9,0 10px 26px rgba(0,0,0,.5)' })
+        : v),
+      tabs: [
+        { n: 'Catálogo', ic: 'ph-fill ph-squares-four', c: '#d2cefd' },
+        { n: 'Álbum', ic: 'ph-books', c: 'rgba(233,233,237,.5)' },
+        { n: 'Mazos', ic: 'ph-stack', c: 'rgba(233,233,237,.5)' },
+        { n: 'Cambios', ic: 'ph-arrows-left-right', c: 'rgba(233,233,237,.5)' },
+        { n: 'Datos', ic: 'ph-chart-bar', c: 'rgba(233,233,237,.5)' }
+      ],
+      topTabs: [
+        { n: 'Catálogo', c: '#d2cefd', bg: 'rgba(145,132,217,.16)' },
+        { n: 'Colecciones', c: 'rgba(233,233,237,.65)', bg: 'transparent' },
+        { n: 'Mazos', c: 'rgba(233,233,237,.65)', bg: 'transparent' },
+        { n: 'Cambio y ventas', c: 'rgba(233,233,237,.65)', bg: 'transparent' },
+        { n: 'Estadísticas', c: 'rgba(233,233,237,.65)', bg: 'transparent' }
+      ],
+      selects: [
+        { k: 'Inventario', v: 'Todas las cartas', c: '#e9e9ed' },
+        { k: 'Formato', v: 'Primer Bloque', c: '#d2cefd' },
+        { k: 'Edición', v: 'Espada Sagrada', c: '#d2cefd' },
+        { k: 'Raza', v: 'Todas', c: 'rgba(233,233,237,.6)' },
+        { k: 'Tipo', v: 'Todos', c: 'rgba(233,233,237,.6)' },
+        { k: 'Ordenar por', v: 'Número de carta', c: '#e9e9ed' }
+      ],
+      cols: [
+        { n: 'Nº', a: 'left' }, { n: 'Carta', a: 'left' }, { n: 'Tipo', a: 'left' },
+        { n: 'Raza', a: 'left' }, { n: 'Coste', a: 'center' }, { n: 'Fuerza', a: 'center' },
+        { n: 'Rareza', a: 'left' }, { n: 'Copias', a: 'right' }
+      ],
+      filas: CARTAS.slice(0, 10).map((c, i) => {
+        const [n, tipo, rareza, num, qty, g] = c;
+        const [rbg, rc] = RAREZA_T[rareza];
+        return {
+          num, n, tipo, rareza, rbg, rc, g,
+          raza: ['Sabio', 'Arma', 'Caballero', 'Hechicera', 'Caballero', 'Monumento', 'Cortesana', 'Talismán', 'Caballero', 'Monumento'][i],
+          coste: [5, 2, 6, 4, 4, 3, 2, 5, 4, 3][i],
+          fuerza: [4, '—', 6, 3, 5, '—', 2, '—', 4, '—'][i],
+          qty: qty ? String(qty) : '0',
+          qc: qty ? '#e9e9ed' : 'rgba(233,233,237,.35)',
+          nc: qty ? '#e9e9ed' : 'rgba(233,233,237,.55)',
+          fl: qty ? 'none' : 'grayscale(1) brightness(.7)',
+          bg: i === 0 ? 'rgba(145,132,217,.10)' : 'transparent'
+        };
+      }),
+      filasMovil: CARTAS.slice(0, 9).map((c, i) => {
+        const [n, tipo, rareza, num, qty, g] = c;
+        return {
+          n, g, meta: 'nº ' + num + ' · ' + tipo + ' · ' + rareza,
+          qty: qty ? String(qty) : '0',
+          qc: qty ? '#e9e9ed' : 'rgba(233,233,237,.35)',
+          nc: qty ? '#e9e9ed' : 'rgba(233,233,237,.55)',
+          fl: qty ? 'none' : 'grayscale(1) brightness(.7)',
+          bg: i === 0 ? 'rgba(145,132,217,.10)' : '#1c1e2c'
+        };
+      }),
+      fichaMeta: [
+        { k: 'En tus mazos', v: '2 mazos', c: '#e9e9ed' },
+        { k: 'Repetidas', v: '2 para cambio', c: '#d2cefd' },
+        { k: 'Precio ref.', v: '$3.200', c: '#e9e9ed' },
+        { k: 'Banlist', v: 'Legal en PB', c: '#e9e9ed' }
+      ],
+      albumTabs: [
+        { n: 'Todo el catálogo', c: '#e9e9ed', sh: 'inset 0 -2px 0 #9184d9' },
+        { n: 'Primer Bloque', c: 'rgba(233,233,237,.55)', sh: 'none' },
+        { n: 'Primera Era', c: 'rgba(233,233,237,.55)', sh: 'none' },
+        { n: 'Segundo Bloque', c: 'rgba(233,233,237,.55)', sh: 'none' },
+        { n: 'Nueva Era', c: 'rgba(233,233,237,.55)', sh: 'none' },
+        { n: 'Mis ediciones', c: 'rgba(233,233,237,.55)', sh: 'none' }
+      ],
+      estantes: [
+        {
+          n: 'Espada Sagrada', fmt: 'Primer Bloque', meta: '149 de 180 · te faltan 31 · la más cercana de cerrar',
+          p: '83%', w: '83%', pc: '#d2cefd', bar: 'linear-gradient(90deg,#5d5294,#b5abfc)',
+          accion: 'Inventariar', aic: 'ph-check-square-offset', ab: '#9184d9', ac: '#9184d9',
+          resto: '169 más', cartas: CARTAS.map(mapCard)
+        },
+        {
+          n: 'Helénica', fmt: 'Primer Bloque', meta: '96 de 180 · te faltan 84',
+          p: '53%', w: '53%', pc: '#e9e9ed', bar: 'linear-gradient(90deg,#4a4176,#9184d9)',
+          accion: 'Inventariar', aic: 'ph-check-square-offset', ab: 'rgba(233,233,237,.16)', ac: 'rgba(233,233,237,.78)',
+          resto: '169 más',
+          cartas: [
+            ['Zeus', 'Aliado', 'Real', '001', 1, G.b],
+            ['Aquiles', 'Aliado', 'Real', '002', 2, G.e],
+            ['Odiseo', 'Aliado', 'Cortesano', '003', 0, G.a],
+            ['Atenea', 'Aliado', 'Real', '004', 1, G.f],
+            ['Escudo de Ayax', 'Arma', 'Cortesano', '005', 0, G.d],
+            ['Hidra', 'Aliado', 'Cortesano', '006', 0, G.c],
+            ['Cerbero', 'Aliado', 'Vasallo', '007', 3, G.b],
+            ['Oráculo de Delfos', 'Monumento', 'Real', '008', 0, G.e],
+            ['Medusa', 'Aliado', 'Cortesano', '009', 1, G.a],
+            ['Caballo de Troya', 'Monumento', 'Real', '010', 0, G.d]
+          ].map(mapCard)
+        },
+        {
+          n: 'Dominios de Ra', fmt: 'Primer Bloque', meta: '31 de 180 · recién empezada',
+          p: '17%', w: '17%', pc: 'rgba(233,233,237,.75)', bar: 'linear-gradient(90deg,#3f3a5c,#6c62a8)',
+          accion: 'Inventariar', aic: 'ph-check-square-offset', ab: 'rgba(233,233,237,.16)', ac: 'rgba(233,233,237,.78)',
+          resto: '169 más',
+          cartas: [
+            ['Ramsés II', 'Aliado', 'Real', '001', 1, G.e],
+            ['Anubis', 'Aliado', 'Real', '002', 0, G.a],
+            ['Cleopatra', 'Aliado', 'Cortesano', '003', 0, G.c],
+            ['Esfinge', 'Aliado', 'Cortesano', '004', 2, G.d],
+            ['Ojo de Horus', 'Talismán', 'Real', '005', 0, G.f],
+            ['Pirámide de Giza', 'Monumento', 'Real', '006', 0, G.e],
+            ['Osiris', 'Aliado', 'Real', '007', 0, G.b],
+            ['Escarabajo Sagrado', 'Talismán', 'Vasallo', '008', 1, G.d],
+            ['Nefertiti', 'Aliado', 'Cortesano', '009', 0, G.c],
+            ['Maldición del Faraón', 'Talismán', 'Cortesano', '010', 0, G.a]
+          ].map(mapCard)
+        }
+      ],
+      estantesMovil: [
+        {
+          n: 'Espada Sagrada', meta: '149 de 180 · faltan 31', p: '83%', w: '83%',
+          pc: '#d2cefd', bar: 'linear-gradient(90deg,#5d5294,#b5abfc)', cartas: CARTAS.slice(0, 6).map(mapCard)
+        },
+        {
+          n: 'Helénica', meta: '96 de 180 · faltan 84', p: '53%', w: '53%',
+          pc: '#e9e9ed', bar: 'linear-gradient(90deg,#4a4176,#9184d9)',
+          cartas: [
+            ['Zeus', 'Aliado', 'Real', '001', 1, G.b],
+            ['Aquiles', 'Aliado', 'Real', '002', 2, G.e],
+            ['Odiseo', 'Aliado', 'Cortesano', '003', 0, G.a],
+            ['Atenea', 'Aliado', 'Real', '004', 1, G.f],
+            ['Hidra', 'Aliado', 'Cortesano', '006', 0, G.c],
+            ['Medusa', 'Aliado', 'Cortesano', '009', 1, G.a]
+          ].map(mapCard)
+        },
+        {
+          n: 'Dominios de Ra', meta: '31 de 180 · recién empezada', p: '17%', w: '17%',
+          pc: 'rgba(233,233,237,.75)', bar: 'linear-gradient(90deg,#3f3a5c,#6c62a8)',
+          cartas: [
+            ['Ramsés II', 'Aliado', 'Real', '001', 1, G.e],
+            ['Anubis', 'Aliado', 'Real', '002', 0, G.a],
+            ['Cleopatra', 'Aliado', 'Cortesano', '003', 0, G.c],
+            ['Esfinge', 'Aliado', 'Cortesano', '004', 2, G.d],
+            ['Ojo de Horus', 'Talismán', 'Real', '005', 0, G.f],
+            ['Osiris', 'Aliado', 'Real', '007', 0, G.b]
+          ].map(mapCard)
+        }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
