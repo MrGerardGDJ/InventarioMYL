@@ -378,6 +378,64 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-19 (36ª iteración) — Rediseño "Vitrina": Catálogo con ficha fija, Modal de detalle y Modo inventariar
+
+Segundo bloque grande del rediseño (ver 35ª iteración para el contexto completo del
+bundle y el plan de 11 fases). Cubre las fases 3, 4 y 5.
+
+- **Catálogo — tarjeta-arte nueva** (`cardEl()`): el nombre, tipo·rareza, número de
+  edición y badge de cantidad se superponen al arte con velo inferior, en vez de vivir en
+  un `.card-body` separado. Un clic ya no abre el modal — **elige** la carta (la muestra
+  en la ficha fija); el modal se abre con doble clic, el botón de expandir de la ficha o
+  la tecla Espacio. Cambios y la composición de Mazos siguen con su markup viejo
+  (`.card-body`/`.qty-row`/`.badge-*`) sin tocar — no pasan por `cardEl()`, tienen su
+  propio generador (`tradeCardEl`/`deckCardTileHtml`) que se rediseña en su propia fase.
+  Solo se ajustó la base compartida `.card` (radio, sombra en vez de borde), verificado
+  que no rompe nada en esas dos vistas con datos reales.
+- **Ficha fija** (panel nuevo de 318px al lado de la grilla): arte grande, ‹ › para
+  recorrer la lista filtrada, stepper de copias, habilidad, metadatos 2×2 (En tus
+  mazos/Repetidas — definida como `qty-1` a falta de un campo formal/Precio ref./Banlist)
+  y las acciones Añadir al mazo activo/Ofrecer/Vender.
+- **Chips de filtro**: los 8 controles del aside `.filters` de 260px (selects + rango de
+  coste) pasan a una fila de píldoras horizontal dentro del contenido — mismos ids, misma
+  lógica de `applyFilters()`, solo un `<select>` restyleado (`appearance:none` + ícono
+  caret) en vez de un dropdown de sidebar. Colecciones/Cambios/Mazos conservan su aside de
+  siempre.
+- **Atajos de teclado** del Catálogo (con una carta elegida, fuera de inputs/modal):
+  ← → recorren la ficha, ↑ ↓ suman/restan una copia, 0–9 fijan la cantidad exacta,
+  Espacio abre el modal. Esc cierra el modal si está abierto, si no deselecciona.
+  **No** se agregó el conmutador grilla/tabla (la vista de tabla es una función nueva que
+  ningún documento del bundle especifica) ni se dejó el botón "Inventariar" sin función —
+  se esperó a que la fase 5 existiera de verdad.
+- **Modal de detalle** (2b): pasa a 928px con dos columnas — izquierda `--color-rail` de
+  356px con el arte y la fila de copias debajo; derecha con el nombre a 30px, tags (tipo
+  con tinte de acento, resto contorno) y 4 tarjetas de stat nuevas (Coste, Fuerza,
+  Repetidas, Precio ref. — antes coste/fuerza eran tags de texto plano). El resto de
+  controles que ya existían y el handoff no describe (disponible para cambio,
+  editar/eliminar, ficha ampliada de la API) se conservan tal cual, solo con la paleta
+  nueva.
+  - **Bug real encontrado con la propia verificación**: al mover la fila de copias dentro
+    de `.cd-image`, sus botones +/− quedaron dentro del mismo contenedor al que estaba
+    atado el zoom de imagen (`data-zoom` en todo `.cd-image`) — un clic en "+" también
+    disparaba el zoom a pantalla completa. Corregido atando el zoom solo a la `<img>`/su
+    hint, no al contenedor completo.
+- **Modo inventariar** (2a, vista nueva `#view-inventariar`, no es un destino del rail):
+  pantalla completa para recorrer una lista de cartas marcando cantidades rápido — carta
+  central de 326px con vecinas atenuadas, stepper grande, atajos en píldoras, tira de
+  miniaturas con badge, cabecera con progreso/contador de sesión/toggle "Solo sin marcar"
+  (auto-avanza al marcar). Dos entradas: botón "Inventariar" del Catálogo (usa
+  `state.filtered`) y uno igual en el detalle de una Colección (usa `collectionCards`).
+  - **Bug evitado antes de que pasara**: el modo inventariar registra su propio listener
+    de teclado; sin cuidado, un mismo ArrowRight/dígito habría disparado a la vez los
+    atajos del modo Y los de la ficha fija (que sigue "escuchando" de fondo, oculta). Se
+    agregó `if (inv) return` al principio del handler de la ficha para que ceda el paso.
+
+Verificado con Playwright en cada commit (0 `pageerror` en todos): selección sin abrir
+modal, sincronización ficha ⇄ grilla ⇄ modal en ambos sentidos, doble clic/Espacio abren
+el modal, secuencia completa de atajos del Catálogo, filtro por chip, modal con 4 stat
+cards y sin el bug del zoom, y el modo inventariar de punta a punta (marcar con teclado,
+avanzar, tira de miniaturas, salir, cantidades persistidas de verdad en `localStorage`).
+
 ### 2026-09-19 (35ª iteración) — Rediseño "Vitrina" (Nocturne): Fundamentos + Rail de navegación
 
 El dueño trajo un bundle de 5 documentos de handoff generados por una herramienta externa
