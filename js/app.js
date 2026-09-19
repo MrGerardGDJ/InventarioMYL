@@ -38,6 +38,7 @@ const state = {
   colFilter: "all", // filtro de la vista Colecciones: all | missing | owned
   prices: {},       // data/prices.json → { cardId: { mylserena, mesaredonda } }, cobertura parcial
   banlist: null,    // data/banlist.json → { meta, entries: [{edition, editionName, name, status, maxCopies}] }
+  selectedCardId: null, // carta elegida en la grilla del Catálogo, la muestra la ficha fija
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -476,7 +477,7 @@ function renderGrid(reset) {
 function cardEl(card, navList) {
   const qty = store.getQty(card.id);
   const el = document.createElement("div");
-  el.className = "card" + (qty > 0 ? " owned" : "");
+  el.className = "card" + (qty > 0 ? " owned" : "") + (state.selectedCardId === card.id ? " selected" : "");
   el.dataset.id = card.id;
 
   const dName = displayName(card);
@@ -484,38 +485,188 @@ function cardEl(card, navList) {
   const img = card.image
     ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'placeholder',innerHTML:'<div class=ph-name>${escapeAttr(dName)}</div>'}))" />`
     : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div>${card.editionName || ""}</div>`;
+  const numLabel = card.specialId ? escapeHtml(card.specialId) : Number.isFinite(num) ? "#" + num : "";
 
-  const activeDeck = store.getDeck(store.getSetting("activeDeckId"));
-  const deckBtn = `<button class="qty-btn deck-add" title="${activeDeck ? "Añadir a «" + escapeAttr(activeDeck.name) + "»" : "Añadir a un mazo"}">🃏＋</button>`;
-
+  // Tarjeta-arte (ver design_handoff_inventario_vitrina/README.md, 3a): el
+  // texto y los controles se superponen al arte con un velo inferior, en
+  // vez de vivir en un cuerpo separado como en Cambios/Mazos (que siguen
+  // usando .card-body/.card-name/.qty-row con su propio look, sin
+  // redisñar todavía). Un clic ELIGE la carta (actualiza la ficha fija);
+  // el modal se abre con el botón de expandir de la ficha, doble clic o
+  // la tecla Espacio.
   el.innerHTML = `
-    <div class="card-img" data-act="detail">
-      ${card.cost != null ? `<span class="badge-cost">${card.cost}</span>` : ""}
-      ${card.strength != null ? `<span class="badge-str">${card.strength}</span>` : ""}
-      ${card.specialId ? `<span class="badge-num special">${escapeHtml(card.specialId)}</span>` : Number.isFinite(num) ? `<span class="badge-num">#${num}</span>` : ""}
+    <div class="card-img" data-act="select">
       ${img}
-    </div>
-    <div class="card-body">
-      <div class="card-name">${escapeHtml(dName)}</div>
-      <div class="card-meta">${escapeHtml(card.race)} · ${escapeHtml(card.type)}</div>
-      <div class="card-meta">${escapeHtml(card.editionName || "")}</div>
-      <div data-role="avail">${availableMetaHtml(card.id)}</div>
-      <div class="qty-row">
-        <button class="qty-btn" data-act="minus">−</button>
-        <span class="qty-num ${qty === 0 ? "zero" : ""}" data-role="qty">${qty}</span>
-        <button class="qty-btn" data-act="plus">+</button>
-        ${deckBtn}
+      <div class="v-tex"></div>
+      <div class="v-veil"></div>
+      ${numLabel ? `<span class="v-num">${numLabel}</span>` : ""}
+      <span class="v-qty ${qty === 0 ? "zero" : ""}" data-role="qty">${qty}</span>
+      <div class="v-info">
+        <div class="v-name">${escapeHtml(dName)}</div>
+        <div class="v-meta">${escapeHtml(card.type)} · ${escapeHtml(card.rarity || "")}</div>
+      </div>
+      <div class="v-hover">
+        <button class="v-minus" data-act="minus" title="Quitar copia">−</button>
+        <button class="v-plus" data-act="plus" title="Agregar copia">+</button>
       </div>
     </div>`;
 
   el.addEventListener("click", (e) => {
-    if (e.target.closest(".deck-add")) { addToDeckQuick(card); return; }
     const act = e.target.closest("[data-act]")?.dataset.act;
     if (act === "plus") changeQty(el, card, +1);
     else if (act === "minus") changeQty(el, card, -1);
-    else if (act === "detail") openModal(card, navList);
+    else if (act === "select") selectCard(card, navList);
   });
+  el.querySelector(".card-img").addEventListener("dblclick", () => openModal(card, navList));
   return el;
+}
+
+/* ===================== Ficha fija (panel derecho del Catálogo) =====================
+   Panel de 318px que muestra la carta elegida en la grilla sin abrir el
+   modal (ver README del handoff, pantalla 3a). Un clic en una tarjeta la
+   selecciona; ‹ › recorren navList (la misma lista filtrada que usa el
+   modal), y el botón de expandir/doble clic/Espacio abren el modal. */
+let fichaNavList = null;
+let fichaNavIndex = -1;
+
+function selectCard(card, navList) {
+  const prevId = state.selectedCardId;
+  state.selectedCardId = card.id;
+  fichaNavList = navList || null;
+  fichaNavIndex = fichaNavList ? fichaNavList.findIndex((c) => c.id === card.id) : -1;
+  if (prevId && prevId !== card.id) {
+    const prevEl = document.querySelector(`.card[data-id="${CSS.escape(prevId)}"]`);
+    if (prevEl) prevEl.classList.remove("selected");
+  }
+  const el = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+  if (el) el.classList.add("selected");
+  renderFicha(card);
+}
+
+function fichaNavStep(delta) {
+  if (!fichaNavList) return;
+  const i = fichaNavIndex + delta;
+  if (i < 0 || i >= fichaNavList.length) return;
+  selectCard(fichaNavList[i], fichaNavList);
+}
+
+// Reparte "en tus mazos" (cuántos mazos distintos la incluyen) y "repetidas"
+// (copias más allá de la primera — no hay un concepto formal de "repetida"
+// en el store, se define acá como qty-1 para no inventar un campo nuevo).
+function fichaMetaGrid(card) {
+  const qty = store.getQty(card.id);
+  const deckCount = store.getDecks().filter((d) => (d.cards[card.id] || 0) > 0).length;
+  const repetidas = Math.max(0, qty - 1);
+  const price = cardPriceInfo(card.id);
+  const priceParts = price ? [price.mylserena, price.mesaredonda].filter((v) => v != null) : [];
+  const priceLabel = priceParts.length ? priceParts.map(fmtCLP).join(" / ") : "—";
+  const ban = getBanlistEntry(card);
+  const banLabel = ban ? (ban.status === "banned" ? "Prohibida" : `Máx. ${ban.maxCopies}`) : "Legal";
+  return [
+    ["En tus mazos", deckCount ? `${deckCount} mazo${deckCount === 1 ? "" : "s"}` : "Ninguno"],
+    ["Repetidas", String(repetidas)],
+    ["Precio ref.", priceLabel],
+    ["Banlist", banLabel],
+  ].map(([k, v]) => `<div class="ficha-meta-item"><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join("");
+}
+
+function renderFicha(card) {
+  $("#ficha-empty").classList.add("hidden");
+  $("#ficha-body").classList.remove("hidden");
+  $("#ficha-prev").disabled = !fichaNavList || fichaNavIndex <= 0;
+  $("#ficha-next").disabled = !fichaNavList || fichaNavIndex < 0 || fichaNavIndex >= fichaNavList.length - 1;
+
+  const dName = displayName(card);
+  const img = card.image
+    ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" />`
+    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div></div>`;
+  $("#ficha-art").innerHTML = `
+    <div class="holo" data-rarity="">
+      <div class="holo-art">
+        ${img}
+        <div class="v-veil"></div>
+        <div class="ficha-art-badges">
+          ${card.cost != null ? `<span class="ficha-pill"><i class="ph ph-coin"></i>${card.cost}</span>` : ""}
+          ${card.strength != null ? `<span class="ficha-pill"><i class="ph ph-sword"></i>${card.strength}</span>` : ""}
+        </div>
+      </div>
+    </div>
+    <div class="ficha-name">${escapeHtml(dName)}</div>
+    <div class="ficha-sub muted">${escapeHtml(card.editionName || "")} · ${cardLabel(card)} · ${escapeHtml(card.rarity || "")}</div>`;
+
+  const qty = store.getQty(card.id);
+  $("#ficha-qty-num").textContent = qty;
+  $("#ficha-qty-num").classList.toggle("zero", qty === 0);
+  const avail = store.getAvailableQty(card.id);
+  $("#ficha-avail").textContent = avail > 0 ? `Disponible ×${avail}` : "";
+
+  $("#ficha-ability").innerHTML = card.ability ? nl2br(card.ability) : `<span class="muted">Sin texto.</span>`;
+  $("#ficha-meta-grid").innerHTML = fichaMetaGrid(card);
+
+  const activeDeck = store.getDeck(store.getSetting("activeDeckId"));
+  $("#ficha-add-deck").title = activeDeck ? `Añadir a «${activeDeck.name}»` : "Elegir mazo";
+}
+
+// Etiqueta de posición dentro de la edición: "#42" numeradas, el specialId
+// en las promocionales/especiales (mismo criterio que la píldora de la
+// grilla, ver cardEl()).
+function cardLabel(card) {
+  const num = cardNum(card);
+  if (card.specialId) return escapeHtml(card.specialId);
+  return Number.isFinite(num) ? "#" + num : "—";
+}
+
+// Sincroniza SOLO la cifra/avail de la ficha cuando la cantidad cambia
+// desde la grilla o el modal (sin volver a pintar toda la ficha).
+function refreshFichaQty(cardId) {
+  const qtyEl = $("#ficha-qty-num");
+  if (!qtyEl || state.selectedCardId !== cardId) return;
+  const qty = store.getQty(cardId);
+  qtyEl.textContent = qty;
+  qtyEl.classList.toggle("zero", qty === 0);
+  $("#ficha-avail").textContent = (() => {
+    const avail = store.getAvailableQty(cardId);
+    return avail > 0 ? `Disponible ×${avail}` : "";
+  })();
+}
+
+function fichaSelectedCard() {
+  return state.selectedCardId ? cardById(state.selectedCardId) : null;
+}
+
+function bindFichaEvents() {
+  $("#ficha-prev").addEventListener("click", () => fichaNavStep(-1));
+  $("#ficha-next").addEventListener("click", () => fichaNavStep(+1));
+  $("#ficha-expand").addEventListener("click", () => {
+    const card = fichaSelectedCard();
+    if (card) openModal(card, fichaNavList, fichaNavIndex);
+  });
+  $("#ficha-minus").addEventListener("click", () => {
+    const card = fichaSelectedCard();
+    if (!card) return;
+    const gridEl = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+    if (gridEl) changeQty(gridEl, card, -1);
+    else { store.addQty(card.id, -1); refreshFichaQty(card.id); }
+  });
+  $("#ficha-plus").addEventListener("click", () => {
+    const card = fichaSelectedCard();
+    if (!card) return;
+    const gridEl = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+    if (gridEl) changeQty(gridEl, card, +1);
+    else { store.addQty(card.id, +1); refreshFichaQty(card.id); }
+  });
+  $("#ficha-add-deck").addEventListener("click", () => {
+    const card = fichaSelectedCard();
+    if (card) addToDeckQuick(card);
+  });
+  $("#ficha-offer").addEventListener("click", () => {
+    const card = fichaSelectedCard();
+    if (card) openTradeModal(card);
+  });
+  $("#ficha-sell").addEventListener("click", () => {
+    const card = fichaSelectedCard();
+    if (card) openSellModal(card);
+  });
 }
 
 // Reparte el total que tienes de una carta en 3 baldes que SIEMPRE suman el
@@ -565,6 +716,7 @@ function changeQty(el, card, delta) {
   if (availEl) availEl.innerHTML = availableMetaHtml(card.id);
   updateResultCount();
   if (state.view === "colecciones") updateCollectionProgress();
+  if (state.selectedCardId === card.id) refreshFichaQty(card.id);
 }
 
 /* ===================== Modal detalle ===================== */
@@ -3066,6 +3218,9 @@ function bindEvents() {
   // Rail de navegación
   $$(".rail-item[data-view]").forEach((t) => t.addEventListener("click", () => switchView(t.dataset.view)));
   $("#rail-add-card").addEventListener("click", () => openCardForm(null));
+
+  // Ficha fija del Catálogo
+  bindFichaEvents();
 
   // Buscador global: filtra el Catálogo y también la vista activa
   // (dentro de una colección, del mazo abierto, o de Cambio y Ventas)

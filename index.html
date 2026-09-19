@@ -157,6 +157,42 @@
         <div id="grid-empty" class="empty hidden">No hay cartas que coincidan con los filtros.</div>
         <button id="load-more" class="btn load-more hidden">Cargar más</button>
       </div>
+
+      <aside class="ficha" id="card-ficha">
+        <div class="ficha-empty" id="ficha-empty">
+          <p class="muted">Elegí una carta de la grilla para verla acá.</p>
+        </div>
+        <div class="ficha-body hidden" id="ficha-body">
+          <div class="ficha-top">
+            <span class="ficha-kicker">Carta elegida</span>
+            <div class="ficha-nav">
+              <button id="ficha-prev" title="Anterior (←)"><i class="ph ph-caret-left"></i></button>
+              <button id="ficha-next" title="Siguiente (→)"><i class="ph ph-caret-right"></i></button>
+              <button id="ficha-expand" title="Ver detalle completo (Espacio)"><i class="ph ph-arrows-out"></i></button>
+            </div>
+          </div>
+          <div class="ficha-art" id="ficha-art"></div>
+          <div class="ficha-qty">
+            <button class="ficha-qty-btn" id="ficha-minus">−</button>
+            <span class="ficha-qty-num" id="ficha-qty-num">0</span>
+            <button class="ficha-qty-btn plus" id="ficha-plus">+</button>
+            <span class="ficha-avail muted" id="ficha-avail"></span>
+          </div>
+          <div class="ficha-section">
+            <span class="ficha-kicker">Habilidad</span>
+            <p id="ficha-ability"></p>
+          </div>
+          <div class="ficha-meta-grid" id="ficha-meta-grid"></div>
+          <div class="ficha-actions">
+            <button class="btn ficha-btn-primary" id="ficha-add-deck"><i class="ph ph-stack-plus"></i> Añadir al mazo activo</button>
+            <div class="ficha-actions-row">
+              <button class="btn" id="ficha-offer"><i class="ph ph-arrows-left-right"></i> Ofrecer</button>
+              <button class="btn" id="ficha-sell"><i class="ph ph-tag"></i> Vender</button>
+            </div>
+          </div>
+          <div class="ficha-foot muted">← → recorrer · 0–9 copias</div>
+        </div>
+      </aside>
     </section>
 
     <!-- ===== VISTA COLECCIONES ===== -->
