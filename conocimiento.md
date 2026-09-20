@@ -378,6 +378,68 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-20 (94ª iteración) — Segunda pasada de móvil: toolbar en íconos, filtros de Cambios, separación visual del menú inferior — y corrige una regresión real que metió la 93ª iteración (barra inferior tapando toda la pantalla)
+
+El dueño marcó con capturas en rosa 4 zonas del sitio en vivo que seguían viéndose
+"amontonadas" después de la 93ª iteración, preguntando si no había ya un patrón de UI
+estándar para esto. Se aplicaron 3 patrones conocidos de diseño móvil:
+
+- **Barra de acciones del catálogo** (Carta manual/Ediciones/Importar/Exportar):
+  4 botones con texto completo se apilaban en 2 filas. Pasan a ser solo el ícono en
+  móvil (`.btn-label{display:none}` bajo `max-width:760px`), con `title` para
+  accesibilidad — el patrón estándar de toolbar compacto. Se agregaron íconos Phosphor
+  a Ediciones (`ph-cards`) e Importar/Exportar (`ph-upload-simple`/`ph-download-simple`,
+  verificados contra `assets/phosphor/regular.css` antes de usarlos — el selector real
+  ahí es `.ph.ph-<nombre>:before`, no `.ph-<nombre>::before`, así que un grep ingenuo
+  los daba por inexistentes cuando sí estaban).
+- **Filtros de Cambios** (`.trade-toolbar`/`.trade-filter-select`): mismo bug que ya se
+  había corregido en el catálogo (91ª/93ª) pero en un bloque distinto que no comparte
+  clase — `<select>` nativos sin tope de ancho, apilados uno por fila. Mismo tratamiento:
+  tira horizontal con scroll + `max-width` con elipsis.
+- **Menú inferior sin jerarquía visual**: en la barra fija de 7 íconos (5 pestañas +
+  sincronizar + tema) todos se veían como un solo grupo indistinguible — el dueño marcó
+  justo esa zona pensando que "Estadísticas" era parte del cluster de utilidades. Se
+  agregó un separador (`border-left` + espacio) entre `.rail-nav` y `.rail-bottom`, y los
+  íconos de utilidad se redujeron un poco, para que se lea como "navegación | utilidades"
+  en vez de 7 íconos sueltos.
+
+**Regresión real encontrada verificando lo anterior** (antes de shippear, no llegó a
+producción sin arreglo): al agregar `.rail-bottom{flex:none; border-left; padding-left}`
+para el separador, Playwright detectó que `#btn-export` ya no se podía clickear en móvil
+— `.rail` estaba interceptando el clic en TODA la pantalla (`elementFromPoint` devolvía
+`aside.rail` en el punto del botón, con `rail.height = 844` = el alto completo del
+viewport). La causa era un efecto secundario de la 93ª iteración: para resolver el
+desborde de `width:100%` que `box-sizing:content-box` le agregaba a `.rail` en móvil (ver
+entrada anterior), se cambió `height:58px` (fijo) por `min-height:58px`, pero la regla
+base de `.rail` (fuera de cualquier media query, pensada para escritorio) fija
+`height: 100vh` — quitar la propiedad `height` del bloque `@media(max-width:760px)` NO
+anula esa regla base, `min-height` es una propiedad distinta. Sin un `height` explícito
+que la pise, `.rail` heredaba `height:100vh` (844px) tapando toda la pantalla con un
+elemento `position:fixed` invisible-pero-clicable por encima de todo (z-index:30) — el
+contenido se veía bien porque el fondo de `.rail` es transparente fuera de sus hijos
+visibles, pero cualquier toque en cualquier parte de la pantalla que no fuera exactamente
+un botón del rail quedaba absorbido por él. Corregido agregando `height: auto` junto al
+`min-height: 58px` en el mismo bloque, para que el alto vuelva a calcularse por
+contenido (como el `height:auto` original antes de la 93ª iteración) en vez de heredar el
+100vh de escritorio, conservando el `min-height` que sí hacía falta para el
+`env(safe-area-inset-bottom)`.
+
+Verificación: recorrido Playwright de las 5 vistas en 390×844 confirmando
+`document.body.scrollWidth === innerWidth` en todas, `.rail` con `height` exacto de 58px
+anclado al fondo (no 100vh), `elementFromPoint` sobre `#btn-export` devolviendo el botón
+mismo (no `.rail`), el dropdown de Exportar abriendo con un clic real, y la tira de
+filtros de Cambios con `overflow-x:auto` en vez de apilarse. 0 `pageerror`. `node --check`
+sobre los `.js` (sin cambios este bloque, solo `index.html`/`css/styles.css`).
+
+**Pendiente, decisión del dueño**: la vista Colecciones (y Mazos, misma estructura) usa
+un layout de lista+detalle de dos columnas que en móvil se apilan una sobre otra (lista
+completa arriba, detalle abajo) — el dueño marcó esa zona también. El patrón estándar para
+listas+detalle en pantallas angostas es navegación tipo "empujar" (mostrar solo la lista
+primero; al tocar un ítem, la lista se oculta y el detalle ocupa toda la pantalla con una
+flecha "‹ Volver" arriba) — es un cambio de comportamiento (JS), no solo CSS, así que se
+dejó para confirmar con el dueño antes de tocar `renderCollectionsView()`/`renderDeckList()`
+en `js/app.js`.
+
 ### 2026-09-20 (93ª iteración) — Corrige 3 problemas de diseño móvil reportados con capturas del sitio en vivo: grilla del catálogo, filtros amontonados y menú inferior "invisible" en Estadísticas
 
 El dueño reportó, con capturas de teléfono de `mrgerardgdj.github.io/InventarioMYL`, tres
