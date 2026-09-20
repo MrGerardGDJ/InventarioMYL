@@ -1896,6 +1896,7 @@ function renderCollectionsView() {
     row.querySelector(".d-name").onclick = () => {
       store.setSetting("activeCollectionId", col.id);
       renderCollectionsView();
+      $("#view-colecciones").classList.add("mobile-detail");
     };
     row.querySelector("[data-del]").onclick = () => {
       if (!confirm(`¿Eliminar la colección «${col.name}»?\n\n(No borra las cantidades de tu inventario)`)) return;
@@ -2210,6 +2211,7 @@ function createCollectionFromModal() {
   store.setSetting("activeCollectionId", col.id);
   closeCollectionModal();
   renderCollectionsView();
+  $("#view-colecciones").classList.add("mobile-detail");
   showToast(`Colección «${name}» creada ✓ (${eds.length} edición${eds.length === 1 ? "" : "es"})`);
 }
 function bindCollectionEvents() {
@@ -2918,6 +2920,7 @@ function renderDecksView() {
       if (e.target.closest("[data-del]")) return;
       store.setSetting("activeDeckId", d.id);
       renderDecksView();
+      $("#view-mazos").classList.add("mobile-detail");
     });
     row.querySelector("[data-del]").onclick = (e) => {
       e.stopPropagation();
@@ -3590,6 +3593,7 @@ function jumpToAlbumEdition(slug) {
   if (!col) col = store.createCollection(state.editionName[slug] || slug, [slug]);
   store.setSetting("activeCollectionId", col.id);
   switchView("colecciones");
+  $("#view-colecciones").classList.add("mobile-detail");
 }
 function statCard(num, lbl) {
   return `<div class="stat-card"><div class="num">${num}</div><div class="lbl">${lbl}</div></div>`;
@@ -3990,7 +3994,19 @@ function switchView(view) {
 
 function bindEvents() {
   // Tabs
-  $$(".tab").forEach((t) => t.addEventListener("click", () => switchView(t.dataset.view)));
+  $$(".tab").forEach((t) => t.addEventListener("click", () => {
+    switchView(t.dataset.view);
+    // Al tocar la pestaña (no al llegar por un deep-link como
+    // jumpToAlbumEdition) siempre se vuelve a la lista en el patrón
+    // lista→detalle de Colecciones/Mazos en móvil — ver .mobile-detail.
+    const view = $("#view-" + t.dataset.view);
+    if (view) view.classList.remove("mobile-detail");
+  }));
+
+  // Patrón lista→detalle en móvil (Colecciones/Mazos): botón "‹ Volver"
+  $$(".mobile-back-btn").forEach((b) => b.addEventListener("click", () => {
+    $("#view-" + b.dataset.backView).classList.remove("mobile-detail");
+  }));
 
   // Buscador global: filtra el Catálogo y también la vista activa
   // (dentro de una colección, del mazo abierto, o de Cambio y Ventas)
@@ -4094,7 +4110,12 @@ function bindEvents() {
   // Mazos
   $("#new-deck").addEventListener("click", () => {
     const name = prompt("Nombre del mazo:", "Mazo nuevo");
-    if (name !== null) { const d = store.createDeck(name); store.setSetting("activeDeckId", d.id); renderDecksView(); }
+    if (name !== null) {
+      const d = store.createDeck(name);
+      store.setSetting("activeDeckId", d.id);
+      renderDecksView();
+      $("#view-mazos").classList.add("mobile-detail");
+    }
   });
   bindDeckBarEvents();
 
