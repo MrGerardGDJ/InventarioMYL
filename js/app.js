@@ -39,6 +39,8 @@ const state = {
   prices: {},       // data/prices.json → { cardId: { mylserena, mesaredonda } }, cobertura parcial
   banlist: null,    // data/banlist.json → { meta, entries: [{edition, editionName, name, status, maxCopies}] }
   selectedCardId: null, // carta elegida en la grilla del Catálogo, la muestra la ficha fija
+  viewMode: "grid",      // "grid" | "table" — conmutador de la cabecera del Catálogo
+  selectedDeckCardId: null, // carta elegida en la composición de un mazo, la muestra la ficha de Mazos
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -201,9 +203,14 @@ function pumpNames() {
   }
 }
 function updateCardNameInDom(id, name) {
-  const sel = `.card[data-id="${CSS.escape(id)}"]`;
-  const el = document.querySelector(sel + " .card-name");
-  if (el) el.textContent = name;
+  const sel = `[data-id="${CSS.escape(id)}"]`;
+  // .card-name: Cambios/Mazos (siguen con el markup viejo, ver fase 3 del
+  // rediseño). .v-name: tarjeta-arte del Catálogo/Álbum. .ct-name: fila de
+  // la vista en tabla del Catálogo.
+  for (const cls of [".card-name", ".v-name", ".ct-name"]) {
+    const el = document.querySelector(sel + " " + cls);
+    if (el) el.textContent = name;
+  }
   const ph = document.querySelector(sel + " .ph-name");
   if (ph) ph.textContent = name;
 }
@@ -452,20 +459,82 @@ function updateResultCount() {
   $("#result-count").textContent = `${n} carta${n === 1 ? "" : "s"} · ${owned} en tu colección`;
 }
 
-/* ===================== Render grid ===================== */
+/* ===================== Render grid / tabla ===================== */
+// Conmutador grilla/tabla del Catálogo (README del handoff, cabecera):
+// preferencia persistida en store (viewMode). renderGrid() sigue siendo el
+// punto de entrada único que usan applyFilters()/#load-more — decide acá
+// qué contenedor llenar en vez de duplicar esa lógica en cada call site.
 function renderGrid(reset) {
-  const grid = $("#cards-grid");
-  if (reset) grid.innerHTML = "";
+  const isTable = state.viewMode === "table";
+  $("#cards-grid").classList.toggle("hidden", isTable);
+  $("#table-wrap").classList.toggle("hidden", !isTable);
+
   const start = state.page * state.pageSize;
   const slice = state.filtered.slice(start, start + state.pageSize);
-  const frag = document.createDocumentFragment();
-  for (const card of slice) frag.appendChild(cardEl(card, state.filtered));
-  grid.appendChild(frag);
+
+  if (isTable) {
+    const body = $("#cards-table-body");
+    if (reset) { body.innerHTML = ""; $("#cards-grid").innerHTML = ""; } // limpia la otra vista: data-id duplicado (oculto) tapaba las búsquedas por selector
+    const frag = document.createDocumentFragment();
+    for (const card of slice) frag.appendChild(tableRowEl(card, state.filtered));
+    body.appendChild(frag);
+  } else {
+    const grid = $("#cards-grid");
+    if (reset) { grid.innerHTML = ""; $("#cards-table-body").innerHTML = ""; }
+    const frag = document.createDocumentFragment();
+    for (const card of slice) frag.appendChild(cardEl(card, state.filtered));
+    grid.appendChild(frag);
+  }
   scheduleNameCorrection(slice);
 
   $("#grid-empty").classList.toggle("hidden", state.filtered.length !== 0);
   const hasMore = (state.page + 1) * state.pageSize < state.filtered.length;
   $("#load-more").classList.toggle("hidden", !hasMore);
+}
+
+function setViewMode(mode) {
+  state.viewMode = mode;
+  store.setSetting("viewMode", mode);
+  $$("#view-toggle .vt-btn").forEach((b) => b.classList.toggle("active", b.dataset.vmode === mode));
+  renderGrid(true);
+}
+
+// Fila de la vista en tabla: mismos data-act/data-role que cardEl(), así
+// que changeQty()/selectCard()/openModal() funcionan igual sin duplicar
+// esa lógica (ver el selector genérico [data-id] que ya no exige .card).
+function tableRowEl(card, navList) {
+  const qty = store.getQty(card.id);
+  const tr = document.createElement("tr");
+  tr.className = (qty > 0 ? "owned" : "") + (state.selectedCardId === card.id ? " selected" : "");
+  tr.dataset.id = card.id;
+  const dName = displayName(card);
+  const img = card.image
+    ? `<img loading="lazy" src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" onerror="this.replaceWith(document.createElement('div'))" />`
+    : "";
+  tr.innerHTML = `
+    <td><div class="ct-thumb">${img}</div></td>
+    <td class="ct-name">${escapeHtml(dName)}</td>
+    <td>${escapeHtml(card.editionName || "")}</td>
+    <td>${escapeHtml(card.type)}</td>
+    <td>${escapeHtml(card.race)}</td>
+    <td>${escapeHtml(card.rarity || "")}</td>
+    <td>${card.cost ?? "—"}</td>
+    <td>${card.strength ?? "—"}</td>
+    <td>
+      <div class="ct-qty">
+        <button data-act="minus">−</button>
+        <span class="${qty === 0 ? "zero" : ""}" data-role="qty">${qty}</span>
+        <button class="plus" data-act="plus">+</button>
+      </div>
+    </td>`;
+  tr.addEventListener("click", (e) => {
+    const act = e.target.closest("[data-act]")?.dataset.act;
+    if (act === "plus") changeQty(tr, card, +1);
+    else if (act === "minus") changeQty(tr, card, -1);
+    else selectCard(card, navList);
+  });
+  tr.addEventListener("dblclick", (e) => { if (!e.target.closest("[data-act]")) openModal(card, navList); });
+  return tr;
 }
 
 // Crea el nodo de una carta para cualquier grilla (Catálogo y Colecciones).
@@ -577,10 +646,10 @@ function selectCard(card, navList) {
   fichaNavList = navList || null;
   fichaNavIndex = fichaNavList ? fichaNavList.findIndex((c) => c.id === card.id) : -1;
   if (prevId && prevId !== card.id) {
-    const prevEl = document.querySelector(`.card[data-id="${CSS.escape(prevId)}"]`);
+    const prevEl = document.querySelector(`[data-id="${CSS.escape(prevId)}"]`);
     if (prevEl) prevEl.classList.remove("selected");
   }
-  const el = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+  const el = document.querySelector(`[data-id="${CSS.escape(card.id)}"]`);
   if (el) el.classList.add("selected");
   renderFicha(card);
   // En móvil la ficha es una hoja inferior (ver movil.md): .open la sube.
@@ -595,7 +664,7 @@ function deselectCard() {
   fichaNavList = null;
   fichaNavIndex = -1;
   if (prevId) {
-    const prevEl = document.querySelector(`.card[data-id="${CSS.escape(prevId)}"]`);
+    const prevEl = document.querySelector(`[data-id="${CSS.escape(prevId)}"]`);
     if (prevEl) prevEl.classList.remove("selected");
   }
   $("#ficha-body").classList.add("hidden");
@@ -639,7 +708,7 @@ function renderFicha(card) {
 
   const dName = displayName(card);
   const img = card.image
-    ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" />`
+    ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" draggable="false" />`
     : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div></div>`;
   $("#ficha-art").innerHTML = `
     <div class="holo" data-rarity="${raritySlug(card.rarity)}">
@@ -696,11 +765,60 @@ function fichaSelectedCard() {
   return state.selectedCardId ? cardById(state.selectedCardId) : null;
 }
 
+// Gestos táctiles de la hoja inferior (movil.md, punto 5): arrastrar la
+// manilla hacia abajo la cierra; deslizar horizontalmente sobre el arte
+// pasa a la carta anterior/siguiente. Con Pointer Events (touch y mouse a
+// la vez) en vez de Touch Events, así también se puede probar con clic
+// arrastrado en escritorio/Playwright. Sin efecto en la práctica en
+// escritorio: ahí la ficha es un panel fijo, no hay nada que arrastrar.
+function bindFichaGestures() {
+  const ficha = $("#card-ficha");
+  const handle = ficha.querySelector(".ficha-handle");
+  const CLOSE_THRESHOLD = 90;
+  let draggingDown = false, startY = 0;
+
+  handle.addEventListener("pointerdown", (e) => {
+    draggingDown = true; startY = e.clientY;
+    ficha.style.transition = "none";
+    handle.setPointerCapture(e.pointerId);
+  });
+  handle.addEventListener("pointermove", (e) => {
+    if (!draggingDown) return;
+    const dy = Math.max(0, e.clientY - startY);
+    ficha.style.transform = `translateY(${dy}px)`;
+  });
+  const endDrag = (e) => {
+    if (!draggingDown) return;
+    draggingDown = false;
+    ficha.style.transition = "";
+    const dy = Math.max(0, e.clientY - startY);
+    ficha.style.transform = "";
+    if (dy > CLOSE_THRESHOLD) deselectCard();
+  };
+  handle.addEventListener("pointerup", endDrag);
+  handle.addEventListener("pointercancel", endDrag);
+
+  const SWIPE_THRESHOLD = 60;
+  const art = $("#ficha-art");
+  let swiping = false, startX = 0;
+  art.addEventListener("pointerdown", (e) => { swiping = true; startX = e.clientX; });
+  art.addEventListener("pointerup", (e) => {
+    if (!swiping) return;
+    swiping = false;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > SWIPE_THRESHOLD) fichaNavStep(dx < 0 ? 1 : -1);
+  });
+}
+
 function bindFichaEvents() {
-  // Hoja inferior en móvil: tocar el velo o arrastrar la manilla hacia
-  // abajo la cierra (equivalente a deselectCard). Sin efecto en escritorio.
+  // Hoja inferior en móvil: tocar el velo la cierra directo; arrastrar la
+  // manilla hacia abajo la cierra solo si pasa el umbral (bindFichaGestures
+  // más abajo) — antes también había un "click" incondicional en la
+  // manilla, pero un mousedown+mouseup con poco movimiento sigue
+  // disparando "click" en el navegador, así que se colaba de nuevo el
+  // cierre sin arrastre real (bug encontrado con la propia verificación).
   $("#ficha-veil").addEventListener("click", deselectCard);
-  $("#card-ficha").querySelector(".ficha-handle").addEventListener("click", deselectCard);
+  bindFichaGestures();
   $("#ficha-prev").addEventListener("click", () => fichaNavStep(-1));
   $("#ficha-next").addEventListener("click", () => fichaNavStep(+1));
   $("#ficha-expand").addEventListener("click", () => {
@@ -710,14 +828,14 @@ function bindFichaEvents() {
   $("#ficha-minus").addEventListener("click", () => {
     const card = fichaSelectedCard();
     if (!card) return;
-    const gridEl = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+    const gridEl = document.querySelector(`[data-id="${CSS.escape(card.id)}"]`);
     if (gridEl) changeQty(gridEl, card, -1);
     else { store.addQty(card.id, -1); refreshFichaQty(card.id); }
   });
   $("#ficha-plus").addEventListener("click", () => {
     const card = fichaSelectedCard();
     if (!card) return;
-    const gridEl = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+    const gridEl = document.querySelector(`[data-id="${CSS.escape(card.id)}"]`);
     if (gridEl) changeQty(gridEl, card, +1);
     else { store.addQty(card.id, +1); refreshFichaQty(card.id); }
   });
@@ -1039,7 +1157,7 @@ function openModal(card, navList, navIndex) {
       const mq = box.querySelector('[data-role="mqty"]');
       mq.textContent = newQty;
       mq.classList.toggle("zero", newQty === 0);
-      const gridCard = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+      const gridCard = document.querySelector(`[data-id="${CSS.escape(card.id)}"]`);
       if (gridCard) {
         const g = gridCard.querySelector('[data-role="qty"]');
         g.textContent = newQty; g.classList.toggle("zero", newQty === 0);
@@ -1068,7 +1186,7 @@ function openModal(card, navList, navIndex) {
       }
       box.querySelector('[data-role="tqty"]').textContent = store.getAvailableQty(card.id);
       renderDeckHint(box.querySelector('[data-role="deckhint"]'), card.id);
-      const gridCard = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+      const gridCard = document.querySelector(`[data-id="${CSS.escape(card.id)}"]`);
       const availEl = gridCard?.querySelector('[data-role="avail"]');
       if (availEl) availEl.innerHTML = availableMetaHtml(card.id);
     };
@@ -2237,8 +2355,7 @@ function cardById(id) {
 function renderTradeView() {
   renderTradeKpis();
   renderTradeList();
-  renderTradeLog();
-  renderSaleLog();
+  renderHistoryList();
 }
 
 // Fila de 4 KPI (README del handoff, 2d): Repetidas cuenta copias más allá
@@ -2401,31 +2518,37 @@ function tradeCardEl(card, navList) {
   return el;
 }
 
-function renderTradeLog() {
-  const wrap = $("#trade-log");
-  const log = store.getTradeLog();
-  if (!log.length) { wrap.innerHTML = `<p class="muted">Todavía no registras intercambios.</p>`; return; }
-  wrap.innerHTML = log.map((e) => {
-    const g = cardById(e.given), r = cardById(e.received);
-    return `<div class="tlog-row">
-      <span class="muted">${new Date(e.date).toLocaleString("es-CL")}</span>
-      <span>Entregada: <b>${escapeHtml(g ? displayName(g) : e.given)}</b></span>
-      <span>Recibida: <b>${escapeHtml(r ? displayName(r) : e.received)}</b></span>
-    </div>`;
-  }).join("");
-}
-
-function renderSaleLog() {
-  const wrap = $("#sale-log");
+// Columna "Historial" de 352px (README del handoff, 2d): intercambios y
+// ventas mezclados en una sola lista cronológica (antes eran dos bloques
+// apilados, "Historial de intercambios" e "Historial de ventas" por
+// separado) — cada fila con su ícono (cambio con tinte de acento, venta
+// neutro), texto, fecha y valor a la derecha.
+function renderHistoryList() {
+  const wrap = $("#history-list");
   if (!wrap) return;
-  const log = store.getSaleLog();
-  if (!log.length) { wrap.innerHTML = `<p class="muted">Todavía no registras ventas.</p>`; return; }
-  wrap.innerHTML = log.map((e) => {
+  const trades = store.getTradeLog().map((e) => ({ ...e, kind: "trade" }));
+  const sales = store.getSaleLog().map((e) => ({ ...e, kind: "sale" }));
+  const entries = [...trades, ...sales].sort((a, b) => b.date - a.date);
+  if (!entries.length) { wrap.innerHTML = `<p class="muted">Todavía no registras intercambios ni ventas.</p>`; return; }
+  wrap.innerHTML = entries.map((e) => {
+    if (e.kind === "trade") {
+      const g = cardById(e.given), r = cardById(e.received);
+      return `<div class="hist-row">
+        <div class="hist-icon exchange"><i class="ph ph-arrows-left-right"></i></div>
+        <div class="hist-body">
+          <div class="hist-text">Entregada <b>${escapeHtml(g ? displayName(g) : e.given)}</b> · Recibida <b>${escapeHtml(r ? displayName(r) : e.received)}</b></div>
+          <div class="hist-date">${new Date(e.date).toLocaleString("es-CL")}</div>
+        </div>
+      </div>`;
+    }
     const c = cardById(e.cardId);
-    return `<div class="tlog-row">
-      <span class="muted">${new Date(e.date).toLocaleString("es-CL")}</span>
-      <span>Vendida: <b>${escapeHtml(c ? displayName(c) : e.cardId)}</b> ×${e.qty}</span>
-      <span>${e.price != null ? fmtCLP(e.price) : "sin precio registrado"}</span>
+    return `<div class="hist-row">
+      <div class="hist-icon sale"><i class="ph ph-tag"></i></div>
+      <div class="hist-body">
+        <div class="hist-text">Vendida <b>${escapeHtml(c ? displayName(c) : e.cardId)}</b> ×${e.qty}</div>
+        <div class="hist-date">${new Date(e.date).toLocaleString("es-CL")}</div>
+      </div>
+      <div class="hist-value">${e.price != null ? fmtCLP(e.price) : "—"}</div>
     </div>`;
   }).join("");
 }
@@ -2697,6 +2820,10 @@ function renderDecksView() {
 function renderDeckDetail() {
   const wrap = $("#deck-detail");
   const deck = store.getDeck(store.getSetting("activeDeckId"));
+  // La carta elegida en la ficha es del mazo anterior — no tiene sentido
+  // arrastrarla al entrar a Mazos o cambiar de mazo activo.
+  state.selectedDeckCardId = null;
+  $("#deck-ficha").classList.add("hidden");
   if (!deck) {
     wrap.innerHTML = `<p class="muted">Selecciona o crea un mazo para empezar a construirlo. Desde la vista <b>Colección</b> puedes añadir cartas al mazo activo con el botón 🃏＋, o buscarlas aquí abajo.</p>`;
     return;
@@ -2876,12 +3003,20 @@ function renderDeckContents(deck) {
   cont.innerHTML = html;
   cont.querySelectorAll(".dist-card[data-cid]").forEach((tile) => {
     const cid = tile.dataset.cid;
+    tile.classList.toggle("selected", state.selectedDeckCardId === cid);
     tile.querySelectorAll("[data-d]").forEach((b) => {
-      b.onclick = () => { store.deckAdd(deck.id, cid, b.dataset.d === "plus" ? 1 : -1); renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount(); };
+      b.onclick = (e) => {
+        e.stopPropagation();
+        store.deckAdd(deck.id, cid, b.dataset.d === "plus" ? 1 : -1);
+        renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount();
+      };
     });
+    tile.addEventListener("click", () => selectDeckCard(cid, deck));
   });
   renderDeckSummary(deck);
   renderDeckStrategy(deck);
+  if (state.selectedDeckCardId && !deck.cards[state.selectedDeckCardId]) deselectDeckCard();
+  else if (state.selectedDeckCardId) renderDeckFicha(state.selectedDeckCardId, deck);
 }
 
 function deckCardTileHtml(card, cid, q) {
@@ -2921,6 +3056,103 @@ function deckGapTileHtml(title, sub) {
       <div class="card-meta">${escapeHtml(sub)}</div>
     </div>
   </div>`;
+}
+
+/* ===================== Ficha de Mazos (panel derecho de 318px) =====================
+   Igual que la ficha del Catálogo (arte con marco holográfico/foil,
+   stepper, habilidad, metadatos), pero el contador edita la cantidad EN
+   EL MAZO (store.deckAdd) en vez del inventario, y las acciones son de
+   mazo: Quitar del mazo, saltar al Catálogo, Ofrecer. IDs propios
+   (df-*) porque #view-coleccion y #view-mazos conviven en el DOM. */
+function selectDeckCard(cid, deck) {
+  state.selectedDeckCardId = cid;
+  renderDeckContents(deck); // repinta para marcar .selected en la tile
+}
+
+function deselectDeckCard() {
+  state.selectedDeckCardId = null;
+  $("#deck-ficha").classList.add("hidden");
+}
+
+function renderDeckFicha(cid, deck) {
+  const card = cardById(cid);
+  if (!card) { deselectDeckCard(); return; }
+  $("#deck-ficha").classList.remove("hidden");
+
+  const dName = displayName(card);
+  const img = card.image
+    ? `<img src="${escapeAttr(card.image)}" alt="${escapeAttr(dName)}" />`
+    : `<div class="placeholder"><div class="ph-name">${escapeHtml(dName)}</div></div>`;
+  $("#df-art").innerHTML = `
+    <div class="holo" data-rarity="${raritySlug(card.rarity)}">
+      <div class="holo-art">
+        ${img}
+        <div class="v-veil"></div>
+        <div class="foil" ${hasFoil(card) ? "" : "hidden"}></div>
+        <div class="ficha-art-badges">
+          ${card.cost != null ? `<span class="ficha-pill"><i class="ph ph-coin"></i>${card.cost}</span>` : ""}
+          ${card.strength != null ? `<span class="ficha-pill"><i class="ph ph-sword"></i>${card.strength}</span>` : ""}
+        </div>
+      </div>
+    </div>
+    <div class="ficha-name">${escapeHtml(dName)}</div>
+    <div class="ficha-sub muted">${escapeHtml(card.editionName || "")} · ${cardLabel(card)} · ${escapeHtml(card.rarity || "")}</div>`;
+
+  const qtyInDeck = deck.cards[cid] || 0;
+  $("#df-qty-num").textContent = qtyInDeck;
+  $("#df-qty-num").classList.toggle("zero", qtyInDeck === 0);
+
+  $("#df-ability").innerHTML = card.ability ? nl2br(card.ability) : `<span class="muted">Sin texto.</span>`;
+
+  const own = store.getQty(cid);
+  const otherDecks = store.getDecks().filter((d) => d.id !== deck.id && (d.cards[cid] || 0) > 0).length;
+  const price = cardPriceInfo(cid);
+  const priceParts = price ? [price.mylserena, price.mesaredonda].filter((v) => v != null) : [];
+  const priceLabel = priceParts.length ? priceParts.map(fmtCLP).join(" / ") : "—";
+  $("#df-meta-grid").innerHTML = [
+    ["Copias que tienes", String(own)],
+    ["En otros mazos", otherDecks ? `${otherDecks} mazo${otherDecks === 1 ? "" : "s"}` : "Ninguno"],
+    ["Repetidas libres", String(store.getAvailableQty(cid))],
+    ["Precio ref.", priceLabel],
+  ].map(([k, v]) => `<div class="ficha-meta-item"><span>${escapeHtml(k)}</span><b>${escapeHtml(v)}</b></div>`).join("");
+}
+
+function bindDeckFichaEvents() {
+  const activeDeck = () => store.getDeck(store.getSetting("activeDeckId"));
+  $("#df-minus").addEventListener("click", () => {
+    const deck = activeDeck(); if (!deck || !state.selectedDeckCardId) return;
+    store.deckAdd(deck.id, state.selectedDeckCardId, -1);
+    renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount();
+  });
+  $("#df-plus").addEventListener("click", () => {
+    const deck = activeDeck(); if (!deck || !state.selectedDeckCardId) return;
+    store.deckAdd(deck.id, state.selectedDeckCardId, +1);
+    renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount();
+  });
+  $("#df-remove").addEventListener("click", () => {
+    const deck = activeDeck(); if (!deck || !state.selectedDeckCardId) return;
+    const cid = state.selectedDeckCardId;
+    store.deckAdd(deck.id, cid, -(deck.cards[cid] || 0));
+    deselectDeckCard();
+    renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount();
+  });
+  $("#df-expand").addEventListener("click", () => {
+    const card = cardById(state.selectedDeckCardId);
+    if (card) openModal(card);
+  });
+  $("#df-catalog").addEventListener("click", () => {
+    const cid = state.selectedDeckCardId;
+    if (!cid) return;
+    switchView("coleccion");
+    $("#search").value = "";
+    applyFilters();
+    const card = cardById(cid);
+    if (card) selectCard(card, state.filtered);
+  });
+  $("#df-offer").addEventListener("click", () => {
+    const card = cardById(state.selectedDeckCardId);
+    if (card) openTradeModal(card);
+  });
 }
 
 function renderDeckSummary(deck) {
@@ -3515,11 +3747,17 @@ function bindEvents() {
   $$(".rail-item[data-view]").forEach((t) => t.addEventListener("click", () => switchView(t.dataset.view)));
   $("#rail-add-card").addEventListener("click", () => openCardForm(null));
 
+  // Conmutador grilla/tabla del Catálogo
+  $$("#view-toggle .vt-btn").forEach((b) => b.addEventListener("click", () => setViewMode(b.dataset.vmode)));
+
   // Ficha fija del Catálogo
   bindFichaEvents();
 
   // Modo inventariar
   bindInventoryEvents();
+
+  // Ficha de Mazos
+  bindDeckFichaEvents();
 
   // Buscador global: filtra el Catálogo y también la vista activa
   // (dentro de una colección, del mazo abierto, o de Cambio y Ventas)
@@ -3585,7 +3823,7 @@ function bindEvents() {
       const card = fichaSelectedCard();
       if (!card) return;
       store.setQty(card.id, Number(e.key));
-      const gridEl = document.querySelector(`.card[data-id="${CSS.escape(card.id)}"]`);
+      const gridEl = document.querySelector(`[data-id="${CSS.escape(card.id)}"]`);
       if (gridEl) { gridEl.classList.toggle("owned", Number(e.key) > 0); const q = gridEl.querySelector('[data-role="qty"]'); if (q) { q.textContent = e.key; q.classList.toggle("zero", e.key === "0"); } }
       updateResultCount();
       if (state.view === "colecciones") updateCollectionProgress();
@@ -3643,6 +3881,8 @@ function debounce(fn, ms) {
 async function init() {
   bindEvents();
   store.onChange(onStoreChange);
+  state.viewMode = store.getSetting("viewMode") === "table" ? "table" : "grid";
+  $$("#view-toggle .vt-btn").forEach((b) => b.classList.toggle("active", b.dataset.vmode === state.viewMode));
   await loadData();
   populateFilters();
   refreshActiveDeckUI();

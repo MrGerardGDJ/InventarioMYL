@@ -181,6 +181,42 @@ main { padding: 0; }
 }
 .chip-range input[type="range"] { width: 90px; }
 
+/* Conmutador grilla/tabla del Catálogo (README del handoff, cabecera) */
+.view-toggle {
+  display: flex; border-radius: 8px; overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+}
+.vt-btn {
+  width: 36px; height: 36px; border: none; background: transparent; cursor: pointer;
+  color: var(--color-text-55); display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.vt-btn:hover { color: var(--color-text); }
+.vt-btn.active { background: var(--color-accent-tint); color: var(--color-accent-300); }
+
+/* Vista en tabla del Catálogo */
+.table-wrap { overflow-x: auto; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--color-border); }
+.cards-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.cards-table th {
+  text-align: left; padding: 9px 11px; font-size: 11px; color: var(--color-text-55);
+  border-bottom: 1px solid var(--color-border-strong); white-space: nowrap;
+  position: sticky; top: 0; background: var(--color-surface);
+}
+.cards-table td { padding: 6px 11px; border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+.cards-table tbody tr { cursor: pointer; }
+.cards-table tbody tr:hover { background: rgba(233, 233, 237, .04); }
+.cards-table tbody tr.selected { background: var(--color-accent-tint-soft); }
+.ct-thumb { width: 30px; height: 42px; border-radius: 4px; overflow: hidden; background: var(--color-surface-2); flex: none; }
+.ct-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cards-table tbody tr:not(.owned) .ct-thumb img { filter: grayscale(1) brightness(.68); }
+.ct-name { font-weight: 500; }
+.ct-qty { display: flex; align-items: center; gap: 6px; }
+.ct-qty button {
+  width: 22px; height: 22px; border-radius: 6px; border: none; cursor: pointer;
+  background: var(--color-surface-2); color: var(--color-text); font-size: 13px; line-height: 1;
+}
+.ct-qty button.plus { background: var(--color-accent); color: #161826; }
+.ct-qty span { min-width: 16px; text-align: center; font-variant-numeric: tabular-nums; }
+
 .content { flex: 1; padding: 16px 20px; min-width: 0; }
 .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
 .toolbar .spacer { flex: 1; }
@@ -223,7 +259,7 @@ main { padding: 0; }
 }
 /* Catálogo: grilla más densa que reserva espacio para la ficha fija de
    318px al lado (ver .ficha más abajo) */
-#view-coleccion #cards-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 13px; }
+#view-coleccion #cards-grid { grid-template-columns: repeat(5, 1fr); gap: 13px; }
 .card {
   background: var(--color-surface);
   border-radius: 8px;
@@ -441,11 +477,29 @@ main { padding: 0; }
 .trade-actions .btn:disabled { opacity: .45; cursor: not-allowed; }
 .trade-avail-note { font-size: 11px; font-weight: 600; color: var(--danger); margin-top: 4px; }
 .trade-avail-note.ok { color: var(--ok); font-weight: 400; }
-.trade-log .tlog-row {
-  display: grid; grid-template-columns: 150px 1fr 1fr; gap: 10px;
-  padding: 7px 10px; border-bottom: 1px solid var(--color-border-strong); font-size: 13px;
+/* Cambio y Ventas a dos columnas (README del handoff, 2d): Ofrecidas a la
+   izquierda, Historial (intercambios + ventas mezclados, orden cronológico)
+   en una columna fija de 352px a la derecha. */
+.cambios-layout { display: flex; gap: 20px; align-items: flex-start; }
+.cambios-main { flex: 1; min-width: 0; }
+.cambios-history { width: 352px; flex: 0 0 352px; }
+.hist-list { display: flex; flex-direction: column; }
+.hist-row {
+  display: flex; align-items: flex-start; gap: 10px; padding: 10px 0;
+  box-shadow: inset 0 -1px 0 var(--color-border);
 }
-@media (max-width: 640px) { .trade-log .tlog-row { grid-template-columns: 1fr; gap: 2px; } }
+.hist-row:last-child { box-shadow: none; }
+.hist-icon {
+  width: 28px; height: 28px; border-radius: 8px; flex: none;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.hist-icon.exchange { background: var(--color-accent-tint); color: var(--color-accent-300); }
+.hist-icon.sale { background: var(--color-surface-2); color: var(--color-text-55); }
+.hist-body { flex: 1; min-width: 0; }
+.hist-text { font-size: 13px; line-height: 1.4; }
+.hist-date { font-size: 11px; color: var(--color-text-55); margin-top: 2px; }
+.hist-value { font-size: 13px; font-weight: 500; color: var(--color-accent-300); flex: none; font-variant-numeric: tabular-nums; }
+@media (max-width: 900px) { .cambios-layout { flex-direction: column; } .cambios-history { width: 100%; flex: none; } }
 /* Indicador "Disponible ×n" en las tarjetas y control del modal de detalle */
 .card-trade { color: var(--color-accent-400); font-weight: 600; }
 .trade-ctl { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 13px; flex-wrap: wrap; }
@@ -649,7 +703,9 @@ main { padding: 0; }
 .dist-card .card-warn { font-size: 10.5px; font-weight: 600; line-height: 1.3; margin-top: 2px; }
 .dist-card .card-warn.lack { color: var(--color-text-55); }
 .dist-card .card-warn.ban { color: var(--danger); }
-.dist-card.has-ban { border-color: var(--danger); }
+.dist-card { cursor: pointer; }
+.dist-card.has-ban { box-shadow: 0 0 0 1px var(--danger); }
+.dist-card.selected { box-shadow: 0 0 0 2px var(--color-accent); }
 .dist-card .ban-icon {
   position: absolute; top: 6px; right: 6px; z-index: 2;
   background: var(--danger); color: #fff; border-radius: 50%;
@@ -895,7 +951,10 @@ main { padding: 0; }
   position: relative; aspect-ratio: 63 / 88; border-radius: 10px; overflow: hidden;
   background: var(--color-surface-2);
 }
-.ficha-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* -webkit-user-drag:none evita que el <img> dispare el drag-and-drop
+   nativo del navegador al arrastrar (interfiere con el gesto de deslizar
+   para cambiar de carta, ver bindFichaGestures() en app.js) */
+.ficha-art img { width: 100%; height: 100%; object-fit: cover; display: block; -webkit-user-drag: none; user-select: none; }
 .ficha-art .placeholder { display: flex; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 10px; color: var(--color-text-55); font-size: 12px; }
 .ficha-art .v-veil { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(transparent 55%, rgba(12, 13, 24, .75)); }
 .ficha-art-badges { position: absolute; top: 8px; left: 8px; display: flex; gap: 6px; z-index: 2; }
@@ -1040,7 +1099,8 @@ main { padding: 0; }
   opacity: 0; pointer-events: none; transition: opacity .2s ease;
 }
 .ficha-veil.open { opacity: 1; pointer-events: auto; }
-.ficha-handle { display: none; }
+.ficha-handle { display: none; touch-action: none; cursor: grab; }
+.ficha-art { touch-action: pan-y; }
 
 @media (max-width: 760px) {
   .sync-form { grid-template-columns: 1fr; }

@@ -108,6 +108,10 @@
           <button id="orphan-note" class="orphan-note hidden"></button>
           <div class="spacer"></div>
           <div class="actions">
+            <div class="view-toggle" id="view-toggle">
+              <button class="vt-btn" data-vmode="grid" title="Vista en grilla"><i class="ph ph-squares-four"></i></button>
+              <button class="vt-btn" data-vmode="table" title="Vista en tabla"><i class="ph ph-list"></i></button>
+            </div>
             <button id="btn-inventariar" class="btn accent"><i class="ph ph-check-square-offset"></i> Inventariar</button>
             <button id="btn-add-card" class="btn">➕ Carta manual</button>
             <button id="btn-editions" class="btn">Ediciones</button>
@@ -134,6 +138,17 @@
           <span id="active-deck-count" class="muted"></span>
         </div>
         <div id="cards-grid" class="cards-grid"></div>
+        <div class="table-wrap hidden" id="table-wrap">
+          <table class="cards-table" id="cards-table">
+            <thead>
+              <tr>
+                <th></th><th>Nombre</th><th>Edición</th><th>Tipo</th><th>Raza</th><th>Rareza</th>
+                <th>Coste</th><th>Fuerza</th><th>Copias</th>
+              </tr>
+            </thead>
+            <tbody id="cards-table-body"></tbody>
+          </table>
+        </div>
         <div id="grid-empty" class="empty hidden">No hay cartas que coincidan con los filtros.</div>
         <button id="load-more" class="btn load-more hidden">Cargar más</button>
       </div>
@@ -244,17 +259,21 @@
       </aside>
       <div class="content">
         <div class="stats-grid" id="trade-kpis"></div>
-        <h3 class="trade-h3" style="margin-top:0">Ofrecer una carta</h3>
-        <div class="deck-add-search" style="margin:6px 0 0">
-          <input id="trade-search" type="search" placeholder="Busca por nombre una carta que tengas, para ofrecerla en cambio o venta…" autocomplete="off" />
-          <div id="trade-search-results" class="deck-search-results"></div>
+        <div class="cambios-layout">
+          <div class="cambios-main">
+            <h3 class="trade-h3" style="margin-top:0">Ofrecer una carta</h3>
+            <div class="deck-add-search" style="margin:6px 0 0">
+              <input id="trade-search" type="search" placeholder="Busca por nombre una carta que tengas, para ofrecerla en cambio o venta…" autocomplete="off" />
+              <div id="trade-search-results" class="deck-search-results"></div>
+            </div>
+            <h3 class="trade-h3">Ofrecidas para cambio o venta</h3>
+            <div id="trade-list" class="trade-grid"></div>
+          </div>
+          <aside class="cambios-history">
+            <h3 class="trade-h3" style="margin-top:0">Historial</h3>
+            <div id="history-list" class="hist-list"></div>
+          </aside>
         </div>
-        <h3 class="trade-h3">Ofrecidas para cambio o venta</h3>
-        <div id="trade-list" class="trade-grid"></div>
-        <h3 class="trade-h3">Historial de intercambios</h3>
-        <div id="trade-log" class="trade-log"></div>
-        <h3 class="trade-h3">Historial de ventas</h3>
-        <div id="sale-log" class="trade-log"></div>
       </div>
     </section>
 
@@ -270,6 +289,36 @@
           <p class="muted">Selecciona o crea un mazo para empezar a construirlo. Desde la vista <b>Colección</b> puedes añadir cartas al mazo activo.</p>
         </div>
       </div>
+
+      <aside class="ficha hidden" id="deck-ficha">
+        <div class="ficha-body" id="deck-ficha-body">
+          <div class="ficha-top">
+            <span class="ficha-kicker">Carta elegida</span>
+            <div class="ficha-nav">
+              <button id="df-expand" title="Ver detalle completo"><i class="ph ph-arrows-out"></i></button>
+            </div>
+          </div>
+          <div class="ficha-art" id="df-art"></div>
+          <div class="ficha-qty">
+            <span class="ficha-kicker" style="letter-spacing:0;text-transform:none;font-size:11px">En este mazo</span>
+            <button class="ficha-qty-btn" id="df-minus">−</button>
+            <span class="ficha-qty-num" id="df-qty-num">0</span>
+            <button class="ficha-qty-btn plus" id="df-plus">+</button>
+          </div>
+          <div class="ficha-section">
+            <span class="ficha-kicker">Habilidad</span>
+            <p id="df-ability"></p>
+          </div>
+          <div class="ficha-meta-grid" id="df-meta-grid"></div>
+          <div class="ficha-actions">
+            <button class="btn" id="df-remove"><i class="ph ph-minus-circle"></i> Quitar del mazo</button>
+            <div class="ficha-actions-row">
+              <button class="btn" id="df-catalog"><i class="ph ph-squares-four"></i> En catálogo</button>
+              <button class="btn" id="df-offer"><i class="ph ph-arrows-left-right"></i> Ofrecer</button>
+            </div>
+          </div>
+        </div>
+      </aside>
     </section>
 
     <!-- ===== VISTA ESTADÍSTICAS ===== -->
