@@ -378,6 +378,66 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-20 (40ª iteración) — Vitrina: grilla del Catálogo a 5 columnas fijas + las funciones que quedaban pendientes
+
+El dueño revisó el cierre del rediseño (39ª iteración) y pidió dos cosas puntuales: fijar
+la grilla del Catálogo en 5 columnas (no responsive) y, para todo lo que se había marcado
+como "alcance reducido" en las iteraciones 36ª-39ª, implementarlo.
+
+- **Grilla del Catálogo**: `#view-coleccion #cards-grid` pasa de
+  `repeat(auto-fill, minmax(140px,1fr))` a `repeat(5, 1fr)` fijo. El móvil sigue en 3
+  columnas (sin cambios, ese breakpoint ya estaba bien).
+- **Conmutador grilla/tabla**: preferencia persistida en `store` (`viewMode`). Vista en
+  tabla nueva (`tableRowEl()`, columnas Nombre/Edición/Tipo/Raza/Rareza/Coste/Fuerza/
+  Copias) que reusa `changeQty()`/`selectCard()`/`openModal()` sin duplicar lógica, porque
+  la fila comparte los mismos `data-act`/`data-role` que la tarjeta del Catálogo.
+- **Cambio y Ventas a dos columnas**: Ofrecidas a la izquierda, Historial nuevo de 352px a
+  la derecha que mezcla intercambios y ventas en una sola lista cronológica (antes dos
+  bloques separados apilados, `renderTradeLog()`/`renderSaleLog()` fusionados en
+  `renderHistoryList()`).
+- **Ficha lateral de 318px en Mazos**: mismo componente visual que la del Catálogo (arte
+  con marco holográfico/foil de las fases 8-9, habilidad, metadatos), pero el contador
+  edita la cantidad EN EL MAZO (`store.deckAdd`) en vez del inventario, con acciones
+  propias (Quitar del mazo, saltar "En catálogo" con la misma carta ya elegida ahí,
+  Ofrecer). Clic en una carta de la composición la selecciona.
+- **Gestos táctiles de la hoja inferior**: arrastrar la manilla hacia abajo la cierra (con
+  Pointer Events, umbral 90px), deslizar horizontalmente sobre el arte pasa a la carta
+  anterior/siguiente (umbral 60px) — funciona con touch y con mouse arrastrado a la vez,
+  se puede probar en Playwright sin emulación táctil.
+
+**Tres bugs reales encontrados y corregidos con la propia verificación** (ninguno
+introducido por este cambio puntual, todos preexistentes destapados al tocar código
+cercano):
+1. `updateCardNameInDom()` (corrección de nombres desde la API en vivo) seguía buscando
+   la clase `.card-name`, que ya no existe en la tarjeta-arte del Catálogo desde la fase 3
+   del rediseño — la corrección de nombres llevaba semanas sin aplicarse ahí, en silencio
+   (una clase CSS que no matchea no rompe nada, solo no hace nada). Ahora también busca
+   `.v-name` y `.ct-name` (la fila de la tabla nueva).
+2. Los ~9 selectores `.card[data-id="..."]` repartidos por el archivo no encontraban las
+   filas de la tabla nueva (sin la clase `.card`) — generalizados a `[data-id="..."]`.
+   Relacionado: al cambiar de grilla a tabla (o viceversa), la vista oculta dejaba sus
+   nodos viejos en el DOM con el mismo `data-id`, tapando por orden de documento la
+   búsqueda de la vista visible — `renderGrid()` ahora limpia la vista inactiva al
+   re-renderizar.
+3. Al arrastrar la manilla de la hoja inferior una distancia corta (por debajo del umbral
+   de 90px), la hoja se cerraba igual: el mousedown+mouseup de cualquier arrastre corto
+   sigue disparando un "click" nativo del navegador, y un listener de "click" incondicional
+   que había quedado de la fase 11 (antes de este gesto con umbral) competía con la lógica
+   nueva. Se sacó ese listener — el velo ya cubre "tocar para cerrar sin arrastrar".
+   - **Nota de método**: este bug se encontró siguiendo la disciplina de nunca aceptar un
+     resultado de test sorpresivo sin explicarlo — el primer indicio fue un
+     `getComputedStyle().transform` con un valor (150.84px) que no encajaba ni con "abierta"
+     ni con "cerrada del todo", lo que llevó a revisar los listeners en vez de ajustar el
+     umbral a ciegas.
+
+Verificado con Playwright: grilla en 5 columnas, tabla con 60 filas y stepper/selección/
+persistencia del modo funcionando, Cambios con historial mezclado y ordenado por fecha,
+ficha de Mazos sincronizando la cantidad del mazo sin tocar el inventario y saltando al
+Catálogo con la carta elegida, gestos de arrastre/deslizamiento con los umbrales correctos
+(confirmado que un arrastre corto ya no cierra), y un recorrido de regresión completo por
+las 5 vistas de escritorio + un recorrido corto en 390×844. 0 `pageerror` en todas las
+corridas.
+
 ### 2026-09-19 (39ª iteración) — Rediseño "Vitrina": Móvil — cierre de las 11 fases
 
 Quinto y último bloque grande del rediseño (ver 35ª iteración para el contexto completo
