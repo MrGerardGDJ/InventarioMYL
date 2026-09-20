@@ -378,6 +378,67 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-20 (93ª iteración) — Corrige 3 problemas de diseño móvil reportados con capturas del sitio en vivo: grilla del catálogo, filtros amontonados y menú inferior "invisible" en Estadísticas
+
+El dueño reportó, con capturas de teléfono de `mrgerardgdj.github.io/InventarioMYL`, tres
+problemas de la rama `claude/card-collections-filters-9tcflz` (la que de verdad está
+publicada — ver nota abajo). Los tres se reprodujeron y corrigieron en `css/styles.css`:
+
+- **Grilla del catálogo con muy pocas columnas**: `.cards-grid` usaba
+  `grid-template-columns: repeat(auto-fill, minmax(122px, 1fr))` sin límite superior de
+  columnas. En el ancho útil real de un teléfono (350px de contenido tras el padding de
+  `.content`, en un viewport de 390px) eso daba solo 2 columnas — muy pocas y con tarjetas
+  gigantes, como se veía en la captura. Se agregaron 3 franjas explícitas dentro de
+  `@media (max-width: 760px)`: 3 columnas por defecto (`≤480px`), 4 columnas entre 481 y
+  640px, 5 columnas entre 641 y 760px — cubre exactamente el rango "3 a 5" que pidió el
+  dueño. Verificado con Playwright en 390/500/700px: 3/4/5 columnas respectivamente.
+- **Filtros "aglutinados"**: `.filter-chip-row` (las píldoras de inventario +
+  7 `<select>` tipo píldora de Formato/Edición/Raza/Tipo/Rareza/Coste/Ordenar) usaba
+  `flex-wrap: wrap`, que en 350px de ancho apilaba las píldoras y selects en 5-6 filas
+  completas — la "pared de píldoras" de la captura. Se cambió a una sola tira horizontal
+  con scroll (`flex-wrap: nowrap; overflow-x: auto`, ítems `flex: none`), el patrón
+  estándar de filtros en móvil — mismo contenido, mucho menos denso visualmente. De paso
+  se encontró y corrigió un desborde horizontal real en el mismo bloque: `.toolbar .actions`
+  (los botones Carta manual/Ediciones/Importar/Exportar) no tenía `flex-wrap`, así que en
+  350px sus 4 botones (387px de ancho mínimo) desbordaban la página 17px hacia la derecha
+  (`document.body.scrollWidth` 407 vs 390 de viewport) — agregado `flex-wrap: wrap` en el
+  breakpoint móvil.
+- **"El menú cambia de tamaño y en Estadísticas a veces ni se ve"**: el rail (`.rail`,
+  convertido en barra inferior fija en móvil) resultó estar bien — mismo DOM, mismo CSS,
+  mismo alto (`58px` de contenido) en las 5 vistas, confirmado con
+  `getBoundingClientRect()` recorriendo Catálogo/Colecciones/Mazos/Cambios/Estadísticas por
+  Playwright antes de tocar nada. La causa real, específica de Estadísticas: `.ep-row`
+  (cada fila de "Progreso por edición") es un ítem de grilla (`.edition-progress`, 1
+  columna en móvil) sin `min-width: 0`, y contiene `.ep-name` con
+  `white-space: nowrap` — por la regla de CSS Grid de que el tamaño mínimo automático de un
+  ítem es su `max-content` a menos que se declare `min-width: 0`, el nombre de edición más
+  largo (p. ej. "Leyendas - Primera Era 4.0") fijaba el ancho mínimo de la fila en **637px**,
+  muy por encima del contenido útil de 350px — la página entera se volvía más ancha que la
+  pantalla. Es decir: no es que el menú desaparezca, es que el `<body>` se ensancha (se
+  confirmó con `document.body.scrollWidth`, 637+ en vez de 390) y en un teléfono real eso
+  puede desplazar el viewport visual o hacer que el usuario, al hacer scroll horizontal sin
+  querer, pierda de vista la barra fija momentáneamente — y explica por qué el dueño lo vio
+  justo en esta vista, la única con esa fila de ancho fijo colgando de un texto largo.
+  Corregido agregando `min-width: 0` a `.ep-row` (el truncado ya lo hacía
+  `.ep-name{overflow:hidden;text-overflow:ellipsis}`, solo le faltaba permiso para encoger).
+  Verificado recorriendo las 5 vistas en 390px con Playwright: `document.body.scrollWidth`
+  quedó en 390 (sin desborde) en las 5, antes solo Estadísticas fallaba (407-637).
+- **Nota sobre qué rama es la que importa**: esta sesión venía de un rediseño "Vitrina"
+  completo y ya terminado en `claude/myl-card-inventory-app-hx8z9d`, pero al revisar las
+  capturas se confirmó que el sitio publicado en GitHub Pages corre en realidad el
+  rediseño "Nocturne" de **esta** rama (`claude/card-collections-filters-9tcflz`),
+  mergeada a `main` en un merge anterior de esta misma sesión por otro motivo (fix de
+  PDF/imágenes) — dos rediseños paralelos e independientes de la misma app, hechos por
+  sesiones distintas. Se decidió con el dueño arreglar el móvil acá, en la rama que de
+  verdad está en producción, en vez de imponerle encima el trabajo de `hx8z9d` (que
+  hubiera descartado iteración ya probada en vivo).
+
+Verificación: `node --check` sobre los `.js` (sin cambios, solo se tocó CSS). Smoke test
+Playwright cubriendo escritorio (recorrido de las 5 vistas por el rail, selección de carta
+→ ficha lateral, apertura de modal) y móvil 390×844 (recorrido de las 5 vistas verificando
+`document.body.scrollWidth === innerWidth` en cada una, grilla en 3/4/5 columnas según
+ancho, fila de filtros con scroll horizontal en vez de wrap) — 0 `pageerror` en ambos.
+
 ### 2026-09-18 (92ª iteración) — Corrige 3 bugs del PDF de Colecciones detectados en un PDF real: orden alfabético en vez de numérico, texto superpuesto entre cartas y fondo blanco en vez de Nocturne
 
 El dueño bajó un PDF real (edición Lootbox PE 2024, cartas

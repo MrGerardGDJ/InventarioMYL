@@ -906,6 +906,8 @@ main { padding: 0; }
 .ep-row {
   display: flex; align-items: center; gap: 13px; font-size: 13px; cursor: pointer;
   padding: 11px 13px; border-radius: 10px; background: var(--bg-2); box-shadow: inset 0 0 0 1px var(--border);
+  min-width: 0; /* si no, el nombre con white-space:nowrap fija el mínimo del
+                   track de la grilla al ancho del texto y desborda el móvil */
 }
 .ep-row:hover { box-shadow: inset 0 0 0 1px var(--border-strong); }
 .ep-row .ep-info { flex: 1; min-width: 0; }
@@ -996,12 +998,35 @@ main { padding: 0; }
   .filters { width: 100%; flex: none; position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
   .topbar { gap: 10px; }
   .ep-row { grid-template-columns: 130px 1fr 70px; }
+  .toolbar .actions { flex-wrap: wrap; }
+
+  /* Grilla de catálogo: 3 columnas por defecto en móvil angosto, creciendo
+     a 4/5 en teléfonos grandes o tablets chicas — nunca la auto-fill sin
+     tope de escritorio, que en 350-400px de ancho útil terminaba en 2. */
+  .cards-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
+  /* Fila de filtros: en vez de amontonar píldoras + selects en varias filas
+     (flex-wrap), se vuelve una sola tira horizontal con scroll — el patrón
+     estándar de filtros en móvil, evita el efecto "aglutinado". */
+  .filter-chip-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+  }
+  .filter-chip-row::-webkit-scrollbar { height: 4px; }
+  .filter-chip-row::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+  #f-ownership-pills.pill-row { flex-wrap: nowrap; flex: none; }
+  .filter-chip-row .pill,
+  .filter-chip-row .chip-select { flex: none; }
 
   .app-shell { flex-direction: column; }
   .rail {
     position: fixed; bottom: 0; left: 0; right: 0; top: auto; z-index: 30;
-    width: 100%; height: auto; flex-direction: row; align-items: center; justify-content: space-around;
-    padding: 4px 6px 6px; box-shadow: 0 -1px 0 var(--border); gap: 2px;
+    width: 100%; height: 58px; flex-direction: row; align-items: center; justify-content: space-around;
+    padding: 4px 6px calc(4px + env(safe-area-inset-bottom)); box-shadow: 0 -1px 0 var(--border); gap: 2px;
+    box-sizing: content-box;
   }
   .rail-logo { display: none; }
   .rail-nav { flex-direction: row; flex: 1; justify-content: space-around; }
@@ -1009,7 +1034,15 @@ main { padding: 0; }
   .rail-bottom { flex-direction: row; margin-top: 0; }
   .sync-chip { display: none; }
   #rail-collapse { display: none; }
-  main { padding-bottom: 58px; }
+  main { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+}
+
+@media (min-width: 481px) and (max-width: 760px) {
+  .cards-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (min-width: 641px) and (max-width: 760px) {
+  .cards-grid { grid-template-columns: repeat(5, 1fr); }
 }
 
 /* ===== Marco holográfico de rareza (arte de la ficha y del modal) =====
