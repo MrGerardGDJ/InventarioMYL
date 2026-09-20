@@ -998,7 +998,31 @@ main { padding: 0; }
   .filters { width: 100%; flex: none; position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
   .topbar { gap: 10px; }
   .ep-row { grid-template-columns: 130px 1fr 70px; }
-  .toolbar .actions { flex-wrap: wrap; }
+
+  /* Barra de acciones del catálogo (Carta manual/Ediciones/Importar/
+     Exportar): en vez de 4 botones con texto completo apilándose en 2
+     filas, quedan solo el ícono — mismo patrón que un toolbar nativo
+     (íconos con significado propio + accesible por `title`). */
+  .toolbar .actions { flex-wrap: wrap; gap: 6px; }
+  .toolbar .actions .btn { padding: 8px 10px; }
+  .toolbar .actions .btn-label { display: none; }
+
+  /* Mismo tratamiento de tira horizontal con scroll que .filter-chip-row,
+     aplicado a los filtros de la vista Cambios (usaban <select> nativos
+     sin tope de ancho — el mismo problema, apilados en una fila por cada
+     uno porque el texto de la opción elegida fija su ancho). */
+  .trade-toolbar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+  }
+  .trade-toolbar::-webkit-scrollbar { height: 4px; }
+  .trade-toolbar::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+  .trade-filter-select {
+    flex: none; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
 
   /* Grilla de catálogo: 3 columnas por defecto en móvil angosto, creciendo
      a 4/5 en teléfonos grandes o tablets chicas — nunca la auto-fill sin
@@ -1024,14 +1048,20 @@ main { padding: 0; }
   .app-shell { flex-direction: column; }
   .rail {
     position: fixed; bottom: 0; left: 0; right: 0; top: auto; z-index: 30;
-    width: 100%; height: 58px; flex-direction: row; align-items: center; justify-content: space-around;
+    width: 100%; height: auto; min-height: 58px; flex-direction: row; align-items: center; justify-content: space-around;
     padding: 4px 6px calc(4px + env(safe-area-inset-bottom)); box-shadow: 0 -1px 0 var(--border); gap: 2px;
-    box-sizing: content-box;
   }
   .rail-logo { display: none; }
   .rail-nav { flex-direction: row; flex: 1; justify-content: space-around; }
   .rail .tab { width: auto; flex: 1; min-height: 44px; }
-  .rail-bottom { flex-direction: row; margin-top: 0; }
+  /* Separador visual entre las 5 pestañas de navegación y los íconos de
+     utilidad (sincronizar/tema) — sin esto se leen como un solo grupo de
+     7 íconos sin jerarquía, en vez de "navegación | utilidades". */
+  .rail-bottom {
+    flex-direction: row; margin-top: 0; flex: none;
+    border-left: 1px solid var(--border); padding-left: 6px; margin-left: 2px;
+  }
+  .rail-bottom .rail-icon-btn { width: 30px; height: 30px; font-size: 15px; }
   .sync-chip { display: none; }
   #rail-collapse { display: none; }
   main { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
