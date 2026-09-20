@@ -224,6 +224,14 @@ main { padding: 0; }
 .btn.primary { box-shadow: inset 0 0 0 1px var(--accent); color: var(--accent); }
 .btn.primary:hover { background: var(--accent-tint-soft); }
 
+/* Botón "‹ Volver" del patrón lista→detalle de Colecciones/Mazos en móvil
+   (ver @media max-width:760px). Oculto siempre en escritorio, donde lista y
+   detalle se ven lado a lado. */
+.mobile-back-btn {
+  display: none; align-items: center; gap: 6px; background: none; border: none;
+  color: var(--accent-2); font-size: 13px; font-weight: 600; padding: 4px 0 14px; cursor: pointer;
+}
+
 .dropdown { position: relative; }
 .dropdown-menu {
   position: absolute; right: 0; top: 110%; background: var(--bg-2);
@@ -1023,6 +1031,21 @@ main { padding: 0; }
   .trade-filter-select {
     flex: none; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
+
+  /* Colecciones y Mazos: patrón lista→detalle a pantalla completa (el
+     estándar en apps con maestro-detalle en pantallas angostas), en vez de
+     apilar la lista completa arriba del detalle. Por defecto se ve solo la
+     lista (.filters); al elegir un ítem, JS agrega .mobile-detail a la
+     vista y se intercambia qué panel se ve, con el botón "‹ Volver" para
+     salir. Ver bindEvents()/switchView() en app.js. */
+  #view-colecciones .content,
+  #view-mazos .content { display: none; }
+  #view-colecciones.mobile-detail .filters,
+  #view-mazos.mobile-detail .filters { display: none; }
+  #view-colecciones.mobile-detail .content,
+  #view-mazos.mobile-detail .content { display: block; }
+  #view-colecciones.mobile-detail .mobile-back-btn,
+  #view-mazos.mobile-detail .mobile-back-btn { display: flex; }
 
   /* Grilla de catálogo: 3 columnas por defecto en móvil angosto, creciendo
      a 4/5 en teléfonos grandes o tablets chicas — nunca la auto-fill sin

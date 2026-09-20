@@ -378,6 +378,45 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-20 (95ª iteración) — Patrón lista→detalle en móvil para Colecciones y Mazos
+
+Cierra el pendiente que había quedado abierto en la 94ª iteración: el dueño confirmó
+aplicar el patrón estándar de listas maestro-detalle en pantallas angostas a **ambas**
+vistas (Colecciones y Mazos), que comparten la misma estructura de dos paneles
+(`.filters` con la lista + `.content` con el detalle).
+
+Comportamiento nuevo, solo bajo `@media (max-width: 760px)` (desktop no cambia, sigue
+mostrando ambos paneles lado a lado):
+
+- Por defecto se ve **solo la lista** (`.filters`) — antes se apilaba la lista completa
+  arriba del detalle, ocupando pantalla completa igual aunque no hubiera nada
+  seleccionado.
+- Al tocar una colección/mazo existente, crear uno nuevo, o entrar por el atajo "Progreso
+  por edición" de Estadísticas (`jumpToAlbumEdition`), el detalle pasa a ocupar toda la
+  pantalla con un botón "‹ Mis colecciones" / "‹ Mis mazos" arriba (`.mobile-back-btn`,
+  oculto siempre en escritorio).
+- Tocar ese botón, o volver a tocar la pestaña de navegación (Álbum/Mazos) en la barra
+  inferior, vuelve a mostrar solo la lista.
+
+Implementación: una clase `.mobile-detail` en `#view-colecciones`/`#view-mazos` que CSS
+usa para decidir qué panel mostrar (`display:none`/`block` en `.filters`/`.content`
+dentro del mismo `@media` que ya apilaba ambos). La clase se agrega en los puntos donde
+el usuario elige explícitamente un ítem (clic en `.d-name` de un `.col-item`/`.deck-item`,
+`createCollectionFromModal()`, `#new-deck`, `jumpToAlbumEdition()`) y se quita en el
+botón "‹ Volver" y en el handler de clic de las pestañas del rail — este último con
+cuidado de no interferir con `jumpToAlbumEdition()` (que también llama a
+`switchView("colecciones")` pero SÍ quiere aterrizar directo en el detalle): el reset a
+"solo lista" vive específicamente en el listener de `.tab`, no dentro de `switchView()`,
+así que un salto programático que llama a `switchView()` y agrega `.mobile-detail` él
+mismo, después, no lo pierde.
+
+Verificado con Playwright en 390×844: lista sola tras tocar la pestaña, detalle solo +
+botón Volver visible tras elegir/crear un ítem, lista de nuevo tras Volver — para
+Colecciones y para Mazos por separado — más el caso de `jumpToAlbumEdition` (clic en una
+fila de "Progreso por edición" en Estadísticas) aterrizando directo en el detalle sin
+pasar por la lista. En escritorio (1600px) se confirmó que ambos paneles siguen visibles
+a la vez, sin cambios. 0 `pageerror`, `node --check` sobre `js/app.js` sin errores.
+
 ### 2026-09-20 (94ª iteración) — Segunda pasada de móvil: toolbar en íconos, filtros de Cambios, separación visual del menú inferior — y corrige una regresión real que metió la 93ª iteración (barra inferior tapando toda la pantalla)
 
 El dueño marcó con capturas en rosa 4 zonas del sitio en vivo que seguían viéndose
