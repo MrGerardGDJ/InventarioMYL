@@ -378,6 +378,40 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-29 (96ª iteración) — Juego Organizado: renumera JO-01..JO-127 por fecha de obtención (antes seguía el orden de la tabla del wiki)
+
+El dueño preguntó si el orden de "Juego Organizado - Primera Era" era correcto, dado que
+son promos que a veces dicen un número de edición y a veces solo "EDICIÓN LIMITADA JO", y
+propuso ordenarlas por fecha de lanzamiento (la más antigua = 1).
+
+- **Diagnóstico**: los `JO-NN` eran simplemente el orden de las filas de la tabla
+  "Juego Organizado" de https://myl.fandom.com/es/wiki/Cartas_Promo_Primera_Era_Klu (ver
+  iteración 4/11ª), que es cronológico solo a grandes rasgos. Saltos reales: "Premier 2024"
+  y "J.O. 2024" (JO-40..52) quedaban después de dic-2024 (JO-39); "Nacional 2025"
+  (JO-104..106) después de feb-2026; Hrist/Comerciantes del Río numeradas al final (126/127)
+  aunque el wiki los lista entre las de mediados de 2026.
+- **Fuente de fechas**: columna "Obtención" de esa misma tabla (ej. "J.O. Enero 2021",
+  "Premier Julio 2024", "Lanzamiento CRPE 2025 (Julio)"). Ojo: NO existe una fecha exacta
+  por carta — solo mes+año en ~la mitad de las filas, el resto trae solo el año
+  ("J.O. 2024"), un rango ("J.O. 2025-2026") o nada ("J.O."). Los `cb=` de las URLs de
+  imagen son la fecha en que se subió el archivo al wiki, no la de lanzamiento (no se usan).
+- **Criterio de orden** (clave `(año, mes)`, desempate por posición en la tabla del wiki):
+  sin fecha → primero (son las promos previas a ene-2021, en orden del wiki); con mes → ese
+  mes; solo año → **después** de los meses fechados de ese año; rango que cruza años → al
+  final de su primer año. Hrist y Comerciantes del Río se ubicaron en agosto 2026 (su
+  página propia dice Torneo Premier PE agosto 2026, más específico que el "J.O. 2026" de la
+  tabla), Hrist antes, como los numeró el dueño. **Es una convención, no un dato**: dentro
+  de un mismo año, las de "solo año" podrían haber salido antes o después de las fechadas.
+- **Cambio**: solo `specialId` de 57 cartas en `data/custom-cards.json` (verificado: mismo
+  conjunto de `id`, todos los demás campos idénticos, 127 identificadores únicos JO-01..127).
+  El `id` interno no cambia, así que inventario, mazos y colecciones no se tocan. Cambia lo
+  que se ve en la etiqueta (ej. Vikingo pasa de JO-95 a JO-71).
+- **No incluido**: el wiki hoy trae 151 filas; las 24 extra (Premier agosto 2026 "Coleccionista
+  Victoriosa PE 1..", Torneo Relámpago) son otras líneas de producto, no J.O.; además
+  "Nido de Dragón" está duplicada en la propia tabla. Quedan fuera hasta que el dueño decida.
+- Verificado con Playwright: colección de la edición muestra JO-01..JO-127 en orden
+  ascendente estricto, 0 `pageerror`.
+
 ### 2026-09-20 (95ª iteración) — Patrón lista→detalle en móvil para Colecciones y Mazos
 
 Cierra el pendiente que había quedado abierto en la 94ª iteración: el dueño confirmó

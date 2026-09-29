@@ -16423,7 +16423,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/29/Knarr_JO.png/revision/latest?cb=20251102190906&path-prefix=es",
    "custom": true,
-   "specialId": "JO-71"
+   "specialId": "JO-72"
   },
   {
    "id": "juego_organizado_pe__custom__072_armadura_de_valkyria",
@@ -16441,7 +16441,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d2/Armadura_de_Valkyria_JO.png/revision/latest?cb=20251102192302&path-prefix=es",
    "custom": true,
-   "specialId": "JO-72"
+   "specialId": "JO-73"
   },
   {
    "id": "juego_organizado_pe__custom__073_los_cinco_anillos",
@@ -16459,7 +16459,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/44/Los_Cinco_Anillos_JO.png/revision/latest?cb=20251102193433&path-prefix=es",
    "custom": true,
-   "specialId": "JO-73"
+   "specialId": "JO-74"
   },
   {
    "id": "juego_organizado_pe__custom__074_darmer",
@@ -16477,7 +16477,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/6f/Darmer_JO.png/revision/latest?cb=20251102195320&path-prefix=es",
    "custom": true,
-   "specialId": "JO-74"
+   "specialId": "JO-75"
   },
   {
    "id": "juego_organizado_pe__custom__075_pajaro_trueno",
@@ -16495,7 +16495,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f0/P%C3%A1jaro_Trueno_JO.png/revision/latest?cb=20251102200457&path-prefix=es",
    "custom": true,
-   "specialId": "JO-75"
+   "specialId": "JO-76"
   },
   {
    "id": "juego_organizado_pe__custom__076_final_del_arcoiris",
@@ -16513,7 +16513,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/19/Final_del_Arco%C3%ADris_JO.png/revision/latest?cb=20251102152446&path-prefix=es",
    "custom": true,
-   "specialId": "JO-76"
+   "specialId": "JO-77"
   },
   {
    "id": "juego_organizado_pe__custom__077_agua_sagrada",
@@ -16531,7 +16531,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/77/Agua_Sagrada_JO.png/revision/latest?cb=20251102153427&path-prefix=es",
    "custom": true,
-   "specialId": "JO-77"
+   "specialId": "JO-78"
   },
   {
    "id": "juego_organizado_pe__custom__078_collar_de_mani",
@@ -16549,7 +16549,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a8/Collar_de_Man%C3%AD_JO.png/revision/latest?cb=20251102153755&path-prefix=es",
    "custom": true,
-   "specialId": "JO-78"
+   "specialId": "JO-79"
   },
   {
    "id": "juego_organizado_pe__custom__079_puente_bifrost",
@@ -16567,7 +16567,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/51/Puente_Bifrost_JO.png/revision/latest?cb=20251102154433&path-prefix=es",
    "custom": true,
-   "specialId": "JO-79"
+   "specialId": "JO-80"
   },
   {
    "id": "juego_organizado_pe__custom__080_origami",
@@ -16585,7 +16585,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/85/Origami_JO.png/revision/latest?cb=20251102154711&path-prefix=es",
    "custom": true,
-   "specialId": "JO-80"
+   "specialId": "JO-81"
   },
   {
    "id": "juego_organizado_pe__custom__081_torc_ardiente",
@@ -16603,7 +16603,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b5/Torc_Ardiente_JO.png/revision/latest?cb=20260414020913&path-prefix=es",
    "custom": true,
-   "specialId": "JO-81"
+   "specialId": "JO-95"
   },
   {
    "id": "juego_organizado_pe__custom__082_calabaza_del_inmortal",
@@ -16621,7 +16621,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/0b/Calabaza_del_Inmortal_JO.png/revision/latest?cb=20260215173927&path-prefix=es",
    "custom": true,
-   "specialId": "JO-82"
+   "specialId": "JO-96"
   },
   {
    "id": "juego_organizado_pe__custom__083_baculo",
@@ -16639,7 +16639,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/63/B%C3%A1culo_JO.png/revision/latest?cb=20260215174319&path-prefix=es",
    "custom": true,
-   "specialId": "JO-83"
+   "specialId": "JO-97"
   },
   {
    "id": "juego_organizado_pe__custom__084_hutzilopochtli",
@@ -16657,7 +16657,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/ef/Hutzilopochtli_JO.png/revision/latest?cb=20260421024121&path-prefix=es",
    "custom": true,
-   "specialId": "JO-84"
+   "specialId": "JO-82"
   },
   {
    "id": "juego_organizado_pe__custom__085_mu_she",
@@ -16675,7 +16675,7 @@
    "flavour": "Símbolo de sabiduría y crecimiento. Representa renovación, adaptabilidad y longevidad.",
    "image": "./data/custom-images/mylserena/juego_organizado_pe_085_mu_she.jpg",
    "custom": true,
-   "specialId": "JO-85"
+   "specialId": "JO-83"
   },
   {
    "id": "juego_organizado_pe__custom__086_flores_de_sangre",
@@ -16693,7 +16693,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d9/Flores_de_Sangre_JO.png/revision/latest?cb=20251102160942&path-prefix=es",
    "custom": true,
-   "specialId": "JO-86"
+   "specialId": "JO-84"
   },
   {
    "id": "juego_organizado_pe__custom__087_dracula",
@@ -16711,7 +16711,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/6f/Dr%C3%A1cula_JO.png/revision/latest?cb=20251102161417&path-prefix=es",
    "custom": true,
-   "specialId": "JO-87"
+   "specialId": "JO-85"
   },
   {
    "id": "juego_organizado_pe__custom__088_destierro_astral",
@@ -16729,7 +16729,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/77/Destierro_Astral_JO.png/revision/latest?cb=20251102162501&path-prefix=es",
    "custom": true,
-   "specialId": "JO-88"
+   "specialId": "JO-86"
   },
   {
    "id": "juego_organizado_pe__custom__089_tambor_daiko",
@@ -16747,7 +16747,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/9c/Tambor_Daiko_JO.png/revision/latest?cb=20251102170224&path-prefix=es",
    "custom": true,
-   "specialId": "JO-89"
+   "specialId": "JO-87"
   },
   {
    "id": "juego_organizado_pe__custom__090_dalai_lama",
@@ -16765,7 +16765,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/0d/Dalai_Lama_JO.png/revision/latest?cb=20251102170818&path-prefix=es",
    "custom": true,
-   "specialId": "JO-90"
+   "specialId": "JO-88"
   },
   {
    "id": "juego_organizado_pe__custom__091_cuerno_de_elfo",
@@ -16783,7 +16783,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/e0/Cuerno_de_Elfo_JO.png/revision/latest?cb=20260421025128&path-prefix=es",
    "custom": true,
-   "specialId": "JO-91"
+   "specialId": "JO-89"
   },
   {
    "id": "juego_organizado_pe__custom__092_grimorio_sacro",
@@ -16801,7 +16801,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/1b/Grimorio_Sacro_JO.png/revision/latest?cb=20260421025454&path-prefix=es",
    "custom": true,
-   "specialId": "JO-92"
+   "specialId": "JO-90"
   },
   {
    "id": "juego_organizado_pe__custom__093_signy",
@@ -16819,7 +16819,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/11/Signy_JO_PE.png/revision/latest?cb=20251102163301&path-prefix=es",
    "custom": true,
-   "specialId": "JO-93"
+   "specialId": "JO-98"
   },
   {
    "id": "juego_organizado_pe__custom__094_wangulen",
@@ -16837,7 +16837,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/cb/Wangul%C3%A9n_JO.png/revision/latest?cb=20251120235236&path-prefix=es",
    "custom": true,
-   "specialId": "JO-94"
+   "specialId": "JO-99"
   },
   {
    "id": "juego_organizado_pe__custom__095_vikingo",
@@ -16855,7 +16855,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/69/Vikingo_JO.png/revision/latest?cb=20251201014502&path-prefix=es",
    "custom": true,
-   "specialId": "JO-95"
+   "specialId": "JO-71"
   },
   {
    "id": "juego_organizado_pe__custom__096_kordrag",
@@ -16873,7 +16873,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b5/Kordrag_Staff.png/revision/latest?cb=20251102171231&path-prefix=es",
    "custom": true,
-   "specialId": "JO-96"
+   "specialId": "JO-91"
   },
   {
    "id": "juego_organizado_pe__custom__097_bultungin",
@@ -16891,7 +16891,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/7/72/Bultungin_JO.png/revision/latest?cb=20260215175558&path-prefix=es",
    "custom": true,
-   "specialId": "JO-97"
+   "specialId": "JO-100"
   },
   {
    "id": "juego_organizado_pe__custom__098_strix",
@@ -16909,7 +16909,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/38/Strix_JO.png/revision/latest?cb=20260215180156&path-prefix=es",
    "custom": true,
-   "specialId": "JO-98"
+   "specialId": "JO-101"
   },
   {
    "id": "juego_organizado_pe__custom__099_cortadora",
@@ -16927,7 +16927,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f0/Cortadora_JO.png/revision/latest?cb=20260215181048&path-prefix=es",
    "custom": true,
-   "specialId": "JO-99"
+   "specialId": "JO-102"
   },
   {
    "id": "juego_organizado_pe__custom__100_brunnmigi",
@@ -16945,7 +16945,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/81/Brunnmigi_JO.png/revision/latest?cb=20260215181433&path-prefix=es",
    "custom": true,
-   "specialId": "JO-100"
+   "specialId": "JO-103"
   },
   {
    "id": "juego_organizado_pe__custom__101_ivar_ragnarsson",
@@ -16963,7 +16963,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/6d/Ivar_Ragnarsson_JO.png/revision/latest?cb=20260215181844&path-prefix=es",
    "custom": true,
-   "specialId": "JO-101"
+   "specialId": "JO-104"
   },
   {
    "id": "juego_organizado_pe__custom__102_hwarang",
@@ -16981,7 +16981,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/35/Hwarang_JO.png/revision/latest?cb=20260215182351&path-prefix=es",
    "custom": true,
-   "specialId": "JO-102"
+   "specialId": "JO-105"
   },
   {
    "id": "juego_organizado_pe__custom__103_changquan",
@@ -16999,7 +16999,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/25/Changquan_JO.png/revision/latest?cb=20260215183430&path-prefix=es",
    "custom": true,
-   "specialId": "JO-103"
+   "specialId": "JO-106"
   },
   {
    "id": "juego_organizado_pe__custom__104_odin",
@@ -17017,7 +17017,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/e9/Od%C3%ADn_JO.png/revision/latest?cb=20260315192615&path-prefix=es",
    "custom": true,
-   "specialId": "JO-104"
+   "specialId": "JO-92"
   },
   {
    "id": "juego_organizado_pe__custom__105_colgante_impio",
@@ -17035,7 +17035,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/46/Colgante_Imp%C3%ADo_JO.png/revision/latest?cb=20260315203648&path-prefix=es",
    "custom": true,
-   "specialId": "JO-105"
+   "specialId": "JO-93"
   },
   {
    "id": "juego_organizado_pe__custom__106_nukewaza",
@@ -17053,7 +17053,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/3a/Nukewaza_JO.png/revision/latest?cb=20260315204345&path-prefix=es",
    "custom": true,
-   "specialId": "JO-106"
+   "specialId": "JO-94"
   },
   {
    "id": "juego_organizado_pe__custom__107_dama_del_lago",
@@ -17071,7 +17071,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/01/Dama_del_Lago_JO.png/revision/latest?cb=20260414021619&path-prefix=es",
    "custom": true,
-   "specialId": "JO-107"
+   "specialId": "JO-122"
   },
   {
    "id": "juego_organizado_pe__custom__108_cador",
@@ -17089,7 +17089,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/50/Cador_JO.png/revision/latest?cb=20260606020541&path-prefix=es",
    "custom": true,
-   "specialId": "JO-108"
+   "specialId": "JO-123"
   },
   {
    "id": "juego_organizado_pe__custom__109_gente_lunar",
@@ -17107,7 +17107,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c5/Gente_Lunar_JO.png/revision/latest?cb=20260606020913&path-prefix=es",
    "custom": true,
-   "specialId": "JO-109"
+   "specialId": "JO-124"
   },
   {
    "id": "juego_organizado_pe__custom__110_hombre_de_negro",
@@ -17125,7 +17125,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f7/Hombre_de_Negro_JO.png/revision/latest?cb=20260421032549&path-prefix=es",
    "custom": true,
-   "specialId": "JO-110"
+   "specialId": "JO-125"
   },
   {
    "id": "juego_organizado_pe__custom__111_selena",
@@ -17143,7 +17143,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/5a/Selena_JO.png/revision/latest?cb=20260606020703&path-prefix=es",
    "custom": true,
-   "specialId": "JO-111"
+   "specialId": "JO-126"
   },
   {
    "id": "juego_organizado_pe__custom__112_pajaro_inti",
@@ -17161,7 +17161,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/d/d5/P%C3%A1jaro_Inti_Staff.png/revision/latest?cb=20260421034110&path-prefix=es",
    "custom": true,
-   "specialId": "JO-112"
+   "specialId": "JO-127"
   },
   {
    "id": "juego_organizado_pe__custom__113_aliento_ardiente",
@@ -17179,7 +17179,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/a/a0/Aliento_Ardiente_JO.png/revision/latest?cb=20260421034617&path-prefix=es",
    "custom": true,
-   "specialId": "JO-113"
+   "specialId": "JO-107"
   },
   {
    "id": "juego_organizado_pe__custom__114_karve",
@@ -17197,7 +17197,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8d/Karve_JO.png/revision/latest?cb=20260421035149&path-prefix=es",
    "custom": true,
-   "specialId": "JO-114"
+   "specialId": "JO-108"
   },
   {
    "id": "juego_organizado_pe__custom__115_nido_de_dragon",
@@ -17215,7 +17215,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c2/Nido_de_Drag%C3%B3n_JO.png/revision/latest?cb=20260606040431&path-prefix=es",
    "custom": true,
-   "specialId": "JO-115"
+   "specialId": "JO-109"
   },
   {
    "id": "juego_organizado_pe__custom__116_ave_fenix",
@@ -17233,7 +17233,7 @@
    "flavour": "La muerte no lo alcanza. Al exponerse a los rayos del sol, renace de sus cenizas.",
    "image": "",
    "custom": true,
-   "specialId": "JO-116"
+   "specialId": "JO-110"
   },
   {
    "id": "juego_organizado_pe__custom__117_caballero_verde",
@@ -17251,7 +17251,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/c/c9/Caballero_Verde_JO.png/revision/latest?cb=20260606041052&path-prefix=es",
    "custom": true,
-   "specialId": "JO-117"
+   "specialId": "JO-111"
   },
   {
    "id": "juego_organizado_pe__custom__118_zduhac",
@@ -17269,7 +17269,7 @@
    "flavour": "",
    "image": "./data/custom-images/mylserena/juego_organizado_pe_118_zduhac.png",
    "custom": true,
-   "specialId": "JO-118"
+   "specialId": "JO-113"
   },
   {
    "id": "juego_organizado_pe__custom__119_terence_el_escudero",
@@ -17287,7 +17287,7 @@
    "flavour": "",
    "image": "./data/custom-images/mylserena/juego_organizado_pe_119_terence_el_escudero.png",
    "custom": true,
-   "specialId": "JO-119"
+   "specialId": "JO-112"
   },
   {
    "id": "juego_organizado_pe__custom__120_flamberge_suiza",
@@ -17305,7 +17305,7 @@
    "flavour": "",
    "image": "./data/custom-images/mylserena/juego_organizado_pe_120_flamberge_suiza.png",
    "custom": true,
-   "specialId": "JO-120"
+   "specialId": "JO-114"
   },
   {
    "id": "juego_organizado_pe__custom__121_cazar_vampiro",
@@ -17323,7 +17323,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/3/37/Cazar_Vampiro_JO.png/revision/latest?cb=20260701232127&path-prefix=es",
    "custom": true,
-   "specialId": "JO-121"
+   "specialId": "JO-115"
   },
   {
    "id": "toolkit_valentia_y_desolacion__custom__tkpe25_01_rapto_de_idunn",
@@ -18745,7 +18745,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/b8/Erchitu_JO.png/revision/latest?cb=20260807033845&path-prefix=es",
    "custom": true,
-   "specialId": "JO-122"
+   "specialId": "JO-118"
   },
   {
    "id": "juego_organizado_pe__custom__123_mullo",
@@ -18763,7 +18763,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/bf/Mullo_JO.png/revision/latest?cb=20260807033847&path-prefix=es",
    "custom": true,
-   "specialId": "JO-123"
+   "specialId": "JO-120"
   },
   {
    "id": "juego_organizado_pe__custom__124_torreon_negro",
@@ -18781,7 +18781,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/ba/Torre%C3%B3n_Negro_JO.png/revision/latest?cb=20260807033848&path-prefix=es",
    "custom": true,
-   "specialId": "JO-124"
+   "specialId": "JO-119"
   },
   {
    "id": "juego_organizado_pe__custom__125_calmet",
@@ -18799,7 +18799,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/b/be/Calmet_JO.png/revision/latest?cb=20260807033848&path-prefix=es",
    "custom": true,
-   "specialId": "JO-125"
+   "specialId": "JO-121"
   },
   {
    "id": "promo_20_anos_pe__custom__1_flechero",
@@ -21608,7 +21608,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/6/63/Hrist_JO.png/revision/latest?cb=20260821020005&path-prefix=es",
    "custom": true,
-   "specialId": "JO-126"
+   "specialId": "JO-116"
   },
   {
    "id": "juego_organizado_pe__custom__comerciantes_del_rio",
@@ -21626,7 +21626,7 @@
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/e/e4/Comerciantes_del_R%C3%ADo_JO.png/revision/latest?cb=20260821020501&path-prefix=es",
    "custom": true,
-   "specialId": "JO-127"
+   "specialId": "JO-117"
   },
   {
    "id": "kit_juego_pe_fullart__custom__114-126_zeus",
