@@ -378,6 +378,40 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-29 (97ª iteración) — Juego Organizado: +23 cartas (Premier Agosto 2026 y Torneo Relámpago), renumeración a JO-01..JO-150 y filtro "Origen"
+
+Por pedido del dueño, las 23 filas de la tabla del wiki que no estaban cargadas se agregaron
+DENTRO de `juego_organizado_pe` (no como edición aparte), con filtro para distinguirlas.
+
+- **Por qué van dentro de JO**: la página de cada carta trae `edición = J.O. Primera Era 2026`
+  y el wiki las lista en la misma sección "Juego Organizado" (cartas de torneos de Primera
+  Era). Corrige lo que se dijo antes: no son "otra línea" por ser Premier; solo cambia el código
+  impreso (`EDICIÓN LIMITADA JO`, `COLECCIONISTA VICTORIOSA PE 1..12`, `EDICIÓN LIMITADA
+  RELÁMPAGO`). Velas Demoniacas e Inquisidor Asesino ya llevaban "EDICIÓN LIMITADA JO".
+- **Cartas nuevas (23)**: 2 "JO" de Premier Ago-2026, 12 Coleccionista Victoriosa (Gareth…Loke,
+  32 mejores del Premier PE de agosto 2026), Dracma Relámpago + 8 Torneo Relámpago
+  (Puchao, Peacemaker, Lámpara Mágica, Torre Oscura, Tumba del Caballero, Escudo de Guerra,
+  Sangre de Dragón, Gram). Datos (tipo, raza, coste, fuerza, habilidad, texto) e imagen de la
+  página propia de cada carta vía API de MediaWiki. "Nido de Dragón" no se duplicó (la fila
+  está repetida en la propia tabla del wiki).
+- **Inquisidor Asesino**: su página "(J.O.)" no existe en el wiki; datos tomados de la carta
+  original (el wiki dice que las JO son idénticas a su versión original) pero **sin imagen**:
+  el arte JO podría ser distinto y la regla del proyecto es no usar la imagen de la página base.
+- **Nuevos campos** en `data/custom-cards.json` para las 150 cartas JO: `obtencion` (texto
+  del wiki, ej. "Premier Julio 2024") y `origen` (categoría: Torneo Premier 44, Juego Organizado
+  53, Liga J.O. 15, Torneo Relámpago 11, Lanzamiento de producto 10, Torneo Nacional 6, Campeón
+  4, Incentivo Staff 4, Promo 3). Hrist y Comerciantes del Río: `obtencion` "Torneo Relámpago
+  Agosto 2026" (su página propia; la tabla dice solo "J.O. 2026").
+- **Renumeración** JO-01..JO-150 con el mismo criterio de la 96ª iteración (año/mes de
+  Obtención; solo-año después de los meses de ese año; desempate por orden del wiki).
+  Ojo: Dracma Relámpago (solo "2026") queda JO-150 y Dama del Lago/Cador/... ("2026" sin mes)
+  después de septiembre 2026: es la convención, no un dato. `id` internos sin cambio.
+- **App** (`js/app.js`, `index.html`): `normalizeCard` conserva `obtencion`/`origen`; nuevo
+  chip-select "Origen" en el catálogo (se llena solo desde los datos, se limpia con "Limpiar");
+  `obtencion` entra en la búsqueda y se muestra en la línea de la ficha.
+- Verificado con Playwright: filtro Relámpago = 11, Premier = 44; colección JO con 150 cartas en
+  orden ascendente estricto; 0 desborde en móvil; 0 `pageerror`.
+
 ### 2026-09-29 (96ª iteración) — Juego Organizado: renumera JO-01..JO-127 por fecha de obtención (antes seguía el orden de la tabla del wiki)
 
 El dueño preguntó si el orden de "Juego Organizado - Primera Era" era correcto, dado que

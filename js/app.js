@@ -86,7 +86,7 @@ async function loadData() {
   // Asegura nombre legible de edición y precalcula texto de búsqueda (una vez)
   for (const c of state.baseCards) {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
-    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c));
+    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion);
   }
   // Migración auto-reconciliante (Capa B): remapea inventario/mazos de
   // legacyId → id estable usando el catálogo. Idempotente; se cura sola cuando
@@ -127,6 +127,10 @@ function normalizeCard(c, i) {
     // Si está presente, la carta no usa número y se lista en la sección de
     // especiales, al inicio de la colección.
     specialId: c.specialId || "",
+    // Cómo se consigue la carta (promos de torneo/liga): texto del wiki
+    // ("Premier Julio 2024") y su categoría para el filtro "Origen".
+    obtencion: c.obtencion || "",
+    origen: c.origen || "",
     custom: !!c.custom,
     // Preservar la marca de carta creada por el usuario: sin ella el detalle
     // no muestra los botones Editar/Eliminar (bug que impedía corregir la
@@ -148,7 +152,7 @@ function rebuildCards() {
   const overrideIds = new Set(userCustom.map((c) => c.id));
   for (const c of userCustom) {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
-    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c));
+    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion);
   }
   state.cards = (state.baseCards || []).filter((c) => !overrideIds.has(c.id)).concat(userCustom);
   // Las ediciones personalizadas aportan su nombre legible al mapa global
@@ -254,6 +258,7 @@ function populateFilters() {
   fillSelect("#f-race", uniqueSorted(state.cards.map((c) => c.race)).map((v) => ({ value: v, label: v })));
   fillSelect("#f-type", groupedUnique(state.cards.map((c) => c.type)).map((v) => ({ value: v, label: v })));
   fillSelect("#f-rarity", uniqueSorted(state.cards.map((c) => c.rarity)).map((v) => ({ value: v, label: v })));
+  fillSelect("#f-origin", uniqueSorted(state.cards.map((c) => c.origen)).map((v) => ({ value: v, label: v })));
   // Formato también en la vista de estadísticas
   fillSelect("#stats-format", uniqueSorted(state.cards.map((c) => c.format)).map((f) => ({ value: f, label: FMT_NAMES[f] || f })));
   refreshEditionOptions();
@@ -351,6 +356,7 @@ function baseFilteredCards() {
   const race = $("#f-race").value;
   const type = $("#f-type").value;
   const rarity = $("#f-rarity").value;
+  const origin = $("#f-origin").value;
   const maxCost = Number($("#f-cost").value);
   return state.cards.filter((c) => {
     if (q && !c.searchText.includes(q)) return false;
@@ -359,6 +365,7 @@ function baseFilteredCards() {
     if (race && c.race !== race) return false;
     if (type && !looseEq(c.type, type)) return false;
     if (rarity && c.rarity !== rarity) return false;
+    if (origin && c.origen !== origin) return false;
     if (maxCost < 12 && c.cost != null && c.cost > maxCost) return false;
     return true;
   });
@@ -747,7 +754,7 @@ function renderFicha() {
     ${card.cost != null ? `<span class="badge-cost"><i class="ph ph-coin"></i>${card.cost}</span>` : ""}
     <div class="card-overlay-text ficha-overlay-text">
       <div class="ficha-card-name">${escapeHtml(dName)}</div>
-      <div class="ficha-card-sub">${escapeHtml(card.editionName || "")} · ${card.specialId ? escapeHtml(card.specialId) : Number.isFinite(num) ? "nº " + String(num).padStart(3, "0") : ""} · ${escapeHtml(card.rarity)}</div>
+      <div class="ficha-card-sub">${escapeHtml(card.editionName || "")} · ${card.specialId ? escapeHtml(card.specialId) : Number.isFinite(num) ? "nº " + String(num).padStart(3, "0") : ""} · ${escapeHtml(card.rarity)}${card.obtencion ? " · " + escapeHtml(card.obtencion) : ""}</div>
     </div>`;
 
   updateFichaQty(qty);
@@ -861,7 +868,7 @@ function renderDeckFicha() {
     ${card.cost != null ? `<span class="badge-cost"><i class="ph ph-coin"></i>${card.cost}</span>` : ""}
     <div class="card-overlay-text ficha-overlay-text">
       <div class="ficha-card-name">${escapeHtml(dName)}</div>
-      <div class="ficha-card-sub">${escapeHtml(card.editionName || "")} · ${card.specialId ? escapeHtml(card.specialId) : Number.isFinite(num) ? "nº " + String(num).padStart(3, "0") : ""} · ${escapeHtml(card.rarity)}</div>
+      <div class="ficha-card-sub">${escapeHtml(card.editionName || "")} · ${card.specialId ? escapeHtml(card.specialId) : Number.isFinite(num) ? "nº " + String(num).padStart(3, "0") : ""} · ${escapeHtml(card.rarity)}${card.obtencion ? " · " + escapeHtml(card.obtencion) : ""}</div>
     </div>`;
 
   updateDeckFichaQty(qty);
@@ -906,7 +913,7 @@ function renderDeckFicha() {
 function jumpToCatalogCard(card) {
   switchView("coleccion");
   $("#search").value = displayName(card);
-  ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-sort"].forEach((s) => { const el = $(s); if (el) el.selectedIndex = 0; });
+  ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-sort"].forEach((s) => { const el = $(s); if (el) el.selectedIndex = 0; });
   $("#f-cost").value = 12; $("#cost-val").textContent = "∞";
   refreshEditionOptions();
   applyFilters();
@@ -4023,7 +4030,7 @@ function bindEvents() {
     }
   }, 180);
   $("#search").addEventListener("input", debounced);
-  ["#f-ownership", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-sort"].forEach((s) =>
+  ["#f-ownership", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-sort"].forEach((s) =>
     $(s).addEventListener("change", applyFilters)
   );
   $("#f-format").addEventListener("change", () => { refreshEditionOptions(); applyFilters(); });
@@ -4034,7 +4041,7 @@ function bindEvents() {
   });
   $("#clear-filters").addEventListener("click", () => {
     $("#search").value = "";
-    ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-sort"].forEach((s) => ($(s).selectedIndex = 0));
+    ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-sort"].forEach((s) => ($(s).selectedIndex = 0));
     $("#f-cost").value = 12; $("#cost-val").textContent = "∞";
     refreshEditionOptions();
     applyFilters();
