@@ -2048,6 +2048,11 @@ function exportCollectionAsPDF(col) {
 // como listado inicial con su propio título y luego el listado numerado.
 // Cada grilla interna lleva la clase .collection-grid, que activa en CSS el
 // modo bloqueado (blanco y negro) para las cartas sin copias.
+// Orden de escasez de los orígenes de las promos de Juego Organizado (más
+// escasa primero). El blog oficial solo confirma que Victoriosa es exclusiva
+// de los Top de eventos masivos y Relámpago se entrega por participar; el
+// resto del orden es criterio del dueño del inventario, ajustable aquí.
+const ORIGEN_RANK = ["Victoriosa", "Campeón", "Torneo Nacional", "Torneo Premier", "Liga J.O.", "Torneo Relámpago", "Lanzamiento de producto", "Incentivo Staff", "Promo", "Juego Organizado"];
 function renderCollectionGrid(col) {
   const wrap = $("#collection-grid");
   if (!wrap) return;
@@ -2079,6 +2084,21 @@ function renderCollectionGrid(col) {
     for (const c of list) { navList.push(c); g.appendChild(cardEl(c, navList)); }
     wrap.appendChild(g);
   };
+  // Promocionales con `origen` (Juego Organizado): una sección por origen,
+  // de la más escasa a la más común, en vez de una sola lista mezclada.
+  // Dentro de cada sección se conserva el orden ya calculado (por fecha).
+  const addSpecialSections = (prefix, list, fallback = prefix) => {
+    const withOrigin = list.filter((c) => c.origen);
+    if (!withOrigin.length) { addSection(`${fallback} (${list.length})`, list); return; }
+    const rank = (o) => { const i = ORIGEN_RANK.indexOf(o); return i < 0 ? ORIGEN_RANK.length : i; };
+    const origins = [...new Set(withOrigin.map((c) => c.origen))].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b, "es"));
+    for (const o of origins) {
+      const sub = list.filter((c) => c.origen === o);
+      addSection(`${prefix ? prefix + " · " : ""}${o} (${sub.length})`, sub);
+    }
+    const rest = list.filter((c) => !c.origen);
+    if (rest.length) addSection(`${prefix ? prefix + " · " : ""}Otras promocionales (${rest.length})`, rest);
+  };
   if (col.editions.length > 1) {
     // Colección con varias ediciones agrupadas: una sub-grilla por edición,
     // en su orden de publicación (cards ya viene ordenado así) — tanto para
@@ -2089,11 +2109,11 @@ function renderCollectionGrid(col) {
       const edSpecials = specials.filter((c) => c.edition === slug);
       const edNormals = normals.filter((c) => c.edition === slug);
       const edName = state.editionName[slug] || slug;
-      addSection(`${edName} — promocionales / especiales (${edSpecials.length})`, edSpecials);
+      addSpecialSections(`${edName} — promocionales / especiales`, edSpecials);
       addSection(`${edName} (${edNormals.length})`, edNormals);
     }
   } else if (specials.length) {
-    addSection(`Cartas promocionales / especiales (${specials.length})`, specials);
+    addSpecialSections("", specials, "Cartas promocionales / especiales");
     addSection(`Listado de cartas de la edición (${normals.length})`, normals);
   } else {
     addSection(null, normals); // sin especiales y una sola edición: una sola grilla, como siempre
