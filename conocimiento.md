@@ -378,6 +378,27 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-29 (98ª iteración) — Colección de Juego Organizado en secciones por origen, de la más escasa a la más común
+
+El dueño leyó el blog oficial (https://blog.myl.cl/novedades-jo-pe-cartas-victoriosas-y-torneos-relampago,
+30/07/2026) y pidió separar las promos por escasez: una Victoriosa no es igual a una de Staff.
+
+- **Lo que confirma el blog**: las 12 Victoriosas son una "nueva rareza" exclusiva de los Top de
+  eventos Premier/Open/Campeones/Coliseo, disponibles 3 meses y luego reemplazadas; las 8
+  Relámpago se dan por participar (1 al azar de 3 por torneo, las otras 5 son premio de canje) y
+  el Dracma Relámpago es una moneda de canje. **El resto del orden de escasez no sale del blog**:
+  es criterio del dueño y vive en `ORIGEN_RANK` (`js/app.js`), fácil de ajustar.
+- **Datos**: las 12 Victoriosas pasan de origen "Torneo Premier" a "Victoriosa" (Premier queda con
+  32 en vez de 44). Sin cambios en `obtencion`, `specialId` ni `id`.
+- **Colección** (`renderCollectionGrid`): las especiales con `origen` se agrupan en una sección por
+  origen, ordenadas por `ORIGEN_RANK`: Victoriosa 12 > Campeón 4 > Torneo Nacional 6 > Torneo
+  Premier 32 > Liga J.O. 15 > Torneo Relámpago 11 > Lanzamiento de producto 10 > Incentivo Staff
+  4 > Promo 3 > Juego Organizado 53. Dentro de cada sección se conserva el orden por fecha
+  (JO-NN ascendente, verificado). Ediciones sin `origen` (ej. Lootbox) no cambian.
+- No incluido: el PDF de la colección sigue con su orden anterior (por `specialId`).
+- Verificado con Playwright: 10 secciones con los conteos de arriba, cada una ascendente, Lootbox
+  intacta, 0 `pageerror`.
+
 ### 2026-09-29 (97ª iteración) — Juego Organizado: +23 cartas (Premier Agosto 2026 y Torneo Relámpago), renumeración a JO-01..JO-150 y filtro "Origen"
 
 Por pedido del dueño, las 23 filas de la tabla del wiki que no estaban cargadas se agregaron
