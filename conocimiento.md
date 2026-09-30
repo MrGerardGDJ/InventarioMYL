@@ -378,6 +378,27 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-30 (99ª iteración) — Ave Fénix (JO-110) y Rapto de Idunn (JO-62): imagen y datos desde escaneos propios del dueño
+
+Las dos cartas no tenían imagen en ninguna fuente (wiki y tiendas revisadas antes: sin página/foto
+J.O.). El dueño escaneó sus cartas físicas y las entregó.
+
+- **Imágenes**: escaneos (~1060×1500, ~450 KB) reducidos a 720 px de ancho, WebP calidad 86 (~210 KB)
+  y guardados en `data/custom-images/scans/` (`juego_organizado_pe_110_ave_fenix.webp`,
+  `juego_organizado_pe_062_rapto_de_idunn.webp`), auto-hospedados como el resto (sin hotlink;
+  importa para el PDF, que dibuja las imágenes en un `<canvas>`).
+- **Datos leídos de la propia carta** (fuente de mayor confianza, la carta impresa):
+  - Ave Fénix: Aliado, raza Faerie, coste 2, fuerza 2, habilidad completa; código "EDICIÓN LIMITADA
+    JO". **Corrección**: el registro decía coste 3 y raza "—"; el escaneo muestra coste 2 y Faerie
+    (el coste 3 venía de otra fuente, probablemente la carta base). Se dejó `rarity` "Vasallo" y el
+    `flavour` que ya tenía: el escaneo no muestra ninguno de los dos.
+  - Rapto de Idunn: Talismán, coste 3, habilidad "Para jugar esta carta debes destruir un Aliado que
+    controles. / Gana el control de un Aliado oponente por el resto del juego."; el código impreso es
+    "EDICIÓN LIMITADA PE 24" y dice "Torneo Premier" (confirma su origen). `rarity` sigue en "—":
+    la carta no la declara.
+- Verificado con Playwright (imágenes locales sin interceptar): ambas cargan (`naturalWidth>0`) y la
+  ficha muestra la habilidad nueva; 0 `pageerror`.
+
 ### 2026-09-29 (98ª iteración) — Colección de Juego Organizado en secciones por origen, de la más escasa a la más común
 
 El dueño leyó el blog oficial (https://blog.myl.cl/novedades-jo-pe-cartas-victoriosas-y-torneos-relampago,
