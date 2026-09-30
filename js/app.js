@@ -86,7 +86,7 @@ async function loadData() {
   // Asegura nombre legible de edición y precalcula texto de búsqueda (una vez)
   for (const c of state.baseCards) {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
-    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion);
+    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion + " " + c.codigo + " " + c.serie);
   }
   // Migración auto-reconciliante (Capa B): remapea inventario/mazos de
   // legacyId → id estable usando el catálogo. Idempotente; se cura sola cuando
@@ -131,6 +131,12 @@ function normalizeCard(c, i) {
     // ("Premier Julio 2024") y su categoría para el filtro "Origen".
     obtencion: c.obtencion || "",
     origen: c.origen || "",
+    // Serie = familia según el código impreso en la carta (ver SERIES_JO);
+    // codigo = ese código tal cual; orden = posición cronológica dentro de la
+    // edición (1 = la más antigua).
+    serie: c.serie || "",
+    codigo: c.codigo || "",
+    orden: Number.isFinite(Number(c.orden)) && c.orden !== "" ? Number(c.orden) : null,
     custom: !!c.custom,
     // Preservar la marca de carta creada por el usuario: sin ella el detalle
     // no muestra los botones Editar/Eliminar (bug que impedía corregir la
@@ -152,7 +158,7 @@ function rebuildCards() {
   const overrideIds = new Set(userCustom.map((c) => c.id));
   for (const c of userCustom) {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
-    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion);
+    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion + " " + c.codigo + " " + c.serie);
   }
   state.cards = (state.baseCards || []).filter((c) => !overrideIds.has(c.id)).concat(userCustom);
   // Las ediciones personalizadas aportan su nombre legible al mapa global
@@ -455,6 +461,7 @@ function compareEditionCards(a, b) {
       const ra = lootboxRarityRank(a.specialId), rb = lootboxRarityRank(b.specialId);
       if (ra !== rb) return ra - rb;
     }
+    if (a.edition === b.edition && a.orden != null && b.orden != null) return a.orden - b.orden;
     return a.specialId.localeCompare(b.specialId, "es", { numeric: true, sensitivity: "base" });
   }
   return cardNum(a) - cardNum(b) || a.name.localeCompare(b.name, "es");
@@ -2032,6 +2039,7 @@ function exportCollectionAsPDF(col) {
     // orden alfabético por nombre en vez de por el número que traen en su
     // specialId (ej. "PROMOCIONAL PE24 08" antes que "... 10"). Mismo
     // criterio "numeric" que ya usa compareEditionCards.
+    (a.orden != null && b.orden != null ? a.orden - b.orden : 0) ||
     (a.specialId || "").localeCompare(b.specialId || "", "es", { numeric: true, sensitivity: "base" }) ||
     a.name.localeCompare(b.name, "es")
   );
@@ -2048,11 +2056,19 @@ function exportCollectionAsPDF(col) {
 // como listado inicial con su propio título y luego el listado numerado.
 // Cada grilla interna lleva la clase .collection-grid, que activa en CSS el
 // modo bloqueado (blanco y negro) para las cartas sin copias.
-// Orden de escasez de los orígenes de las promos de Juego Organizado (más
-// escasa primero). El blog oficial solo confirma que Victoriosa es exclusiva
-// de los Top de eventos masivos y Relámpago se entrega por participar; el
-// resto del orden es criterio del dueño del inventario, ajustable aquí.
-const ORIGEN_RANK = ["Victoriosa", "Campeón", "Torneo Nacional", "Torneo Premier", "Liga J.O.", "Torneo Relámpago", "Lanzamiento de producto", "Incentivo Staff", "Promo", "Juego Organizado"];
+// Series de Juego Organizado según el código impreso en la carta, en el orden
+// en que se muestran las secciones. `propia` = la carta no trae número, el
+// identificador (LJO-01, PE24-01…) lo asigna este inventario por fecha de
+// entrega; en las demás el número sale de lo impreso en la carta.
+const SERIES_JO = [
+  { key: "Victoriosa", title: "Coleccionista Victoriosa PE", propia: false },
+  { key: "Relámpago", title: "Edición Limitada Relámpago", propia: true },
+  { key: "Edición Limitada JO", title: "Edición Limitada JO", propia: true },
+  { key: "Edición Limitada PE 24", title: "Edición Limitada PE 24", propia: true },
+  { key: "VPE", title: "VPE", propia: false },
+  { key: "Primera Edición", title: "Primera Edición (número de su edición original)", propia: false },
+  { key: "Edición Limitada", title: "Edición Limitada (sin más código)", propia: true },
+];
 function renderCollectionGrid(col) {
   const wrap = $("#collection-grid");
   if (!wrap) return;
@@ -2084,19 +2100,21 @@ function renderCollectionGrid(col) {
     for (const c of list) { navList.push(c); g.appendChild(cardEl(c, navList)); }
     wrap.appendChild(g);
   };
-  // Promocionales con `origen` (Juego Organizado): una sección por origen,
-  // de la más escasa a la más común, en vez de una sola lista mezclada.
-  // Dentro de cada sección se conserva el orden ya calculado (por fecha).
+  // Promocionales con `serie` (Juego Organizado): una sección por serie
+  // (familia de código impreso, ver SERIES_JO). Dentro de cada sección se
+  // conserva el orden ya calculado (por `orden`, cronológico).
   const addSpecialSections = (prefix, list, fallback = prefix) => {
-    const withOrigin = list.filter((c) => c.origen);
-    if (!withOrigin.length) { addSection(`${fallback} (${list.length})`, list); return; }
-    const rank = (o) => { const i = ORIGEN_RANK.indexOf(o); return i < 0 ? ORIGEN_RANK.length : i; };
-    const origins = [...new Set(withOrigin.map((c) => c.origen))].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b, "es"));
-    for (const o of origins) {
-      const sub = list.filter((c) => c.origen === o);
-      addSection(`${prefix ? prefix + " · " : ""}${o} (${sub.length})`, sub);
+    const withSerie = list.filter((c) => c.serie);
+    if (!withSerie.length) { addSection(`${fallback} (${list.length})`, list); return; }
+    const rank = (k) => { const i = SERIES_JO.findIndex((x) => x.key === k); return i < 0 ? SERIES_JO.length : i; };
+    const keys = [...new Set(withSerie.map((c) => c.serie))].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b, "es"));
+    for (const k of keys) {
+      const meta = SERIES_JO.find((x) => x.key === k);
+      const sub = list.filter((c) => c.serie === k);
+      const title = (meta ? meta.title : k) + (meta?.propia ? " · numeración propia" : "");
+      addSection(`${prefix ? prefix + " · " : ""}${title} (${sub.length})`, sub);
     }
-    const rest = list.filter((c) => !c.origen);
+    const rest = list.filter((c) => !c.serie);
     if (rest.length) addSection(`${prefix ? prefix + " · " : ""}Otras promocionales (${rest.length})`, rest);
   };
   if (col.editions.length > 1) {
