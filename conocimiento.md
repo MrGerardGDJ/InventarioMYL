@@ -378,6 +378,50 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-30 (100ª iteración) — Juego Organizado: series por código impreso, numeración propia por serie y orden cronológico con fechas exactas de eventos
+
+El dueño detectó que las promos de JO traen códigos impresos distintos (Coleccionista Victoriosa
+PE n, Edición Limitada JO, Edición Limitada PE 24, VPE nn, número de su edición original) y pidió
+investigar y definir una enumeración lógica. Reemplaza el esquema JO-NN de las iteraciones 96-98.
+
+- **Investigación** (fuentes: tabla "Juego Organizado" de la página "Cartas Promo Primera Era Klu"
+  + página de cada carta + páginas de cada torneo del wiki, vía API de MediaWiki). Familias de
+  código impreso (150 cartas): Edición Limitada JO 79, "N - TOTAL / Primera Edición" 31 (casi todas
+  2021 + Acupuntura y Yasakani de ene-2024; el número es el de su edición original: El Reto,
+  Ragnarok, La Cofradía, Espíritu de Dragón, La Ira del Nahual, Mundo Gótico, Mundo Gótico X, El
+  Reto X), Edición Limitada PE 24 14 (una dice "PE 2024"), Victoriosa 12, Relámpago 9 (8 cartas +
+  Dracma), VPE 01-03 3 (Brokk, Shuar, Carmilla), "Edición Limitada" a secas 2 (Flechero, Kordrag).
+  El código de la tabla y el de la página de cada carta coinciden salvo que las 31 numeradas
+  agregan "/ Primera Edición" en la página.
+- **Fechas exactas**: las páginas "Premier Primera Era AAAA (Mes)" y "Torneo Nacional Primera Era"
+  traen `fecha` y `cartas_del_evento`; se cruzaron por **título de página** (no por nombre: Wangulén,
+  Signy, Puchao tienen versiones JO y Victoriosa/Relámpago distintas). 47 cartas quedan con fecha
+  exacta (la de su PRIMERA entrega: Final del Arcoíris salió en 9 Premier de 2025). El resto
+  (ligas, lanzamientos de producto, Staff, "J.O. 2025") solo tiene mes o año en el wiki.
+- **Campos nuevos** en `data/custom-cards.json` (150 cartas): `serie`, `codigo` (código impreso
+  literal) y `orden` (1 = más antigua, cronológico; convención de siempre para fechas imprecisas:
+  sin fecha primero, solo mes a mitad de mes, solo año después de los meses de ese año, rango
+  2025-2026 al final de su primer año, desempate por posición en el wiki). `specialId` pasa a ser el
+  identificador de la serie:
+  - Con número impreso: `VIC-01..12` (Coleccionista Victoriosa PE n), `VPE-01..03`, y las
+    Primera Edición como `RET-109/126`, `RAG-3/126`, `COF-88/170`, `EDD-133/236`, `IRA-49/126`,
+    `MGO-17/126`, `MGX-23/174`, `RTX-162/174` (prefijo de la edición original; sin él, el 109/126
+    de El Reto y el de La Ira del Nahual chocan).
+  - **Numeración propia** (la carta no trae número, mismo texto en todas): `LJO-01..79`,
+    `PE24-01..14`, `REL-00..08` (00 = Dracma Relámpago, moneda de canje), `LIM-01..02`, siempre por
+    fecha de entrega. La sección lo dice ("· numeración propia").
+- **App**: la colección agrupa las especiales por `serie` (`SERIES_JO` en `js/app.js`; orden de
+  secciones: Victoriosa, Relámpago, Edición Limitada JO, PE 24, VPE, Primera Edición, sueltas — es
+  una constante, se cambia ahí), y dentro de cada sección ordena por `orden`.
+  `compareEditionCards` usa `orden` entre cartas de la misma edición y el PDF también. El
+  código impreso y la serie entran en la búsqueda ("victoriosa pe 4" o "VIC-04" encuentran la
+  misma carta). El filtro "Origen" (Premier, Liga, Staff…) sigue igual: origen = cómo se consiguió,
+  serie = qué dice la carta. Se quitó el agrupado por origen de la 98ª iteración (`ORIGEN_RANK`).
+- **Pendiente**: el Premier del 26/09/2026 entregó Janaqueo, Teepee y Pluma de Amaru, todavía sin
+  página en el wiki ni en su tabla, así que no están cargadas. Los `JO-NN` anteriores ya no existen.
+- Verificado con Playwright: 7 secciones con sus conteos, cada una ascendente, Lootbox intacta,
+  búsqueda por código, badges largos caben en móvil, 0 `pageerror`.
+
 ### 2026-09-30 (99ª iteración) — Ave Fénix (JO-110) y Rapto de Idunn (JO-62): imagen y datos desde escaneos propios del dueño
 
 Las dos cartas no tenían imagen en ninguna fuente (wiki y tiendas revisadas antes: sin página/foto
