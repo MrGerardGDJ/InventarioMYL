@@ -17806,7 +17806,7 @@
    "strength": 2,
    "ability": "Cuando entra en juego, puedes poner 2 cartas de tu Cementerio en la parte inferior de tu Mazo Castillo en cualquier orden. Si este Aliado está en tu Cementerio, puedes desterrar otras 2 cartas de tu Cementerio para ponerlo en tu Mano.",
    "flavour": "La muerte no lo alcanza. Al exponerse a los rayos del sol, renace de sus cenizas.",
-   "image": "./data/custom-images/scans/juego_organizado_pe_110_ave_fenix.webp",
+   "image": "./data/custom-images/scans/juego_organizado_pe_110_ave_fenix_digital.webp",
    "custom": true,
    "specialId": "LJO-60",
    "codigo": "EDICIÓN LIMITADA JO",

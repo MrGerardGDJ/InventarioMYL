@@ -378,6 +378,18 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-09-30 (101ª iteración) — Ave Fénix (LJO-60): imagen digital del blog oficial en vez del escaneo
+
+El dueño encontró la versión digital de la carta en el blog oficial
+(`blog.myl.cl/wp-content/uploads/2026/08/09-Ave-Fenix-JO.png`, 709×1016 RGBA con esquinas
+transparentes) y pidió reemplazar el escaneo de la 99ª iteración para mejorar la calidad.
+Se guarda como `data/custom-images/scans/juego_organizado_pe_110_ave_fenix_digital.webp` (WebP q90,
+222 KB, sin reescalar) y se borra el archivo del escaneo (queda en el historial de git). El nombre
+cambia a propósito para no servir la versión vieja desde caché del navegador.
+Contras conocidos, aceptados por el dueño: es de menor resolución que el escaneo (1058×1500) y trae
+una marca de agua semitransparente "Mitos y Leyendas" abajo a la derecha (propia del blog). Verificado
+con Playwright: carga (`naturalWidth` 709), 0 `pageerror`.
+
 ### 2026-09-30 (100ª iteración) — Juego Organizado: series por código impreso, numeración propia por serie y orden cronológico con fechas exactas de eventos
 
 El dueño detectó que las promos de JO traen códigos impresos distintos (Coleccionista Victoriosa
