@@ -378,6 +378,27 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-01 (102ª iteración) — Móvil: tocar una carta en el Catálogo y en Mazos no abría su detalle
+
+Reporte del dueño en su teléfono: en el Catálogo, tocar una carta no abre el detalle (en Colecciones
+sí); pidió revisar también las cartas del mazo.
+
+- **Causa**: desde el rediseño Nocturne, tocar una carta del Catálogo ejecuta `selectCard()` (la
+  elige en la ficha fija lateral) y tocar una fila de un mazo ejecuta `selectDeckCard()`; solo en
+  Colecciones el toque abría `openModal()`. Pero `.ficha-panel` se oculta con
+  `@media (max-width: 1100px)`, así que en un teléfono (y en tablets) el toque actualizaba un panel
+  invisible: no pasaba nada. Reproducido con Playwright emulando teléfono táctil (modal cerrado tras
+  el toque en el Catálogo). El caso del Mazo se confirmó por código (misma ficha oculta); no se
+  reprodujo antes del arreglo porque el script se detuvo en el primer fallo.
+- **Arreglo** (`js/app.js`): `fichaPanelHidden()` (`matchMedia("(max-width: 1100px)")`, mismo
+  umbral que el CSS). Si el panel está oculto, el toque en una carta del Catálogo o de un mazo abre
+  el modal de detalle (con anterior/siguiente sobre la lista visible); si está visible (escritorio),
+  sigue eligiendo la carta en la ficha lateral, sin cambios.
+- Verificado con teléfono táctil emulado 390×844 (`tap`): Catálogo, Mazos y Colecciones abren el
+  modal; en escritorio 1400 px el Catálogo muestra la ficha y no el modal; 0 `pageerror`.
+- Nota: el atajo de teclado y "saltar a una carta" desde otras vistas siguen usando la ficha lateral
+  (solo importan con teclado/pantalla ancha).
+
 ### 2026-09-30 (101ª iteración) — Ave Fénix (LJO-60): imagen digital del blog oficial en vez del escaneo
 
 El dueño encontró la versión digital de la carta en el blog oficial

@@ -103,6 +103,11 @@ async function loadData() {
   }
 }
 
+// La ficha fija lateral (Catálogo y Mazos) se oculta por CSS bajo 1100px:
+// ahí un toque en una carta tiene que abrir el modal de detalle, porque
+// seleccionarla solo actualizaría un panel invisible.
+const fichaPanelHidden = () => window.matchMedia("(max-width: 1100px)").matches;
+
 function normalizeCard(c, i) {
   const id = c.id || `${c.edition || "x"}__${(c.name || "carta_" + i).toLowerCase().replace(/\s+/g, "_")}`;
   return {
@@ -615,7 +620,7 @@ function cardEl(card, navList) {
     if (act === "plus") changeQty(el, card, +1);
     else if (act === "minus") changeQty(el, card, -1);
     else if (act === "detail") {
-      if (state.view === "coleccion") selectCard(card, navList);
+      if (state.view === "coleccion" && !fichaPanelHidden()) selectCard(card, navList);
       else openModal(card, navList);
     }
   });
@@ -3276,7 +3281,12 @@ function renderDeckContents(deck) {
   state.deckFichaNavList = navList;
   cont.querySelectorAll(".deck-card-row[data-cid]").forEach((row) => {
     row.classList.toggle("selected", row.dataset.cid === state.deckSelectedCardId);
-    row.addEventListener("click", () => selectDeckCard(row.dataset.cid, navList));
+    row.addEventListener("click", () => {
+      if (!fichaPanelHidden()) { selectDeckCard(row.dataset.cid, navList); return; }
+      const cards = navList.map(cardById).filter(Boolean);
+      const card = cardById(row.dataset.cid);
+      if (card) openModal(card, cards, cards.indexOf(card));
+    });
   });
   if (state.deckSelectedCardId && !navList.includes(state.deckSelectedCardId)) {
     state.deckSelectedCardId = null;
