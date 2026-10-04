@@ -237,7 +237,7 @@
     "slug": "crpe2",
     "format": "PE",
     "formatName": "Primera Era",
-    "name": "Colecciones Raciales Primera Era Segunda Parte"
+    "name": "Colecciones Raciales Primera Era Segunda Parte (2022)"
   },
   {
     "slug": "crpe3",
@@ -285,13 +285,19 @@
     "slug": "crpe4",
     "format": "PE",
     "formatName": "Primera Era",
-    "name": "Colecciones Raciales Primera Era 2025"
+    "name": "Colecciones Raciales Primera Era 2025 Primera Parte"
   },
   {
     "slug": "leyendas_primera_era_4_0",
     "format": "PE",
     "formatName": "Primera Era",
     "name": "Leyendas - Primera Era 4.0"
+  },
+  {
+    "slug": "crpe5",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Colecciones Raciales Primera Era 2025 Segunda Parte"
   },
   {
     "slug": "xinnian_ano_caballo_2026",

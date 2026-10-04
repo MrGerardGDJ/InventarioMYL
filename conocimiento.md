@@ -378,6 +378,36 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-04 (104ª iteración) — Colecciones Raciales Primera Era 2025 Segunda Parte (CRPE5, 91 cartas) y renombre de CRPE2/CRPE4
+
+El dueño preguntó por qué en su colección la "Segunda Parte" aparecía antes que "2025". Hallazgo: el
+orden era correcto (por fecha de lanzamiento según el wiki: Raciales 16-sep-2021, Segunda Parte
+11-nov-2022, 2023 17-jun-2023, 2025 11-jul-2025, **2025 Segunda Parte 17-oct-2025**), pero el nombre
+confundía: existen dos "Segunda Parte" (2022 y 2025) y la de 2025 no estaba cargada.
+
+- **Renombres** (`data/editions.json` + `editionName` de cada carta en `data/custom-cards.json`;
+  son ediciones propias, no las pisa el scraper): `crpe2` → "Colecciones Raciales Primera Era Segunda
+  Parte (2022)" (84 cartas); `crpe4` → "Colecciones Raciales Primera Era 2025 Primera Parte" (117).
+  Los `id`/slug no cambian. Los nombres de colecciones ya creadas (texto guardado en el navegador) no
+  se tocan.
+- **Edición nueva `crpe5`** "Colecciones Raciales Primera Era 2025 Segunda Parte" (El Reto y
+  Espíritu de Dragón; 7 Kits: Caballero, Dragón, Faerie, Campeón, Criaturas, Kami, Xian), insertada
+  en `editions.json` después de `leyendas_primera_era_4_0` y antes de Xinnián 2026 (oct-2025).
+  Fuente: "Lista de cartas de Colecciones Raciales Primera Era 2025 Segunda Parte" + página propia de
+  cada carta (todas con código `CRPE5 NN - 84` e imagen `CRPE5-NN-84.png`). **91 cartas, no 84**:
+  la 01-84 numerada (13 por Kit menos las extras) y la 85-91, una carta "Buy a Box" de arte
+  alternativo por Kit (Kordrag, Knochen, Oberon, Nobunaga, Tanuki, Ebisu, Dalai Lama; Promocionales)
+  que el wiki numera como `CRPE5 85 - 84`..`91 - 84`. Se registraron las 91 con `edid` 001..091.
+  84 Aliados, 3 Armas, 2 Tótems, 2 Talismanes; todas con habilidad e imagen (comprobado en vivo,
+  200 `image/webp`); 7 sin leyenda (Armas/Tótems/Talismanes, sin texto documentado).
+- El extractor `extract_myl_edition.py` volvió a fallar (0 cartas numeradas) con esta tabla
+  (columnas Código | Kit | Nombre | Tipo | Nota): segundo caso tras Xinnián 2026, así que conviene
+  enseñarle este formato.
+- Las colecciones que el dueño ya tenía con CRPE2/CRPE4 **no** incluyen CRPE5 automáticamente: hay
+  que agregarla con "Editar ediciones".
+- Verificado con Playwright: los 4 nombres en el filtro Edición, crpe5 = 91 cartas, una colección de
+  las tres muestra 84 / 117 / 91 en ese orden (0/292), 0 `pageerror`.
+
 ### 2026-10-04 (103ª iteración) — Nueva edición: Xinnián 2026 - Año del Caballo (31 cartas)
 
 El dueño notó que faltaba un Xinnián y dio el producto de CasaMyL
