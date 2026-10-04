@@ -378,6 +378,34 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-04 (103ª iteración) — Nueva edición: Xinnián 2026 - Año del Caballo (31 cartas)
+
+El dueño notó que faltaba un Xinnián y dio el producto de CasaMyL
+(`casamyl.cl/products/xinnian-2026`: 18 cartas nuevas de Espíritu de Dragón, 12 oros foil del
+Zodiaco Chino, 8 sobres de LPE 4.0 y 1 carta Buy a Box "Ma Nian", $29.990).
+
+- **Estado previo**: solo existían `xinnian` (37, API) y `xinnian_año_serpiente_2025` (32,
+  custom). La API de TOR (`/cards/edition/todas`) no trae el 2026 (solo el slug `xinnian`).
+- **Fuente**: wiki, "Lista de cartas de Xinnián 2026 - Año del Caballo" (31 cartas, códigos
+  `XINNIÁN 3 00/30`..`30/30`) y la página propia de cada una (las 31 existen). El extractor
+  `extract_myl_edition.py` falló (0 cartas numeradas) porque esta tabla trae el código
+  `XINNIÁN 3 NN/30` en la primera columna con otro orden de columnas (Código | Nombre | Tipo |
+  Frecuencia | Raza | Arte); se parseó la tabla y las plantillas `{{Carta...}}` a mano con el
+  mismo criterio (tipo, frecuencia, ataque, coste de oro, raza, habilidad, texto, imagen).
+  Pendiente menor: enseñarle ese formato al extractor.
+- **Registro**: slug `xinnian_ano_caballo_2026` (ASCII; el de 2025 quedó con ñ), nombre
+  "Xinnián Año del Caballo 2026", formato PE, insertado en `data/editions.json` entre
+  `leyendas_primera_era_4_0` y `toolkit_primera_era_2026` (orden cronológico: sale ~feb-2026).
+  31 cartas en `data/custom-cards.json`: 01-30 con `edid` "001".."030" (18 Espíritu de Dragón
+  01-18 + 12 oros del Zodiaco 19-30, "Sin Frecuencia") y la 00 Ma Nián (Buy a Box) con
+  `specialId: "XINNIAN3-00"`, igual criterio que Shé Nián en 2025 (la app no acepta `edid` < 1).
+- **Imágenes**: las 31 de la página específica de cada carta (`XINNIAN-3-NN-30.png`), hotlink al
+  wiki como el resto de las cartas del wiki; comprobado en vivo que responden 200 `image/webp`.
+  Ma Nián no tiene leyenda documentada (igual que la 00 de 2025). Ninguna carta se rellenó "por
+  parecido".
+- Verificado con Playwright: aparece en el filtro Edición, 31 cartas, colección con 1
+  especial + 30 numeradas ordenadas, 0 `pageerror`.
+
 ### 2026-10-01 (102ª iteración) — Móvil: tocar una carta en el Catálogo y en Mazos no abría su detalle
 
 Reporte del dueño en su teléfono: en el Catálogo, tocar una carta no abre el detalle (en Colecciones
