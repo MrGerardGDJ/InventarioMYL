@@ -378,6 +378,30 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-13 (105ª iteración) — Imagen correcta de Vali (CRPE 46-72) y de "Primeras Festividades 2025" (LBPE25 00/21)
+
+El dueño avisó que Vali (CRPE 46-72) tenía la imagen equivocada y que faltaba la carta de
+festividades 00-21; dio las páginas del wiki `Vali_(CRPE)` y `Primeras_Festividades_2025`.
+
+- **Vali (`70-046`, edición `raciales_pe`, código `CRPE-46-72`)**: en la 54ª iteración se le puso la
+  imagen de "Vali (PE)", que es otra carta: **"CARTA PROMO PE 04"**, reprint (mismo arte, otro marco)
+  que se entregaba al comprar los 6 kits raciales en CasaMyL a fines de 2021. La carta CRPE 46-72
+  lleva la imagen de su página, `CRPE-46-72.png` (Kit Dios, ilustrador Gonzalo Lotito). Cambiada en
+  `data/cards.json` y en `IMAGE_CORRECTIONS` de `scraper/corrections.js` (si no, el scraper semanal la
+  habría vuelto a pisar); se reescribió el comentario de esa corrección. Es el mismo error de fondo
+  que el de "Ira del Nahual" (41ª-42ª): cartas reimpresas que se confunden con la base.
+- **Primeras Festividades 2025**: la carta sí estaba registrada (`LBPE25 - 00/21`, Oro Secreta,
+  Lootbox PE 2025, la Ultra Secreta de la caja festiva) pero con `image` vacío — por eso no se veía.
+  Se llenó con `LBPE25-00-21.png` de su página del wiki (200 `image/webp`). El wiki también lista la de
+  2024 (`LBPE24 - 00/21`, ya con imagen) y las de Primer Bloque (Festividades 2023 `00/12`, 2024
+  `00/15`), de otro formato.
+- **Pendiente de decisión del dueño**: la promo "CARTA PROMO PE 04" (Vali PE) y sus 5 hermanas
+  (01 Troll, 02 Bjorn Ragnarsson, 03 Curandero, 05 Beerwolf, 06 Lord Ruthven; categoría "Cartas Promo
+  PE Retro") no existen como cartas propias en el catálogo. Antes de este cambio, la imagen de la
+  promo ocupaba el lugar de la CRPE 46-72.
+- Verificado con Playwright: Vali muestra `cb=20220925051659` (la CRPE) y Festividades 2025 muestra
+  `cb=20251205001343`; 0 `pageerror`; `node --check` sobre `corrections.js`.
+
 ### 2026-10-04 (104ª iteración) — Colecciones Raciales Primera Era 2025 Segunda Parte (CRPE5, 91 cartas) y renombre de CRPE2/CRPE4
 
 El dueño preguntó por qué en su colección la "Segunda Parte" aparecía antes que "2025". Hallazgo: el
