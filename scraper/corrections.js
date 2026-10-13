@@ -571,14 +571,15 @@ export const NAME_CORRECTIONS = {
 // intentó cargar como corrección de imagen de la carta base y el dueño
 // corrigió que son dos cosas distintas.
 export const IMAGE_CORRECTIONS = {
-  // TOR ya marca esta carta como "Promocional" (rareza correcta) pero trae la
-  // imagen de la carta base "Vali" del Kit Dios (Colecciones Raciales
-  // Primera Era, código impreso "CRPE-46-72") en vez de la de esta versión
-  // promocional real ("CARTA PROMO PE 04", entregada al comprar los 6 kits
-  // en CasaMyL a fines de 2021) — mismo arte, marco/borde distinto. El
-  // dueño confirmó tener la física y que coincide con
-  // https://myl.fandom.com/es/wiki/Vali_(PE), no con la que traía la app.
-  "70-046": { image: "https://static.wikia.nocookie.net/myl-tcg/images/d/de/Vali_PE.png/revision/latest?cb=20211130185027&path-prefix=es" },
+  // Vali, Kit Dios de Colecciones Raciales Primera Era, código impreso
+  // "CRPE-46-72". TOR ya la marca "Promocional" (rareza correcta) pero la
+  // imagen debe ser la de SU página del wiki (Vali_(CRPE), archivo
+  // CRPE-46-72.png). Ojo: existe otra carta distinta, Vali (PE) = "CARTA
+  // PROMO PE 04" (reprint que se entregaba al comprar los 6 kits en CasaMyL a
+  // fines de 2021, mismo arte pero otro marco). En la 54ª iteración se le puso
+  // a esta carta la imagen de la promo; el dueño corrigió (13-10-2026) que la
+  // CRPE 46-72 lleva la suya. La promo es una carta aparte.
+  "70-046": { image: "https://static.wikia.nocookie.net/myl-tcg/images/3/3e/CRPE-46-72.png/revision/latest?cb=20220925051659&path-prefix=es" },
 };
 
 // TOR trae la rareza equivocada para estas cartas. Reportado por el dueño
