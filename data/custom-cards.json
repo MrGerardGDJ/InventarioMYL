@@ -5468,7 +5468,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "321",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -5477,7 +5477,8 @@
    "ability": "Si este Oro está en tu Reserva de Oros, puedes desterrarlo para buscar un Oro en tu Cementerio y ponerlo en tu Reserva de Oros.",
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/0/03/LPE4-321-320.png/revision/latest?cb=20251126034124&path-prefix=es",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-321"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__322_fruto_sagrado",
@@ -5485,7 +5486,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "322",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -5494,7 +5495,8 @@
    "ability": "Cuando entra en juego, baraja 2 cartas de tu Cementerio en tu Mazo Castillo.",
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/9/90/LPE4-322-320.png/revision/latest?cb=20251126034124&path-prefix=es",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-322"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__323_grimorio_sacro",
@@ -5502,7 +5504,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "323",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -5511,7 +5513,8 @@
    "ability": "Cuando entra en juego, cada jugador elige entre descartar una carta de su Mano o botar 3 cartas de su Mazo Castillo.",
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/8/8e/LPE4-323-320.png/revision/latest?cb=20251126034124&path-prefix=es",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-323"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__324_el_dorado",
@@ -5519,7 +5522,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "324",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -5528,7 +5531,8 @@
    "ability": "Cuando entra en juego, puedes robar 1 carta de tu Mazo Castillo. Luego, descarta 1 carta de tu Mano.",
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/1/1b/LPE4-324-320.png/revision/latest?cb=20251126034125&path-prefix=es",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-324"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__325_knarr",
@@ -5536,7 +5540,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "325",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -5545,7 +5549,8 @@
    "ability": "En tu Fase de Vigilia, una vez por turno, puedes pagar este Oro y barajar una carta de tu Mano para robar una carta.",
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f6/LPE4-325-320.png/revision/latest?cb=20251126034125&path-prefix=es",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-325"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__326_los_cinco_anillos",
@@ -5553,7 +5558,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "326",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -5562,7 +5567,8 @@
    "ability": "Si este Oro está en tu Reserva de Oros y tienes 3 o menos cartas en tu Mano, puedes desterrarlo para robar 2 cartas.",
    "flavour": "",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/2/25/LPE4-326-320.png/revision/latest?cb=20251126034125&path-prefix=es",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-326"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__327_mandoble_purificador",
@@ -5570,7 +5576,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "327",
+   "edid": "",
    "type": "Arma",
    "race": "—",
    "rarity": "Promocional",
@@ -5579,7 +5585,8 @@
    "ability": "",
    "flavour": "",
    "image": "./data/custom-images/mesaredonda/leyendas_primera_era_4_0_327_mandoble_purificador.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-327"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__328_altar_sacro",
@@ -5587,7 +5594,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "328",
+   "edid": "",
    "type": "Tótem",
    "race": "—",
    "rarity": "Promocional",
@@ -5596,7 +5603,8 @@
    "ability": "Cuando entra en juego, destierra la carta superior del Mazo Castillo oponente. Puedes desterrar este Tótem para buscar un Aliado en tu Mazo Castillo y ponerlo en tu Mano.",
    "flavour": "Dicen que fue erigido por los primeros paladines, y que su luz guía a los justos con poder y esperanza.",
    "image": "./data/custom-images/mesaredonda/leyendas_primera_era_4_0_328_altar_sacro.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-328"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__329_bruja_carabusse",
@@ -5604,7 +5612,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "329",
+   "edid": "",
    "type": "Talismán",
    "race": "—",
    "rarity": "Promocional",
@@ -5613,7 +5621,8 @@
    "ability": "Una carta oponente no puede bloquear en este turno.",
    "flavour": "Oscura figura del mal. Sus hechizos contaminan las vidas de todos los que la rodean.",
    "image": "./data/custom-images/mesaredonda/leyendas_primera_era_4_0_329_bruja_carabusse.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-329"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__330_rosa_de_los_vientos",
@@ -5621,7 +5630,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "330",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -5630,7 +5639,8 @@
    "ability": "Cuando entra en juego, tu oponente bota 1 carta por cada copia de este Oro que controles.",
    "flavour": "El horizonte estalla en todas las direcciones, pero, al igual que un tornado, no olvida su centro.",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_330_rosa_de_los_vientos.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-330"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__331_alabarda_de_la_sangre",
@@ -5638,7 +5648,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "331",
+   "edid": "",
    "type": "Arma",
    "race": "—",
    "rarity": "Promocional",
@@ -5647,7 +5657,8 @@
    "ability": "",
    "flavour": "",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_331_alabarda_de_la_sangre.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-331"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__332_amuleto_pagano",
@@ -5655,7 +5666,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "332",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -5664,7 +5675,8 @@
    "ability": "",
    "flavour": "",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_332_amuleto_pagano.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-332"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__333_justos_por_pecadores",
@@ -5672,7 +5684,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "333",
+   "edid": "",
    "type": "Talismán",
    "race": "—",
    "rarity": "Promocional",
@@ -5681,7 +5693,8 @@
    "ability": "Destruye un aliado en juego y no puedes ser atacado el próximo turno.",
    "flavour": "¿Pagarán justos por pecadores?. ¡Disparad, es una orden! ¡Que dios sabrá distinguir a los suyos!",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_333_justos_por_pecadores.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-333"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__334_totem_ultimo",
@@ -5689,7 +5702,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "334",
+   "edid": "",
    "type": "Tótem",
    "race": "—",
    "rarity": "Promocional",
@@ -5698,7 +5711,8 @@
    "ability": "Paga un Oro y anula la habilidad de todas las Armas en juego (una vez por turno).",
    "flavour": "Cuando llegue el final de las cosas, entre los últimos jirones del saber antiguo, escucharás los cánticos de la resurrección.",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_334_totem_ultimo.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-334"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__335_arco_naskapi",
@@ -5706,7 +5720,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "335",
+   "edid": "",
    "type": "Arma",
    "race": "—",
    "rarity": "Promocional",
@@ -5715,7 +5729,8 @@
    "ability": "",
    "flavour": "",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_335_arco_naskapi.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-335"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__336_pintura_naskapi",
@@ -5723,7 +5738,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "336",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -5732,7 +5747,8 @@
    "ability": "",
    "flavour": "",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_336_pintura_naskapi.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-336"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__337_ah_puch",
@@ -5740,7 +5756,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "337",
+   "edid": "",
    "type": "Talismán",
    "race": "—",
    "rarity": "Promocional",
@@ -5749,7 +5765,8 @@
    "ability": "Destruye un Aliado que controles. Luego, puedes jugar un Aliado de tu Mano sin pagar su Coste con la misma Fuerza o el mismo Coste que el Aliado destruido.",
    "flavour": "Tendremos que perecer. Señores Águilas y Jaguares, aunque fuerais de jade o de oro, también iremos a su casa, al lugar de los descarnados.",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_337_ah_puch.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-337"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__338_uxmal",
@@ -5757,7 +5774,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "338",
+   "edid": "",
    "type": "Tótem",
    "race": "—",
    "rarity": "Promocional",
@@ -5766,7 +5783,8 @@
    "ability": "Cuando entra en juego, puedes buscar un Tótem en tu Mazo Castillo que no sea Uxmal y ponerlo en tu Mano. Cada vez que otro Tótem entre en juego bajo tu control, tu oponente bota 1 carta.",
    "flavour": "Las diferentes ramas de las tribus se iban reuniendo y éste fue el lugar de su ciudad... Allí hicieron sus casas y construyeron el templo. Mientras otras ciudades-estado declinan, Uxmal se alza.",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_338_uxmal.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-338"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__339_vinland",
@@ -5774,7 +5792,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "339",
+   "edid": "",
    "type": "Tótem",
    "race": "—",
    "rarity": "Promocional",
@@ -5783,7 +5801,8 @@
    "ability": "Una vez en tu turno, puedes destruir un Aliado en juego de Fuerza 1 o menos.",
    "flavour": "Más allá de las nieblas y los mares desconocidos, los vikingos hallaron una tierra fértil y salvaje: Vinland, la promesa de un nuevo mundo.",
    "image": "https://static.wikia.nocookie.net/myl-tcg/images/4/41/LPE4-339-320.png/revision/latest?cb=20251126034125&path-prefix=es",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-339"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__340_karve",
@@ -5791,7 +5810,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "340",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -5800,7 +5819,8 @@
    "ability": "",
    "flavour": "",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_340_karve.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-340"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__341_amor_de_valkyria",
@@ -5808,7 +5828,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "341",
+   "edid": "",
    "type": "Talismán",
    "race": "—",
    "rarity": "Promocional",
@@ -5817,7 +5837,8 @@
    "ability": "Cuando un aliado sea destruido juega inmediatamente este Talismán para que dicho aliado siga en juego. Luego podrás robar una carta de tu castillo.",
    "flavour": "Qué podría darte... ¿el valor de osar en lo imposible? Hecho singular es este amor de un ser que no es de esta tierra y un mortal.",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_341_amor_de_valkyria.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-341"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__342_zapatos_de_hierro",
@@ -5825,7 +5846,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "342",
+   "edid": "",
    "type": "Arma",
    "race": "—",
    "rarity": "Promocional",
@@ -5834,7 +5855,8 @@
    "ability": "Agrega +1 a la fuerza de su portador. Si su portador ataca tú tienes la primera acción en combate.",
    "flavour": "Desde el principio de los tiempos los pedazos de cuero que los hombres arrancan de las puntas de los talones de sus zapatos ayudan a conformar el invencible calzado de Vidar, hijo de Odín.",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_342_zapatos_de_hierro.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-342"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__343_lampara_magica",
@@ -5842,7 +5864,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "343",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -5851,7 +5873,8 @@
    "ability": "Si este Oro está en tu Reserva de Oros, puedes desterrarlo para mirar las 3 cartas inferiores de tu Mazo Castillo. Pon una en tu Mano y el resto en tu Cementerio.",
    "flavour": "Sortilegios milenarios se ocultan en su interior, esperando la señal del elegido para liberarlos.",
    "image": "./data/custom-images/mesaredonda/leyendas_primera_era_4_0_343_l_mpara_m_gica.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-343"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__344_oannes",
@@ -5859,7 +5882,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "344",
+   "edid": "",
    "type": "Aliado",
    "race": "—",
    "rarity": "Promocional",
@@ -5868,7 +5891,8 @@
    "ability": "Al jugarlo puedes robar una carta.",
    "flavour": "Surge de las profundidades marinas para dirigir las conciencias de los seres humanos.",
    "image": "./data/custom-images/mesaredonda/leyendas_primera_era_4_0_344_oannes.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-344"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__345_strix",
@@ -5876,7 +5900,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "345",
+   "edid": "",
    "type": "Aliado",
    "race": "Vampiro",
    "rarity": "Promocional",
@@ -5885,7 +5909,8 @@
    "ability": "Si ataca, debe ser acompañado por un aliado.",
    "flavour": "Cuidado con sus palabras de confusión, cuidado con su mirada embustera, cuidado con sus alas negras.",
    "image": "./data/custom-images/mesaredonda/leyendas_primera_era_4_0_345_strix.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-345"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__346_corazon_de_leon",
@@ -5893,7 +5918,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "346",
+   "edid": "",
    "type": "Aliado",
    "race": "Cazador",
    "rarity": "Promocional",
@@ -5902,7 +5927,8 @@
    "ability": "Cuando ataca este aliado gana +1 a la fuerza",
    "flavour": "Al comenzar la lucha, parco y resuelto observa a sus compañeros... El sabe que no está solo y que combatirán codo con codo. Así la unión hace la fuerza.",
    "image": "./data/custom-images/mesaredonda/leyendas_primera_era_4_0_346_coraz_n_de_le_n.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-346"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__347_wiraqocha",
@@ -5910,7 +5936,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "347",
+   "edid": "",
    "type": "Aliado",
    "race": "Chamán",
    "rarity": "Promocional",
@@ -5919,7 +5945,8 @@
    "ability": "Cada vez que haga daño de combate al Mazo Castillo oponente, puedes buscar un Aliado de Coste 3 o más en tu Mazo Castillo y ponerlo en tu Mano.",
    "flavour": "De una piedra llamó a salir a las cañas, que se lanzaron a matarle. Wiraqocha hizo caer fuego del cielo, muchos murieron. Apagó el fuego y dijo: \"Soy vuestro Hacedor\", las cañas se postraron ante él.",
    "image": "./data/custom-images/mesaredonda/leyendas_primera_era_4_0_347_wiraqocha.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-347"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__348_k_ak_na",
@@ -5927,7 +5954,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "348",
+   "edid": "",
    "type": "Talismán",
    "race": "—",
    "rarity": "Promocional",
@@ -5936,7 +5963,8 @@
    "ability": "Tu oponente elige entre descartar 2 cartas de su Mano o botar 5 cartas de su Mazo Castillo. Luego, puedes robar 1 carta.",
    "flavour": "En la sexta casa de tormento en Xibalba, me aguardaban brazas ardiendo y fuego ansiosos de quemarme. ¿Dónde vagaba mi corazón para llegar hasta aquí?",
    "image": "./data/custom-images/mesaredonda/leyendas_primera_era_4_0_348_k_ak_na.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-348"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__349_astucia_de_loki",
@@ -5944,7 +5972,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "349",
+   "edid": "",
    "type": "Talismán",
    "race": "—",
    "rarity": "Promocional",
@@ -5953,7 +5981,8 @@
    "ability": "Todos los aliados imbloqueables son devueltos a la mano de su dueño.",
    "flavour": "Loki disfrazado de vieja supo de Frigg que sólo un brote de muérdago a Baldur podría herir. Loki lo cortó y en la reunión preguntó a Hodur: ¿por qué no haces como los otros? Toma, lanza esta saeta, haz como los demás, yo te guiaré..., toma.",
    "image": "./data/custom-images/mesaredonda/leyendas_primera_era_4_0_349_astucia_de_loki.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-349"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__350_codex_runicus",
@@ -5961,7 +5990,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "350",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -5970,7 +5999,8 @@
    "ability": "Sólo puedes tener un Codex Runicus en juego. Si este Oro está en tu Reserva de Oro, puedes desterrarlo para poner un Aliado de Coste 2 o menos de tu Cementerio en tu Mano.",
    "flavour": "Este árbol colosal y majestuoso creció del suelo, las altas ramas del fresno se ciernen sobre todos los mundos y llegan por encima de los cielos. Sus tres raíces que lo mantienen erecto beben de las fuentes de Urd, Mimir y Hvergelmir.",
    "image": "./data/custom-images/mesaredonda/leyendas_primera_era_4_0_350_codex_runicus.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-350"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__351_kunoichi",
@@ -5978,7 +6008,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "351",
+   "edid": "",
    "type": "Aliado",
    "race": "Campeón/Ninja",
    "rarity": "Promocional",
@@ -5987,7 +6017,8 @@
    "ability": "Cuando asignes el bloqueo, paga uno de oro y bloquea a un aliado extra.",
    "flavour": "Sus técnicas y sus armas son sutiles, como el engaño, como la flor venenosa.",
    "image": "./data/custom-images/mesaredonda/leyendas_primera_era_4_0_351_kunoichi.webp",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-351"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__352_calabaza_del_inmortal",
@@ -5995,7 +6026,7 @@
    "edition": "leyendas_primera_era_4_0",
    "editionName": "Leyendas - Primera Era 4.0",
    "format": "PE",
-   "edid": "352",
+   "edid": "",
    "type": "Oro",
    "race": "—",
    "rarity": "Promocional",
@@ -6004,7 +6035,8 @@
    "ability": "Cuando entra en juego, si controlas 4 o más Oros, puedes robar 1 carta.",
    "flavour": "Al contemplarla se ve la relación en el mundo de lo superior e inferior y los cambios que regulan la existencia cósmica.",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_352_calabaza_del_inmortal.jpg",
-   "custom": true
+   "custom": true,
+   "specialId": "LPE4-352"
   },
   {
    "id": "leyendas_primera_era_4_0__custom__sc_01_caballero_negro",
