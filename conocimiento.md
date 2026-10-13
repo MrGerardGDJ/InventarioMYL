@@ -378,6 +378,41 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-13 (106ª iteración) — Cartas especiales de Leyendas Primera Era 1.0, 2.0 y 4.0 (códigos impresos distintos)
+
+El dueño armó la colección "leyendas" (1.0 + 2.0 + 3.0 + 4.0) y notó que no se distinguían las
+cartas especiales y que sus códigos impresos difieren ("Primera Edición", PEX, la Reina Guinivere con
+otro). Se verificó cada edición contra su lista del wiki (`Lista de cartas de Leyendas - Primera Era`,
+`... 2.0`, `... 3.0`, `... 4.0`).
+
+- **Estado previo**: 3.0 ya tenía sus 26 especiales (LPE23-000, 10 `LPE23-301..310`, 12 Coleccionista,
+  3 Secreta Exclusiva) y 4.0 las 80 del Set Clásico (`SCLPE4`); **1.0 y 2.0 no tenían ninguna** — TOR las
+  numera corridas 1..280 / 1..300 y se veían todas como normales.
+- **Familias de código impreso por edición (wiki)**: 1.0 → 272 numeradas + 8 Legendarias full art
+  `LPE - 01..08`. 2.0 → 268 `N - TOTAL` (número de su edición original, "Primera Edición"), 8
+  `LG2PE - NN - 08` (Legendarias full art), 18 `PEX - NN - 18` (marcos de Mundo Gótico / Ira del
+  Nahual / Ragnarok) y 6 `LBD - NN - 06` (edición origen Liber Dominus: Rey Arturo, **Reina Guinivere**,
+  Morgana, Mago Merlín, Dragón de Magma, Excalibur). 3.0 → `LPE23 - NNN/300`, `COLECCIONISTA LPE23 NN`,
+  `SECRETA EXCLUSIVA PE NN`. 4.0 → `LPE4 - NNN/320 + letra de rareza` y `SCLPE4 - N/80`.
+- **Marcadas como especiales** (`specialId`, `edid` vacío): 8 de 1.0 (`LPE-01..08`) y 32 de 2.0
+  (`LG2PE-01..08`, `PEX-01..18`, `LBD-01..06`), vía `LEYENDAS_ESPECIALES_CORRECTIONS` en
+  `scraper/corrections.js` (agregada a `ALL_CORRECTIONS` de `scrape.js`, para que el scraper semanal
+  no las pierda) y aplicadas directo en `data/cards.json`. Los 40 cruces son únicos por
+  edición+nombre+rareza. **Errata del wiki**: dos cartas figuran como `PEX - 04 - 18` (Carmilla y Lord
+  Ruthven) y falta la 05; la cadena anterior/siguiente de sus páginas (Manada Mortífera → Carmilla →
+  Lord Ruthven → Vampiros Amenazantes) pone a Lord Ruthven en `PEX-05`.
+- **4.0**: las 32 promos `LPE4 - 321..352/320 P` (rareza Promocional, numeradas MÁS ALLÁ del tope de
+  320, mismo caso que las `LPE23-30x` de 3.0) pasan a especiales `LPE4-321..352` en
+  `data/custom-cards.json`; coinciden 32/32 por número, nombre y rareza. Las 10 Legendarias y 5
+  Secretas de 4.0 siguen numeradas (están dentro de 1..320).
+- **No cambia**: las 268 de la 2.0 que imprimen `N - TOTAL / Primera Edición` siguen con la numeración
+  de posición de TOR (quedan huecos donde están las 32 especiales); mostrar su número impreso
+  (original de cada edición, p. ej. "11 - 126") sería otro cambio. Los `id` no cambian, así que
+  inventario/mazos/colecciones no se tocan.
+- Efecto en la colección "leyendas" (1338 cartas): secciones "promocionales / especiales" de 8 (1.0),
+  32 (2.0), 26 (3.0) y 112 (4.0: 80 Set Clásico + 32 promos). Verificado con Playwright (Reina
+  Guinivere = `LBD-02`; búsqueda `PEX-05` encuentra Lord Ruthven; 0 `pageerror`).
+
 ### 2026-10-13 (105ª iteración) — Imagen correcta de Vali (CRPE 46-72) y de "Primeras Festividades 2025" (LBPE25 00/21)
 
 El dueño avisó que Vali (CRPE 46-72) tenía la imagen equivocada y que faltaba la carta de

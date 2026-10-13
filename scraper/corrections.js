@@ -582,6 +582,63 @@ export const IMAGE_CORRECTIONS = {
   "70-046": { image: "https://static.wikia.nocookie.net/myl-tcg/images/3/3e/CRPE-46-72.png/revision/latest?cb=20220925051659&path-prefix=es" },
 };
 
+// Cartas ESPECIALES de Leyendas - Primera Era 1.0 y 2.0 (TOR las numera
+// corridas 1..280 / 1..300 como si fueran normales; el código impreso en la
+// carta física, según las listas del wiki, es otro):
+//   - LPE 1.0: 8 Legendarias full art "LPE - 01..08".
+//   - LPE 2.0: 8 Legendarias full art "LG2PE - NN - 08", 18 cartas "PEX - NN -
+//     18" (marcos de Mundo Gótico/Ira del Nahual/Ragnarok) y 6 de la edición
+//     Liber Dominus "LBD - NN - 06" (ahí está Reina Guinivere).
+// El resto de la 2.0 imprime "N - TOTAL / Primera Edición" (número de su
+// edición original) y sigue como numerada normal. En el wiki dos cartas figuran
+// como "PEX - 04 - 18" (Carmilla y Lord Ruthven) y falta la 05: la cadena
+// anterior/siguiente de sus páginas (Manada Mortífera → Carmilla → Lord Ruthven →
+// Vampiros Amenazantes) ubica a Lord Ruthven en PEX-05. Verificado contra
+// https://myl.fandom.com/es/wiki/Lista_de_cartas_de_Leyendas_-_Primera_Era y
+// ..._Primera_Era_2.0 el 13-10-2026. Solo pisa edid/specialId de SALIDA; el id no cambia.
+export const LEYENDAS_ESPECIALES_CORRECTIONS = {
+  "154-001": { edid: "", specialId: "LPE-01" },
+  "154-002": { edid: "", specialId: "LPE-02" },
+  "154-003": { edid: "", specialId: "LPE-03" },
+  "154-004": { edid: "", specialId: "LPE-04" },
+  "154-005": { edid: "", specialId: "LPE-05" },
+  "154-006": { edid: "", specialId: "LPE-06" },
+  "154-007": { edid: "", specialId: "LPE-07" },
+  "154-008": { edid: "", specialId: "LPE-08" },
+  "151-001": { edid: "", specialId: "LG2PE-01" },
+  "151-002": { edid: "", specialId: "LG2PE-02" },
+  "151-003": { edid: "", specialId: "LG2PE-03" },
+  "151-004": { edid: "", specialId: "LG2PE-04" },
+  "151-005": { edid: "", specialId: "LG2PE-05" },
+  "151-006": { edid: "", specialId: "LG2PE-06" },
+  "151-007": { edid: "", specialId: "LG2PE-07" },
+  "151-008": { edid: "", specialId: "LG2PE-08" },
+  "151-016": { edid: "", specialId: "PEX-04" },
+  "151-013": { edid: "", specialId: "PEX-13" },
+  "151-026": { edid: "", specialId: "PEX-01" },
+  "151-042": { edid: "", specialId: "PEX-02" },
+  "151-030": { edid: "", specialId: "PEX-03" },
+  "151-031": { edid: "", specialId: "PEX-05" },
+  "151-033": { edid: "", specialId: "PEX-06" },
+  "151-040": { edid: "", specialId: "PEX-07" },
+  "151-036": { edid: "", specialId: "PEX-10" },
+  "151-043": { edid: "", specialId: "PEX-11" },
+  "151-029": { edid: "", specialId: "PEX-12" },
+  "151-032": { edid: "", specialId: "PEX-14" },
+  "151-025": { edid: "", specialId: "PEX-15" },
+  "151-038": { edid: "", specialId: "PEX-16" },
+  "151-028": { edid: "", specialId: "PEX-17" },
+  "151-041": { edid: "", specialId: "PEX-18" },
+  "151-123": { edid: "", specialId: "PEX-08" },
+  "151-129": { edid: "", specialId: "PEX-09" },
+  "151-023": { edid: "", specialId: "LBD-04" },
+  "151-012": { edid: "", specialId: "LBD-05" },
+  "151-034": { edid: "", specialId: "LBD-01" },
+  "151-044": { edid: "", specialId: "LBD-02" },
+  "151-027": { edid: "", specialId: "LBD-03" },
+  "151-152": { edid: "", specialId: "LBD-06" },
+};
+
 // TOR trae la rareza equivocada para estas cartas. Reportado por el dueño
 // contra su carta física (no la versión Full Art / Kit de Juego, que es una
 // edición aparte con su propia entrada correcta en custom-cards.json).
