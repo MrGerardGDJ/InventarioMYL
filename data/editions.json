@@ -312,6 +312,18 @@
     "name": "Toolkit Primera Era 2026"
   },
   {
+    "slug": "tinieblas_pe_2026",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Tinieblas Primera Era 2026"
+  },
+  {
+    "slug": "abismo_pe_2026",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Abismo Primera Era 2026"
+  },
+  {
     "slug": "aniversario_lpe25",
     "format": "PE",
     "formatName": "Primera Era",

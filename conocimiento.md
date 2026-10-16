@@ -378,6 +378,41 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-16 (107ª iteración) — Nuevas ediciones: Tinieblas y Abismo (Primera Era, producto especial, 50 cartas)
+
+El dueño avisó que hoy (16-oct-2026) se lanzaron "Tinieblas" y "Abismo", ediciones especiales
+complementarias de Primera Era, y pidió agregarlas.
+
+- **Qué son** (wiki: "Tinieblas", "Abismo (Producto especial)"): dos productos especiales lanzados el
+  16-10-2026, de 24 cartas cada uno, diseñados para Primera Era Extendido, ambientación "Leyendas de
+  Ultratumba". Código impreso `HLPE26 NN/48`: Tinieblas 01-24 y Abismo 25-48 (la numeración de Abismo
+  continúa la de Tinieblas), más una carta Buy a Box por producto fuera de ese rango: `49/48` Bayard
+  (Talismán, arte alternativo de Lootbox PE 2025) en Tinieblas y `50/48` Midgard (Tótem, arte alternativo
+  de Toolkit PE 2026) en Abismo, ambas Promocionales.
+- **Fuentes**: la API de TOR no las trae como edición (las menciones de "tinieblas"/"abismo" son nombres
+  de cartas de otras ediciones); wiki: `Lista de cartas de Tinieblas` / `... de Abismo` (tabla con código,
+  nombre, tipo, frecuencia, raza e ilustrador de las 50) y la página propia de cada carta. Tiendas
+  (mylserena.cl por sitemap, casamyl.cl): sin cartas sueltas ni producto todavía (404).
+- **Registro**: slugs `tinieblas_pe_2026` ("Tinieblas Primera Era 2026") y `abismo_pe_2026` ("Abismo
+  Primera Era 2026"), formato PE, en `data/editions.json` después de `toolkit_primera_era_2026`. 50
+  cartas en `data/custom-cards.json`: numeradas 01-24 / 25-48 con `edid` "001".."048" (el número
+  impreso), y las dos Buy a Box con `specialId` "HLPE26 49/48" / "HLPE26 50/48".
+- **INCOMPLETO a propósito**: el wiki publicó hoy las listas pero solo **24 de las 50 cartas tienen ya
+  página propia** (habilidad, coste, fuerza, leyenda e imagen `HLPE26-NN-48.png`, todas con 200
+  `image/webp`). Las otras **26** se registraron con lo que sí dice la tabla (nombre, tipo, frecuencia,
+  raza) y **sin habilidad, coste, fuerza, leyenda ni imagen** — no se inventó nada. Pendientes de
+  completar cuando el wiki las documente: Tinieblas 04 Dragón Hueso, 07 Maldecir el Suelo, 16 Camina Muertes, 21 Xuan de Zhou, 23 Ejecución Fantasma, 24 Dones de Chung Kwei. Abismo 30 Mavka, 31 Retornar, 32 Locura Mágica, 33 Espada de Hueso, 34 Oráculo de Hueso, 35 Haugbui, 36 Gjenganger, 37 Grettir, 38 Glámr, 39 Valravn, 40 Peckols, 41 Cazadores Hambrientos, 42 Grito Helado, 43 Estela de la Muerte, 44 Mano del Muerto, 45 Dorotabo, 46 Wangliang, 47 Kaji-kito, 48 Espada de Exorcista, 50 Midgard.
+  Para completarlas: re-correr el parseo de las páginas `(HLPE26)` y rellenar por `id`
+  (`<slug>__custom__NN_nombre`), que no cambia.
+- **Incidente de sesión**: al reanudar, el checkout local de `claude/card-collections-filters-9tcflz`
+  apuntaba al tip del rediseño "Vitrina" (`f52c13f`, rama `hx8z9d`) en vez de al publicado (`96fca3c`), de
+  modo que los primeros cambios de datos se aplicaron sobre archivos de hace semanas (se notó porque la
+  página no tenía el menú lateral y `custom-cards.json` terminaba en otra carta). Se descartaron esos
+  cambios sin commitear, se alineó la rama local con `origin/` y se aplicó de nuevo todo. La rama Vitrina
+  sigue intacta en el remoto.
+- Verificado con Playwright: ambas ediciones en el filtro Edición (25 cartas c/u), colección conjunta con
+  1 especial + 24 numeradas por edición (0/50), 0 `pageerror`.
+
 ### 2026-10-13 (106ª iteración) — Cartas especiales de Leyendas Primera Era 1.0, 2.0 y 4.0 (códigos impresos distintos)
 
 El dueño armó la colección "leyendas" (1.0 + 2.0 + 3.0 + 4.0) y notó que no se distinguían las
