@@ -60,13 +60,15 @@ async function loadData() {
   // práctica (09-08-2026): dos correcciones de datos ya subidas y
   // verificadas en el repo seguían sin verse en el sitio publicado.
   const v = Date.now();
-  const [cardsRes, edRes, customRes, pricesRes, banlistRes] = await Promise.all([
+  const [cardsRes, edRes, customRes, pricesRes, banlistRes, marcosRes] = await Promise.all([
     fetch(`./data/cards.json?v=${v}`).then((r) => r.json()).catch(() => ({ cards: [] })),
     fetch(`./data/editions.json?v=${v}`).then((r) => r.json()).catch(() => []),
     fetch(`./data/custom-cards.json?v=${v}`).then((r) => (r.ok ? r.json() : { cards: [] })).catch(() => ({ cards: [] })),
     fetch(`./data/prices.json?v=${v}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
     fetch(`./data/banlist.json?v=${v}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+    fetch(`./data/marcos.json?v=${v}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
   ]);
+  const marcosPorId = marcosRes?.marcos || {};
   state.prices = pricesRes?.prices || {};
   state.banlist = banlistRes && Array.isArray(banlistRes.entries) ? banlistRes : null;
 
@@ -86,6 +88,7 @@ async function loadData() {
   // Asegura nombre legible de edición y precalcula texto de búsqueda (una vez)
   for (const c of state.baseCards) {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
+    c.marco = c.marco || marcosPorId[c.id] || MARCO_POR_EDICION[c.edition] || "";
     c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion + " " + c.codigo + " " + c.serie);
   }
   // Migración auto-reconciliante (Capa B): remapea inventario/mazos de
@@ -106,6 +109,21 @@ async function loadData() {
 // La ficha fija lateral (Catálogo y Mazos) se oculta por CSS bajo 1100px:
 // ahí un toque en una carta tiene que abrir el modal de detalle, porque
 // seleccionarla solo actualizaría un panel invisible.
+// Marco: de cuál de las 6 ediciones base de Primera Era es el DISEÑO de la
+// carta (no el producto en que viene). Permite filtrar, p. ej., todos los
+// Talismanes de Ragnarok aunque estén en Mundos Perdidos o en Leyendas.
+// Las ediciones base (SALO y Colección 20 Años) lo traen implícito; el resto sale
+// de data/marcos.json (documentado por el wiki) y lo demás queda "sin clasificar".
+const MARCOS = ["El Reto", "Mundo Gótico", "La Ira del Nahual", "Ragnarok", "La Cofradía", "Espíritu de Dragón"];
+const MARCO_POR_EDICION = {
+  el_reto: "El Reto", coleccion_20_anos_el_reto: "El Reto",
+  mundo_gotico: "Mundo Gótico", coleccion_20_anos_mundo_gotico: "Mundo Gótico",
+  ira_del_nahual: "La Ira del Nahual", coleccion_20_anos_ira_del_nahual: "La Ira del Nahual",
+  ragnarok: "Ragnarok", coleccion_20_anos_ragnarok: "Ragnarok",
+  cofradia: "La Cofradía", coleccion_20_anos_cofradia: "La Cofradía",
+  espiritu_del_dragon: "Espíritu de Dragón", coleccion_20_anos_espiritu_del_dragon: "Espíritu de Dragón",
+};
+
 const fichaPanelHidden = () => window.matchMedia("(max-width: 1100px)").matches;
 
 function normalizeCard(c, i) {
@@ -140,6 +158,7 @@ function normalizeCard(c, i) {
     // codigo = ese código tal cual; orden = posición cronológica dentro de la
     // edición (1 = la más antigua).
     serie: c.serie || "",
+    marco: c.marco || "",
     codigo: c.codigo || "",
     orden: Number.isFinite(Number(c.orden)) && c.orden !== "" ? Number(c.orden) : null,
     custom: !!c.custom,
@@ -270,6 +289,7 @@ function populateFilters() {
   fillSelect("#f-type", groupedUnique(state.cards.map((c) => c.type)).map((v) => ({ value: v, label: v })));
   fillSelect("#f-rarity", uniqueSorted(state.cards.map((c) => c.rarity)).map((v) => ({ value: v, label: v })));
   fillSelect("#f-origin", uniqueSorted(state.cards.map((c) => c.origen)).map((v) => ({ value: v, label: v })));
+  fillSelect("#f-marco", [...MARCOS.map((v) => ({ value: v, label: v })), { value: "__none__", label: "Primera Era sin clasificar" }]);
   // Formato también en la vista de estadísticas
   fillSelect("#stats-format", uniqueSorted(state.cards.map((c) => c.format)).map((f) => ({ value: f, label: FMT_NAMES[f] || f })));
   refreshEditionOptions();
@@ -368,6 +388,7 @@ function baseFilteredCards() {
   const type = $("#f-type").value;
   const rarity = $("#f-rarity").value;
   const origin = $("#f-origin").value;
+  const marco = $("#f-marco").value;
   const maxCost = Number($("#f-cost").value);
   return state.cards.filter((c) => {
     if (q && !c.searchText.includes(q)) return false;
@@ -377,6 +398,8 @@ function baseFilteredCards() {
     if (type && !looseEq(c.type, type)) return false;
     if (rarity && c.rarity !== rarity) return false;
     if (origin && c.origen !== origin) return false;
+    if (marco === "__none__") { if (c.format !== "PE" || c.marco) return false; }
+    else if (marco && c.marco !== marco) return false;
     if (maxCost < 12 && c.cost != null && c.cost > maxCost) return false;
     return true;
   });
@@ -925,7 +948,7 @@ function renderDeckFicha() {
 function jumpToCatalogCard(card) {
   switchView("coleccion");
   $("#search").value = displayName(card);
-  ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-sort"].forEach((s) => { const el = $(s); if (el) el.selectedIndex = 0; });
+  ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-marco", "#f-sort"].forEach((s) => { const el = $(s); if (el) el.selectedIndex = 0; });
   $("#f-cost").value = 12; $("#cost-val").textContent = "∞";
   refreshEditionOptions();
   applyFilters();
@@ -4078,7 +4101,7 @@ function bindEvents() {
     }
   }, 180);
   $("#search").addEventListener("input", debounced);
-  ["#f-ownership", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-sort"].forEach((s) =>
+  ["#f-ownership", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-marco", "#f-sort"].forEach((s) =>
     $(s).addEventListener("change", applyFilters)
   );
   $("#f-format").addEventListener("change", () => { refreshEditionOptions(); applyFilters(); });
@@ -4089,7 +4112,7 @@ function bindEvents() {
   });
   $("#clear-filters").addEventListener("click", () => {
     $("#search").value = "";
-    ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-sort"].forEach((s) => ($(s).selectedIndex = 0));
+    ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-marco", "#f-sort"].forEach((s) => ($(s).selectedIndex = 0));
     $("#f-cost").value = 12; $("#cost-val").textContent = "∞";
     refreshEditionOptions();
     applyFilters();
