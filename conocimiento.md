@@ -378,6 +378,39 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-19 (108ª iteración) — Campo y filtro "Marco" (edición de origen del diseño de cada carta, Primera Era)
+
+El dueño quería filtrar, p. ej., todos los Talismanes del formato Ragnarok sin importar en qué producto
+vengan (Mundos Perdidos mezcla extensiones de varias ediciones; Tinieblas y Abismo, también). Hasta
+ahora las cartas solo traían `edition` (el producto), sin ningún dato del diseño/marco de origen.
+
+- **Qué es "Marco"**: de cuál de las 6 ediciones base de Primera Era es el DISEÑO de la carta (El Reto,
+  Mundo Gótico, La Ira del Nahual, Ragnarok, La Cofradía, Espíritu de Dragón; las extensiones "X" cuentan
+  como su edición madre). Nuevo chip-select **Marco** junto a Origen, con la opción "Primera Era sin
+  clasificar" (solo formato PE) para que el filtro no mienta sobre lo que no se sabe.
+- **De dónde sale el dato** (`js/app.js`, `data/marcos.json`):
+  1. **Ediciones base** (las 6 de SALO y las 6 de Colección 20 Años, ~2.012 cartas): deducido del slug en
+     `MARCO_POR_EDICION`, sin datos nuevos ni riesgo.
+  2. **Wiki, 786 cartas** en `data/marcos.json` (id → marco): Leyendas 1.0 (sección por edición de origen,
+     247), 2.0 (columna "Edición de Origen", 252), 3.0 (nota de origen cuando es una edición base, 222) y
+     4.0 (65). Cruce estricto: por código+nombre (3.0/4.0, tolerando erratas de TOR como "Gambantein")
+     o por nombre único (1.0/2.0; si el nombre es ambiguo no se asigna). Validación cruzada: 765 de 768
+     cartas coinciden con el marco de su homónima en las ediciones base (las 3 discrepancias son nombres
+     que existen como dos cartas distintas: Ícaro y Tezcatlipoca).
+  3. **Todo lo demás queda sin clasificar**: 2.065 de las 4.863 cartas de Primera Era (42%) — Mundos
+     Perdidos, Toolkit, Xinnián, Tinieblas/Abismo, Raciales, Lootbox, JO, las cartas nuevas de Leyendas, etc.
+     El wiki NO documenta el marco de esas (se revisaron las páginas de Tinieblas y Abismo: ni la página del
+     producto ni las de cada carta lo dicen; en Leyendas 3.0/4.0 la "Nota" suele traer el producto de
+     origen, no el marco). El dato está en el diseño impreso de la carta.
+- **Por qué `data/marcos.json` aparte** y no un campo en `cards.json`: el scraper regenera `cards.json`
+  cada semana y lo pisaría; la app une ambos al cargar.
+- **Caso del dueño verificado** (Playwright): Marco Ragnarok = 414 cartas, + Talismán = 105; Marco La Ira
+  del Nahual = 375 (126 SALO + 126 Colección 20 Años + 33 de Leyendas 2.0 + 35 de la 3.0 + el resto en
+  Leyendas 1.0/4.0); "sin clasificar" = 2.065; "Limpiar" reinicia el filtro; 0 `pageerror`.
+- **Para ampliar la cobertura**: el dueño puede indicar el reparto por producto (ej. Tinieblas: cuáles
+  cartas son de qué marco); también sería posible clasificar por la imagen de la carta, con verificación.
+  No implementado.
+
 ### 2026-10-16 (107ª iteración) — Nuevas ediciones: Tinieblas y Abismo (Primera Era, producto especial, 50 cartas)
 
 El dueño avisó que hoy (16-oct-2026) se lanzaron "Tinieblas" y "Abismo", ediciones especiales
