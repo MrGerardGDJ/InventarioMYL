@@ -1236,3 +1236,7 @@ main { padding: 0; }
 .scan-warn { color: var(--accent-300); }
 .scan-wrap { flex-wrap: wrap; overflow: visible; }
 .scan-skip { margin-top: 8px; width: 100%; justify-content: center; }
+
+/* En móvil los botones del mazo quedan alineados a la izquierda: el menú de
+   exportar debe abrir hacia la derecha (si no, se sale de la pantalla). */
+@media (max-width: 760px) { #deck-export-dropdown .dropdown-menu { right: auto; left: 0; } }
