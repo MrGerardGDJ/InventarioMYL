@@ -378,6 +378,11 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-25 (113ª iteración) — Tinieblas y Abismo: 26 cartas completadas (imagen, habilidad, coste, fuerza)
+
+- Las 26 cartas que estaban sin imagen (Tinieblas 6, Abismo 20) ya tienen página en el wiki (`HLPE26-NN-48`). Se leyó cada plantilla `{{Carta}}`/`{{Cartasintexto}}`, se **verificó el número impreso** (`código = HLPE26 NN/48`) contra el `edid` de cada registro (26/26 coinciden; Midgard = `50/48`) y se completaron imagen (URL del wiki con `path-prefix=es`, igual que el resto de la edición), habilidad, texto de ambientación, coste y fuerza (`ataque`). Los saltos `<br>` de la habilidad se unieron con espacio y los wikilinks se limpiaron.
+- Solo se rellenaron campos vacíos; los datos que ya estaban (tipo, raza, rareza) coincidían con el wiki en todas. Edición quirúrgica de `custom-cards.json` (solo esas 26 cartas). Las 50 cartas de ambas ediciones quedan con imagen y habilidad.
+
 ### 2026-10-25 (112ª iteración) — Raza del mazo: el buscador solo muestra aliados de esa raza
 
 - `cardFitsRace`: los **Aliados** se filtran por raza exacta (las variantes “Campeón / Samurái/Ninja/Shaolín” cuentan como Campeón; aliados sin raza se excluyen); el resto de tipos sigue filtrando por marco de la raza + La Cofradía + sin clasificar. Solo formato PE. Verificado: con raza Guerrero, “Meili” (Dios) no aparece y “Karib” (Guerrero) sí.
