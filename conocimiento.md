@@ -378,6 +378,10 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-25 (115ª iteración) — Exportar mazo a PDF
+
+- Nuevo `exportDeckPDF` (`js/exporters.js`) y opción "PDF" en el menú Exportar del mazo (junto a Excel/Imagen/Texto). A4 vertical: encabezado con nombre, raza, total y copias por conseguir; resumen por tipo; una tabla por tipo (copias×nombre, raza, coste, fuerza, rareza, edición, “tengo” con “faltan N” en rojo); pie con número de página. Nombre de archivo sin tildes (`mazo_<nombre>_<fecha>.pdf`). Verificado generando el PDF desde la app y revisándolo renderizado.
+
 ### 2026-10-25 (114ª iteración) — Menú Exportar del mazo cortado en móvil
 
 - El menú del botón Exportar (cabecera del mazo) se anclaba por la derecha del botón; en móvil el botón queda a la izquierda y el menú se salía de la pantalla. Ahora, ≤760px, `#deck-export-dropdown .dropdown-menu` abre hacia la derecha (`left:0`). Verificado: 390px → menú en x 20–210; escritorio sin cambios.

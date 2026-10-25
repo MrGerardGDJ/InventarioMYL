@@ -628,6 +628,57 @@ export function deckSummary(deck, cards, getQty, displayName) {
   return { rows, total, missing, typeTotal, matrix, cols, typesPresent, colTotal, pct };
 }
 
+/* ===================== MAZO: PDF (lista de cartas por tipo) ===================== */
+export async function exportDeckPDF(deck, cards, getQty, displayName) {
+  await loadScript(CDN.jspdf);
+  await loadScript(CDN.autotable);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
+  const sum = deckSummary(deck, cards, getQty, displayName);
+  const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+  const GOLD = [201, 161, 59];
+
+  doc.setFillColor(15, 17, 23); doc.rect(0, 0, W, 70, "F");
+  doc.setTextColor(...GOLD); doc.setFont("helvetica", "bold"); doc.setFontSize(20);
+  doc.text(String(deck.name || "Mazo"), 40, 34);
+  doc.setTextColor(200); doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+  doc.text(`${deck.race ? "Raza: " + deck.race + "  ·  " : ""}${sum.total} cartas  ·  ${sum.missing ? sum.missing + " por conseguir" : "mazo completo en tu colección"}  ·  ${fmtDate()}`, 40, 54);
+
+  // Resumen por tipo
+  doc.autoTable({
+    startY: 86,
+    head: [["Tipo", "Cartas", "%"]],
+    body: sum.typesPresent.map((t) => [t, sum.typeTotal[t], sum.pct(sum.typeTotal[t]) + "%"]),
+    theme: "grid", headStyles: { fillColor: GOLD, textColor: 20 }, styles: { fontSize: 9 },
+    margin: { left: 40, right: W - 260 },
+  });
+
+  // Lista de cartas, una sección por tipo
+  const fmtN = (v) => (v == null ? "–" : v);
+  let y = doc.lastAutoTable.finalY + 20;
+  for (const t of sum.typesPresent) {
+    const rs = sum.rows.filter((r) => (r.type || "Otro") === t);
+    doc.autoTable({
+      startY: y,
+      head: [[`${t} · ${sum.typeTotal[t]}`, "Raza", "Coste", "Fuerza", "Rareza", "Edición", "Tengo"]],
+      body: rs.map((r) => [`${r.qty}×  ${r.name}`, r.race && r.race !== "—" ? r.race : "", fmtN(r.cost), fmtN(r.strength), r.rarity || "", r.edition, r.missing ? `${r.own} (faltan ${r.missing})` : r.own]),
+      theme: "striped", headStyles: { fillColor: [31, 35, 48], textColor: 220 },
+      alternateRowStyles: { fillColor: [245, 246, 250] },
+      styles: { fontSize: 8, cellPadding: 3, overflow: "ellipsize" },
+      columnStyles: { 0: { cellWidth: 150 }, 2: { halign: "center" }, 3: { halign: "center" }, 6: { halign: "center" } },
+      margin: { left: 40, right: 40, bottom: 36 },
+      didParseCell: (d) => { if (d.section === "body" && d.column.index === 6 && String(d.cell.raw).includes("faltan")) d.cell.styles.textColor = [180, 60, 60]; },
+    });
+    y = doc.lastAutoTable.finalY + 16;
+  }
+  const pages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pages; i++) {
+    doc.setPage(i); doc.setFontSize(8); doc.setTextColor(150);
+    doc.text(`Inventario Mitos y Leyendas · Página ${i} de ${pages}`, W - 40, H - 16, { align: "right" });
+  }
+  doc.save(`mazo_${String(deck.name || "mazo").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\-]+/g, "_")}_${today()}.pdf`);
+}
+
 /* ===================== MAZO: Excel ===================== */
 export async function exportDeckExcel(deck, cards, getQty, displayName) {
   await loadScript(CDN.xlsx);

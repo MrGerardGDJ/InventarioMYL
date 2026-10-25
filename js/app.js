@@ -19,7 +19,7 @@
      · Navegación / eventos ..... tabs, listeners y arranque (init)
    ========================================================================== */
 import * as store from "./store.js";
-import { exportExcel, exportPricesExcel, exportPDF, exportDeckExcel, exportDeckImage, exportCollectionPDF, deckSummary } from "./exporters.js";
+import { exportExcel, exportPricesExcel, exportPDF, exportDeckExcel, exportDeckPDF, exportDeckImage, exportCollectionPDF, deckSummary } from "./exporters.js";
 import { renderDeckCharts } from "./charts.js";
 import * as cloud from "./cloud.js";
 import { NO_STRENGTH_TYPES } from "./icons.js";
@@ -3111,6 +3111,7 @@ function renderDeckDetail() {
           <button class="btn" id="deck-export-btn"><i class="ph ph-export"></i> Exportar</button>
           <div class="dropdown-menu">
             <button id="deck-xlsx"><i class="ph ph-file-xls"></i> Excel</button>
+            <button id="deck-pdf"><i class="ph ph-file-pdf"></i> PDF</button>
             <button id="deck-img"><i class="ph ph-image"></i> Imagen</button>
             <button id="deck-txt"><i class="ph ph-text-align-left"></i> Texto</button>
           </div>
@@ -3187,6 +3188,12 @@ function renderDeckDetail() {
     showToast("Generando Excel…", 4000);
     exportDeckExcel(deck, state.cards, store.getQty, displayName)
       .then(() => showToast("Excel descargado ✓")).catch((e) => showToast("Error: " + e.message, 4000));
+  };
+  $("#deck-pdf").onclick = () => {
+    exportDd.classList.remove("open");
+    showToast("Generando PDF…", 4000);
+    exportDeckPDF(deck, state.cards, store.getQty, displayName)
+      .then(() => showToast("PDF descargado ✓")).catch((e) => showToast("Error: " + e.message, 4000));
   };
   $("#deck-img").onclick = () => {
     exportDd.classList.remove("open");
