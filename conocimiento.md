@@ -378,6 +378,24 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-25 (109ª iteración) — Mazos en móvil: − / + por carta dentro del mazo (antes modificaba el inventario)
+
+Reporte del dueño: en móvil/responsivo le costaba quitar cartas del mazo o cambiar su cantidad, y al
+intentarlo se modificaba la cantidad global de copias de su inventario en vez de la del mazo.
+
+- **Causa**: la fila de una carta en el mazo (`deckCardRowHtml`) solo mostraba "×N" y no tenía controles;
+  el único −/+ "En este mazo" vivía en la ficha lateral (`#deck-ficha-panel`), oculta bajo 1100 px. En la 102ª
+  iteración, tocar la fila en móvil pasó a abrir el modal de detalle, y ahí el −/+ visible es el de
+  `store.setQty` (copias en la colección), sin etiqueta: se tocaba pensando que era el del mazo.
+- **Arreglo** (`js/app.js`, `css/styles.css`): cada fila del mazo trae su propio **−  N  +** (botones de
+  36 px en móvil) que llama a `store.deckAdd(deck.id, cid, ±1)`; llegar a 0 quita la carta del mazo. Nunca
+  toca el inventario. Tocar el resto de la fila (miniatura/nombre) sigue abriendo el detalle. Se extrajo
+  `deckChangeQty(cid, delta)` y `deckFichaChangeQty` la reutiliza. En el detalle de la carta se agregó la
+  etiqueta "Copias que tienes en tu colección" sobre el −/+ de inventario.
+- Verificado con teléfono táctil emulado y escritorio: mazo {A:3,B:1} con inventario {A:5,B:2} → dos "−" en A
+  → mazo A:1, inventario intacto; "+" → A:2; "−" sobre B (1 copia) → B sale del mazo (1 fila); tocar el
+  nombre abre el detalle; 0 `pageerror`.
+
 ### 2026-10-19 (108ª iteración) — Campo y filtro "Marco" (edición de origen del diseño de cada carta, Primera Era)
 
 El dueño quería filtrar, p. ej., todos los Talismanes del formato Ragnarok sin importar en qué producto
