@@ -812,7 +812,14 @@ main { padding: 0; }
 .deck-card-row .dcr-name { font-size: 12.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .deck-card-row .dcr-meta { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
 .deck-card-row.missing .dcr-meta { color: var(--accent-300); }
-.deck-card-row .dcr-qty { font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; flex: none; }
+.deck-card-row .dcr-qty { font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; flex: none; min-width: 18px; text-align: center; }
+.deck-card-row .dcr-step { display: flex; align-items: center; gap: 4px; flex: none; }
+.deck-card-row .dcr-step-btn {
+  width: 28px; height: 28px; border-radius: 8px; border: none; padding: 0; display: grid; place-items: center;
+  background: transparent; color: var(--text-70); box-shadow: inset 0 0 0 1px var(--border-strong); font-size: 13px;
+}
+.deck-card-row .dcr-step-btn:hover { background: rgba(233, 233, 237, 0.08); color: var(--text); }
+@media (max-width: 760px) { .deck-card-row .dcr-step-btn { width: 36px; height: 36px; font-size: 15px; } }
 .deck-card-row.missing .dcr-qty { color: var(--accent-300); }
 .deck-card-row .dcr-warn { font-size: 10px; color: var(--danger); flex: none; }
 .deck-gap-row {

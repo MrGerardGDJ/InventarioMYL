@@ -854,14 +854,14 @@ function updateDeckFichaQty(qty) {
   if (el) el.textContent = qty;
 }
 function activeDeckOrNull() { return store.getDeck(store.getSetting("activeDeckId")); }
-function deckFichaChangeQty(delta) {
+function deckChangeQty(cid, delta) {
   const deck = activeDeckOrNull();
-  const cid = state.deckSelectedCardId;
   if (!deck || !cid) return;
   store.deckAdd(deck.id, cid, delta);
   updateDeckCounts(); refreshActiveDeckCount();
   renderDeckContents(deck);
 }
+function deckFichaChangeQty(delta) { deckChangeQty(state.deckSelectedCardId, delta); }
 function deckFichaSetQty(qty) {
   const deck = activeDeckOrNull();
   const cid = state.deckSelectedCardId;
@@ -1026,7 +1026,8 @@ function openModal(card, navList, navIndex) {
           ${tag(card.editionName || "")}${tag(card.race)}${tag(card.type)}${tag(card.rarity)}
           ${card.cost != null ? tag("Coste " + card.cost) : ""}${card.strength != null ? tag("Fuerza " + card.strength) : ""}
         </div>
-        <div class="qty-row" style="border:none;padding:0;margin:14px 0">
+        <div class="muted" style="font-size:12px;margin-top:14px">Copias que tienes en tu colección</div>
+        <div class="qty-row" style="border:none;padding:0;margin:6px 0 14px">
           <button class="qty-btn" data-m="minus">−</button>
           <input type="number" min="0" class="qty-num-input ${qty === 0 ? "zero" : ""}" data-role="mqty" value="${qty}" style="flex:none;width:44px" />
           <button class="qty-btn" data-m="plus">+</button>
@@ -3304,7 +3305,13 @@ function renderDeckContents(deck) {
   state.deckFichaNavList = navList;
   cont.querySelectorAll(".deck-card-row[data-cid]").forEach((row) => {
     row.classList.toggle("selected", row.dataset.cid === state.deckSelectedCardId);
-    row.addEventListener("click", () => {
+    // − / + de la fila: cambian SOLO las copias dentro de este mazo (no tu inventario)
+    row.querySelectorAll("[data-dstep]").forEach((b) => b.addEventListener("click", (e) => {
+      e.stopPropagation();
+      deckChangeQty(row.dataset.cid, Number(b.dataset.dstep));
+    }));
+    row.addEventListener("click", (e) => {
+      if (e.target.closest(".dcr-step")) return;
       if (!fichaPanelHidden()) { selectDeckCard(row.dataset.cid, navList); return; }
       const cards = navList.map(cardById).filter(Boolean);
       const card = cardById(row.dataset.cid);
@@ -3350,10 +3357,14 @@ function deckCardRowHtml(card, cid, q, deck) {
     <div class="dcr-thumb">${img}</div>
     <div class="dcr-main">
       <div class="dcr-name">${escapeHtml(dName)}</div>
-      <div class="dcr-meta">×${q} · tienes ${own}</div>
+      <div class="dcr-meta">tienes ${own}</div>
     </div>
     ${banWarn ? `<i class="ph ph-prohibit dcr-warn" title="${escapeAttr(banWarn)}"></i>` : ""}
-    <div class="dcr-qty">×${q}</div>
+    <div class="dcr-step" role="group" aria-label="Copias en el mazo">
+      <button class="dcr-step-btn" data-dstep="-1" aria-label="Quitar una copia del mazo"><i class="ph ph-minus"></i></button>
+      <span class="dcr-qty">${q}</span>
+      <button class="dcr-step-btn" data-dstep="1" aria-label="Agregar una copia al mazo"><i class="ph ph-plus"></i></button>
+    </div>
   </div>`;
 }
 
