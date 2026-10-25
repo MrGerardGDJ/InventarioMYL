@@ -378,6 +378,10 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-25 (112ª iteración) — Raza del mazo: el buscador solo muestra aliados de esa raza
+
+- `cardFitsRace`: los **Aliados** se filtran por raza exacta (las variantes “Campeón / Samurái/Ninja/Shaolín” cuentan como Campeón; aliados sin raza se excluyen); el resto de tipos sigue filtrando por marco de la raza + La Cofradía + sin clasificar. Solo formato PE. Verificado: con raza Guerrero, “Meili” (Dios) no aparece y “Karib” (Guerrero) sí.
+
 ### 2026-10-25 (111ª iteración) — Escáner de cartas con cámara (fase 1: OCR del nombre)
 
 - Nuevo `js/scanner.js` + botones "Escanear" en Catálogo (suma a la colección) y en la cabecera del mazo (añade al mazo, respetando la raza elegida).
