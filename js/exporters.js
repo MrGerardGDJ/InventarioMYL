@@ -679,6 +679,92 @@ export async function exportDeckPDF(deck, cards, getQty, displayName) {
   doc.save(`mazo_${String(deck.name || "mazo").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\-]+/g, "_")}_${today()}.pdf`);
 }
 
+/* ===================== MAZO: PDF con imágenes (cartas por tipo) =====================
+   Sin estadísticas: solo el nombre del mazo, el total de cartas y, por cada
+   tipo, un título con su cantidad y la grilla de imágenes de esas cartas
+   (una imagen por carta distinta, con un distintivo "×N" si hay copias). */
+const DECK_IMG_TYPES = [["Aliado", "Aliados"], ["Arma", "Armas"], ["Tótem", "Tótems"], ["Talismán", "Talismanes"], ["Oro", "Oros"], ["Otro", "Otras cartas"]];
+export async function exportDeckImagesPDF(deck, cards, displayName, onProgress) {
+  await loadScript(CDN.jspdf);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
+  const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+  const M = 36, GAP = 8, COLS = 4;
+  const cw = (W - 2 * M - (COLS - 1) * GAP) / COLS, ch = cw * CARD_ASPECT;
+  const GOLD = [201, 161, 59];
+
+  const byId = new Map(cards.map((c) => [c.id, c]));
+  const groups = new Map(DECK_IMG_TYPES.map(([k]) => [k, []]));
+  for (const [cid, q] of Object.entries(deck.cards || {})) {
+    const c = byId.get(cid);
+    if (!c || q <= 0) continue;
+    const key = c.type === "Monumento" ? "Oro" : groups.has(c.type) ? c.type : "Otro";
+    groups.get(key).push({ c, q });
+  }
+  for (const list of groups.values()) list.sort((a, b) => (cardNumOf(a.c) ?? 9999) - (cardNumOf(b.c) ?? 9999) || displayName(a.c).localeCompare(displayName(b.c), "es"));
+  const all = [...groups.values()].flat();
+  const total = all.reduce((a, x) => a + x.q, 0);
+
+  // Precarga de imágenes (concurrencia limitada), ya rasterizadas a esquinas redondeadas
+  const SCALE = 3, tw = Math.round(cw * SCALE), th = Math.round(tw * CARD_ASPECT);
+  const thumbs = new Map();
+  let next = 0, done = 0;
+  async function worker() {
+    while (next < all.length) {
+      const x = all[next++];
+      const img = await loadImageEl(x.c.image);
+      thumbs.set(x.c.id, renderCardThumb(img, false, tw, th, displayName(x.c)));
+      onProgress?.(++done, all.length);
+    }
+  }
+  await Promise.all(Array.from({ length: 4 }, worker));
+
+  // Encabezado
+  doc.setFillColor(15, 17, 23); doc.rect(0, 0, W, 62, "F");
+  doc.setTextColor(...GOLD); doc.setFont("helvetica", "bold"); doc.setFontSize(20);
+  doc.text(truncateText(doc, String(deck.name || "Mazo"), W - 2 * M), M, 30);
+  doc.setTextColor(200); doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+  doc.text(`${total} carta${total === 1 ? "" : "s"}`, M, 48);
+
+  let y = 62 + 22;
+  const heading = (title, n) => {
+    doc.setTextColor(30); doc.setFont("helvetica", "bold"); doc.setFontSize(13);
+    doc.text(title, M, y + 10);
+    const tw2 = doc.getTextWidth(title);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(110);
+    doc.text(`${n} carta${n === 1 ? "" : "s"}`, M + tw2 + 8, y + 10);
+    doc.setDrawColor(...GOLD); doc.setLineWidth(0.8); doc.line(M, y + 16, W - M, y + 16);
+    y += 26;
+  };
+  for (const [key, title] of DECK_IMG_TYPES) {
+    const list = groups.get(key);
+    if (!list.length) continue;
+    const n = list.reduce((a, x) => a + x.q, 0);
+    if (y + 26 + ch > H - M) { doc.addPage(); y = M; }
+    heading(title, n);
+    let col = 0;
+    for (const { c, q } of list) {
+      if (col === COLS) { col = 0; y += ch + GAP; }
+      if (y + ch > H - M) { doc.addPage(); y = M; col = 0; }
+      const x = M + col * (cw + GAP);
+      doc.addImage(thumbs.get(c.id), "JPEG", x, y, cw, ch);
+      if (q > 1) {
+        doc.setFillColor(...GOLD); doc.circle(x + cw - 14, y + 14, 11, "F");
+        doc.setTextColor(20); doc.setFont("helvetica", "bold"); doc.setFontSize(10);
+        doc.text(`×${q}`, x + cw - 14, y + 17.5, { align: "center" });
+      }
+      col++;
+    }
+    y += ch + GAP + 14;
+  }
+  const pages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pages; i++) {
+    doc.setPage(i); doc.setFontSize(8); doc.setTextColor(150); doc.setFont("helvetica", "normal");
+    doc.text(`${deck.name || "Mazo"} · Página ${i} de ${pages}`, W - M, H - 14, { align: "right" });
+  }
+  doc.save(`mazo_cartas_${String(deck.name || "mazo").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\-]+/g, "_")}_${today()}.pdf`);
+}
+
 /* ===================== MAZO: Excel ===================== */
 export async function exportDeckExcel(deck, cards, getQty, displayName) {
   await loadScript(CDN.xlsx);
