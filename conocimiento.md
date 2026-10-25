@@ -378,6 +378,10 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-25 (116ª iteración) — Exportar mazo a PDF con imágenes por tipo
+
+- Nuevo `exportDeckImagesPDF` (`js/exporters.js`), **sin tocar** `exportDeckPDF`. El menú Exportar del mazo ahora tiene “PDF (lista)” (el de la 115ª) y “PDF (con imágenes)”. A4 vertical, sin estadísticas: encabezado con nombre del mazo y total de cartas; por tipo (Aliados, Armas, Tótems, Talismanes, Oros, Otras) un título con su cantidad y una grilla de 4 columnas con la imagen de cada carta distinta (distintivo dorado “×N” si hay copias). Reutiliza la carga de imágenes con reintentos y rasterizado con esquinas redondeadas del PDF de Colecciones (evita canvas “tainted”); las cartas sin imagen salen con su nombre. Muestra progreso “Cargando imágenes n/N…”. Verificado con un mazo de 60 cartas con imágenes reales.
+
 ### 2026-10-25 (115ª iteración) — Exportar mazo a PDF
 
 - Nuevo `exportDeckPDF` (`js/exporters.js`) y opción "PDF" en el menú Exportar del mazo (junto a Excel/Imagen/Texto). A4 vertical: encabezado con nombre, raza, total y copias por conseguir; resumen por tipo; una tabla por tipo (copias×nombre, raza, coste, fuerza, rareza, edición, “tengo” con “faltan N” en rojo); pie con número de página. Nombre de archivo sin tildes (`mazo_<nombre>_<fecha>.pdf`). Verificado generando el PDF desde la app y revisándolo renderizado.
