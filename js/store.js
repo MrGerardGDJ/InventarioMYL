@@ -135,6 +135,10 @@ export function setDeckStatus(id, status) {
   const d = getDeck(id);
   if (d) { d.status = status; d.updatedAt = Date.now(); write(KEYS.decks, decks); notify(); }
 }
+export function setDeckRace(id, race) {
+  const d = getDeck(id);
+  if (d) { d.race = race || ""; d.updatedAt = Date.now(); write(KEYS.decks, decks); notify(); }
+}
 export function deleteDeck(id) {
   decks = decks.filter((d) => d.id !== id);
   write(KEYS.decks, decks);

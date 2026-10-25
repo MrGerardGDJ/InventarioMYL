@@ -124,6 +124,24 @@ const MARCO_POR_EDICION = {
   espiritu_del_dragon: "Espíritu de Dragón", coleccion_20_anos_espiritu_del_dragon: "Espíritu de Dragón",
 };
 
+// Raza del mazo → marco (diseño) de las cartas que le corresponden. La
+// Cofradía mezcla razas de todos los marcos, así que siempre se permite.
+const RAZA_MARCO = {
+  "Caballero": "El Reto", "Dragón": "El Reto", "Faerie": "El Reto",
+  "Vampiro": "Mundo Gótico", "Cazador": "Mundo Gótico", "Licántropo": "Mundo Gótico",
+  "Guerrero": "La Ira del Nahual", "Chamán": "La Ira del Nahual", "Bestia": "La Ira del Nahual",
+  "Dios": "Ragnarok", "Abominación": "Ragnarok", "Bárbaro": "Ragnarok",
+  "Kami": "Espíritu de Dragón", "Xian": "Espíritu de Dragón", "Criaturas": "Espíritu de Dragón", "Campeón": "Espíritu de Dragón",
+};
+// ¿La carta sirve para un mazo de esa raza? Sin raza elegida, todas.
+function cardFitsRace(card, race) {
+  if (!race) return true;
+  if (card.format !== "PE") return false;
+  const m = card.marco;
+  if (!m) return true; // sin clasificar: no se descarta
+  return m === RAZA_MARCO[race] || m === "La Cofradía";
+}
+
 const fichaPanelHidden = () => window.matchMedia("(max-width: 1100px)").matches;
 
 function normalizeCard(c, i) {
@@ -3092,6 +3110,13 @@ function renderDeckDetail() {
       ? "Mazo Secundario: es un plan/experimento — no reserva copias de tus cartas ni compite con tus otros mazos."
       : "Mazo Principal: compite por copias con tus otros mazos Principal (si comparten una carta, la disponibilidad se reparte entre ellos)."}</p>
 
+    <label class="field inline deck-race-field">
+      <span>Raza del mazo</span>
+      <select id="deck-race">
+        <option value="">Sin raza (todas las cartas)</option>
+        ${[...new Set(Object.values(RAZA_MARCO))].map((mc) => `<optgroup label="${escapeAttr(mc)}">${Object.keys(RAZA_MARCO).filter((r) => RAZA_MARCO[r] === mc).map((r) => `<option value="${escapeAttr(r)}">${escapeHtml(r)}</option>`).join("")}</optgroup>`).join("")}
+      </select>
+    </label>
     <div id="deck-kpis-top" class="stats-grid cols-4"></div>
 
     <div class="tabs deck-tabs">
@@ -3129,6 +3154,12 @@ function renderDeckDetail() {
   switchDeckTab(deckTab);
 
   $("#deck-name").onchange = (e) => { store.renameDeck(deck.id, e.target.value || "Mazo"); populateActiveDeckSelect(); updateDeckCounts(); };
+  $("#deck-race").value = deck.race || "";
+  $("#deck-race").onchange = (e) => {
+    store.setDeckRace(deck.id, e.target.value);
+    deck.race = e.target.value;
+    const inp = $("#deck-search"); if (inp && inp.oninput) inp.oninput();
+  };
   $("#deck-sort").value = store.getSetting("deckSort") || "number";
   $("#deck-sort").onchange = (e) => { store.setSetting("deckSort", e.target.value); renderDeckContents(deck); };
   wrap.querySelector("[data-status]").onclick = () => {
@@ -3159,7 +3190,7 @@ function renderDeckDetail() {
     const q = normText(di.value.trim());
     const res = $("#deck-search-results");
     if (q.length < 2) { res.innerHTML = ""; return; }
-    const matches = state.cards.filter((c) => c.searchText.includes(q)).slice(0, 30);
+    const matches = state.cards.filter((c) => c.searchText.includes(q) && cardFitsRace(c, deck.race)).slice(0, 30);
     res.innerHTML = matches.map((c) => {
       const own = store.getQty(c.id);
       return `<div class="dsr" data-id="${escapeAttr(c.id)}">
@@ -3217,6 +3248,24 @@ function deckZoneOf(card) {
   return DECK_SUPPORT_TYPES.has(card.type) ? "Apoyo" : "Otro";
 }
 
+// En móvil el mazo se muestra por tipo de carta, cada uno como carrusel.
+let deckWasMobile = null;
+window.addEventListener("resize", () => {
+  const m = window.matchMedia("(max-width: 760px)").matches;
+  if (deckWasMobile !== null && m !== deckWasMobile) {
+    const deck = store.getDeck(store.getSetting("activeDeckId"));
+    if (deck && $("#deck-contents")) renderDeckContents(deck);
+  }
+  deckWasMobile = m;
+});
+const deckMobile = () => window.matchMedia("(max-width: 760px)").matches;
+const DECK_TYPE_KEYS = ["Aliado", "Arma", "Tótem", "Talismán", "Oro", "Otro"];
+const DECK_TYPE_TITLES = { Aliado: "Aliados", Arma: "Armas", "Tótem": "Tótems", "Talismán": "Talismanes", Oro: "Oros", Otro: "Otras cartas" };
+function deckTypeZoneOf(card) {
+  if (card.type === "Oro" || card.type === "Monumento") return "Oro";
+  return DECK_TYPE_KEYS.includes(card.type) ? card.type : "Otro";
+}
+
 function renderDeckContents(deck) {
   const cont = $("#deck-contents");
   if (!cont) return;
@@ -3228,7 +3277,11 @@ function renderDeckContents(deck) {
   // resumen y los avisos siguen calculándose sobre el mazo completo.
   const query = normText($("#search").value.trim());
 
-  const groups = { Aliado: [], Apoyo: [], Oro: [], Otro: [] };
+  const carousel = deckMobile();
+  const zoneKeys = carousel ? DECK_TYPE_KEYS : ["Aliado", "Apoyo", "Oro", "Otro"];
+  const zoneOfCard = carousel ? deckTypeZoneOf : deckZoneOf;
+  const zoneTitle = (k) => (carousel ? DECK_TYPE_TITLES[k] : DECK_ZONE_TITLES[k]);
+  const groups = Object.fromEntries(zoneKeys.map((k) => [k, []]));
   let missing = 0;
   let banIssues = 0;
   let allyTotal = 0;
@@ -3240,7 +3293,7 @@ function renderDeckContents(deck) {
     if (banlistWarning(card, q)) banIssues++;
     if (card.type === "Aliado") allyTotal += q;
     if (query && !card.searchText.includes(query)) continue;
-    groups[deckZoneOf(card)].push({ card, cid, q });
+    groups[zoneOfCard(card)].push({ card, cid, q });
   }
 
   const banner = $("#deck-banner");
@@ -3264,7 +3317,7 @@ function renderDeckContents(deck) {
 
   let html = "";
   const navList = []; // orden visual de cid, para ← → en la ficha
-  for (const key of ["Aliado", "Apoyo", "Oro", "Otro"]) {
+  for (const key of zoneKeys) {
     const zoneCards = groups[key];
     // El "espacio de carta" de Aliados faltantes se muestra siempre que el
     // mazo tenga menos del mínimo, incluso si el buscador de arriba está
@@ -3285,8 +3338,8 @@ function renderDeckContents(deck) {
     });
     for (const x of zoneCards) navList.push(x.cid);
     html += `<div class="deck-group">
-      <div class="deck-group-head"><span class="dgh-name">${escapeHtml(DECK_ZONE_TITLES[key])}</span><span class="dgh-count">${zoneQty} cartas</span><span class="dgh-rule"></span></div>
-      <div class="deck-group-grid">${zoneCards.map(({ card, cid, q }) => deckCardRowHtml(card, cid, q, deck)).join("")}`;
+      <div class="deck-group-head"><span class="dgh-name">${escapeHtml(zoneTitle(key))}</span><span class="dgh-count">${zoneQty} carta${zoneQty === 1 ? "" : "s"}</span><span class="dgh-rule"></span></div>
+      <div class="deck-group-grid${carousel ? " carousel" : ""}">${zoneCards.map(({ card, cid, q }) => deckCardRowHtml(card, cid, q, deck)).join("")}`;
     if (showAllyGap) {
       const need = RACIAL_MIN_ALLIES - allyTotal;
       html += deckGapRowHtml(`Faltan ${need} Aliado${need === 1 ? "" : "s"}`, `Mínimo ${RACIAL_MIN_ALLIES} en el formato Racial Edición`);
