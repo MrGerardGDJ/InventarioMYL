@@ -90,6 +90,7 @@ export function openScanner(opts) {
   for (const c of pool) { const n = norm(opts.displayName(c)); if (n) (nameIndex.get(n) || nameIndex.set(n, []).get(n)).push(c); }
 
   const batch = new Map(); // id -> qty
+  const pending = new Map(); // nombre normalizado -> qty (edición por elegir al final)
   const root = document.createElement("div");
   root.className = "scan-overlay";
   root.innerHTML = `
@@ -117,7 +118,7 @@ export function openScanner(opts) {
   $(".scan-x").onclick = () => { if (!batch.size || confirm("Hay cartas sin confirmar. ¿Cerrar y descartarlas?")) close(); };
 
   function renderBatch() {
-    const total = [...batch.values()].reduce((a, b) => a + b, 0);
+    const total = [...batch.values(), ...pending.values()].reduce((a, b) => a + b, 0);
     if (!total) { batchEl.innerHTML = ""; return; }
     const byId = new Map(pool.map((c) => [c.id, c]));
     batchEl.innerHTML = `<div class="scan-batch-title">Por agregar · ${total} carta${total === 1 ? "" : "s"}</div>` +
@@ -125,27 +126,56 @@ export function openScanner(opts) {
         <span class="scan-bname">${esc(opts.displayName(byId.get(id)))} <small class="muted">${esc(byId.get(id).editionName || "")}</small></span>
         <button class="scan-step" data-d="-1"><i class="ph ph-minus"></i></button><b>${q}</b><button class="scan-step" data-d="1"><i class="ph ph-plus"></i></button>
       </div>`).join("") +
+      [...pending].map(([n, q]) => `<div class="scan-brow scan-pend" data-n="${esc(n)}">
+        <span class="scan-bname">${esc(opts.displayName(nameIndex.get(n)[0]))} <small class="scan-warn">edición por elegir</small></span>
+        <button class="scan-step" data-d="-1"><i class="ph ph-minus"></i></button><b>${q}</b><button class="scan-step" data-d="1"><i class="ph ph-plus"></i></button>
+      </div>`).join("") +
       `<button class="btn primary scan-confirm"><i class="ph ph-check"></i> Confirmar ${opts.mode === "deck" ? "en el mazo" : "en mi colección"}</button>`;
     batchEl.querySelectorAll(".scan-brow").forEach((r) => r.querySelectorAll(".scan-step").forEach((b) => b.onclick = () => {
       const id = r.dataset.id, q = (batch.get(id) || 0) + Number(b.dataset.d);
       q > 0 ? batch.set(id, q) : batch.delete(id); renderBatch();
     }));
+    batchEl.querySelectorAll(".scan-pend").forEach((r) => r.querySelectorAll(".scan-step").forEach((b) => b.onclick = () => {
+      const n = r.dataset.n, q = (pending.get(n) || 0) + Number(b.dataset.d);
+      q > 0 ? pending.set(n, q) : pending.delete(n); renderBatch();
+    }));
     batchEl.querySelector(".scan-confirm").onclick = () => {
+      if (pending.size) { resolvePending(); return; }
       opts.onConfirm([...batch].map(([id, qty]) => ({ id, qty })));
       close();
     };
   }
+  // Al final: por cada nombre con varias ediciones, el usuario elige la suya.
+  function resolvePending() {
+    const [n, q] = [...pending][0];
+    const cards = nameIndex.get(n);
+    candsEl.innerHTML = "";
+    statusEl.textContent = `¿De qué edición ${q > 1 ? "son tus " + q + " copias" : "es tu copia"} de “${opts.displayName(cards[0])}”? (${pending.size} por resolver)`;
+    batchEl.innerHTML = `<div class="scan-variants scan-wrap">${cards.map((c) => `<button class="scan-var" data-id="${esc(c.id)}">
+      ${c.image ? `<img loading="lazy" src="${esc(c.image)}" alt="" />` : `<span class="scan-noimg"></span>`}
+      <span>${esc(c.editionName || "")}${c.rarity ? " · " + esc(c.rarity) : ""}</span></button>`).join("")}</div>
+      <button class="btn scan-skip">Volver sin elegir</button>`;
+    batchEl.querySelectorAll(".scan-var").forEach((b) => b.onclick = () => {
+      pending.delete(n); batch.set(b.dataset.id, (batch.get(b.dataset.id) || 0) + q);
+      statusEl.textContent = ""; renderBatch();
+      if (!pending.size) statusEl.textContent = "Todas resueltas. Revisa y confirma.";
+    });
+    batchEl.querySelector(".scan-skip").onclick = () => { statusEl.textContent = ""; renderBatch(); };
+  }
+  function addPending(n) { pending.set(n, (pending.get(n) || 0) + 1); renderBatch(); opts.toast?.("Añadida (edición al final)", 900); }
   function add(id) { batch.set(id, (batch.get(id) || 0) + 1); renderBatch(); opts.toast?.("Añadida ✓", 900); }
 
   function renderCands(matches, note) {
     if (!matches.length) { candsEl.innerHTML = ""; statusEl.textContent = note || "No encontré coincidencias. Prueba de nuevo o busca por nombre."; return; }
-    statusEl.textContent = note || "Toca la carta correcta (si hay varias ediciones, elige la que tienes en la mano):";
+    statusEl.textContent = note || "Toca la edición exacta si la ves, o usa “elegir edición al final” si tienes dudas:";
     candsEl.innerHTML = matches.map((m) => `<div class="scan-cand">
-      <div class="scan-cname">${esc(opts.displayName(m.cards[0]))} <small class="muted">${Math.round(m.score * 100)}%</small></div>
+      <div class="scan-cname">${esc(opts.displayName(m.cards[0]))} <small class="muted">${Math.round(m.score * 100)}%</small>
+        ${m.cards.length > 1 ? `<button class="btn scan-later" data-n="${esc(m.name)}"><i class="ph ph-plus"></i> Añadir y elegir edición al final</button>` : ""}</div>
       <div class="scan-variants">${m.cards.slice(0, 12).map((c) => `<button class="scan-var" data-id="${esc(c.id)}">
         ${c.image ? `<img loading="lazy" src="${esc(c.image)}" alt="" />` : `<span class="scan-noimg"></span>`}
         <span>${esc(c.editionName || "")}${c.rarity ? " · " + esc(c.rarity) : ""}</span></button>`).join("")}</div>
     </div>`).join("");
+    candsEl.querySelectorAll(".scan-later").forEach((b) => b.onclick = () => addPending(b.dataset.n));
     candsEl.querySelectorAll(".scan-var").forEach((b) => b.onclick = () => add(b.dataset.id));
   }
 
