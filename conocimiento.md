@@ -378,6 +378,12 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-25 (111ª iteración) — Escáner de cartas con cámara (fase 1: OCR del nombre)
+
+- Nuevo `js/scanner.js` + botones "Escanear" en Catálogo (suma a la colección) y en la cabecera del mazo (añade al mazo, respetando la raza elegida).
+- Flujo: cámara trasera con marco guía → recorte de la franja del nombre → Tesseract.js 5.1.1 (cargado bajo demanda desde jsDelivr, idioma `spa`, normal e invertido) → similitud (Levenshtein + ventanas) contra los nombres del catálogo → candidatos con miniatura **por edición**; el usuario toca la correcta (nunca agrega sola, porque un nombre existe en varias ediciones). Modo ráfaga: lista "Por agregar" con −/+ y confirmación final. Búsqueda por nombre como respaldo.
+- Matcher: nombres de <4 letras solo con calce exacto (evita falsos positivos con basura de OCR). Probado con cámara falsa de Chromium y OCR sobre texto sintético; **falta probar con cartas reales** (reflejos, fundas, foils). Fase 2 prevista: huellas de imagen precalculadas para distinguir ediciones.
+
 ### 2026-10-25 (110ª iteración) — Mazos: raza del mazo filtra el buscador + carruseles por tipo en móvil
 
 - **Raza del mazo** (`deck.race`, `store.setDeckRace`): selector en la cabecera del mazo. El buscador "añadir cartas" solo muestra cartas PE cuyo `marco` corresponde a la raza (`RAZA_MARCO`: Guerrero/Chamán/Bestia → Ira del Nahual, Dios/Abominación/Bárbaro → Ragnarok, etc.). **La Cofradía** mezcla razas de todos los marcos, así que siempre se permite; las cartas sin marco clasificado no se descartan.
