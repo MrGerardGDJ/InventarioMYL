@@ -382,6 +382,7 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 - Nuevo `js/scanner.js` + botones "Escanear" en Catálogo (suma a la colección) y en la cabecera del mazo (añade al mazo, respetando la raza elegida).
 - Flujo: cámara trasera con marco guía → recorte de la franja del nombre → Tesseract.js 5.1.1 (cargado bajo demanda desde jsDelivr, idioma `spa`, normal e invertido) → similitud (Levenshtein + ventanas) contra los nombres del catálogo → candidatos con miniatura **por edición**; el usuario toca la correcta (nunca agrega sola, porque un nombre existe en varias ediciones). Modo ráfaga: lista "Por agregar" con −/+ y confirmación final. Búsqueda por nombre como respaldo.
+- **Dudas de edición**: si un nombre existe en varias ediciones, el candidato ofrece “Añadir y elegir edición al final”; queda “edición por elegir” en la lista y al confirmar se pide, por cada nombre pendiente, elegir la edición con miniaturas (se aplica a todas sus copias). Siempre se puede tocar directamente una edición concreta.
 - Matcher: nombres de <4 letras solo con calce exacto (evita falsos positivos con basura de OCR). Probado con cámara falsa de Chromium y OCR sobre texto sintético; **falta probar con cartas reales** (reflejos, fundas, foils). Fase 2 prevista: huellas de imagen precalculadas para distinguir ediciones.
 
 ### 2026-10-25 (110ª iteración) — Mazos: raza del mazo filtra el buscador + carruseles por tipo en móvil
