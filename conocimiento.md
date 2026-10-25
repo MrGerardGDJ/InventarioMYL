@@ -378,6 +378,11 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-25 (110ª iteración) — Mazos: raza del mazo filtra el buscador + carruseles por tipo en móvil
+
+- **Raza del mazo** (`deck.race`, `store.setDeckRace`): selector en la cabecera del mazo. El buscador "añadir cartas" solo muestra cartas PE cuyo `marco` corresponde a la raza (`RAZA_MARCO`: Guerrero/Chamán/Bestia → Ira del Nahual, Dios/Abominación/Bárbaro → Ragnarok, etc.). **La Cofradía** mezcla razas de todos los marcos, así que siempre se permite; las cartas sin marco clasificado no se descartan.
+- **Móvil (≤760px)**: la composición del mazo se agrupa por tipo (Aliados, Armas, Tótems, Talismanes, Oros) como carrusel horizontal con scroll-snap; cada título muestra las copias de ese tipo. En escritorio se mantiene la vista por zonas; se re-renderiza al cruzar el breakpoint.
+
 ### 2026-10-25 (109ª iteración) — Mazos en móvil: − / + por carta dentro del mazo (antes modificaba el inventario)
 
 Reporte del dueño: en móvil/responsivo le costaba quitar cartas del mazo o cambiar su cantidad, y al
