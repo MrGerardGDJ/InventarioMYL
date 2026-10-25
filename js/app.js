@@ -135,9 +135,12 @@ const RAZA_MARCO = {
   "Kami": "Espíritu de Dragón", "Xian": "Espíritu de Dragón", "Criaturas": "Espíritu de Dragón", "Campeón": "Espíritu de Dragón",
 };
 // ¿La carta sirve para un mazo de esa raza? Sin raza elegida, todas.
+// Aliados: por raza exacta. El resto: por marco (+ La Cofradía y sin clasificar).
 function cardFitsRace(card, race) {
   if (!race) return true;
   if (card.format !== "PE") return false;
+  // Aliados: solo los de esa raza (las variantes "Campeón / Samurái" cuentan como Campeón)
+  if (card.type === "Aliado") return String(card.race || "").split("/")[0].trim() === race;
   const m = card.marco;
   if (!m) return true; // sin clasificar: no se descarta
   return m === RAZA_MARCO[race] || m === "La Cofradía";
