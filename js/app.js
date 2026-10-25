@@ -24,6 +24,7 @@ import { renderDeckCharts } from "./charts.js";
 import * as cloud from "./cloud.js";
 import { NO_STRENGTH_TYPES } from "./icons.js";
 import { importEditionFromWiki } from "./wiki-import.js";
+import { openScanner } from "./scanner.js";
 
 /* ===================== Estado global ===================== */
 const state = {
@@ -1338,6 +1339,14 @@ function saveCardForm(another) {
 }
 function bindCardFormEvents() {
   $("#btn-add-card").addEventListener("click", () => openCardForm(null));
+  $("#btn-scan").addEventListener("click", () => openScanner({
+    mode: "inventory", cards: state.cards, getQty: store.getQty, displayName, toast: showToast,
+    onConfirm: (list) => {
+      for (const { id, qty } of list) store.addQty(id, qty);
+      showToast(`${list.reduce((a, x) => a + x.qty, 0)} carta(s) añadidas a tu colección ✓`);
+      applyFilters();
+    },
+  }));
   $("#cf-save").addEventListener("click", () => saveCardForm(false));
   $("#cf-save-another").addEventListener("click", () => saveCardForm(true));
   $("#cf-delete").addEventListener("click", () => {
@@ -3103,6 +3112,7 @@ function renderDeckDetail() {
             <button id="deck-txt"><i class="ph ph-text-align-left"></i> Texto</button>
           </div>
         </div>
+        <button class="btn" id="deck-scan"><i class="ph ph-camera"></i> Escanear</button>
         <button class="btn primary" id="deck-add-cards"><i class="ph ph-magnifying-glass"></i> Añadir cartas</button>
       </div>
     </div>
@@ -3181,6 +3191,15 @@ function renderDeckDetail() {
     exportDeckImage(deck, state.cards, store.getQty, displayName)
       .then(() => showToast("Imagen descargada ✓")).catch((e) => showToast("Error: " + e.message, 4000));
   };
+  $("#deck-scan").onclick = () => openScanner({
+    mode: "deck", deckName: deck.name, cards: state.cards, getQty: store.getQty, displayName, toast: showToast,
+    filter: (c) => cardFitsRace(c, deck.race),
+    onConfirm: (list) => {
+      for (const { id, qty } of list) store.deckAdd(deck.id, id, qty);
+      renderDeckContents(deck); updateDeckCounts(); refreshActiveDeckCount();
+      showToast(`${list.reduce((a, x) => a + x.qty, 0)} carta(s) añadidas al mazo ✓`);
+    },
+  });
   $("#deck-add-cards").onclick = () => { switchDeckTab("cartas"); $("#deck-search")?.focus(); };
 
   renderDeckKpis(deck);
