@@ -378,6 +378,11 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-26 (117ª iteración) — Juego Organizado de octubre: Atacama y Amaru Aranway
+
+- Ninguna tiene aún página de carta en el wiki (solo figuran en “Cartas Promo Primera Era Klu”: Atacama = Aliado, Top 3 Liga Octubre 2026; Amaru Aranway = Talismán, Top 8 Avanzado Octubre 2026). Fuente: artículo oficial “Nueva Temporada de Juego Organizado PE 2026” de blog.myl.cl, que trae las imágenes de las cartas (`20-Atacama-JO.png`, `22-Amaru-Aranway-JO.png`). Datos leídos de la propia imagen: **Atacama** Aliado Chamán, coste 3, fuerza 3, “Cuando entra en juego, puedes ganar el control de un Arma o un Tótem que controle tu oponente hasta que salga del juego.” (ilustrador Francisco Somalo); **Amaru Aranway** Talismán, coste 2, “Busca en tu Mazo Castillo un Tótem o Arma de Coste 2 o menos y juégalo sin pagar su Coste. Luego, bota 3 cartas.” (ilustradora Mariola Quirland). Ambas “Edición Limitada JO”.
+- Registradas en `juego_organizado_pe` (ids `…__custom__126_atacama` y `…__127_amaru_aranway`, `LJO-80`/`LJO-81`, orden 151/152, rareza Promocional), con imagen autoalojada en `data/custom-images/blogmyl/` (webp). Quedan pendientes las de septiembre (Janaqueo, Teepee, Pluma de Amaru, sin página en el wiki) y las de noviembre (Sapa Inca, Katari); cuando se carguen, los números LJO/orden se reacomodan por fecha.
+
 ### 2026-10-25 (116ª iteración) — Exportar mazo a PDF con imágenes por tipo
 
 - Nuevo `exportDeckImagesPDF` (`js/exporters.js`), **sin tocar** `exportDeckPDF`. El menú Exportar del mazo ahora tiene “PDF (lista)” (el de la 115ª) y “PDF (con imágenes)”. A4 vertical, sin estadísticas: encabezado con nombre del mazo y total de cartas; por tipo (Aliados, Armas, Tótems, Talismanes, Oros, Otras) un título con su cantidad y una grilla de 4 columnas con la imagen de cada carta distinta (distintivo dorado “×N” si hay copias). Reutiliza la carga de imágenes con reintentos y rasterizado con esquinas redondeadas del PDF de Colecciones (evita canvas “tainted”); las cartas sin imagen salen con su nombre. Muestra progreso “Cargando imágenes n/N…”. Verificado con un mazo de 60 cartas con imágenes reales.
