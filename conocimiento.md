@@ -378,6 +378,10 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-26 (118ª iteración) — Fafnir (LPE 4.0 · 195/320) corregido
+
+- El registro `leyendas_primera_era_4_0__custom__195_fafnir` tenía los datos del Fafnir de Vikingos (Dragón, coste 3, fuerza 5, “Furia, exhumar…”). La carta impresa (foto del dueño, código `LPE4 - 195/320 R`) es **Abominación, coste 4, fuerza 4**: “Cuando entra en juego, puedes destruir un Aliado que controle tu oponente que no sea Abominación o Bárbaro.” (ilustrador Nitrox). Se corrigieron raza, coste, fuerza, habilidad y texto; la imagen ya era la correcta. Detectado al comparar mazos: un Fafnir “Dragón” en un mazo racial de Abominación era la señal. Posible revisión pendiente: otras cartas de LPE 4.0 cargadas con datos de la versión anterior en vez de lo impreso.
+
 ### 2026-10-26 (117ª iteración) — Juego Organizado de octubre: Atacama y Amaru Aranway
 
 - Ninguna tiene aún página de carta en el wiki (solo figuran en “Cartas Promo Primera Era Klu”: Atacama = Aliado, Top 3 Liga Octubre 2026; Amaru Aranway = Talismán, Top 8 Avanzado Octubre 2026). Fuente: artículo oficial “Nueva Temporada de Juego Organizado PE 2026” de blog.myl.cl, que trae las imágenes de las cartas (`20-Atacama-JO.png`, `22-Amaru-Aranway-JO.png`). Datos leídos de la propia imagen: **Atacama** Aliado Chamán, coste 3, fuerza 3, “Cuando entra en juego, puedes ganar el control de un Arma o un Tótem que controle tu oponente hasta que salga del juego.” (ilustrador Francisco Somalo); **Amaru Aranway** Talismán, coste 2, “Busca en tu Mazo Castillo un Tótem o Arma de Coste 2 o menos y juégalo sin pagar su Coste. Luego, bota 3 cartas.” (ilustradora Mariola Quirland). Ambas “Edición Limitada JO”.
