@@ -58334,7 +58334,8 @@
    "serie": "Edición Limitada JO",
    "orden": 151,
    "obtencion": "J.O. Top 3 Liga Octubre 2026",
-   "origen": "Juego Organizado"
+   "origen": "Juego Organizado",
+   "marco": "La Ira del Nahual"
   },
   {
    "id": "juego_organizado_pe__custom__127_amaru_aranway",
@@ -58357,7 +58358,8 @@
    "serie": "Edición Limitada JO",
    "orden": 152,
    "obtencion": "J.O. Top 8 Avanzado Octubre 2026",
-   "origen": "Juego Organizado"
+   "origen": "Juego Organizado",
+   "marco": "La Ira del Nahual"
   }
  ]
 }
