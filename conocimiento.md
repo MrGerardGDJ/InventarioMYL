@@ -378,6 +378,10 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-27 (119ª iteración) — Caverna de Loki (LPE 4.0 · 143/320) completada
+
+- El registro estaba sin coste ni habilidad (sin página en el wiki). Datos leídos de la foto de la carta que envió el dueño (`LPE4 - 143/320 R`, ilustrador Kissa): **Tótem, coste 4** — “Sólo puedes tener una Caverna de Loki en juego. Una vez por turno, puedes elegir entre botar 2 cartas del Mazo Castillo oponente o desterrar 2 cartas de un Cementerio.” + texto de ambientación.
+
 ### 2026-10-26 (118ª iteración) — Fafnir (LPE 4.0 · 195/320) corregido
 
 - El registro `leyendas_primera_era_4_0__custom__195_fafnir` tenía los datos del Fafnir de Vikingos (Dragón, coste 3, fuerza 5, “Furia, exhumar…”). La carta impresa (foto del dueño, código `LPE4 - 195/320 R`) es **Abominación, coste 4, fuerza 4**: “Cuando entra en juego, puedes destruir un Aliado que controle tu oponente que no sea Abominación o Bárbaro.” (ilustrador Nitrox). Se corrigieron raza, coste, fuerza, habilidad y texto; la imagen ya era la correcta. Detectado al comparar mazos: un Fafnir “Dragón” en un mazo racial de Abominación era la señal. Posible revisión pendiente: otras cartas de LPE 4.0 cargadas con datos de la versión anterior en vez de lo impreso.
