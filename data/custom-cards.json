@@ -2446,10 +2446,10 @@
    "type": "Tótem",
    "race": "—",
    "rarity": "Real",
-   "cost": null,
+   "cost": 4,
    "strength": null,
-   "ability": "",
-   "flavour": "",
+   "ability": "Sólo puedes tener una Caverna de Loki en juego. Una vez por turno, puedes elegir entre botar 2 cartas del Mazo Castillo oponente o desterrar 2 cartas de un Cementerio.",
+   "flavour": "Prisión y altar del engaño. Allí gotea el veneno sobre su rostro, y su ira sacude la tierra. Atado con los intestinos de su hijo, Loki no duerme: conspira. Cada temblor del mundo es su risa contenida.",
    "image": "./data/custom-images/mylserena/leyendas_primera_era_4_0_143_caverna_de_loki.jpg",
    "custom": true
   },
