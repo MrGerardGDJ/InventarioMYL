@@ -680,9 +680,9 @@ export async function exportDeckPDF(deck, cards, getQty, displayName) {
 }
 
 /* ===================== MAZO: PDF con imágenes (cartas por tipo) =====================
-   Sin estadísticas: solo el nombre del mazo, el total de cartas y, por cada
-   tipo, un título con su cantidad y la grilla de imágenes de esas cartas
-   (una imagen por carta distinta, con un distintivo "×N" si hay copias). */
+   Fondo oscuro con el tema del sitio. Nombre del mazo y total de cartas; por
+   cada tipo, un título con su cantidad y la grilla de imágenes (una por carta
+   distinta, con "N copias" debajo); al final, las estadísticas del mazo. */
 const DECK_IMG_TYPES = [["Aliado", "Aliados"], ["Arma", "Armas"], ["Tótem", "Tótems"], ["Talismán", "Talismanes"], ["Oro", "Oros"], ["Otro", "Otras cartas"]];
 export async function exportDeckImagesPDF(deck, cards, displayName, onProgress) {
   await loadScript(CDN.jspdf);
@@ -719,47 +719,91 @@ export async function exportDeckImagesPDF(deck, cards, displayName, onProgress) 
   }
   await Promise.all(Array.from({ length: 4 }, worker));
 
+  // Tema del sitio (Nocturne): mismos tonos oscuros que el PDF de Colecciones
+  const PAGE_BG = [22, 24, 38], HEADER_BG = [16, 18, 32], TILE_BG = [35, 37, 50];
+  const TEXT = [233, 233, 237], TEXT_DIM = [172, 172, 179], DIVIDER = [64, 67, 84], ACCENT = [181, 171, 252];
+  const paintPage = () => { doc.setFillColor(...PAGE_BG); doc.rect(0, 0, W, H, "F"); };
+  const newPage = () => { doc.addPage(); paintPage(); return M; };
+  paintPage();
+
   // Encabezado
-  doc.setFillColor(15, 17, 23); doc.rect(0, 0, W, 62, "F");
-  doc.setTextColor(...GOLD); doc.setFont("helvetica", "bold"); doc.setFontSize(20);
+  doc.setFillColor(...HEADER_BG); doc.rect(0, 0, W, 62, "F");
+  doc.setTextColor(...ACCENT); doc.setFont("helvetica", "bold"); doc.setFontSize(20);
   doc.text(truncateText(doc, String(deck.name || "Mazo"), W - 2 * M), M, 30);
-  doc.setTextColor(200); doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+  doc.setTextColor(...TEXT_DIM); doc.setFont("helvetica", "normal"); doc.setFontSize(10);
   doc.text(`${total} carta${total === 1 ? "" : "s"}`, M, 48);
 
   let y = 62 + 22;
   const heading = (title, n) => {
-    doc.setTextColor(30); doc.setFont("helvetica", "bold"); doc.setFontSize(13);
+    doc.setTextColor(...TEXT); doc.setFont("helvetica", "bold"); doc.setFontSize(13);
     doc.text(title, M, y + 10);
     const tw2 = doc.getTextWidth(title);
-    doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(110);
-    doc.text(`${n} carta${n === 1 ? "" : "s"}`, M + tw2 + 8, y + 10);
-    doc.setDrawColor(...GOLD); doc.setLineWidth(0.8); doc.line(M, y + 16, W - M, y + 16);
+    if (n != null) {
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...TEXT_DIM);
+      doc.text(`${n} carta${n === 1 ? "" : "s"}`, M + tw2 + 8, y + 10);
+    }
+    doc.setDrawColor(...DIVIDER); doc.setLineWidth(0.8); doc.line(M, y + 16, W - M, y + 16);
     y += 26;
   };
+  const LABEL_H = 16; // alto de la línea “N copias” bajo cada carta
   for (const [key, title] of DECK_IMG_TYPES) {
     const list = groups.get(key);
     if (!list.length) continue;
     const n = list.reduce((a, x) => a + x.q, 0);
-    if (y + 26 + ch > H - M) { doc.addPage(); y = M; }
+    if (y + 26 + ch + LABEL_H > H - M) y = newPage();
     heading(title, n);
     let col = 0;
     for (const { c, q } of list) {
-      if (col === COLS) { col = 0; y += ch + GAP; }
-      if (y + ch > H - M) { doc.addPage(); y = M; col = 0; }
+      if (col === COLS) { col = 0; y += ch + LABEL_H + GAP; }
+      if (y + ch + LABEL_H > H - M) { y = newPage(); col = 0; }
       const x = M + col * (cw + GAP);
       doc.addImage(thumbs.get(c.id), "JPEG", x, y, cw, ch);
-      if (q > 1) {
-        doc.setFillColor(...GOLD); doc.circle(x + cw - 14, y + 14, 11, "F");
-        doc.setTextColor(20); doc.setFont("helvetica", "bold"); doc.setFontSize(10);
-        doc.text(`×${q}`, x + cw - 14, y + 17.5, { align: "center" });
-      }
+      doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...ACCENT);
+      doc.text(`${q} ${q === 1 ? "copia" : "copias"}`, x + cw / 2, y + ch + 11, { align: "center" });
       col++;
     }
-    y += ch + GAP + 14;
+    y += ch + LABEL_H + GAP + 10;
+  }
+
+  // Estadísticas, después de todas las cartas
+  const sum = deckSummary(deck, cards, () => 0, displayName);
+  const STATS_H = 40 + 26 + sum.typesPresent.length * 18 + 30 + 26 + 120;
+  if (y + STATS_H > H - M) y = newPage();
+  heading("Estadísticas");
+  // Distribución por tipo (barra proporcional)
+  const maxT = Math.max(...sum.typesPresent.map((t) => sum.typeTotal[t]));
+  const barX = M + 90, barW = W - 2 * M - 90 - 70;
+  for (const t of sum.typesPresent) {
+    const v = sum.typeTotal[t];
+    doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...TEXT);
+    doc.text(t, M, y + 9);
+    doc.setFillColor(...TILE_BG); doc.roundedRect(barX, y, barW, 11, 3, 3, "F");
+    doc.setFillColor(...ACCENT); doc.roundedRect(barX, y, Math.max(6, barW * (v / maxT)), 11, 3, 3, "F");
+    doc.setTextColor(...TEXT_DIM);
+    doc.text(`${v} · ${sum.pct(v)}%`, W - M, y + 9, { align: "right" });
+    y += 18;
+  }
+  y += 10;
+  // Curva de coste (sin Oros: todos cuestan 0 y aplastarían el gráfico)
+  const curve = sum.cols.map((c) => [c, sum.typesPresent.filter((t) => t !== "Oro").reduce((a, t) => a + (sum.matrix[t][c] || 0), 0)]).filter(([, v]) => v > 0);
+  if (curve.length) {
+    doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(...TEXT);
+    doc.text("Curva de coste (sin Oros)", M, y + 10); y += 22;
+    const maxC = Math.max(...curve.map(([, v]) => v)), chartH = 90, bw = Math.min(34, (W - 2 * M) / curve.length - 8);
+    const gap = ((W - 2 * M) - bw * curve.length) / (curve.length + 1);
+    curve.forEach(([c, v], i) => {
+      const bx = M + gap + i * (bw + gap), bh = Math.max(3, (chartH - 14) * (v / maxC));
+      doc.setFillColor(...ACCENT); doc.roundedRect(bx, y + chartH - bh, bw, bh, 3, 3, "F");
+      doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...TEXT);
+      doc.text(String(v), bx + bw / 2, y + chartH - bh - 3, { align: "center" });
+      doc.setFont("helvetica", "normal"); doc.setTextColor(...TEXT_DIM);
+      doc.text(c === "–" ? "–" : `Coste ${c}`, bx + bw / 2, y + chartH + 11, { align: "center" });
+    });
+    y += chartH + 20;
   }
   const pages = doc.internal.getNumberOfPages();
   for (let i = 1; i <= pages; i++) {
-    doc.setPage(i); doc.setFontSize(8); doc.setTextColor(150); doc.setFont("helvetica", "normal");
+    doc.setPage(i); doc.setFontSize(8); doc.setTextColor(...TEXT_DIM); doc.setFont("helvetica", "normal");
     doc.text(`${deck.name || "Mazo"} · Página ${i} de ${pages}`, W - M, H - 14, { align: "right" });
   }
   doc.save(`mazo_cartas_${String(deck.name || "mazo").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\-]+/g, "_")}_${today()}.pdf`);

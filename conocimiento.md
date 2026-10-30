@@ -378,6 +378,10 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-30 (120ª iteración) — PDF del mazo con imágenes: tema oscuro, copias bajo cada carta y estadísticas al final
+
+- `exportDeckImagesPDF` (la versión “con imágenes”, 116ª) ahora usa el **tema del sitio** (fondo Nocturne `--bg`, cabecera `--bg-deep`, acento `--accent-2`, igual que el PDF de Colecciones) en vez de blanco; cada página se pinta antes de dibujar. El distintivo dorado “×N” se reemplazó por una línea **“N copia(s)” debajo de cada carta**. Después de todas las cartas se agrega la sección **Estadísticas** (barra de cantidad y % por tipo + curva de coste sin Oros, que valen 0 y aplastarían el gráfico); si no cabe en la página, pasa a una nueva. El PDF “lista” (115ª) no se tocó.
+
 ### 2026-10-27 (119ª iteración) — Caverna de Loki (LPE 4.0 · 143/320) completada
 
 - El registro estaba sin coste ni habilidad (sin página en el wiki). Datos leídos de la foto de la carta que envió el dueño (`LPE4 - 143/320 R`, ilustrador Kissa): **Tótem, coste 4** — “Sólo puedes tener una Caverna de Loki en juego. Una vez por turno, puedes elegir entre botar 2 cartas del Mazo Castillo oponente o desterrar 2 cartas de un Cementerio.” + texto de ambientación.
