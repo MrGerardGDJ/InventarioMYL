@@ -378,6 +378,11 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-10-30 (121ª iteración) — Estadísticas del PDF con imágenes idénticas a las de la imagen
+
+- Las estadísticas dibujadas a mano en el PDF (barras y curva de coste, 120ª) se reemplazaron por **la misma sección que usa la exportación en imagen**: se extrajo `deckStatsHtml(sum)` (distribución por tipo con tarjetas e íconos + tabla “Detalle por tipo y coste”) y la usan `exportDeckImage` y `exportDeckImagesPDF`; en el PDF se rasteriza con html2canvas (fondo #0f1117) y se inserta al final, pasando a página nueva si no cabe. Así nunca se desincronizan.
+- Nota: GitHub Pages sirve los JS con `max-age=600`; tras publicar un cambio, el navegador puede mostrar la versión anterior hasta ~10 min o una recarga forzada.
+
 ### 2026-10-30 (120ª iteración) — PDF del mazo con imágenes: tema oscuro, copias bajo cada carta y estadísticas al final
 
 - `exportDeckImagesPDF` (la versión “con imágenes”, 116ª) ahora usa el **tema del sitio** (fondo Nocturne `--bg`, cabecera `--bg-deep`, acento `--accent-2`, igual que el PDF de Colecciones) en vez de blanco; cada página se pinta antes de dibujar. El distintivo dorado “×N” se reemplazó por una línea **“N copia(s)” debajo de cada carta**. Después de todas las cartas se agrega la sección **Estadísticas** (barra de cantidad y % por tipo + curva de coste sin Oros, que valen 0 y aplastarían el gráfico); si no cabe en la página, pasa a una nueva. El PDF “lista” (115ª) no se tocó.

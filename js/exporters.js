@@ -765,41 +765,22 @@ export async function exportDeckImagesPDF(deck, cards, displayName, onProgress) 
     y += ch + LABEL_H + GAP + 10;
   }
 
-  // Estadísticas, después de todas las cartas
+  // Estadísticas, después de todas las cartas: la MISMA sección que la exportación
+  // en imagen (deckStatsHtml), rasterizada con html2canvas.
+  await loadScript(CDN.html2canvas);
   const sum = deckSummary(deck, cards, () => 0, displayName);
-  const STATS_H = 40 + 26 + sum.typesPresent.length * 18 + 30 + 26 + 120;
-  if (y + STATS_H > H - M) y = newPage();
-  heading("Estadísticas");
-  // Distribución por tipo (barra proporcional)
-  const maxT = Math.max(...sum.typesPresent.map((t) => sum.typeTotal[t]));
-  const barX = M + 90, barW = W - 2 * M - 90 - 70;
-  for (const t of sum.typesPresent) {
-    const v = sum.typeTotal[t];
-    doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...TEXT);
-    doc.text(t, M, y + 9);
-    doc.setFillColor(...TILE_BG); doc.roundedRect(barX, y, barW, 11, 3, 3, "F");
-    doc.setFillColor(...ACCENT); doc.roundedRect(barX, y, Math.max(6, barW * (v / maxT)), 11, 3, 3, "F");
-    doc.setTextColor(...TEXT_DIM);
-    doc.text(`${v} · ${sum.pct(v)}%`, W - M, y + 9, { align: "right" });
-    y += 18;
-  }
-  y += 10;
-  // Curva de coste (sin Oros: todos cuestan 0 y aplastarían el gráfico)
-  const curve = sum.cols.map((c) => [c, sum.typesPresent.filter((t) => t !== "Oro").reduce((a, t) => a + (sum.matrix[t][c] || 0), 0)]).filter(([, v]) => v > 0);
-  if (curve.length) {
-    doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(...TEXT);
-    doc.text("Curva de coste (sin Oros)", M, y + 10); y += 22;
-    const maxC = Math.max(...curve.map(([, v]) => v)), chartH = 90, bw = Math.min(34, (W - 2 * M) / curve.length - 8);
-    const gap = ((W - 2 * M) - bw * curve.length) / (curve.length + 1);
-    curve.forEach(([c, v], i) => {
-      const bx = M + gap + i * (bw + gap), bh = Math.max(3, (chartH - 14) * (v / maxC));
-      doc.setFillColor(...ACCENT); doc.roundedRect(bx, y + chartH - bh, bw, bh, 3, 3, "F");
-      doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...TEXT);
-      doc.text(String(v), bx + bw / 2, y + chartH - bh - 3, { align: "center" });
-      doc.setFont("helvetica", "normal"); doc.setTextColor(...TEXT_DIM);
-      doc.text(c === "–" ? "–" : `Coste ${c}`, bx + bw / 2, y + chartH + 11, { align: "center" });
-    });
-    y += chartH + 20;
+  const node = document.createElement("div");
+  node.style.cssText = "position:fixed;left:-9999px;top:0;width:680px;padding:24px;background:#0f1117;color:#e7e9ee;font-family:Segoe UI,system-ui,sans-serif;box-sizing:border-box";
+  node.innerHTML = deckStatsHtml(sum);
+  document.body.appendChild(node);
+  try {
+    const canvas = await window.html2canvas(node, { backgroundColor: "#0f1117", scale: 2 });
+    const iw = W - 2 * M, ih = iw * (canvas.height / canvas.width);
+    if (y + 26 + ih > H - M) y = newPage();
+    heading("Estadísticas");
+    doc.addImage(canvas.toDataURL("image/png"), "PNG", M, y, iw, ih);
+  } finally {
+    node.remove();
   }
   const pages = doc.internal.getNumberOfPages();
   for (let i = 1; i <= pages; i++) {
@@ -855,6 +836,37 @@ export async function exportDeckExcel(deck, cards, getQty, displayName) {
 }
 
 /* ===================== MAZO: Imagen (PNG) ===================== */
+// HTML de la sección de estadísticas (distribución por tipo + detalle tipo × coste).
+// Lo comparten la exportación en imagen y el PDF con imágenes para que se vean idénticas.
+function deckStatsHtml(sum) {
+  const { total, typeTotal, matrix, cols, typesPresent, colTotal, pct } = sum;
+  const esc = (s) => String(s ?? "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const distHtml = typesPresent.map((t) => `
+    <div style="flex:1;min-width:120px;background:#171a23;border:1px solid #2b3040;border-radius:10px;padding:10px 12px">
+      <div style="font-size:12px;color:#9aa1b2">${typeIcon(t)} ${esc(t)}</div>
+      <div style="font-size:22px;font-weight:800;color:#d9b85a">${typeTotal[t]}<span style="font-size:12px;color:#8b93a7;font-weight:400"> · ${pct(typeTotal[t])}%</span></div>
+    </div>`).join("");
+
+  const th = (x) => `<th style="padding:5px 8px;color:#9aa1b2;font-weight:600;border-bottom:1px solid #2b3040;text-align:center">${x}</th>`;
+  const td = (x, b) => `<td style="padding:5px 8px;text-align:center;${b ? "font-weight:700;color:#d9b85a" : "color:#e7e9ee"}">${x || ""}</td>`;
+  const matrixHtml = `
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:10px">
+      <thead><tr><th style="padding:5px 8px;text-align:left;color:#9aa1b2;border-bottom:1px solid #2b3040">Tipo</th>${cols.map((c) => th(c)).join("")}${th("Total")}</tr></thead>
+      <tbody>
+        ${typesPresent.map((t) => `<tr><td style="padding:5px 8px;color:#e7e9ee">${typeIcon(t)} ${esc(t)}</td>${cols.map((c) => td(matrix[t][c])).join("")}${td(typeTotal[t], true)}</tr>`).join("")}
+        <tr style="border-top:1px solid #2b3040"><td style="padding:5px 8px;color:#9aa1b2;font-weight:700">Total</td>${cols.map((c) => td(colTotal(c), true)).join("")}${td(total, true)}</tr>
+      </tbody>
+    </table>`;
+
+  const summaryHtml = `
+    <div style="font-size:12px;color:#c9a13b;letter-spacing:1px;margin-bottom:8px">DISTRIBUCIÓN POR TIPO</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">${distHtml}</div>
+    <div style="font-size:12px;color:#c9a13b;letter-spacing:1px">DETALLE POR TIPO Y COSTE</div>
+    ${matrixHtml}
+    <div style="height:18px"></div>`;
+  return summaryHtml;
+}
+
 export async function exportDeckImage(deck, cards, getQty, displayName) {
   await loadScript(CDN.html2canvas);
   const logo = await getLogoData();
@@ -880,29 +892,7 @@ export async function exportDeckImage(deck, cards, getQty, displayName) {
         </div>`).join("")}
     </div>`).join("");
 
-  const distHtml = typesPresent.map((t) => `
-    <div style="flex:1;min-width:120px;background:#171a23;border:1px solid #2b3040;border-radius:10px;padding:10px 12px">
-      <div style="font-size:12px;color:#9aa1b2">${typeIcon(t)} ${esc(t)}</div>
-      <div style="font-size:22px;font-weight:800;color:#d9b85a">${typeTotal[t]}<span style="font-size:12px;color:#8b93a7;font-weight:400"> · ${pct(typeTotal[t])}%</span></div>
-    </div>`).join("");
-
-  const th = (x) => `<th style="padding:5px 8px;color:#9aa1b2;font-weight:600;border-bottom:1px solid #2b3040;text-align:center">${x}</th>`;
-  const td = (x, b) => `<td style="padding:5px 8px;text-align:center;${b ? "font-weight:700;color:#d9b85a" : "color:#e7e9ee"}">${x || ""}</td>`;
-  const matrixHtml = `
-    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:10px">
-      <thead><tr><th style="padding:5px 8px;text-align:left;color:#9aa1b2;border-bottom:1px solid #2b3040">Tipo</th>${cols.map((c) => th(c)).join("")}${th("Total")}</tr></thead>
-      <tbody>
-        ${typesPresent.map((t) => `<tr><td style="padding:5px 8px;color:#e7e9ee">${typeIcon(t)} ${esc(t)}</td>${cols.map((c) => td(matrix[t][c])).join("")}${td(typeTotal[t], true)}</tr>`).join("")}
-        <tr style="border-top:1px solid #2b3040"><td style="padding:5px 8px;color:#9aa1b2;font-weight:700">Total</td>${cols.map((c) => td(colTotal(c), true)).join("")}${td(total, true)}</tr>
-      </tbody>
-    </table>`;
-
-  const summaryHtml = `
-    <div style="font-size:12px;color:#c9a13b;letter-spacing:1px;margin-bottom:8px">DISTRIBUCIÓN POR TIPO</div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">${distHtml}</div>
-    <div style="font-size:12px;color:#c9a13b;letter-spacing:1px">DETALLE POR TIPO Y COSTE</div>
-    ${matrixHtml}
-    <div style="height:18px"></div>`;
+  const summaryHtml = deckStatsHtml({ total, typeTotal, matrix, cols, typesPresent, colTotal, pct });
 
   const node = document.createElement("div");
   node.style.cssText = "position:fixed;left:-9999px;top:0;width:680px;padding:24px;background:#0f1117;color:#e7e9ee;font-family:Segoe UI,system-ui,sans-serif;box-sizing:border-box";
