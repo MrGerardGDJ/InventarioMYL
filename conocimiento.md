@@ -378,6 +378,11 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-11-02 (122ª iteración) — HLPE26 51/48 y 52/48; las 53–56 aún no existen en las fuentes
+
+- Se buscaron las cartas `HLPE26 53/48` a `56/48` en el wiki (búsqueda por código, archivos `HLPE26-5x-48.png`, cambios recientes y subidas), en blog.myl.cl y en la web: **no hay nada publicado** (las imágenes del wiki llegan hasta `HLPE26-52-48.png`; la lista de “Cartas Promo Primera Era Klu” termina en la 52). No se inventó nada; quedan pendientes hasta que el dueño pase nombres/fotos o el wiki las publique.
+- Lo que sí faltaba en el catálogo y se agregó (verificado contra la página del wiki, código impreso incluido): **51/48 Mercy Brown** (Aliado Vampiro 2/3, entregada al Top 16 de los torneos de lanzamiento de Tinieblas/Abismo, arte alternativo “Juego Organizado”) y **52/48 Konpira Gongen** (Aliado Kami 3/3, Top 8). Ambas Promocional, `specialId` `HLPE26 51/48` / `52/48`, registradas en `tinieblas_pe_2026` junto a Bayard (49) y Midgard (50, en Abismo). Observación: el wiki ya tiene páginas de Pluma de Amaru, Sapa Inca, Katari, Johnny Ringo y Nido de Dragón (J.O.), pendientes de cargar.
+
 ### 2026-10-30 (121ª iteración) — Estadísticas del PDF con imágenes idénticas a las de la imagen
 
 - Las estadísticas dibujadas a mano en el PDF (barras y curva de coste, 120ª) se reemplazaron por **la misma sección que usa la exportación en imagen**: se extrajo `deckStatsHtml(sum)` (distribución por tipo con tarjetas e íconos + tabla “Detalle por tipo y coste”) y la usan `exportDeckImage` y `exportDeckImagesPDF`; en el PDF se rasteriza con html2canvas (fondo #0f1117) y se inserta al final, pasando a página nueva si no cabe. Así nunca se desincronizan.

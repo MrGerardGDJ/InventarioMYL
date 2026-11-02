@@ -58360,6 +58360,42 @@
    "obtencion": "J.O. Top 8 Avanzado Octubre 2026",
    "origen": "Juego Organizado",
    "marco": "La Ira del Nahual"
+  },
+  {
+   "id": "tinieblas_pe_2026__custom__51_mercy_brown",
+   "name": "Mercy Brown",
+   "edition": "tinieblas_pe_2026",
+   "editionName": "Tinieblas Primera Era 2026",
+   "format": "PE",
+   "edid": "",
+   "type": "Aliado",
+   "race": "Vampiro",
+   "rarity": "Promocional",
+   "cost": 2,
+   "strength": 3,
+   "ability": "Cuando entra en juego, puedes botar 1 carta de tu Mazo Castillo para robar 1 carta. Cuando salga del juego, puedes poner un Aliado que no sea Mercy Brown de tu Cementerio en tu Mano.",
+   "flavour": "",
+   "image": "https://static.wikia.nocookie.net/myl-tcg/images/f/f6/HLPE26-51-48.png/revision/latest?cb=20261015140925&path-prefix=es",
+   "custom": true,
+   "specialId": "HLPE26 51/48"
+  },
+  {
+   "id": "tinieblas_pe_2026__custom__52_konpira_gongen",
+   "name": "Konpira Gongen",
+   "edition": "tinieblas_pe_2026",
+   "editionName": "Tinieblas Primera Era 2026",
+   "format": "PE",
+   "edid": "",
+   "type": "Aliado",
+   "race": "Kami",
+   "rarity": "Promocional",
+   "cost": 3,
+   "strength": 3,
+   "ability": "Cuando entre o salga del juego, puedes descartar una carta de tu Mano para que tu oponente bote tantas cartas de su Mazo Castillo como Coste tenga la carta descartada. Luego, puedes robar 1 carta.",
+   "flavour": "",
+   "image": "https://static.wikia.nocookie.net/myl-tcg/images/5/56/HLPE26-52-48.png/revision/latest?cb=20261015140925&path-prefix=es",
+   "custom": true,
+   "specialId": "HLPE26 52/48"
   }
  ]
 }
