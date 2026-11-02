@@ -378,6 +378,11 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-11-02 (124ª iteración) — HLPE26 53–56 completadas con las fotos del dueño
+
+- El dueño envió una foto de cada carta (con funda; códigos impresos `HLPE26 53/48` a `56/48` leídos en cada una, lo que confirma el orden Dragón Medieval, Campesina, Cochise, Hidromiel). Se completaron habilidad, raza, coste y fuerza **leyéndolos de la carta impresa**: **53 Dragón Medieval** (Aliado Dragón 8/6, ilustrador Ikkitouch): “Imbloqueable. Puede atacar cuando entra en juego. Cuando entra en juego, destruye dos Aliados que controle tu oponente.” (coincide con el texto vigente de Extensión/Set Clásico, no con el antiguo de El Reto); **54 Campesina** (Aliado Cazador 2/1, Snoop); **55 Cochise** (Aliado Guerrero 4/4, Ikkitouch); **56 Hidromiel** (Talismán coste 2, Snoop; redacción nueva “barájalas en tu Mazo Castillo”).
+- Imágenes: recortes de las fotos (auto-orientadas, tamaño 700 px, webp) en `data/custom-images/scans/hlpe26_5x_*.webp`. Son fotos con funda y algo de perspectiva/reflejo; reemplazar por el scan limpio cuando el wiki publique las cartas.
+
 ### 2026-11-02 (123ª iteración) — HLPE26 53–56 registradas como “por completar” (regalo código PRIMERAERA26)
 
 - El dueño aportó un banner de tienda (“Por compras sobre $25.990… código PRIMERAERA26… estas cartas de regalo”) con cuatro cartas promo de **arte alternativo**, en este orden: **Dragón Medieval, Campesina, Cochise, Hidromiel** (53 a 56). El banner es de ~700 px (cada carta ~110 px), ilegible para el texto e inservible como imagen; el wiki, el blog y la web no las tienen aún.
