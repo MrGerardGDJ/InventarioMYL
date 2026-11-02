@@ -378,6 +378,11 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-11-02 (123ª iteración) — HLPE26 53–56 registradas como “por completar” (regalo código PRIMERAERA26)
+
+- El dueño aportó un banner de tienda (“Por compras sobre $25.990… código PRIMERAERA26… estas cartas de regalo”) con cuatro cartas promo de **arte alternativo**, en este orden: **Dragón Medieval, Campesina, Cochise, Hidromiel** (53 a 56). El banner es de ~700 px (cada carta ~110 px), ilegible para el texto e inservible como imagen; el wiki, el blog y la web no las tienen aún.
+- Se registraron en `tinieblas_pe_2026` (junto a 49–52) como Promocional, `specialId` `HLPE26 53/48`…`56/48`, **solo con los datos que no cambian entre sus versiones** (tipo, coste, fuerza; raza solo en Cochise). **Habilidad, texto e imagen quedan vacíos** a propósito: las versiones existentes difieren (p. ej. Dragón Medieval: “no puede ser bloqueado” en El Reto vs. “Imbloqueable… destruye dos Aliados” en Extensión), y el texto impreso del promo no se pudo leer. Pendiente: fotos/imágenes limpias o la página del wiki.
+
 ### 2026-11-02 (122ª iteración) — HLPE26 51/48 y 52/48; las 53–56 aún no existen en las fuentes
 
 - Se buscaron las cartas `HLPE26 53/48` a `56/48` en el wiki (búsqueda por código, archivos `HLPE26-5x-48.png`, cambios recientes y subidas), en blog.myl.cl y en la web: **no hay nada publicado** (las imágenes del wiki llegan hasta `HLPE26-52-48.png`; la lista de “Cartas Promo Primera Era Klu” termina en la 52). No se inventó nada; quedan pendientes hasta que el dueño pase nombres/fotos o el wiki las publique.
