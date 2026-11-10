@@ -378,6 +378,11 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-11-10 (131ª iteración) — Ban list actualizada (Octubre 2026) y una imagen más desde el Oráculo
+
+- La ban list de la app estaba en **Julio 2026**; `scraper/scrape-banlist.js` (blog.myl.cl) ya publica **Octubre 2026** (vigente hasta principios de diciembre) y se ejecutó: 107 entradas (43 prohibidas, 32 a 1 copia, 32 a 2). Contraste con los límites del Oráculo (`copiasPorFormato`): 102 de 107 coinciden; difieren Kanillu, Fenghuang (+ Grootslang, Niamh y Espada Real figuran limitadas en el Oráculo pero no en el blog) — se mantiene el blog oficial como fuente.
+- Imagen de **Gothiscandza (LBPE25 16/21)**, la única carta PE del catálogo que no tenía, tomada del Oráculo (`/files/assets/cards/full/LBPE25/016.webp`) y autoalojada en `data/custom-images/oraculo/` (verificada: código impreso `LBPE25 - 16/21`). Siguen sin imagen: **Golpe Vampiro 20A-04** (el Oráculo solo la tiene como carta de “Misión Santiago”, no se asumió que sea la misma impresión) e **Inquisidor Asesino J.O.** (el Oráculo solo trae la base de LPE 4.0).
+
 ### 2026-11-10 (130ª iteración) — Historial de Juego Organizado 2024-03 → 2026-10 (PDF mensuales del Oráculo)
 
 - **Fuente:** los informativos `oraculope.cl/files/documentos/JO/AAAA-MM.pdf` (32 meses). Un agente los procesó (descarga, extracción de las cartas con `pdfimages` + máscara alfa, lectura de cada carta y de su rol) y dejó un JSON por mes + imágenes; el resumen mes × carta quedó en `docs/HISTORIAL-JUEGO-ORGANIZADO.md` (con las dudas de lectura y los cambios de formato del PDF entre épocas: 2024-03/04 diapositivas panorámicas, 2024-12→2025-06 «PBX/PEX», desde 2025-08 «Bloques Clásicos» con copias fijas 12/4/8/1). **Verificación propia:** 8 cartas al azar (PB) leídas contra su imagen coincidieron en nombre, tipo, raza, coste, fuerza y habilidad.
