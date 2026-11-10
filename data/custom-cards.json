@@ -13049,7 +13049,7 @@
    "strength": null,
    "ability": "Cuando entra en juego, puedes robar 1 carta.\nEn tu Fase de Vigilia, una vez por turno, puedes elegir un Aliado en juego para que gane 1 a la Fuerza permanentemente.",
    "flavour": "La primera tierra de los godos, surgía brumosa junto al Báltico, entre bosques oscuros y costas salvajes. Allí nació su furia, su fe y su destino.",
-   "image": "",
+   "image": "./data/custom-images/oraculo/lootbox_pe_2025_lbpe25_16_gothiscandza.webp",
    "custom": true,
    "specialId": "LBPE25 - 16/21"
   },
