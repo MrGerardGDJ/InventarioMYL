@@ -1,0 +1,168 @@
+# Correcciones aplicadas a data/custom-cards.json (Leyendas - Primera Era 4.0)
+
+Generado por `scraper/oraculo-fix.js` el 2026-11-10 a partir de una **verificación visual contra la carta impresa** (220 cartas revisadas; veredictos: {"oraculo":179,"nuestro":37,"mixto":4}). Se corrigieron 162 cartas con los datos del Oráculo; el resto se dejó como estaba.
+
+- 027 Wangulén: habilidad, coste 1→2, fuerza 3→5, raza Faerie→Chamán, leyenda
+- 028 Huáscar: habilidad, coste 3→2, raza Caballero→Guerrero, leyenda
+- 040 Tambor Daiko: habilidad, leyenda
+- 043 Las Musas: habilidad, coste 3→2, fuerza 1→2, raza Titán→Faerie, leyenda
+- 049 Brucolaco: habilidad, coste 3→5, fuerza 3→5, raza Sombra→Vampiro, leyenda
+- 054 Wakan Tanka: habilidad, coste —→5, fuerza —→5, raza —→Chamán, leyenda
+- 059 Fenrisulfr: habilidad, coste —→5, fuerza —→6, raza —→Abominación, leyenda
+- 065 Qin Shi Huang: habilidad, coste 2→5, fuerza 4→5, raza Caballero→Campeón, leyenda
+- 066 Jiaolong: habilidad, coste —→2, fuerza —→3, raza —→Criatura, leyenda
+- 068 Yu Shi: habilidad, coste —→2, fuerza —→5, raza —→Xian, leyenda
+- 075 Torre del Olvido: habilidad, coste 1→2, leyenda
+- 083 Forma Voladora: habilidad, coste 1→4, leyenda
+- 084 H'ain: habilidad, coste 1→2, leyenda
+- 085 Sotz' Na: habilidad, leyenda
+- 093 Nukewaza: habilidad, leyenda
+- 098 Agravain: habilidad, coste —→2, fuerza —→2, raza —→Caballero, leyenda
+- 099 Monstruo del Lago: habilidad, coste —→3, fuerza —→4, raza —→Dragón, leyenda
+- 100 Caballo Pesadilla: habilidad, coste —→4, fuerza —→5, raza —→Faerie, leyenda
+- 104 Falso Grial: habilidad
+- 106 Avalon: habilidad, coste 4→2, leyenda
+- 107 Wyvern Negro: coste 1→3
+- 108 Morgause: habilidad, coste 4→3, fuerza 3→4, raza Sombra→Faerie, leyenda
+- 110 Fionn: habilidad, coste —→4, fuerza —→4, raza —→Cazador, leyenda
+- 111 Colmillo Sangriento: habilidad, coste —→2, fuerza —→2, raza —→Licántropo, leyenda
+- 113 Cazar Vampiro: habilidad, coste —→4, leyenda
+- 115 Máscara de Jade: habilidad, coste 3→2, leyenda
+- 117 Las Lilim: habilidad, coste 2→3, fuerza 1→3, raza Sombra→Vampiro, leyenda
+- 120 Salem: habilidad, leyenda
+- 122 Sasquatch: habilidad, coste —→2, fuerza —→4, raza —→Bestia, leyenda
+- 123 Iktomi: habilidad, coste —→3, fuerza —→3, raza —→Chamán, leyenda
+- 124 Defensor Iroqués: habilidad, coste —→4, fuerza —→4, raza —→Guerrero, leyenda
+- 125 Forma de Oso: habilidad, coste —→4, leyenda
+- 126 Tomahawk: habilidad, coste —→2, leyenda
+- 128 Cihuate Teotl: habilidad, fuerza 2→3, leyenda
+- 131 Forma de Jaguar: habilidad, coste 2→1, leyenda
+- 134 Skeljungur: habilidad, coste —→4, fuerza —→6, raza —→Abominación, leyenda
+- 135 Rognvald Ragnarsson: habilidad, coste —→2, fuerza —→4, raza —→Bárbaro, leyenda
+- 137 Tributo a los Alcis: habilidad, coste —→1, leyenda
+- 138 Langskib: habilidad, leyenda
+- 146 Emisario Budista: habilidad, coste —→3, fuerza —→1, raza —→Campeón, leyenda
+- 147 Amanozako: habilidad, coste —→2, fuerza —→3, raza —→Kami, leyenda
+- 148 Mazu: habilidad, coste —→2, fuerza —→2, raza —→Xian, leyenda
+- 151 Hamsa: habilidad, leyenda
+- 153 Fu: habilidad, coste 5→4, leyenda
+- 155 He Xian Gu: habilidad, leyenda
+- 158 Cernunno: habilidad, coste 1→2, fuerza 1→3, raza —→Faerie, leyenda
+- 160 Titania: habilidad, coste 4→3, fuerza 1→3, leyenda
+- 162 Sigurd: raza —→Caballero
+- 163 Beowulf: raza —→Caballero
+- 164 Y Ddraig Goch: habilidad, coste 4→3, fuerza 6→3, leyenda
+- 167 Fresno Yggdrasil: habilidad, coste 2→6, leyenda
+- 172 Samuel Parris: habilidad, coste 2→3, fuerza 4→3, raza Caballero→Cazador, leyenda
+- 176 Lycaón: habilidad, coste 4→2, raza Héroe→Licántropo, leyenda
+- 177 Carmilla: habilidad, raza Sombra→Vampiro, leyenda
+- 186 Kuyén: habilidad, coste 1→2, fuerza 1→3, raza Eterno→Chamán, leyenda
+- 188 Brujo de Salamanca: habilidad, coste 1→3, raza Sombra→Chamán, leyenda
+- 192 Taranis: habilidad, coste 4→3, fuerza 5→4, raza Tenebris→Guerrero, leyenda
+- 194 Araña Troll: habilidad, leyenda
+- 200 Volsung: habilidad, leyenda
+- 202 Wotán: habilidad, raza Eterno→Dios, leyenda
+- 206 Hwarang: habilidad, fuerza 2→1, raza Samurái→Campeón, leyenda
+- 207 Yoritomo: habilidad, coste 1→2, raza Samurái→Campeón, leyenda
+- 218 Isthar: habilidad, fuerza 3→4, raza —→Caballero, leyenda
+- 219 Marduk: habilidad, fuerza 3→4, raza —→Caballero, leyenda
+- 222 Gnomos Burlones: habilidad, coste —→1, fuerza 2→3, raza —→Faerie, leyenda
+- 223 Traicionar: habilidad, coste —→3, leyenda
+- 224 Matador de Dragones: habilidad, leyenda
+- 225 Búfalo Blanco: habilidad, leyenda
+- 226 Carnwennan: habilidad, coste —→2, leyenda
+- 228 Fenrir: habilidad, raza —→Licántropo, leyenda
+- 229 Vampiro: habilidad, coste 3→2, fuerza —→4, raza —→Vampiro, leyenda
+- 231 Licantropía: habilidad, coste 2→4, leyenda
+- 232 Luna Llena: habilidad, coste 3→2, leyenda
+- 233 Escudo Hiperbóreo: habilidad, leyenda
+- 235 Altar de la Bestia: habilidad, coste —→1, leyenda
+- 236 Serpiente Emplumada: raza —→Bestia
+- 240 Cuauhtémoc: coste 5→2
+- 242 Peri Pillán: habilidad, leyenda
+- 243 Robar el Fuego: habilidad, coste —→1, leyenda
+- 244 Yanomami: habilidad, leyenda
+- 246 Tótem de Serpiente: habilidad, leyenda
+- 247 Tótem de Perro: habilidad, coste 1→2, leyenda
+- 249 Vavtrudnir: habilidad, fuerza 2→3, leyenda
+- 250 Yormungand: habilidad, coste 3→2, leyenda
+- 253 Nidos de Pesadilla: habilidad, coste 3→2, leyenda
+- 254 Hofud: habilidad, coste —→2, leyenda
+- 255 Gambantein: habilidad, coste 2→3, leyenda
+- 256 Vanaheim: habilidad, coste 3→2, leyenda
+- 257 Yotunheim: habilidad, leyenda
+- 258 Niú Mówang: habilidad, coste —→3, fuerza —→3, raza —→Criatura, leyenda
+- 259 Kappa: habilidad, leyenda
+- 261 Yama Bushi: habilidad, leyenda
+- 262 Oho Yama: habilidad, coste 4→2, leyenda
+- 263 Yu Huang: habilidad, fuerza 2→3, leyenda
+- 264 Kendo: habilidad, coste 3→2, leyenda
+- 265 Kyudo: habilidad, coste 3→2, leyenda
+- 266 Marca del Tigre: habilidad, coste 3→2, leyenda
+- 267 Santuario de Kashima: habilidad, coste —→5, leyenda
+- 268 Gilgamesh: coste 3→2, raza —→Caballero
+- 270 Caballero Blanco: habilidad, raza —→Caballero, leyenda
+- 277 Poseidón: habilidad, leyenda
+- 279 Altar de Hadas: habilidad, coste —→4, leyenda
+- 280 Daphne y Gregor: habilidad, coste 3→2, fuerza 2→3, leyenda
+- 282 Brazo Fuerte: habilidad, fuerza 1→2, leyenda
+- 284 Lupo: habilidad, leyenda
+- 286 Guardia del Escudo: habilidad, leyenda
+- 295 Millalobo: habilidad, coste 2→3, fuerza 1→3, raza —→Bestia, leyenda
+- 297 Kukulcán: habilidad, raza Dragón→Chamán, leyenda
+- 301 Insignia de Toqui: habilidad, leyenda
+- 302 Tótem de Uktena: habilidad, coste —→3, leyenda
+- 304 Hraesvelg: habilidad, leyenda
+- 305 Fenoeiself: habilidad, leyenda
+- 306 Freya: habilidad, fuerza 1→2, leyenda
+- 307 Forseti: habilidad, coste 4→2, leyenda
+- 310 Morir en Batalla: habilidad, coste —→1, leyenda
+- 311 Suplicio de Loki: habilidad, leyenda
+- 316 Changquan: habilidad, coste —→1, leyenda
+- 317 Técnica de la Media Luna: habilidad, leyenda
+- 318 Nanigata: habilidad, coste 1→2, leyenda
+- 319 Chien: habilidad, coste 2→4, leyenda
+- LPE4-327 Mandoble Purificador: habilidad, coste —→4, leyenda
+- LPE4-329 Bruja Carabusse: habilidad, leyenda
+- LPE4-331 Alabarda de la Sangre: habilidad, coste —→3, leyenda
+- LPE4-332 Amuleto Pagano: habilidad, leyenda
+- LPE4-333 Justos por Pecadores: habilidad, coste 4→2, leyenda
+- LPE4-334 Tótem Último: habilidad, coste 3→2, leyenda
+- LPE4-335 Arco Naskapi: habilidad, coste —→3, leyenda
+- LPE4-336 Pintura Naskapi: habilidad, leyenda
+- LPE4-340 Karve: habilidad, leyenda
+- LPE4-341 Amor de Valkyria: habilidad, coste 2→1, leyenda
+- LPE4-342 Zapatos de Hierro: habilidad, leyenda
+- SCLPE4-01 Caballero Negro: raza —→Caballero
+- SCLPE4-02 Kordrag: raza —→Caballero
+- SCLPE4-04 Dragón de Magma: fuerza 3→4
+- SCLPE4-06 Dragón Medieval: habilidad, raza —→Dragón, leyenda
+- SCLPE4-08 Melusina: raza —→Faerie
+- SCLPE4-09 Hadas: raza —→Faerie
+- SCLPE4-13 Haiwatha: habilidad, leyenda
+- SCLPE4-14 Vampiro Oriental: habilidad, leyenda
+- SCLPE4-15 Hades: habilidad, leyenda
+- SCLPE4-19 Niamh: habilidad, leyenda
+- SCLPE4-21 Hombre Lobo: raza —→Licántropo
+- SCLPE4-22 Guevadan: habilidad, coste 5→4, leyenda
+- SCLPE4-25 Vampiro del Desierto: habilidad, leyenda
+- SCLPE4-26 Stribog: habilidad, leyenda
+- SCLPE4-29 Ballesta: habilidad, leyenda
+- SCLPE4-35 Sisiutl: habilidad, coste 3→2, fuerza 1→2, raza —→Bestia, leyenda
+- SCLPE4-36 Runa Urutrungu: habilidad, leyenda
+- SCLPE4-38 Nanahuatzin: habilidad, leyenda
+- SCLPE4-41 Lautaro: habilidad, coste 4→3, fuerza —→3, leyenda
+- SCLPE4-44 Machitún: habilidad, leyenda
+- SCLPE4-55 Hodur: habilidad, leyenda
+- SCLPE4-57 Thor: raza —→Dios
+- SCLPE4-58 Galdar: habilidad, leyenda
+- SCLPE4-60 Sacrificio de Odín: habilidad, leyenda
+- SCLPE4-65 Guan Yu: habilidad, leyenda
+- SCLPE4-67 47 Ronin: habilidad, leyenda
+- SCLPE4-71 Amateratsu: habilidad, leyenda
+- SCLPE4-73 Daikoku: habilidad, leyenda
+- SCLPE4-74 Guan Ti: habilidad, leyenda
+- SCLPE4-77 Kitsune-Tsuki: habilidad, leyenda
+- SCLPE4-78 Feng Shui: habilidad, leyenda
+
+Para revisión manual (mixtas, sin coincidencia o ilegibles):

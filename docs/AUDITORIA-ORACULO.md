@@ -7,7 +7,7 @@ Generado: 2026-11-10 · Fuente: https://tomacotgc.ddns.net/Oraculo
 - Ambiguas (el nombre corresponde a varias cartas del Oráculo y nada desempata): 2
 - Sin carta equivalente en el Oráculo: 287
 - Conflictos (señales que se contradicen, no se relacionan): 0
-- Diferencias de datos entre el catálogo y el Oráculo (se relacionan igual; revisar): 321
+- Diferencias de datos entre el catálogo y el Oráculo (se relacionan igual; revisar): 263
 
 ## Cobertura por edición
 
