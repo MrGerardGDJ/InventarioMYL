@@ -4,3 +4,4 @@ scraper/node_modules/
 *.log
 .playwright/
 __pycache__/
+scraper/.cache/
