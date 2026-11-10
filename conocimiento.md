@@ -378,6 +378,13 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-11-10 (130ª iteración) — Historial de Juego Organizado 2024-03 → 2026-10 (PDF mensuales del Oráculo)
+
+- **Fuente:** los informativos `oraculope.cl/files/documentos/JO/AAAA-MM.pdf` (32 meses). Un agente los procesó (descarga, extracción de las cartas con `pdfimages` + máscara alfa, lectura de cada carta y de su rol) y dejó un JSON por mes + imágenes; el resumen mes × carta quedó en `docs/HISTORIAL-JUEGO-ORGANIZADO.md` (con las dudas de lectura y los cambios de formato del PDF entre épocas: 2024-03/04 diapositivas panorámicas, 2024-12→2025-06 «PBX/PEX», desde 2025-08 «Bloques Clásicos» con copias fijas 12/4/8/1). **Verificación propia:** 8 cartas al azar (PB) leídas contra su imagen coincidieron en nombre, tipo, raza, coste, fuerza y habilidad.
+- **Resultado:** 122 cartas distintas (59 PE y 63 PB). **PB:** edición `juego_organizado_pb` pasa de 7 a **65 cartas** (58 nuevas con texto e imagen a la mejor resolución disponible); códigos internos `LJOPB-01…65` ordenados por primera aparición. **PE:** 5 cartas nuevas (Volsung, Huitzilopochtli, Mary Bradbury, Beerwolf, Tuyango; se agregan al final, `LJO-88…`), y 2 nombres mal leídos en el PDF se corrigieron a la grafía del catálogo (Hait→Haiit, Brummimgi→Brunnmigi). Las 59 PE existentes quedan igual.
+- **Campo nuevo `historial`** (en las 122 cartas): «Top Liga: mar 2024, ago 2024 · Ganador Liga: … · Juez/Staff: …». Se muestra en la ficha/detalle (“Historial en Juego Organizado”) y entra en el buscador. El script que lo genera es `scraper/jo-history/integrar_historial.py` (lee los JSON del agente; `--apply` escribe).
+- Pendiente a futuro: cada mes llega un PDF nuevo (el de noviembre 2026 ya está cargado a mano); basta pasar el PDF y repetir el procedimiento. Los informativos de 2026-10 y anteriores ya están en el historial; los números de copias de 2024-05 son incoherentes dentro del propio PDF.
+
 ### 2026-11-10 (129ª iteración) — Leyendas 4.0 corregida contra la carta impresa (162 cartas) + 6 de Mundos Perdidos
 
 - **Problema:** al cruzar con el Oráculo apareció que el registro manual de **Leyendas - Primera Era 4.0** (`custom-cards.json`) tenía en muchas cartas los datos de la **versión anterior** de la carta (Titania 4/1 con su texto antiguo, Wangulén “Faerie 1/3” cuando impresa es Chamán 5/2, Fresno Yggdrasil coste 2 cuando es 6…) y 42 cartas sin habilidad.

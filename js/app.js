@@ -95,7 +95,7 @@ async function loadData() {
     c.marcoPropio = !!c.marco; // marco escrito a mano en el registro: manda sobre el del Oráculo
     c.marco = c.marco || marcosPorId[c.id] || MARCO_POR_EDICION[c.edition] || "";
     enrichFromOraculo(c, true);
-    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion + " " + c.codigo + " " + c.serie);
+    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion + " " + c.codigo + " " + c.serie + " " + (c.historial || ""));
   }
   // Migración auto-reconciliante (Capa B): remapea inventario/mazos de
   // legacyId → id estable usando el catálogo. Idempotente; se cura sola cuando
@@ -187,8 +187,9 @@ function razaCanonica(r) {
 }
 function oraculoSectionHtml(card) {
   const o = card.oracle;
-  if (!o) return "";
-  let html = "";
+  // Historial en Juego Organizado (informativos mensuales): en qué meses se entregó la carta y como qué premio
+  let html = card.historial ? `<div class="cd-section"><h4>Historial en Juego Organizado</h4><div class="muted" style="font-size:12.5px;line-height:1.5">${escapeHtml(card.historial)}</div></div>` : "";
+  if (!o) return html;
   // Texto vigente: solo si difiere del impreso en esta edición
   if (o.h && oraculoFlat(o.h) !== oraculoFlat(card.ability)) {
     html += `<div class="cd-section"><h4>Texto vigente <span class="muted" style="font-weight:400">(Oráculo · puede diferir del impreso en esta edición)</span></h4><div>${nl2br(o.h)}</div></div>`;
@@ -231,6 +232,7 @@ function normalizeCard(c, i) {
     // ("Premier Julio 2024") y su categoría para el filtro "Origen".
     obtencion: c.obtencion || "",
     origen: c.origen || "",
+    historial: c.historial || "",
     // Serie = familia según el código impreso en la carta (ver SERIES_JO);
     // codigo = ese código tal cual; orden = posición cronológica dentro de la
     // edición (1 = la más antigua).
@@ -260,7 +262,7 @@ function rebuildCards() {
   for (const c of userCustom) {
     enrichFromOraculo(c, false); // una carta editada por el usuario solo muestra el Oráculo, no se le rellena nada
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
-    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion + " " + c.codigo + " " + c.serie);
+    c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion + " " + c.codigo + " " + c.serie + " " + (c.historial || ""));
   }
   state.cards = (state.baseCards || []).filter((c) => !overrideIds.has(c.id)).concat(userCustom);
   // Las ediciones personalizadas aportan su nombre legible al mapa global
