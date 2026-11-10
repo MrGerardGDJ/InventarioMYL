@@ -2,10 +2,10 @@
   "meta": {
     "sourceUrl": "https://blog.myl.cl/ban-list-primera-era-formato-racial-edicion/",
     "format": "Primera Era — Racial Edición",
-    "updateLabel": "Julio 2026",
-    "effectiveNote": "Martes 07 de Julio y hasta principios de Agosto 2026",
-    "scrapedAt": "2026-08-15T16:28:48.378Z",
-    "totalEntries": 108
+    "updateLabel": "Octubre 2026",
+    "effectiveNote": "sábado 5 de septiembre hasta principios de Diciembre 2026",
+    "scrapedAt": "2026-11-10T22:50:55.708Z",
+    "totalEntries": 107
   },
   "entries": [
     {
@@ -51,6 +51,13 @@
       "maxCopies": 0
     },
     {
+      "edition": "el_reto",
+      "editionName": "El Reto",
+      "name": "Groostlang",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
       "edition": "mundo_gotico",
       "editionName": "Mundo Gotico",
       "name": "Salome",
@@ -82,6 +89,13 @@
       "edition": "mundo_gotico",
       "editionName": "Mundo Gotico",
       "name": "Lucha de Gólems",
+      "status": "banned",
+      "maxCopies": 0
+    },
+    {
+      "edition": "mundo_gotico",
+      "editionName": "Mundo Gotico",
+      "name": "Mosquete Puritano",
       "status": "banned",
       "maxCopies": 0
     },
@@ -131,13 +145,6 @@
       "edition": "ira_del_nahual",
       "editionName": "Ira Del Nahual",
       "name": "Kanillu",
-      "status": "banned",
-      "maxCopies": 0
-    },
-    {
-      "edition": "ira_del_nahual",
-      "editionName": "Ira Del Nahual",
-      "name": "Trauko",
       "status": "banned",
       "maxCopies": 0
     },
@@ -291,13 +298,6 @@
     {
       "edition": "espiritu_del_dragon",
       "editionName": "Espiritu Del Dragon",
-      "name": "Shen Yi",
-      "status": "banned",
-      "maxCopies": 0
-    },
-    {
-      "edition": "espiritu_del_dragon",
-      "editionName": "Espiritu Del Dragon",
       "name": "Yasakani",
       "status": "banned",
       "maxCopies": 0
@@ -312,7 +312,7 @@
     {
       "edition": "el_reto",
       "editionName": "El Reto",
-      "name": "Grootslang",
+      "name": "Persival",
       "status": "limit1",
       "maxCopies": 1
     },
@@ -327,13 +327,6 @@
       "edition": "mundo_gotico",
       "editionName": "Mundo Gotico",
       "name": "Exorcista",
-      "status": "limit1",
-      "maxCopies": 1
-    },
-    {
-      "edition": "mundo_gotico",
-      "editionName": "Mundo Gotico",
-      "name": "Mosquete Puritano",
       "status": "limit1",
       "maxCopies": 1
     },
@@ -394,6 +387,20 @@
       "maxCopies": 1
     },
     {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Kanillu",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Tótem del Águila",
+      "status": "limit1",
+      "maxCopies": 1
+    },
+    {
       "edition": "ragnarok",
       "editionName": "Ragnarok",
       "name": "Ataúd de Marfil",
@@ -404,13 +411,6 @@
       "edition": "ragnarok",
       "editionName": "Ragnarok",
       "name": "Halatafl",
-      "status": "limit1",
-      "maxCopies": 1
-    },
-    {
-      "edition": "ragnarok",
-      "editionName": "Ragnarok",
-      "name": "Galdar",
       "status": "limit1",
       "maxCopies": 1
     },
@@ -494,7 +494,7 @@
     {
       "edition": "espiritu_del_dragon",
       "editionName": "Espiritu Del Dragon",
-      "name": "Sakura",
+      "name": "Yanhua",
       "status": "limit1",
       "maxCopies": 1
     },
@@ -534,13 +534,6 @@
       "maxCopies": 1
     },
     {
-      "edition": "espiritu_del_dragon",
-      "editionName": "Espiritu Del Dragon",
-      "name": "Yanhua",
-      "status": "limit1",
-      "maxCopies": 1
-    },
-    {
       "edition": "el_reto",
       "editionName": "El Reto",
       "name": "Knochen",
@@ -564,7 +557,7 @@
     {
       "edition": "el_reto",
       "editionName": "El Reto",
-      "name": "Persival",
+      "name": "DiamanteTurquesa",
       "status": "limit2",
       "maxCopies": 2
     },
@@ -578,7 +571,7 @@
     {
       "edition": "el_reto",
       "editionName": "El Reto",
-      "name": "Caballo de Mar",
+      "name": "Torre Oscura",
       "status": "limit2",
       "maxCopies": 2
     },
@@ -625,13 +618,6 @@
       "maxCopies": 2
     },
     {
-      "edition": "mundo_gotico",
-      "editionName": "Mundo Gotico",
-      "name": "Cazadores Implacables",
-      "status": "limit2",
-      "maxCopies": 2
-    },
-    {
       "edition": "ira_del_nahual",
       "editionName": "Ira Del Nahual",
       "name": "Pihuchén",
@@ -662,14 +648,21 @@
     {
       "edition": "ira_del_nahual",
       "editionName": "Ira Del Nahual",
-      "name": "Tótem del Águila",
+      "name": "Forma Voladora",
       "status": "limit2",
       "maxCopies": 2
     },
     {
       "edition": "ira_del_nahual",
       "editionName": "Ira Del Nahual",
-      "name": "Forma Voladora",
+      "name": "Trauko",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "ira_del_nahual",
+      "editionName": "Ira Del Nahual",
+      "name": "Macuñ",
       "status": "limit2",
       "maxCopies": 2
     },
@@ -697,7 +690,14 @@
     {
       "edition": "ragnarok",
       "editionName": "Ragnarok",
-      "name": "Fuerza Abominable",
+      "name": "Rapto de Idunn",
+      "status": "limit2",
+      "maxCopies": 2
+    },
+    {
+      "edition": "ragnarok",
+      "editionName": "Ragnarok",
+      "name": "Galdar",
       "status": "limit2",
       "maxCopies": 2
     },
@@ -725,7 +725,7 @@
     {
       "edition": "espiritu_del_dragon",
       "editionName": "Espiritu Del Dragon",
-      "name": "Geon Si",
+      "name": "Sakura",
       "status": "limit2",
       "maxCopies": 2
     },
@@ -754,13 +754,6 @@
       "edition": "espiritu_del_dragon",
       "editionName": "Espiritu Del Dragon",
       "name": "Nodachi",
-      "status": "limit2",
-      "maxCopies": 2
-    },
-    {
-      "edition": "espiritu_del_dragon",
-      "editionName": "Espiritu Del Dragon",
-      "name": "Sai",
       "status": "limit2",
       "maxCopies": 2
     }
