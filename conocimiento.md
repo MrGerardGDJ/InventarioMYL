@@ -378,6 +378,13 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-11-10 (127ª iteración) — Informativo de Juego Organizado de septiembre 2026 y dónde están los PDF
+
+- **Los informativos son públicos:** el enlace compartido (`share.google/…`) redirige a `https://oraculope.cl/files/documentos/JO/2026-09.pdf`; el mismo patrón `…/JO/AAAA-MM.pdf` responde **200 para 2026-05, 06, 07, 08, 09 y 10** (2026-11 da 404; el de noviembre lo envió el dueño). Se descargan con `curl -sL -A "Mozilla/5.0"`; no hace falta que el dueño los adjunte uno por uno.
+- **Septiembre 2026** (orden de las páginas = Top Liga, Ganador Liga, Top Avanzado, Juez): *Primer Bloque* → Kyria Minotauro, Dory de Amazona (Arma), Dioxippe, la Amazona, Sidhe Guerrero (Staff); *Primera Era* → Mullo, Torreón Negro, Calmet, Pájaro Inti (Staff). Las 4 de Primera Era ya estaban cargadas y sus textos coinciden con el PDF; se amplió su obtención (Torreón Negro: además Ganador Liga de septiembre; Pájaro Inti: además Carta Juez de septiembre). Se agregaron las 3 de PB nuevas a `juego_organizado_pb` (textos leídos a resolución completa; Kyria 2/2 Titán, Dioxippe 3/2 Héroe) y Sidhe Guerrero pasó a “Carta Juez Septiembre y Noviembre 2026” (aparece en ambos informativos).
+- Renumeración por fecha de los códigos internos de PB: septiembre `LJOPB-01…04` (Kyria, Dory, Dioxippe, Sidhe Guerrero) y noviembre `LJOPB-05…07` (Sidhe na gCat, Fuego Pascual, Torc Fiain); los ids no cambian.
+- Pendiente para reconstruir hacia atrás: 2026-05, 06, 07, 08 y 10.
+
 ### 2026-11-10 (126ª iteración) — Informativo oficial de Juego Organizado (PDF “Bloques Clásicos”, noviembre 2026)
 
 - **Fuente nueva y mensual:** el PDF “Informativo Bloques Clásicos” de Juego Organizado (el dueño lo envía cada mes). Trae las cartas del mes **a 709×1016 px, con el texto impreso**, cuántas copias se reparten y a quién (Top de Liga = mejores 3 de cada fecha, 12 copias; Ganador de Liga = el mejor, 4 copias; Top Avanzado = mejores 8, 8 copias; **Carta Juez/Staff** = 1 copia para el juez, colaborador u organizador), separadas en **JO Primer Bloque** y **JO Primera Era**. Las imágenes se extraen con `pdfimages -all` y se combinan con su máscara (`convert img.jpg smask.png -alpha off -compose CopyOpacity -composite`) para conservar las esquinas redondeadas; se guardan en `data/custom-images/jo-pdf/` (webp).
