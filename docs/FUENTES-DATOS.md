@@ -193,3 +193,22 @@ auto-hospedan en `data/custom-images/<tienda>/`, nunca se hotlinkean.
   botón **"Guardar y agregar otra"** (mantiene edición/formato/raza). Todo se
   sincroniza en la nube.
 - Cuando TOR publique la edición, el scraper semanal la trae sola.
+
+## 7) Oráculo PE — `tomacotgc.ddns.net/Oraculo` ✅ (fuente complementaria, integrada)
+
+Base de datos de **Primera Era** mantenida por Rene Figueroa (la misma que se enlaza desde "Documentos — Oráculo PE"). No reemplaza a TOR: aporta lo que TOR no tiene y corrige datos que faltan.
+
+**Qué trae por carta** (≈1.500 cartas distintas, ≈3.460 impresiones, 48 productos): texto **vigente** (`habilidad`), **aclaración** de reglamento, **leyenda** (texto de ambientación), coste y fuerza, tipo, raza, **edición de origen** (`edicionNombre` = el "marco" de la app: de qué edición base —El Reto, Mundo Gótico, La Ira del Nahual, Ragnarok, Espíritu de Dragón o La Cofradía— es originalmente la carta, también cuando viene en un producto posterior), **mecánicas** (Robar, Removal, Buscador…), límite de copias por formato y todas sus impresiones (producto + número + imagen a alta resolución). Solo incluye cartas jugables en Primera Era (por eso faltan, p. ej., las egipcias de El Reto).
+
+**Endpoints** (sin autenticación; es un equipo casero: ritmo cortés, nunca más de 2 peticiones a la vez):
+- `GET /Oraculo/Documentos` → enlaces a galerías y PDFs (`/files/documentos/...`).
+- `GET /imagenes?productoNombre=<CLAVE>` → HTML con las cartas del producto (`data-carta-id`, `data-version-id`, imagen `/files/assets/cards/full/<CLAVE>/<NNN>.webp`).
+- `POST /cartas/getcarddetails` (`cartaId`, `versionId`) → JSON completo de la carta.
+- `GET /files/documentos/JO/AAAA-MM.pdf` → informativos mensuales de Juego Organizado (2024-03 en adelante).
+- Imágenes: 200 KB c/u y **sin cabecera CORS** → no se enlazan desde la app (el PDF las dibuja en un canvas); si hace falta una, se descarga y se autoaloja.
+
+**Cómo está integrado**
+- `scraper/oraculo.js` (el agente recopilador): descubre productos, baja galerías y detalles (caché en `scraper/.cache/`, ignorada por git) y escribe `data/oraculo.json` (≈1,2 MB). Se puede reanudar y pedir solo un producto (`--product HLPE26`).
+- `scraper/oraculo-map.js`: relaciona cada carta de la app con su carta del Oráculo → `data/oraculo-map.json` y un informe `docs/AUDITORIA-ORACULO.md`. Nivel A = impresión exacta (edición + número + nombre); nivel B = nombre único + mismo tipo. Si el nombre es ambiguo no se relaciona.
+- `.github/workflows/scrape-oraculo.yml`: lo ejecuta el día 5 de cada mes (o a mano) y publica los cambios.
+- La app (`enrichFromOraculo` en `js/app.js`) **rellena solo los campos vacíos** (habilidad, leyenda, raza, coste, fuerza), asigna el **marco** y muestra en la ficha/detalle el texto vigente (si difiere del impreso), la aclaración, las mecánicas y el límite de copias. Hay un filtro **Mecánica**. Una carta con un marco escrito a mano en su registro, o editada por el usuario, no se pisa.

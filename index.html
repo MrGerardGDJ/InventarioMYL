@@ -83,6 +83,7 @@
           <select id="f-rarity" class="chip-select"><option value="">Rareza</option></select>
           <select id="f-origin" class="chip-select" title="Cómo se consigue (torneo, liga, lanzamiento…)"><option value="">Origen</option></select>
           <select id="f-marco" class="chip-select" title="Marco: edición de origen del diseño de la carta (Primera Era)"><option value="">Marco</option></select>
+          <select id="f-mecanica" class="chip-select" title="Mecánica (según el Oráculo PE): Robar, Removal, Buscador…"><option value="">Mecánica</option></select>
           <label class="chip-select cost-chip">
             <span>Coste ≤ <b id="cost-val">∞</b></span>
             <input id="f-cost" type="range" min="0" max="12" value="12" />
@@ -136,6 +137,7 @@
           <div class="ficha-ability">
             <div class="ficha-kicker">Habilidad</div>
             <div id="ficha-ability-text"></div>
+            <div id="ficha-oraculo" class="ficha-oraculo"></div>
           </div>
           <div id="ficha-meta" class="ficha-meta-grid"></div>
           <div class="ficha-actions">
@@ -251,6 +253,7 @@
           <div class="ficha-ability">
             <div class="ficha-kicker">Habilidad</div>
             <div id="deck-ficha-ability-text"></div>
+            <div id="deck-ficha-oraculo" class="ficha-oraculo"></div>
           </div>
           <div id="deck-ficha-meta" class="ficha-meta-grid"></div>
           <div class="ficha-actions">

@@ -61,14 +61,17 @@ async function loadData() {
   // práctica (09-08-2026): dos correcciones de datos ya subidas y
   // verificadas en el repo seguían sin verse en el sitio publicado.
   const v = Date.now();
-  const [cardsRes, edRes, customRes, pricesRes, banlistRes, marcosRes] = await Promise.all([
+  const [cardsRes, edRes, customRes, pricesRes, banlistRes, marcosRes, oraculoRes, oraculoMapRes] = await Promise.all([
     fetch(`./data/cards.json?v=${v}`).then((r) => r.json()).catch(() => ({ cards: [] })),
     fetch(`./data/editions.json?v=${v}`).then((r) => r.json()).catch(() => []),
     fetch(`./data/custom-cards.json?v=${v}`).then((r) => (r.ok ? r.json() : { cards: [] })).catch(() => ({ cards: [] })),
     fetch(`./data/prices.json?v=${v}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
     fetch(`./data/banlist.json?v=${v}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
     fetch(`./data/marcos.json?v=${v}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+    fetch(`./data/oraculo.json?v=${v}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+    fetch(`./data/oraculo-map.json?v=${v}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
   ]);
+  state.oraculo = oraculoRes && oraculoMapRes ? { cartas: oraculoRes.cartas || {}, map: oraculoMapRes.map || {} } : null;
   const marcosPorId = marcosRes?.marcos || {};
   state.prices = pricesRes?.prices || {};
   state.banlist = banlistRes && Array.isArray(banlistRes.entries) ? banlistRes : null;
@@ -89,7 +92,9 @@ async function loadData() {
   // Asegura nombre legible de edición y precalcula texto de búsqueda (una vez)
   for (const c of state.baseCards) {
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
+    c.marcoPropio = !!c.marco; // marco escrito a mano en el registro: manda sobre el del Oráculo
     c.marco = c.marco || marcosPorId[c.id] || MARCO_POR_EDICION[c.edition] || "";
+    enrichFromOraculo(c, true);
     c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion + " " + c.codigo + " " + c.serie);
   }
   // Migración auto-reconciliante (Capa B): remapea inventario/mazos de
@@ -144,6 +149,56 @@ function cardFitsRace(card, race) {
   const m = card.marco;
   if (!m) return true; // sin clasificar: no se descarta
   return m === RAZA_MARCO[race] || m === "La Cofradía";
+}
+
+// ===== Oráculo PE (data/oraculo.json + data/oraculo-map.json) =====
+// Texto vigente, aclaraciones, leyenda, mecánicas, límite de copias y MARCO de
+// cada carta de Primera Era. oraculo-map.json relaciona el id de la carta de la
+// app con la carta del Oráculo (lo genera scraper/oraculo-map.js).
+const MARCO_ORACULO = {
+  "el reto": "El Reto", "mundo gotico": "Mundo Gótico", "la ira del nahual": "La Ira del Nahual", "ira del nahual": "La Ira del Nahual",
+  ragnarok: "Ragnarok", "la cofradia": "La Cofradía", cofradia: "La Cofradía", "espiritu de dragon": "Espíritu de Dragón", "espiritu del dragon": "Espíritu de Dragón",
+};
+const oraculoOf = (card) => (state.oraculo ? state.oraculo.cartas[state.oraculo.map[card.id]] || null : null);
+const oraculoFlat = (t) => normText(t).replace(/[^a-z0-9ñ]/g, "");
+// `fill`: completa los campos que la carta tiene vacíos con los del Oráculo (nunca pisa un dato existente)
+function enrichFromOraculo(c, fill) {
+  const o = oraculoOf(c);
+  c.oracle = o || null;
+  if (!o) return;
+  if (fill) {
+    const m = MARCO_ORACULO[normText(o.e)];
+    if (m && !c.marcoPropio) c.marco = m;
+    if (!c.ability && o.h) { c.ability = o.h; c.abilityFromOraculo = true; }
+    if (!c.flavour && o.l) c.flavour = o.l;
+    if ((!c.race || c.race === "—") && c.type === "Aliado" && o.r) c.race = razaCanonica(o.r);
+    if (c.type !== "Oro" && c.cost == null && o.c != null) c.cost = o.c;
+    if (c.type === "Aliado" && c.strength == null && o.f != null) c.strength = o.f;
+  }
+}
+// El Oráculo escribe las razas sin tilde ("Licantropo"): se usa la grafía que ya tiene el catálogo
+let _razaCanon = null;
+function razaCanonica(r) {
+  if (!_razaCanon) {
+    _razaCanon = {};
+    for (const x of state.baseCards || []) if (x.race && x.race !== "—") _razaCanon[normText(x.race)] ||= x.race;
+  }
+  return _razaCanon[normText(r)] || r;
+}
+function oraculoSectionHtml(card) {
+  const o = card.oracle;
+  if (!o) return "";
+  let html = "";
+  // Texto vigente: solo si difiere del impreso en esta edición
+  if (o.h && oraculoFlat(o.h) !== oraculoFlat(card.ability)) {
+    html += `<div class="cd-section"><h4>Texto vigente <span class="muted" style="font-weight:400">(Oráculo · puede diferir del impreso en esta edición)</span></h4><div>${nl2br(o.h)}</div></div>`;
+  }
+  if (o.a) html += `<div class="cd-section"><details class="cd-aclaracion"><summary><b>Aclaración del Oráculo</b></summary><div class="muted">${nl2br(o.a)}</div></details></div>`;
+  if (o.k?.length) html += `<div class="cd-section"><h4>Mecánicas</h4><div class="m-tags">${o.k.map((k) => `<span class="tag">${escapeHtml(k)}</span>`).join("")}</div></div>`;
+  const lim = o.x != null ? `Hasta ${o.x} copia${o.x === 1 ? "" : "s"} por mazo${o.y?.length ? ` <span class="muted">(${[...new Set(o.y.map((z) => z[0]))].join(", ")})</span>` : ""}` : "";
+  const marcoTxt = card.marco ? `Marco: <b>${escapeHtml(card.marco)}</b>` : "";
+  if (lim || marcoTxt) html += `<div class="cd-section"><h4>Ficha del Oráculo</h4><div>${[marcoTxt, lim].filter(Boolean).join(" · ")}</div></div>`;
+  return html;
 }
 
 const fichaPanelHidden = () => window.matchMedia("(max-width: 1100px)").matches;
@@ -203,6 +258,7 @@ function rebuildCards() {
   const userCustom = store.getCustomCards().map(normalizeCard);
   const overrideIds = new Set(userCustom.map((c) => c.id));
   for (const c of userCustom) {
+    enrichFromOraculo(c, false); // una carta editada por el usuario solo muestra el Oráculo, no se le rellena nada
     c.editionName = c.editionName || state.editionName[c.edition] || c.edition || "—";
     c.searchText = normText(c.name + " " + c.ability + " " + cardIdentifierText(c) + " " + c.obtencion + " " + c.codigo + " " + c.serie);
   }
@@ -311,6 +367,7 @@ function populateFilters() {
   fillSelect("#f-type", groupedUnique(state.cards.map((c) => c.type)).map((v) => ({ value: v, label: v })));
   fillSelect("#f-rarity", uniqueSorted(state.cards.map((c) => c.rarity)).map((v) => ({ value: v, label: v })));
   fillSelect("#f-origin", uniqueSorted(state.cards.map((c) => c.origen)).map((v) => ({ value: v, label: v })));
+  fillSelect("#f-mecanica", [...new Set(Object.values(state.oraculo?.cartas || {}).flatMap((o) => o.k || []))].sort((a, b) => a.localeCompare(b, "es")).map((v) => ({ value: v, label: v })));
   fillSelect("#f-marco", [...MARCOS.map((v) => ({ value: v, label: v })), { value: "__none__", label: "Primera Era sin clasificar" }]);
   // Formato también en la vista de estadísticas
   fillSelect("#stats-format", uniqueSorted(state.cards.map((c) => c.format)).map((f) => ({ value: f, label: FMT_NAMES[f] || f })));
@@ -411,6 +468,7 @@ function baseFilteredCards() {
   const rarity = $("#f-rarity").value;
   const origin = $("#f-origin").value;
   const marco = $("#f-marco").value;
+  const mecanica = $("#f-mecanica").value;
   const maxCost = Number($("#f-cost").value);
   return state.cards.filter((c) => {
     if (q && !c.searchText.includes(q)) return false;
@@ -422,6 +480,7 @@ function baseFilteredCards() {
     if (origin && c.origen !== origin) return false;
     if (marco === "__none__") { if (c.format !== "PE" || c.marco) return false; }
     else if (marco && c.marco !== marco) return false;
+    if (mecanica && !(c.oracle?.k || []).includes(mecanica)) return false;
     if (maxCost < 12 && c.cost != null && c.cost > maxCost) return false;
     return true;
   });
@@ -816,6 +875,7 @@ function renderFicha() {
 
   updateFichaQty(qty);
   $("#ficha-ability-text").innerHTML = card.ability ? nl2br(card.ability) : `<span class="muted">Sin texto.</span>`;
+  $("#ficha-oraculo").innerHTML = oraculoSectionHtml(card);
 
   const b = tradeBreakdown(card.id);
   const ref = marketRefPrice(card.id);
@@ -930,6 +990,7 @@ function renderDeckFicha() {
 
   updateDeckFichaQty(qty);
   $("#deck-ficha-ability-text").innerHTML = card.ability ? nl2br(card.ability) : `<span class="muted">Sin texto.</span>`;
+  $("#deck-ficha-oraculo").innerHTML = oraculoSectionHtml(card);
 
   const otherDecks = store.decksUsingCard(cid, deck.id).length;
   const ref = marketRefPrice(cid);
@@ -970,7 +1031,7 @@ function renderDeckFicha() {
 function jumpToCatalogCard(card) {
   switchView("coleccion");
   $("#search").value = displayName(card);
-  ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-marco", "#f-sort"].forEach((s) => { const el = $(s); if (el) el.selectedIndex = 0; });
+  ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-marco", "#f-mecanica", "#f-sort"].forEach((s) => { const el = $(s); if (el) el.selectedIndex = 0; });
   $("#f-cost").value = 12; $("#cost-val").textContent = "∞";
   refreshEditionOptions();
   applyFilters();
@@ -1071,6 +1132,7 @@ function openModal(card, navList, navIndex) {
         </div>
         <div class="cd-section"><h4>Habilidad</h4><div id="cd-ability">${card.ability ? nl2br(card.ability) : "<span class='muted'>Sin texto.</span>"}</div></div>
         ${card.flavour ? `<div class="cd-section"><h4>Historia</h4><p class="cd-flavour">«${escapeHtml(card.flavour)}»</p></div>` : ""}
+        ${oraculoSectionHtml(card)}
         <div id="cd-extra" class="cd-extra"><p class="muted">Cargando detalle ampliado…</p></div>
       </div>
     </div>`;
@@ -4201,7 +4263,7 @@ function bindEvents() {
     }
   }, 180);
   $("#search").addEventListener("input", debounced);
-  ["#f-ownership", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-marco", "#f-sort"].forEach((s) =>
+  ["#f-ownership", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-marco", "#f-mecanica", "#f-sort"].forEach((s) =>
     $(s).addEventListener("change", applyFilters)
   );
   $("#f-format").addEventListener("change", () => { refreshEditionOptions(); applyFilters(); });
@@ -4212,7 +4274,7 @@ function bindEvents() {
   });
   $("#clear-filters").addEventListener("click", () => {
     $("#search").value = "";
-    ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-marco", "#f-sort"].forEach((s) => ($(s).selectedIndex = 0));
+    ["#f-ownership", "#f-format", "#f-edition", "#f-race", "#f-type", "#f-rarity", "#f-origin", "#f-marco", "#f-mecanica", "#f-sort"].forEach((s) => ($(s).selectedIndex = 0));
     $("#f-cost").value = 12; $("#cost-val").textContent = "∞";
     refreshEditionOptions();
     applyFilters();

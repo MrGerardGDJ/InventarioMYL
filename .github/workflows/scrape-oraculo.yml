@@ -1,0 +1,65 @@
+name: Actualizar datos del Oráculo PE
+
+on:
+  workflow_dispatch:
+    inputs:
+      refresh:
+        description: "Volver a pedir TODOS los detalles (ignora la caché; ~30 min). Vacío = solo cartas nuevas"
+        required: false
+        default: ""
+  schedule:
+    # Día 5 de cada mes (los informativos y productos suelen salir a inicios de mes)
+    - cron: "0 7 5 * *"
+
+permissions:
+  contents: write
+
+jobs:
+  oraculo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Caché de detalles del Oráculo
+        # Evita volver a pedir al servidor (un equipo casero) lo que ya se bajó.
+        uses: actions/cache@v4
+        with:
+          path: scraper/.cache
+          key: oraculo-${{ github.run_id }}
+          restore-keys: oraculo-
+
+      - name: Recopilar el Oráculo
+        working-directory: scraper
+        run: |
+          ARGS=""
+          if [ -n "${{ github.event.inputs.refresh }}" ]; then ARGS="--refresh"; fi
+          node oraculo.js $ARGS
+
+      - name: Relacionar con el catálogo y auditar
+        working-directory: scraper
+        run: node oraculo-map.js
+
+      - name: Commit de los datos actualizados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- data/oraculo.json data/oraculo-map.json docs/AUDITORIA-ORACULO.md; then
+            echo "Sin cambios en el Oráculo"
+          else
+            git add data/oraculo.json data/oraculo-map.json docs/AUDITORIA-ORACULO.md
+            git commit -m "datos: actualiza el Oráculo PE (texto vigente, aclaraciones, mecánicas, marcos)"
+            for i in 1 2 3; do
+              git push origin ${{ github.ref_name }} && break
+              echo "push rechazado, integrando cambios remotos (intento $i)…"
+              git pull --rebase -X ours origin ${{ github.ref_name }} || git rebase --abort
+            done
+          fi

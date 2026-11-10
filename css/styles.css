@@ -1240,3 +1240,12 @@ main { padding: 0; }
 /* En móvil los botones del mazo quedan alineados a la izquierda: el menú de
    exportar debe abrir hacia la derecha (si no, se sale de la pantalla). */
 @media (max-width: 760px) { #deck-export-dropdown .dropdown-menu { right: auto; left: 0; } }
+
+/* ===== Oráculo PE: texto vigente, aclaración, mecánicas ===== */
+.ficha-oraculo .cd-section { margin-top: 12px; }
+.ficha-oraculo .cd-section h4 { font-size: 12px; }
+.cd-aclaracion summary { cursor: pointer; font-size: 12.5px; color: var(--accent-300); list-style: none; }
+.cd-aclaracion summary::-webkit-details-marker { display: none; }
+.cd-aclaracion summary::before { content: "▸ "; }
+.cd-aclaracion[open] summary::before { content: "▾ "; }
+.cd-aclaracion > div { margin-top: 6px; font-size: 12.5px; line-height: 1.5; }
