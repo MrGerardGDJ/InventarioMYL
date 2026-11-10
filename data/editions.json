@@ -558,6 +558,12 @@
     "name": "Cartas Promo 20 Años - Primer Bloque"
   },
   {
+    "slug": "juego_organizado_pb",
+    "format": "PB",
+    "formatName": "Primer Bloque",
+    "name": "Juego Organizado - Primer Bloque"
+  },
+  {
     "slug": "guerrero_jaguar",
     "format": "SB",
     "formatName": "Segundo Bloque",
