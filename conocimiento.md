@@ -378,6 +378,11 @@ alguna carta de `leyendas_primera_era_4_0`, hay que corregirla a mano en
 
 ## Registro de cambios
 
+### 2026-11-12 (132ª iteración) — Colección Legendaria Ragnarok (CLRG): 3 cartas registradas, pendientes de verificar
+
+- Consulta del dueño: ¿hay cartas con código `CLRG`? No había. Según el dueño (información de Gemini; el enlace compartido solo llevaba a la página «Colección Legendaria» del wiki, que describe la serie —productos especiales desde jun 2018, 10 cartas icónicas por edición— pero **no lista las cartas ni los códigos CLRG**, y no existe página de la de Ragnarok), el producto reimprime 10 cartas de Ragnarok con numeración `CLRG-01…10`; se conocen solo 3: **Naglfar (CLRG-01), Nanna (CLRG-03), Hodur (CLRG-04)** (y se mencionó Fuente de Urd sin número).
+- Se registraron esas 3 en la edición nueva `coleccion_legendaria_ragnarok` (PE) con los datos de juego de sus cartas base de Ragnarok (reimpresión con arte alternativo, mismo texto), sin imagen y con rareza «Promocional» **provisoria**. **Los códigos no están verificados contra una carta impresa**: hay que confirmarlos (y rareza/imagen) con una foto. Quedan sin registrar las otras 7 (se desconocen).
+
 ### 2026-11-10 (131ª iteración) — Ban list actualizada (Octubre 2026) y una imagen más desde el Oráculo
 
 - La ban list de la app estaba en **Julio 2026**; `scraper/scrape-banlist.js` (blog.myl.cl) ya publica **Octubre 2026** (vigente hasta principios de diciembre) y se ejecutó: 107 entradas (43 prohibidas, 32 a 1 copia, 32 a 2). Contraste con los límites del Oráculo (`copiasPorFormato`): 102 de 107 coinciden; difieren Kanillu, Fenghuang (+ Grootslang, Niamh y Espada Real figuran limitadas en el Oráculo pero no en el blog) — se mantiene el blog oficial como fuente.
