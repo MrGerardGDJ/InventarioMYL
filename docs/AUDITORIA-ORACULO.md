@@ -1,11 +1,11 @@
 # Auditoría del cruce catálogo ↔ Oráculo PE
 
-Generado: 2026-11-10 · Fuente: https://tomacotgc.ddns.net/Oraculo
+Generado: 2026-11-12 · Fuente: https://tomacotgc.ddns.net/Oraculo
 
-- Cartas del catálogo en Primera Era: **4877**
-- Relacionadas con el Oráculo: **4588 de 4877 (94%)** (A · impresión exacta: 1825, B · por nombre: 2763)
+- Cartas del catálogo en Primera Era: **4885**
+- Relacionadas con el Oráculo: **4595 de 4885 (94%)** (A · impresión exacta: 1825, B · por nombre: 2770)
 - Ambiguas (el nombre corresponde a varias cartas del Oráculo y nada desempata): 2
-- Sin carta equivalente en el Oráculo: 287
+- Sin carta equivalente en el Oráculo: 288
 - Conflictos (señales que se contradicen, no se relacionan): 0
 - Diferencias de datos entre el catálogo y el Oráculo (se relacionan igual; revisar): 263
 
@@ -25,7 +25,7 @@ Generado: 2026-11-10 · Fuente: https://tomacotgc.ddns.net/Oraculo
 | coleccion_20_anos_mundo_gotico | 160 de 174 (92%) |
 | cofradia | 152 de 170 (89%) |
 | coleccion_20_anos_cofradia | 152 de 170 (89%) |
-| juego_organizado_pe | 154 de 158 (97%) |
+| juego_organizado_pe | 158 de 163 (97%) |
 | ira_del_nahual | 114 de 126 (90%) |
 | ragnarok | 124 de 126 (98%) |
 | coleccion_20_anos_ira_del_nahual | 114 de 126 (90%) |
@@ -68,6 +68,7 @@ Generado: 2026-11-10 · Fuente: https://tomacotgc.ddns.net/Oraculo
 | promo_20_anos_pe | 9 de 9 (100%) |
 | torneo_aniversario_25_pe | 6 de 6 (100%) |
 | cartas_zombies_pe | 5 de 5 (100%) |
+| coleccion_legendaria_ragnarok | 3 de 3 (100%) |
 | promocionales_primera_era | 2 de 2 (100%) |
 
 ## Conflictos para revisar

@@ -252,6 +252,12 @@
     "name": "Cartas Promo 20 Años"
   },
   {
+    "slug": "coleccion_legendaria_ragnarok",
+    "format": "PE",
+    "formatName": "Primera Era",
+    "name": "Colección Legendaria Ragnarok"
+  },
+  {
     "slug": "juego_organizado_pe",
     "format": "PE",
     "formatName": "Primera Era",
